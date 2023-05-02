@@ -393,28 +393,55 @@ bool WIARVZFileReader<RVZ>::Read(u64 offset, u64 size, u8* out_ptr)
 }
 
 template <bool RVZ>
-bool WIARVZFileReader<RVZ>::SupportsReadWiiDecrypted() const
+const typename WIARVZFileReader<RVZ>::PartitionEntry*
+WIARVZFileReader<RVZ>::GetPartition(u64 partition_data_offset, u32* partition_first_sector) const
 {
-  return !m_partition_entries.empty();
+  const auto it = m_data_entries.upper_bound(partition_data_offset);
+  if (it == m_data_entries.end() || !it->second.is_partition)
+    return nullptr;
+
+  const PartitionEntry* partition = &m_partition_entries[it->second.index];
+  *partition_first_sector = Common::swap32(partition->data_entries[0].first_sector);
+  if (partition_data_offset != *partition_first_sector * VolumeWii::BLOCK_TOTAL_SIZE)
+    return nullptr;
+
+  return partition;
+}
+
+template <bool RVZ>
+bool WIARVZFileReader<RVZ>::SupportsReadWiiDecrypted(u64 offset, u64 size,
+                                                     u64 partition_data_offset) const
+{
+  u32 partition_first_sector;
+  const PartitionEntry* partition = GetPartition(partition_data_offset, &partition_first_sector);
+  if (!partition)
+    return false;
+
+  for (const PartitionDataEntry& data : partition->data_entries)
+  {
+    const u32 start_sector = Common::swap32(data.first_sector) - partition_first_sector;
+    const u32 end_sector = start_sector + Common::swap32(data.number_of_sectors);
+
+    if (offset + size <= end_sector * VolumeWii::BLOCK_DATA_SIZE)
+      return true;
+  }
+
+  return false;
 }
 
 template <bool RVZ>
 bool WIARVZFileReader<RVZ>::ReadWiiDecrypted(u64 offset, u64 size, u8* out_ptr,
                                              u64 partition_data_offset)
 {
+  u32 partition_first_sector;
+  const PartitionEntry* partition = GetPartition(partition_data_offset, &partition_first_sector);
+  if (!partition)
+    return false;
+
   const u64 chunk_size = Common::swap32(m_header_2.chunk_size) * VolumeWii::BLOCK_DATA_SIZE /
                          VolumeWii::BLOCK_TOTAL_SIZE;
 
-  const auto it = m_data_entries.upper_bound(partition_data_offset);
-  if (it == m_data_entries.end() || !it->second.is_partition)
-    return false;
-
-  const PartitionEntry& partition = m_partition_entries[it->second.index];
-  const u32 partition_first_sector = Common::swap32(partition.data_entries[0].first_sector);
-  if (partition_data_offset != partition_first_sector * VolumeWii::BLOCK_TOTAL_SIZE)
-    return false;
-
-  for (const PartitionDataEntry& data : partition.data_entries)
+  for (const PartitionDataEntry& data : partition->data_entries)
   {
     if (size == 0)
       return true;
@@ -1722,19 +1749,24 @@ WIARVZFileReader<RVZ>::Convert(BlobReader* infile, const VolumeDisc* infile_volu
   const size_t raw_data_entries_size = raw_data_entries.size() * sizeof(RawDataEntry);
   const size_t group_entries_size = group_entries.size() * sizeof(GroupEntry);
 
-  // Conservative estimate for how much space will be taken up by headers.
-  // The compression methods None and Purge have very predictable overhead,
-  // and the other methods are able to compress group entries well
+  // An estimate for how much space will be taken up by headers.
+  // We will reserve this much space at the beginning of the file, and if the headers don't
+  // fit on that space, we will need to write them at the end of the file instead.
   const u64 headers_size_upper_bound = [&] {
-    u64 upper_bound = sizeof(WIAHeader1) + sizeof(WIAHeader2) + partition_entries_size +
+      // 0x100 is added to account for compression overhead (in particular for Purge).
+      u64 upper_bound = sizeof(WIAHeader1) + sizeof(WIAHeader2) + partition_entries_size +
                       raw_data_entries_size + 0x100;
 
-    // RVZ's added data in GroupEntry usually compresses well
+    // RVZ's added data in GroupEntry usually compresses well, so we'll assume the compression ratio
+    // for RVZ GroupEntries is 9 / 16 or better. This constant is somehwat arbitrarily chosen, but
+    // no games were found that get a worse compression ratio than that. There are some games that
+    // get a worse ratio than 1 / 2, such as Metroid: Other M (PAL) with the default settings.
     if (RVZ && compression_type > WIARVZCompressionType::Purge)
       upper_bound += static_cast<u64>(group_entries_size) * 9 / 16;
     else
       upper_bound += group_entries_size;
 
+    // This alignment is also somewhat arbitrary.
     return Common::AlignUp(upper_bound, VolumeWii::BLOCK_TOTAL_SIZE);
   }();
 
