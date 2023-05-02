@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#000000"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/text_setting_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:text="Setting"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/text_setting_value"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="99%"
+        android:textAlignment="textEnd"
+        android:textColor="#FFFFFF" />
+
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/spacing_small"
+        android:layout_marginRight="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_medlarge"
+        android:layout_toStartOf="@id/text_setting_value"
+        android:layout_toEndOf="@id/text_setting_name" />
+
+</RelativeLayout>

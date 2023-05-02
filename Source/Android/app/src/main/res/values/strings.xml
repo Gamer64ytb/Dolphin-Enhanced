@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Title of the app -->
+    <string name="app_name">Dolphin 360</string>
+    <string name="host">app</string>
+    <string name="scheme">dolphinemu</string>
+
+    <!-- WARNING Do not move these controller entries AT ALL COSTS! They are indexed with ints, and an assumption
+            is made that they are placed together so that we can access them sequentially in a loop. -->
+    <string name="controller_0">GameCube Controller 1</string>
+    <string name="controller_1">GameCube Controller 2</string>
+    <string name="controller_2">GameCube Controller 3</string>
+    <string name="controller_3">GameCube Controller 4</string>
+    <!-- END WARNING -->
+
+    <string name="wiimote_hotkeys">Hotkeys</string>
+    <string name="controller_control">Control Stick</string>
+    <string name="controller_c">C Stick</string>
+    <string name="controller_trig">Triggers</string>
+    <string name="controller_dpad">D-Pad</string>
+    <string name="modifier_range">Modifier Range</string>
+    <string name="analog_radius">Analog Radius (High value = High sensitivity)</string>
+    <string name="analog_threshold">Analog Threshold (Low value = High sensitivity)</string>
+
+    <!-- WARNING Do not move these controller entries AT ALL COSTS! They are indexed with ints, and an assumption
+            is made that they are placed together so that we can access them sequentially in a loop.
+            Wiimotes start at 4 since they are mapped to padID's 4-7 in the native code.-->
+    <string name="wiimote_4">Wii Remote 1</string>
+    <string name="wiimote_5">Wii Remote 2</string>
+    <string name="wiimote_6">Wii Remote 3</string>
+    <string name="wiimote_7">Wii Remote 4</string>
+    <!-- END WARNING -->
+
+    <!-- WARNING Do not move these controller entries AT ALL COSTS! They are indexed with ints, and an assumption
+            is made that they are placed together so that we can access them sequentially in a loop.
+            Wiimotes start at 4 since they are mapped to padID's 4-7 in the native code.-->
+    <string name="wiimote_extension_4">Wii Remote Extension 1</string>
+    <string name="wiimote_extension_5">Wii Remote Extension 2</string>
+    <string name="wiimote_extension_6">Wii Remote Extension 3</string>
+    <string name="wiimote_extension_7">Wii Remote Extension 4</string>
+    <!-- END WARNING -->
+
+    <string name="wiimote_extensions">Extension</string>
+    <string name="wiimote_extensions_description">Choose and bind the Wii Remote extension.</string>
+    <string name="wiimote_ir">IR</string>
+    <string name="wiimote_swing">Swing</string>
+    <string name="wiimote_tilt">Tilt</string>
+    <string name="wiimote_shake">Shake</string>
+
+    <string name="input_binding">Input Binding</string>
+    <string name="input_binding_description">Press or move an input to bind it to &lt;b>%1$s&lt;/b>.</string>
+    <string name="input_rumble_description">Press or move any input to set &lt;b>rumble&lt;/b>.</string>
+
+    <!-- Generic buttons (Shared with lots of stuff) -->
+    <string name="generic_buttons">Buttons</string>
+    <string name="generic_up">Up</string>
+    <string name="generic_down">Down</string>
+    <string name="generic_left">Left</string>
+    <string name="generic_right">Right</string>
+    <string name="generic_forward">Forward</string>
+    <string name="generic_backward">Backward</string>
+    <string name="generic_stick">Stick</string>
+    <string name="generic_green">Green</string>
+    <string name="generic_red">Red</string>
+    <string name="generic_yellow">Yellow</string>
+    <string name="generic_blue">Blue</string>
+    <string name="generic_orange">Orange</string>
+    <string name="hotkey_sideways_toggle">Sideways Toggle</string>
+    <string name="hotkey_upright_toggle">Upright Toggle</string>
+
+    <!-- GameCube buttons (May be shared with other stuff too) -->
+    <string name="button_a">A</string>
+    <string name="button_b">B</string>
+    <string name="button_start">START</string>
+    <string name="button_x">X</string>
+    <string name="button_y">Y</string>
+    <string name="button_z">Z</string>
+    <string name="trigger_left">L</string>
+    <string name="trigger_right">R</string>
+    <string name="trigger_left_analog">L Analog</string>
+    <string name="trigger_right_analog">R Analog</string>
+    <string name="system_back">System Back</string>
+
+    <!-- Wii Remote buttons (May be shared with other stuff too) -->
+    <string name="button_one">1</string>
+    <string name="button_two">2</string>
+    <string name="button_minus">-</string>
+    <string name="button_plus">+</string>
+    <string name="button_home">HOME</string>
+    <string name="ir_hide">Hide</string>
+    <string name="tilt_modifier">Modifier</string>
+    <string name="shake_x">X</string>
+    <string name="shake_y">Y</string>
+    <string name="shake_z">Z</string>
+
+    <!-- Nunchuk only buttons -->
+    <string name="nunchuk_button_c">C</string>
+
+    <!-- Classic only buttons -->
+    <string name="classic_button_zl">ZL</string>
+    <string name="classic_button_zr">ZR</string>
+    <string name="classic_leftstick">Left Stick</string>
+    <string name="classic_rightstick">Right Stick</string>
+
+    <!-- Guitar only buttons -->
+    <string name="guitar_frets">Frets</string>
+    <string name="guitar_strum">Strum</string>
+    <string name="guitar_whammy">Whammy</string>
+    <string name="guitar_whammy_bar">Bar</string>
+
+    <!-- Drums only buttons -->
+    <string name="drums_pads">Pads</string>
+    <string name="drums_pad_bass">Bass</string>
+
+    <!-- Turntable only buttons -->
+    <string name="turntable_button_green_left">Green Left</string>
+    <string name="turntable_button_red_left">Red Left</string>
+    <string name="turntable_button_blue_left">Blue Left</string>
+    <string name="turntable_button_green_right">Green Right</string>
+    <string name="turntable_button_red_right">Red Right</string>
+    <string name="turntable_button_blue_right">Blue Right</string>
+    <string name="turntable_button_euphoria">Euphoria</string>
+    <string name="turntable_table_left">Table Left</string>
+    <string name="turntable_table_right">Table Right</string>
+    <string name="turntable_effect">Effect</string>
+    <string name="turntable_effect_dial">Dial</string>
+    <string name="turntable_crossfade">Crossfade</string>
+
+    <!-- General Preference Fragment -->
+    <string name="general_submenu">General</string>
+    <string name="cpu_core">CPU Core</string>
+    <string name="cpu_core_description">%s</string>
+    <string name="dual_core">Dual Core</string>
+    <string name="dual_core_description">Split workload to two CPU cores instead of one. Increases speed.</string>
+    <string name="overclock_enable">Override Emulated CPU Clock Speed</string>
+    <string name="overclock_enable_description">Higher values can make variable-framerate games run at a higher framerate, requiring a powerful device.</string>
+    <string name="overclock_title">Emulated CPU Clock Speed</string>
+    <string name="overclock_title_description">Adjusts the emulated CPU\'s clock rate if \"Override Emulated CPU Clock Speed\" is enabled.</string>
+    <string name="speed_limit">Speed Limit</string>
+    <string name="overclock_warning">WARNING: Changing this from the default (100%) WILL break games and cause glitches. Please do not report bugs that occur with a non-default clock.</string>
+    <string name="gamecube_submenu">GameCube</string>
+    <string name="gamecube_system_language">System Language</string>
+    <string name="override_gamecube_language">Override Language on NTSC games</string>
+    <string name="slot_a_device">Slot A Device</string>
+    <string name="slot_b_device">Slot B Device</string>
+    <string name="serial_port_1">Serial Port 1</string>
+    <string name="wii_submenu">Wii</string>
+    <string name="wiimote_scanning">Wii Remote Continuous Scanning</string>
+    <string name="wiimote_scanning_description">Leave this on if you are using a DolphinBar for real Wiimote support.</string>
+    <string name="wiimote_speaker">Wii Remote Speaker</string>
+    <string name="wiimote_speaker_description">Enable sound output through the speaker on a real Wiimote (DolphinBar required).</string>
+    <string name="wii_sd_card">Insert SD Card</string>
+    <string name="wii_sd_card_description">Saved to /Wii/sd.raw (default size is 128mb).</string>
+    <string name="audio_stretch">Audio Stretching</string>
+    <string name="audio_stretch_description">Stretches audio to reduce stuttering. Increases latency.</string>
+    <string name="audio_stretch_max_latency">Stretching Buffer Size</string>
+    <string name="audio_stretch_max_latency_description">Size of audio stretch buffer in milliseconds. Values too low may cause audio crackling.</string>
+	<string name="gametdb_thanks">Thanks to Weihuoya, The Dolphin Official Team, Bankaimaster999, Gamer64_ytb for this emulator fork!</string>
+
+    <string name="sync_on_skip_idle">Sync On Skip Idle</string>
+    <string name="sync_on_skip_idle_description">Wait to process events until the GPU thread finished.</string>
+    <string name="sync_gpu_overclock">Sync GPU Overclock</string>
+    <string name="sync_gpu_overclock_description">Set time threshold to sync with GPU thread.</string>
+    <string name="mmu_emulation">MMU Emulation</string>
+    <string name="mmu_emulation_description">Stop MMU emulation is great for performance, but game may get garbage data or even crash! **Save state is not compatible with different setting.**</string>
+    <string name="fast_disc_speed">Fast Disc Speed</string>
+    <string name="fast_disc_speed_description">Accelerates the emulated disc speed, removing any loading emulation.</string>
+    <string name="jit_follow_branch">JIT Follow Branch</string>
+    <string name="jit_follow_branch_description">JIT follow branch may greatly improve performance, but some games will crash with this enabled.</string>
+    <string name="audio_backend">Audio Backend</string>
+    <string name="audio_backend_description">Set backend used for audio output.</string>
+    <string name="enable_cheats">Enable Cheats</string>
+    <string name="enable_cheats_description">Put AR &amp; Gecko Codes in game setting file.</string>
+    <string name="auto_disc_change">Change Discs Automatically</string>
+
+    <!-- Interface Preference Fragment -->
+    <string name="interface_submenu">Interface</string>
+    <string name="expand_to_cutout_area">Expand to Cutout Area</string>
+    <string name="expand_to_cutout_area_description">Expands the display area to include the cutout (or notch) area.</string>
+    <string name="panic_handlers">Use Panic Handlers</string>
+    <string name="panic_handlers_description">Show a message box when a potentially serious error has occurred. Disabling this may avoid annoying and non-fatal messages.</string>
+    <string name="osd_messages">Show On-Screen Display Messages</string>
+    <string name="osd_messages_description">Display messages over the emulation screen area. These messages include memory card writes, video backend and CPU information, and JIT cache clearing.</string>
+    <string name="updater_check_startup">Check for updates at startup</string>
+    <string name="updater_check_startup_description">If allowed, Dolphin |MMJR| will check for updates when opened. A pop-up will appear when a new version is available. An internet connection is required.</string>
+
+    <!-- Graphics Settings -->
+    <string name="graphics_general">General</string>
+
+    <!-- Video Preference Fragment -->
+    <string name="video_backend">Video Backend</string>
+    <string name="video_backend_description">Select the API used for graphics rendering.</string>
+    <string name="show_fps">Show FPS</string>
+    <string name="show_fps_description">Show the number of frames rendered per second as a measure of emulation speed.</string>
+
+    <string name="enhancements_submenu">Enhancements</string>
+    <string name="internal_resolution">Internal Resolution</string>
+    <string name="internal_resolution_description">A high resolution will improve visual quality a lot but is also quite heavy on performance and might cause glitches in certain games.</string>
+    <string name="FSAA">Full-scene Anti-aliasing</string>
+    <string name="load_hires_textures">Load Custom Textures</string>
+    <string name="load_hires_textures_description">Put your texture pack folder inside the Textures folder. Example: (dolphin-mmjr/Load/Textures/GZ2E01)</string>
+    <string name="cache_hires_textures">Prefetch Custom Textures</string>
+    <string name="cache_hires_textures_description">Preload Custom Textures into RAM</string>
+    <string name="FSAA_description">Reduces the amount of aliasing caused by rasterizing 3D graphics. Heavily decreases emulation speed and sometimes causes issues.</string>
+    <string name="anisotropic_filtering">Anisotropic Filtering</string>
+    <string name="anisotropic_filtering_description">Enhances visual quality of textures that are at oblique viewing angles. Might cause issues in a small number of games.</string>
+    <string name="post_processing_shader">Post-Processing Effect</string>
+    <string name="post_processing_shader_description">Apply a post-processing effect after finishing a frame</string>
+    <string name="postprocessing_shader">Post Processing Shader</string>
+    <string name="postprocessing_shader_description">Apply a post-processing effect after finishing a frame.</string>
+    <string name="scaled_efb_copy">Scaled EFB Copy</string>
+    <string name="scaled_efb_copy_description">Increases quality of textures generated using render to texture effects. Slightly decreases performance and possibly causes issues (although unlikely).</string>
+    <string name="per_pixel_lighting">Per-Pixel Lighting</string>
+    <string name="per_pixel_lighting_description">Calculate lighting of 3D graphics per-pixel rather than per vertex. Decreases emulation speed by some percent (depending on your GPU).</string>
+    <string name="force_texture_filtering">Force Texture Filtering</string>
+    <string name="force_texture_filtering_description">Force texture filtering even if the emulated game explicitly disabled it. Improves texture quality slightly but causes glitches in some games.</string>
+    <string name="force_24bit_color">Force 24-Bit Color</string>
+    <string name="force_24bit_color_description">Forces the game to render the RGB color channels in 24-bit, thereby increasing quality by reducing color banding.</string>
+    <string name="disable_fog">Disable Fog</string>
+    <string name="disable_fog_description">Makes distant objects more visible by removing fog, thus increasing the overall detail.</string>
+    <string name="disable_copy_filter">Disable Copy Filter</string>
+    <string name="disable_copy_filter_description">Disables the blending of adjacent rows when copying the EFB. This is known in some games as \"deflickering\" or \"smoothing\". Disabling the filter is usually safe, and may result in a sharper image.</string>
+    <string name="arbitrary_mipmap_detection">Arbitrary Mipmap Detection</string>
+    <string name="arbitrary_mipmap_detection_description">Enables detection of arbitrary mipmaps, which some games use for special distance-based effects.\nMay have false positives that result in blurry textures at increased internal resolution, such as in games that use very low resolution mipmaps. Disabling this can also reduce stutter in games that frequently load new textures.\n\nIf unsure, leave this checked.</string>
+    <string name="approximate_logic_op">Approximate Logic Op</string>
+    <string name="approximate_logic_op_description">Enable this could fix graphical errors in some games, but may cause graphical errors in others!</string>
+    <string name="wide_screen_hack">Widescreen Hack</string>
+    <string name="wide_screen_hack_description">Forces the game to output graphics for any aspect ratio. Use with \"Aspect Ratio\" set to \"Force 16:9\" to force 4:3-only games to run at 16:9. Rarely produces good results and often partially breaks graphics and game UIs.\nUnnecessary (and detrimental) if using any AR/Gecko-code widescreen patches. If unsure, leave this unchecked.</string>
+    <string name="backend_multithreading">Backend Multithreading</string> <!--Backend Multithreading is only disabled by default on Android  -->
+    <string name="backend_multithreading_description">Enables graphics backend multithreading (Vulkan only). May affect performance. If unsure, leave unchecked.</string>
+
+    <string name="hacks_submenu">Hacks</string>
+    <string name="embedded_frame_buffer">Embedded Frame Buffer</string>
+    <string name="skip_efb_access">Skip EFB Access from CPU</string>
+    <string name="skip_efb_access_description">Ignore any requests from the CPU to read/write to the EFB.</string>
+    <string name="ignore_format_changes">Ignore Format Changes</string>
+    <string name="ignore_format_changes_description">Ignore any changes to the EFB format.</string>
+    <string name="efb_copy_method">Store EFB Copies to Texture Only</string>
+    <string name="efb_copy_method_description">Stores EFB Copies exclusively on the GPU, bypassing system memory. Causes graphical defects in a small number of games. If unsure, leave this checked.</string>
+    <string name="defer_efb_copies">Defer EFB Copies to RAM</string>
+    <string name="defer_efb_copies_description">Waits until the game synchronizes with the emulated GPU before writing the contents of EFB copies to RAM. May result in faster performance.</string>
+    <string name="efb_defer_invalidation">Defer EFB Cache Invalidation</string>
+    <string name="efb_defer_invalidation_description">Defers invalidation of the EFB access cache until a GPU synchronization command is executed.</string>
+    <string name="texture_cache">Texture Cache</string>
+    <string name="texture_cache_accuracy">Texture Cache Accuracy</string>
+    <string name="texture_cache_accuracy_description">The safer the selection, the less likely the emulator will be missing any texture updates from RAM.</string>
+    <string name="gpu_texture_decoding">GPU Texture Decoding</string>
+    <string name="gpu_texture_decoding_description">Decodes textures on the GPU using compute shaders where supported. May improve performance in some scenarios.</string>
+    <string name="external_frame_buffer">External Frame Buffer</string>
+    <string name="xfb_copy_method">Store XFB Copies to Texture Only</string>
+    <string name="xfb_copy_method_description">Stores XFB Copies exclusively on the GPU, bypassing system memory. Causes graphical defects in a small number of games that need to readback from memory. If unsure, leave this checked.</string>
+    <string name="immediate_xfb">Immediately Present XFB</string>
+    <string name="immediate_xfb_description">Displays the XFB copies as soon as they are created, without waiting for scanout. Causes graphical defects in some games but reduces latency. If unsure, leave this unchecked.</string>
+    <string name="skip_duplicate_xfbs">Skip Presenting Duplicate Frames</string>
+    <string name="skip_duplicate_xfbs_description">Skips presentation of duplicate frames. This may improve performance on low-end devices, while making frame pacing less consistent. If unsure, leave this checked.</string>
+    <string name="fast_depth_calculation">Fast Depth Calculation</string>
+    <string name="fast_depth_calculation_description">Uses a less accurate algorithm to calculate depth values.</string>
+    <string name="tmem_cache_emulation">TMEM Cache Emulation</string>
+    <string name="tmem_cache_emulation_description">Reuse textures from the cache without validation under certain conditions.</string>
+    <string name="aspect_ratio">Aspect Ratio</string>
+    <string name="aspect_ratio_description">Select what aspect ratio to use when rendering</string>
+    <string name="shader_compilation_mode">Shader Compilation Mode</string>
+    <string name="shader_compilation_mode_description">Skip Drawing - Do not draw objects while shaders are compiling, will cause broken effects.</string>
+    <string name="wait_for_shaders">Compile Shaders Before Starting</string>
+    <string name="wait_for_shaders_description">This causes a delay when launching games, but will reduce stuttering early on.</string>
+    <string name="memory_override">Memory Override</string>
+    <string name="emulated_mem_size_override">Emulated Memory Size Override</string>
+    <string name="emulated_mem_size_override_description">Adjusts the amount of RAM in the emulated console.\n\nWARNING: Enabling this will completely break many games. Only a small number of games can benefit from this.</string>
+
+    <!-- Debug -->
+    <string name="debug_submenu">Debug</string>
+    <string name="debug_warning">Warning: These settings will slow emulation</string>
+    <string name="debug_jitoff">Jit Disabled</string>
+    <string name="debug_jitloadstoreoff">Jit Load Store Disabled</string>
+    <string name="debug_jitloadstorefloatingoff">Jit Load Store Floating Point Disabled</string>
+    <string name="debug_jitloadstorepairedoff">Jit Load Store Paired Disabled</string>
+    <string name="debug_jitfloatingpointoff">Jit Floating Point Disabled</string>
+    <string name="debug_jitintegeroff">Jit Integer Disabled</string>
+    <string name="debug_jitpairedoff">Jit Paired Disabled</string>
+    <string name="debug_jitsystemregistersoffr">Jit System Registers Disabled</string>
+    <string name="debug_jitbranchoff">Jit Branch Disabled</string>
+
+    <!-- Miscellaneous -->
+    <string name="off">Off</string>
+    <string name="clear">Clear</string>
+    <string name="other">Other</string>
+    <string name="error">Error</string>
+
+    <!-- Game Grid Screen-->
+    <string name="grid_menu_config">Config</string>
+    <string name="grid_menu_graphics_settings">Graphics Settings</string>
+    <string name="grid_menu_gcpad_settings">GameCube Input</string>
+    <string name="grid_menu_wiimote_settings">Wii Input</string>
+    <string name="grid_menu_refresh">Refresh Library</string>
+    <string name="grid_menu_open_file">Run Files</string>
+    <string name="grid_menu_install_wad">Install WAD</string>
+    <string name="wad_install_success">Successfully installed this title to the NAND.</string>
+    <string name="wad_install_failure">Failed to install this title to the NAND.</string>
+
+    <!-- Add Directory Screen-->
+    <string name="toggle_list">Toggle List</string>
+    <string name="add_directory_title">Add Games Folder</string>
+    <string name="add_directory_up_one_level">Up one level</string>
+    <string name="add_directory_empty_folder">That folder is empty.</string>
+
+    <!-- Preferences Screen -->
+    <string name="preferences_save_exit">Save and Exit</string>
+    <string name="preferences_settings">Settings</string>
+    <string name="preferences_game_settings">Game Settings</string>
+    <string name="per_game_settings">Game Settings: %1$s</string>
+    <string name="settings_saved_notice">Saved settings to INI files.</string>
+    <string name="preferences_extensions">Extension Bindings</string>
+
+    <!-- Emulation Menu -->
+    <string name="pause_emulation">Pause Emulation</string>
+    <string name="unpause_emulation">Unpause Emulation</string>
+    <string name="emulation_screenshot">Take Screenshot</string>
+    <string name="emulation_savestate">Save State</string>
+    <string name="emulation_loadstate">Load State</string>
+    <string name="emulation_exit">Exit</string>
+    <string name="emulation_slot1">Slot 1</string>
+    <string name="emulation_slot2">Slot 2</string>
+    <string name="emulation_slot3">Slot 3</string>
+    <string name="emulation_slot4">Slot 4</string>
+    <string name="emulation_slot5">Slot 5</string>
+    <string name="emulation_slot6">Slot 6</string>
+    <string name="emulation_quicksave">Quick Save</string>
+    <string name="emulation_quickload">Quick Load</string>
+    <string name="emulation_refresh_wiimotes">Refresh Wii Remotes</string>
+    <string name="emulation_configure_controls">Configure Controls</string>
+    <string name="emulation_edit_layout">Edit Layout</string>
+    <string name="emulation_done">Done</string>
+    <string name="emulation_toggle_controls">Toggle Controls</string>
+    <string name="emulation_toggle_all">Toggle All</string>
+    <string name="emulation_control_scale">Adjust Scale</string>
+    <string name="emulation_control_alpha">Adujst Opacity</string>
+    <string name="emulation_control_reset_layout">Reset Layout</string>
+    <string name="emulation_control_joystick_rel_center">Relative Stick Center</string>
+    <string name="emulation_control_rumble">Rumble</string>
+    <string name="emulation_choose_controller">Choose Controller</string>
+    <string name="emulation_reload_wiimote_config">Reload Config</string>
+
+    <!-- GC Adapter Menu-->
+    <string name="gc_adapter_rumble">Enable Vibration</string>
+    <string name="gc_adapter_rumble_description">Enable the vibration function for this GameCube controller.</string>
+    <string name="gc_adapter_bongos">Bongo Controller</string>
+    <string name="gc_adapter_bongos_description">Enable this if you are using bongos on this port.</string>
+
+    <!-- Wii Remote Input Menu-->
+    <string name="header_wiimote_general">General</string>
+    <string name="header_controllers">Controllers</string>
+
+    <!-- Rumble -->
+    <string name="rumble_not_found">Device rumble not found</string>
+
+    <string name="write_permission_needed">You need to allow write access to external storage for the emulator to work</string>
+    <string name="load_settings">Loading Settings&#8230;</string>
+    <string name="emulation_change_disc">Change Disc</string>
+
+    <string name="external_storage_not_mounted">The external storage needs to be available in order to use Dolphin</string>
+
+    <!-- Extra Leanback Homescreen Channels-->
+    <string name="homescreen_favorites">Favorites</string>
+
+    <string name="state_saves">State Saves</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
+    <string name="setting_display_scale">Display Scale</string>
+    <string name="emulation_joystick_settings">Joystick Emulation</string>
+    <string name="emulation_sensor_settings">Sensor Emulation</string>
+    <string name="game_platform_wii">[Wii] %1$s %2$s</string>
+    <string name="game_country">%2$s</string>
+    <string name="game_platform_ngc">[NGC] %1$s %2$s</string>
+    <string name="game_platform_ware">[Ware] %1$s %2$s</string>
+    <string name="game_platform_n64">[N64] %1$s %2$s</string>
+    <string name="game_platform_nes">[NES] %1$s %2$s</string>
+    <string name="game_platform_sms">[SMS] %1$s %2$s</string>
+    <string name="game_platform_smd">[SMD] %1$s %2$s</string>
+    <string name="game_platform_c64">[C64] %1$s %2$s</string>
+    <string name="game_platform_snes">[SNES] %1$s %2$s</string>
+    <string name="delete_game_setting">Delete Settings</string>
+    <string name="delete_game_file">Delete Game</string>
+    <string name="clear_game_data">Clear Cache</string>
+    <string name="cheat_code">Cheat / Ini Editor</string>
+    <string name="toast_save_code_ok">Code Saved!</string>
+    <string name="toast_save_code_no">Save Failed!</string>
+    <string name="touch_screen_pointer">Touch Screen emulate IR</string>
+    <string name="touch_screen_pointer_recenter">IR always back to center</string>
+    <string name="joystick_relative_center">Joystick use relative center</string>
+    <string name="use_builtin_title_database">Use Built-In Database of Game Names</string>
+    <string name="touch_ir_click">Click</string>
+    <string name="touch_ir_stick">Stick</string>
+    <string name="delete_cache_toast">Delete %1$d cache files.</string>
+
+    <string name="sysconf_screensaver">Screensaver</string>
+    <string name="sysconf_language">System Language</string>
+    <string name="sysconf_widescreen">Widescreen</string>
+    <string name="sysconf_progressive_scan">Progressive Scan</string>
+    <string name="sysconf_pal60">PAL60</string>
+    <string name="sysconf_sensor_bar_position">Sensor Bar Position</string>
+    <string name="sysconf_sensor_bar_sensitivity">Sensor Bar Sensitivity</string>
+    <string name="sysconf_speaker_volume">Speaker Volume</string>
+    <string name="sysconf_wiimote_motor">Wiimote Motor</string>
+
+    <string name="nnf_new_folder">New folder</string>
+    <string name="nnf_create_folder_error">Failed to create folder</string>
+    <string name="nnf_name">Name</string>
+    <string name="nnf_select_something_first">Please select something first</string>
+    <string name="nnf_need_valid_filename">Please enter or select a valid filename</string>
+    <string name="nnf_permission_external_write_denied">Permisson to access filesystem denied</string>
+    <string name="nnf_filename">Filename</string>
+    <string name="nnf_list_ok">@android:string/ok</string>
+    <string name="nnf_list_cancel">@android:string/cancel</string>
+    <string name="nnf_new_folder_ok">@android:string/ok</string>
+    <string name="nnf_new_folder_cancel">@android:string/cancel</string>
+
+    <!-- File Pickers -->
+    <string name="no_file_extension">The selected file does not appear to have a file name extension.\n\nContinue anyway?</string>
+    <string name="wrong_file_extension_single">The selected file has the file name extension \"%1$s\", but \"%2$s\" was expected.\n\nContinue anyway?</string>
+    <string name="wrong_file_extension_multiple">The selected file has the file name extension \"%1$s\", but one of these extensions was expected: %2$s\n\nContinue anyway?</string>
+    <string name="wrong_file_extension_in_directory">No compatible files were found in the selected location.\n\nThe supported formats are: %1$s</string>
+
+    <!-- Misc -->
+    <string name="pitch">Total Pitch</string>
+    <string name="yaw">Total Yaw</string>
+    <string name="vertical_offset">Vertical Offset</string>
+    <string name="advanced_submenu2">Advanced Settings</string>
+    <string name="hires_textures_submenu">Custom Hires-Textures</string>
+    <string name="more_enhancements_submenu">More Enhancement Settings</string>
+
+    <!-- Convert Screen -->
+    <string name="convert_format">Format</string>
+    <string name="convert_block_size">Block Size</string>
+    <string name="convert_compression">Compression</string>
+    <string name="convert_compression_level">Compression Level</string>
+    <string name="convert_remove_junk_data">Remove Junk Data (Irreversible)</string>
+    <string name="convert_convert">Convert</string>
+    <string name="convert_converting">Converting</string>
+    <string name="convert_warning_iso">Removing junk data does not save any space when converting to ISO (unless you package the ISO file in a compressed file format such as ZIP afterwards). Do you want to continue anyway?</string>
+    <string name="convert_warning_gcz">Converting Wii disc images to GCZ without removing junk data does not save any noticeable amount of space compared to converting to ISO. Do you want to continue anyway?</string>
+    <string name="convert_success_message">The disc image was successfully converted.</string>
+    <string name="convert_failure_message">Dolphin |MMJR| failed to complete the requested action.</string>
+    <string name="convert_format_info">
+ISO: A simple and robust format which is supported by many programs. It takes up more space
+than any other format.
+\n\nGCZ: A basic compressed format which is compatible with most versions of Dolphin and some
+other programs. It can\'t efficiently compress junk data (unless removed) or encrypted Wii data.
+\n\nWIA: An advanced compressed format which is compatible with Dolphin 5.0-12188 and later,
+and a few other programs. It can efficiently compress encrypted Wii data, but not junk data
+(unless removed).
+\n\nRVZ: An advanced compressed format which is compatible with Dolphin 5.0-12188 and later.
+It can efficiently compress both junk data and encrypted Wii data.
+    </string>
+
+    <!-- Updater Window -->
+    <string name="grid_menu_open_updater">MMJR Updater</string>
+    <string name="updater_title">Updater</string>
+    <string name="updater_error">An error has occurred. Please check your internet connection.</string>
+    <string name="updater_uptodate">Up to date!</string>
+    <string name="updater_newavailable">New version available</string>
+    <string name="button_download">Download</string>
+    <string name="button_install">Install</string>
+    <string name="version_description">Latest: %1$s</string>
+    <string name="current_version">Current version: %1$s</string>
+    <string name="download_size">Size: %1$.2f MB</string>
+    <string name="button_view_changelog">View changelog</string>
+    <string name="changelog_section">Version %1$s\nDate: %2$s\nChanges:\n%3$s\n\n</string>
+
+    <!-- Update available dialog -->
+    <string name="updates_alert">Update available</string>
+    <string name="updater_alert_body">A new version of Dolphin |MMJR| is available, do you want to update?</string>
+    <string name="not_now">Not now</string>
+    <string name="skip_version">Skip this version</string>
+
+</resources>

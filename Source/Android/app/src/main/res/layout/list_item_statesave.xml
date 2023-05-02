@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#000000">
+
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:background="@drawable/close_icon"
+        android:backgroundTint="#9C27B0" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="36dp"
+        android:layout_toStartOf="@id/button_load_state"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/state_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00:00"
+            android:textColor="#E91E63" />
+
+        <TextView
+            android:id="@+id/state_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="01-01-01, 2000"
+            android:textColor="#E91E63" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_load_state"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="70dp"
+        android:layout_height="28dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_toStartOf="@+id/separator"
+        android:background="#9C27B0"
+        android:backgroundTint="#9C27B0"
+        android:minWidth="0dp"
+        android:stateListAnimator="@null"
+        android:text="@string/load"
+        android:textColor="#FFFFFF" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="1dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/button_save_state"
+        android:background="#E91E63" />
+
+    <Button
+        android:id="@+id/button_save_state"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="70dp"
+        android:layout_height="28dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:background="#9C27B0"
+        android:backgroundTint="#9C27B0"
+        android:minWidth="0dp"
+        android:stateListAnimator="@null"
+        android:text="@string/save"
+        android:textColor="#FFFFFF" />
+
+</RelativeLayout>
+

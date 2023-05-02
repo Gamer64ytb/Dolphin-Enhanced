@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_activated="true">
+        <shape>
+            <solid android:color="@android:color/transparent"/>
+        </shape>
+    </item>
+    <item android:state_enabled="false">
+        <shape>
+            <solid android:color="@color/card_unselected"/>
+        </shape>
+    </item>
+    <item>
+        <ripple android:color="@color/ripple_white">
+            <item>
+                <shape>
+                    <gradient
+                        android:angle="45"
+                        android:type="linear"
+                        android:startColor="@color/purple_onprimary"
+                        android:centerColor="@android:color/holo_red_light"
+                        android:endColor="@color/purple_onprimary" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+</selector>
