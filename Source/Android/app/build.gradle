@@ -21,9 +21,9 @@ android {
 
     defaultConfig {
         // TODO If this is ever modified, change application_id in strings.xml
-        applicationId "org.mm.jr"
+        applicationId "org.gamerytb.dolphin"
         minSdkVersion 24
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         versionCode(getBuildVersionCode())
 

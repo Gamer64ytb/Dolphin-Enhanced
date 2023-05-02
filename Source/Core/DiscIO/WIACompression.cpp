@@ -367,10 +367,10 @@ bool RVZPackDecompressor::Decompress(const DecompressionBuffer& in, Decompressio
         m_lfg.Forward(m_data_offset % BLOCK_SIZE);
 
         m_decompressed_bytes_read += SEED_SIZE;
-        m_size = size & 0x7FFFFFFF;
       }
 
       m_decompressed_bytes_read += sizeof(u32);
+      m_size = size & 0x7FFFFFFF;
     }
 
     size_t bytes_to_write = std::min<size_t>(m_size, out->data.size() - out->bytes_written);

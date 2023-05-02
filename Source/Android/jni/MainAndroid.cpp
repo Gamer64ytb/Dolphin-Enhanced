@@ -71,8 +71,8 @@
 #include "jni/ButtonManager.h"
 
 static constexpr char DOLPHIN_TAG[] = "DolphinEmuNative";
-static constexpr char PACKAGE[] = "org.mm.jr";
-static constexpr char PACKAGE_DEBUG[] = "org.mm.jr.debug";
+static constexpr char PACKAGE[] = "org.gamerytb.dolphin";
+static constexpr char PACKAGE_DEBUG[] = "org.gamerytb.dolphin.debug";
 static constexpr char LABEL[] = "Dolphin 360";
 static ANativeWindow* s_surf;
 static IniFile s_game_ini;
