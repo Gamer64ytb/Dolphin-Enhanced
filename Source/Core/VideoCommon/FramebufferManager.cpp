@@ -181,12 +181,19 @@ bool FramebufferManager::CreateEFBFramebuffer()
     m_efb_resolve_color_texture = g_renderer->CreateTexture(
         TextureConfig(efb_color_texture_config.width, efb_color_texture_config.height, 1,
                       efb_color_texture_config.layers, 1, efb_color_texture_config.format, 0));
+    if (!m_efb_resolve_color_texture)
+      return false;
+  }
+
+  // We also need one to convert the D24S8 to R32F if that is being used (Adreno).
+  if (g_ActiveConfig.MultisamplingEnabled() || GetEFBDepthFormat() != AbstractTextureFormat::R32F)
+  {
     m_efb_depth_resolve_texture = g_renderer->CreateTexture(TextureConfig(
         efb_depth_texture_config.width, efb_depth_texture_config.height, 1,
         efb_depth_texture_config.layers, 1,
         AbstractTexture::GetColorFormatForDepthFormat(efb_depth_texture_config.format),
         AbstractTextureFlag_RenderTarget));
-    if (!m_efb_resolve_color_texture || !m_efb_depth_resolve_texture)
+    if (!m_efb_depth_resolve_texture)
       return false;
 
     m_efb_depth_resolve_framebuffer =
@@ -240,10 +247,14 @@ AbstractTexture* FramebufferManager::ResolveEFBColorTexture(const MathUtil::Rect
   return m_efb_resolve_color_texture.get();
 }
 
-AbstractTexture* FramebufferManager::ResolveEFBDepthTexture(const MathUtil::Rectangle<int>& region)
+AbstractTexture* FramebufferManager::ResolveEFBDepthTexture(const MathUtil::Rectangle<int>& region,
+                                                            bool force_r32f)
 {
-  if (!IsEFBMultisampled())
+  if (!IsEFBMultisampled() &&
+    (!force_r32f || m_efb_depth_texture->GetFormat() == AbstractTextureFormat::D32F))
+  {
     return m_efb_depth_texture.get();
+  }
 
   // It's not valid to resolve an out-of-range rectangle.
   MathUtil::Rectangle<int> clamped_region = region;
@@ -252,7 +263,8 @@ AbstractTexture* FramebufferManager::ResolveEFBDepthTexture(const MathUtil::Rect
   m_efb_depth_texture->FinishedRendering();
   g_renderer->BeginUtilityDrawing();
   g_renderer->SetAndDiscardFramebuffer(m_efb_depth_resolve_framebuffer.get());
-  g_renderer->SetPipeline(m_efb_depth_resolve_pipeline.get());
+  g_renderer->SetPipeline(IsEFBMultisampled() ? m_efb_depth_resolve_pipeline.get() :
+                          m_efb_depth_cache.copy_pipeline.get());
   g_renderer->SetTexture(0, m_efb_depth_texture.get());
   g_renderer->SetSamplerState(0, RenderState::GetPointSamplerState());
   g_renderer->SetViewportAndScissor(clamped_region);
