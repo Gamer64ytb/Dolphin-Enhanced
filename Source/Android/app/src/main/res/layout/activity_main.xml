@@ -14,7 +14,7 @@
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/dolphin_blue"
+            android:background="@color/green_primary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
 
         <androidx.viewpager.widget.ViewPager
@@ -29,7 +29,7 @@
             android:id="@+id/tabs_platforms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/dolphin_blue"
+            android:background="@color/green_primary"
             android:layout_alignParentBottom="true"
             app:tabTextAppearance="@style/MyCustomTextAppearance"
             app:tabIndicatorColor="#FFFFFF"

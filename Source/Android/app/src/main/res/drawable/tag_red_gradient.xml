@@ -17,9 +17,9 @@
                     <gradient
                         android:angle="45"
                         android:type="linear"
-                        android:startColor="@color/purple_onprimary"
+                        android:startColor="@color/green_primary"
                         android:centerColor="@android:color/holo_red_light"
-                        android:endColor="@color/purple_onprimary" />
+                        android:endColor="@color/green_primary" />
                 </shape>
             </item>
         </ripple>

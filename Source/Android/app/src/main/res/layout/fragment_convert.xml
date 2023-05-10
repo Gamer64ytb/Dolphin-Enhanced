@@ -109,7 +109,7 @@
         android:id="@+id/checkbox_remove_junk_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:buttonTint="#9C27B0"
+        android:buttonTint="@color/green_primary"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"

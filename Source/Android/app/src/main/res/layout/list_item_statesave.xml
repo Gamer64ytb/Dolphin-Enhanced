@@ -9,7 +9,7 @@
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:background="@drawable/close_icon"
-        android:backgroundTint="#9C27B0" />
+        android:backgroundTint="@color/green_primary" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -25,14 +25,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00:00:00"
-            android:textColor="#E91E63" />
+            android:textColor="@color/green_primary" />
 
         <TextView
             android:id="@+id/state_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="01-01-01, 2000"
-            android:textColor="#E91E63" />
+            android:textColor="@color/green_primary" />
     </LinearLayout>
 
     <Button
@@ -46,8 +46,8 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="@dimen/spacing_small"
         android:layout_toStartOf="@+id/separator"
-        android:background="#9C27B0"
-        android:backgroundTint="#9C27B0"
+        android:background="@color/green_primary"
+        android:backgroundTint="@color/green_primary"
         android:minWidth="0dp"
         android:stateListAnimator="@null"
         android:text="@string/load"
@@ -59,7 +59,7 @@
         android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/button_save_state"
-        android:background="#E91E63" />
+        android:background="@color/green_primary" />
 
     <Button
         android:id="@+id/button_save_state"
@@ -72,8 +72,8 @@
         android:layout_marginTop="@dimen/spacing_small"
         android:layout_marginEnd="@dimen/spacing_small"
         android:layout_marginBottom="@dimen/spacing_small"
-        android:background="#9C27B0"
-        android:backgroundTint="#9C27B0"
+        android:background="@color/green_primary"
+        android:backgroundTint="@color/green_primary"
         android:minWidth="0dp"
         android:stateListAnimator="@null"
         android:text="@string/save"

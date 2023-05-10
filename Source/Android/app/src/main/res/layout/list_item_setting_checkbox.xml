@@ -46,7 +46,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/spacing_large"
-        android:buttonTint="#9C27B0"
+        android:buttonTint="@color/green_primary"
         android:clickable="false"
         android:focusable="false"
         android:textColor="#FFFFFF" />

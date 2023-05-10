@@ -60,8 +60,8 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:background="#9C27B0"
-                android:backgroundTint="#9C27B0"
+                android:background="@color/green_primary"
+                android:backgroundTint="@color/green_primary"
                 android:text="@string/nnf_list_cancel"
                 android:textColor="#FFFFFF" />
 
@@ -71,8 +71,8 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:background="#9C27B0"
-                android:backgroundTint="#9C27B0"
+                android:background="@color/green_primary"
+                android:backgroundTint="@color/green_primary"
                 android:text="@string/nnf_list_ok"
                 android:textColor="#FFFFFF" />
 
@@ -99,7 +99,7 @@
                 style="?attr/borderlessButtonStyle"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:backgroundTint="#9C27B0"
+                android:backgroundTint="@color/green_primary"
                 android:hint="@string/nnf_list_ok"
                 android:tint="?attr/nnf_save_icon_color"
                 app:srcCompat="@drawable/nnf_ic_save_black_24dp" />

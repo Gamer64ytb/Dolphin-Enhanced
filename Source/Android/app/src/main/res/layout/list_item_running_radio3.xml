@@ -20,14 +20,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:backgroundTint="#9C27B0"
+        android:backgroundTint="@color/green_primary"
         android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/radio0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="#9C27B0"
+            android:buttonTint="@color/green_primary"
             android:text="Radio0"
             android:textColor="#FFFFFF" />
 
@@ -35,7 +35,7 @@
             android:id="@+id/radio1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="#9C27B0"
+            android:buttonTint="@color/green_primary"
             android:text="Radio1"
             android:textColor="#FFFFFF" />
 
@@ -43,7 +43,7 @@
             android:id="@+id/radio2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="#9C27B0"
+            android:buttonTint="@color/green_primary"
             android:text="Radio2"
             android:textColor="#FFFFFF" />
 

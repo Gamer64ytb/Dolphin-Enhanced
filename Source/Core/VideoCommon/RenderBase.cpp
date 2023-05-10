@@ -442,9 +442,9 @@ void Renderer::CheckForConfigChanges()
 void Renderer::DrawDebugText()
 {
   const Core::PerformanceStatistics& pstats = Core::GetPerformanceStatistics();
-  if (pstats.Speed > 85)
+  if (pstats.Speed > 90)
   {
-    RenderText(m_debug_title_text, 10, 18, 0xFFFF0099); // purple
+    RenderText(m_debug_title_text, 10, 18, 0xFF29A329); // green
   }
   else
   {

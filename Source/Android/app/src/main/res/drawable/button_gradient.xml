@@ -13,10 +13,10 @@
                     <gradient
                         android:angle="45"
                         android:type="linear"
-                        android:startColor="@color/dolphin_blue"
+                        android:startColor="@color/green_primary"
                         android:centerX="40%"
-                        android:centerColor="@color/dolphin_blue"
-                        android:endColor="@color/dolphin_blue" />
+                        android:centerColor="@color/green_primary"
+                        android:endColor="@color/green_primary" />
                     <corners android:radius="6dp" />
                 </shape>
             </item>
@@ -32,10 +32,10 @@
                     <gradient
                         android:angle="45"
                         android:type="linear"
-                        android:startColor="@color/dolphin_blue"
+                        android:startColor="@color/green_primary"
                         android:centerX="40%"
-                        android:centerColor="@color/dolphin_blue"
-                        android:endColor="@color/dolphin_blue" />
+                        android:centerColor="@color/green_primary"
+                        android:endColor="@color/green_primary" />
                     <corners android:radius="6dp" />
                 </shape>
             </item>

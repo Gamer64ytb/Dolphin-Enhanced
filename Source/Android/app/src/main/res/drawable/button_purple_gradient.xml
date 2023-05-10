@@ -19,9 +19,9 @@
                     <gradient
                         android:angle="45"
                         android:type="linear"
-                        android:startColor="@color/purple_primary_dark"
-                        android:centerColor="@color/purple_accent"
-                        android:endColor="@color/purple_primary_dark" />
+                        android:startColor="@color/green_primary_dark"
+                        android:centerColor="@color/green_accent"
+                        android:endColor="@color/green_primary_dark" />
                     <corners android:radius="6dp" />
                 </shape>
             </item>

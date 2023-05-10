@@ -28,7 +28,7 @@
         android:background="#000000"
         android:backgroundTint="#000000"
         android:scaleType="center"
-        android:tint="#9C27B0"
+        android:tint="@color/green_primary"
         app:srcCompat="@drawable/nnf_ic_folder_black_48dp"
         tools:ignore="ContentDescription" />
 

@@ -19,11 +19,8 @@ namespace Gecko
 #ifndef ANDROID
 std::vector<GeckoCode> DownloadCodes(std::string gametdb_id, bool* succeeded)
 {
-  std::string endpoint{"https://www.geckocodes.org/txt.php?txt=" + gametdb_id};
-  Common::HttpRequest http;
-
-  // Circumvent high-tech DDOS protection
-  http.SetCookies("challenge=BitMitigate.com;");
+  // codes.rc24.xyz is a mirror of the now defunct geckocodes.org.
+  std::string endpoint{"https://codes.rc24.xyz/txt.php?txt=" + gametdb_id};  Common::HttpRequest http;
 
   // The server always redirects once to the same location.
   http.FollowRedirects(1);

@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/dolphin_blue"
+        android:background="@color/green_primary"
         android:text="@string/grid_menu_config"
         android:textAlignment="center"
         android:textColor="@android:color/white" />

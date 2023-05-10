@@ -97,7 +97,7 @@ public final class DirectoryInitialization
       File externalPath = Environment.getExternalStorageDirectory();
       if (externalPath != null)
       {
-        File userPath = new File(externalPath, "dolphin-mmjr");
+        File userPath = new File(externalPath, "dolphin-360");
         if (!userPath.isDirectory() && !userPath.mkdir())
         {
           return false;

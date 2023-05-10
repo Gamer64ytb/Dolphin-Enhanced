@@ -5,9 +5,9 @@
 
     <!-- New UI CPU Core selection - Default -->
     <string-array name="emuCoresEntriesX86_64" translatable="false">
-        <item>JIT Recompiler</item>
-        <item>Cached Interpreter</item>
-        <item>Interpreter</item>
+        <item>Recompilador JIT</item>
+        <item>Intérprete Caché</item>
+        <item>Intérprete</item>
     </string-array>
     <integer-array name="emuCoresValuesX86_64" translatable="false">
         <item>1</item>
@@ -15,9 +15,9 @@
         <item>0</item>
     </integer-array>
     <string-array name="emuCoresEntriesARM64" translatable="false">
-        <item>JIT ARM64 Recompiler</item>
-        <item>Cached Interpreter</item>
-        <item>Interpreter</item>
+        <item>Recompilador JIT ARM64</item>
+        <item>Intérprete Caché</item>
+        <item>Intérprete</item>
     </string-array>
     <integer-array name="emuCoresValuesARM64" translatable="false">
         <item>4</item>
@@ -25,8 +25,8 @@
         <item>0</item>
     </integer-array>
     <string-array name="emuCoresEntriesGeneric" translatable="false">
-        <item>Cached Interpreter</item>
-        <item>Interpreter</item>
+        <item>Intérprete Caché</item>
+        <item>Intérprete</item>
     </string-array>
     <integer-array name="emuCoresValuesGeneric" translatable="false">
         <item>5</item>
@@ -35,16 +35,16 @@
 
     <!-- Wii System Languages -->
     <string-array name="wiiSystemLanguageEntries" translatable="false">
-        <item>Japanese</item>
-        <item>English</item>
-        <item>German</item>
-        <item>French</item>
-        <item>Spanish</item>
-        <item>Italian</item>
-        <item>Dutch</item>
-        <item>Simplified Chinese</item>
-        <item>Traditional Chinese</item>
-        <item>Korean</item>
+        <item>Japonés</item>
+        <item>Inglés</item>
+        <item>Alemán</item>
+        <item>Francés</item>
+        <item>Español</item>
+        <item>Italiano</item>
+        <item>Neerlandés</item>
+        <item>Chino Simplificado</item>
+        <item>Chino Tradicional</item>
+        <item>Coreano</item>
     </string-array>
     <integer-array name="wiiSystemLanguageValues" translatable="false">
         <item>0</item>
@@ -61,12 +61,12 @@
 
     <!-- GameCube System Languages -->
     <string-array name="gameCubeSystemLanguageEntries" translatable="false">
-        <item>English</item>
-        <item>German</item>
-        <item>French</item>
-        <item>Spanish</item>
-        <item>Italian</item>
-        <item>Dutch</item>
+        <item>Inglés</item>
+        <item>Alemán</item>
+        <item>Francés</item>
+        <item>Español</item>
+        <item>Italiano</item>
+        <item>Neerlandés</item>
     </string-array>
     <integer-array name="gameCubeSystemLanguageValues" translatable="false">
         <item>0</item>
@@ -79,10 +79,10 @@
 
     <!-- Slot A Device Selection -->
     <string-array name="slotDeviceEntries" translatable="false">
-        <item>Nothing</item>
-        <item>Dummy</item>
-        <item>Memory Card</item>
-        <item>GCI Folder</item>
+        <item>Nada</item>
+        <item>Ficticio</item>
+        <item>Tarjeta de memoria</item>
+        <item>Carpeta GCI</item>
     </string-array>
     <integer-array name="slotDeviceValues" translatable="false">
         <item>255</item>
@@ -93,9 +93,9 @@
 
     <!-- SerialPort1 Device Selection -->
     <string-array name="serialDeviceEntries" translatable="false">
-        <item>Nothing</item>
-        <item>Dummy</item>
-        <item>Broadband Adapter (TAP)</item>
+        <item>Nada</item>
+        <item>Ficticio</item>
+        <item>Adaptador de banda ancha (TAP)</item>
     </string-array>
     <integer-array name="serialDeviceValues" translatable="false">
         <item>255</item>
@@ -115,12 +115,12 @@
 
     <!-- Wii Remote extensions -->
     <string-array name="wiimoteExtensionsEntries" translatable="false">
-        <item>None</item>
+        <item>Ninguno</item>
         <item>Nunchuk</item>
-        <item>Classic</item>
-        <item>Guitar</item>
-        <item>Drums</item>
-        <item>Turntable</item>
+        <item>Clásico</item>
+        <item>Guitarra</item>
+        <item>Batería</item>
+        <item>Mesa de DJ</item>
     </string-array>
     <integer-array name="wiimoteExtensionsValues" translatable="false">
         <item>0</item>
@@ -133,9 +133,9 @@
 
     <!-- Texture Cache Accuracy Preference -->
     <string-array name="textureCacheAccuracyEntries" translatable="false">
-        <item>Low</item>
-        <item>Medium</item>
-        <item>High</item>
+        <item>Bajo</item>
+        <item>Medio</item>
+        <item>Alto</item>
     </string-array>
     <integer-array name="textureCacheAccuracyValues" translatable="false">
         <item>128</item>
@@ -145,8 +145,8 @@
 
     <!-- Ubershader Mode Preference -->
     <string-array name="shaderCompilationModeEntries" translatable="false">
-        <item>Synchronous</item>
-        <item>Asynchronous (Skip Drawing)</item>
+        <item>Sincrónico</item>
+        <item>Asincrónico (Omitir Dibujo)</item>
     </string-array>
     <integer-array name="shaderCompilationModeValues" translatable="false">
         <item>0</item>
@@ -205,7 +205,7 @@
 
     <!-- FSAA Preference -->
     <string-array name="FSAAEntries" translatable="false">
-        <item>Off</item>
+        <item>Apagado</item>
         <item>2x</item>
         <item>4x</item>
         <item>8x</item>
@@ -219,7 +219,7 @@
 
     <!-- Anisotropic Filtering Preference -->
     <string-array name="anisotropicFilteringEntries" translatable="false">
-        <item>Off</item>
+        <item>Apagado</item>
         <item>2x</item>
         <item>4x</item>
         <item>8x</item>
@@ -235,10 +235,10 @@
 
     <!-- Aspect Ratio Preference -->
     <string-array name="aspectRatioEntries" translatable="false">
-        <item>Auto</item>
-        <item>Force 16:9</item>
-        <item>Force 4:3</item>
-        <item>Stretch To Window</item>
+        <item>Automático</item>
+        <item>Forzar 16:9</item>
+        <item>Forzar 4:3</item>
+        <item>Estirar a la Ventana</item>
     </string-array>
     <integer-array name="aspectRatioValues" translatable="false">
         <item>0</item>
@@ -248,25 +248,25 @@
     </integer-array>
 
     <string-array name="countryNames">
-        <item>Europe</item>
-        <item>Japan</item>
-        <item>USA</item>
+        <item>Europa</item>
+        <item>Japón</item>
+        <item>EE.UU</item>
         <item>Australia</item>
-        <item>France</item>
-        <item>Germany</item>
-        <item>Italy</item>
-        <item>Korea</item>
-        <item>Netherlands</item>
-        <item>Russia</item>
-        <item>Spain</item>
-        <item>Taiwan</item>
-        <item>Unknown</item>
+        <item>Francia</item>
+        <item>Alemania</item>
+        <item>Italia</item>
+        <item>Corea</item>
+        <item>Países Bajos</item>
+        <item>Rusia</item>
+        <item>España</item>
+        <item>Taiwán</item>
+        <item>Desconocido</item>
     </string-array>
 
     <string-array name="gcpadTypeEntries">
-        <item>Disabled</item>
-        <item>Emulated</item>
-        <item>GameCube Adapter</item>
+        <item>Desactivado</item>
+        <item>Emulado</item>
+        <item>Adaptador de GameCube</item>
     </string-array>
     <integer-array name="gcpadTypeValues">
         <item>0</item>
@@ -275,9 +275,9 @@
     </integer-array>
 
     <string-array name="wiimoteTypeEntries">
-        <item>Disabled</item>
-        <item>Emulated</item>
-        <item>Real Wii Remote (DolphinBar required)</item>
+        <item>Desactivado</item>
+        <item>Emulado</item>
+        <item>Mando de Wii Real (requiere DolphinBar)</item>
     </string-array>
     <integer-array name="wiimoteTypeValues">
         <item>0</item>
@@ -286,10 +286,10 @@
     </integer-array>
 
     <string-array name="controllersEntries">
-        <item>GameCube Controller</item>
-        <item>Classic Controller</item>
+        <item>Controlador de GameCube</item>
+        <item>Controlador Clásico</item>
         <item>Wii Remote + Nunchuk</item>
-        <item>Horizontal Wii Remote</item>
+        <item>Wii Remote Horizontal</item>
     </string-array>
     <string-array name="controllersValues">
         <item>None</item>
@@ -299,34 +299,34 @@
     </string-array>
 
     <string-array name="wiiJoystickSettings">
-        <item>None</item>
+        <item>Ninguno</item>
         <item>IR</item>
-        <item>Wii Swing</item>
-        <item>Wii Tilt</item>
-        <item>Wii Shake</item>
-        <item>Nunchuk Swing</item>
-        <item>Nunchuk Tilt</item>
-        <item>Nunchuk Shake</item>
+        <item>Movimiento de Wii</item>
+        <item>Inclinación de Wii</item>
+        <item>Agitar de Wii</item>
+        <item>Movimiento del Nunchuk</item>
+        <item>Inclinación del Nunchuk</item>
+        <item>Agitar del Nunchuk</item>
     </string-array>
 
     <string-array name="wiiSensorSettings">
-        <item>None</item>
-        <item>Wii Dpad</item>
-        <item>Nunchuk Stick</item>
+        <item>Ninguno</item>
+        <item>DPad de Wii</item>
+        <item>Palanca del Nunchuk</item>
         <item>IR</item>
-        <item>Wii Swing</item>
-        <item>Wii Tilt</item>
-        <item>Wii Shake</item>
-        <item>Nunchuk Swing</item>
-        <item>Nunchuk Tilt</item>
-        <item>Nunchuk Shake</item>
+        <item>Movimiento de Wii</item>
+        <item>Inclinación de Wii</item>
+        <item>Agitar de Wii</item>
+        <item>Movimiento del Nunchuk</item>
+        <item>Inclinación del Nunchuk</item>
+        <item>Agitar del Nunchuk</item>
     </string-array>
 
     <string-array name="gcSensorSettings">
-        <item>None</item>
-        <item>GameCube Joystick</item>
-        <item>GameCube C Stick</item>
-        <item>GameCube Dpad</item>
+        <item>Ninguno</item>
+        <item>Joystick de GameCube</item>
+        <item>Palanca C de GameCube</item>
+        <item>DPad de GameCube</item>
     </string-array>
 
     <string-array name="gcpadButtons">
@@ -335,14 +335,14 @@
         <item>X</item>
         <item>Y</item>
         <item>Z</item>
-        <item>Start</item>
+        <item>Comenzar</item>
         <item>L</item>
         <item>R</item>
-        <item>L Analog</item>
-        <item>R Analog</item>
+        <item>L Analógico</item>
+        <item>R Analógico</item>
         <item>D-Pad</item>
-        <item>Main Stick</item>
-        <item>C Stick</item>
+        <item>Palanca Principal</item>
+        <item>Palanca C</item>
     </string-array>
 
     <string-array name="wiimoteButtons">
@@ -352,9 +352,9 @@
         <item>2</item>
         <item>+</item>
         <item>-</item>
-        <item>Home</item>
-        <item>Toggle X</item>
-        <item>Tilt Z</item>
+        <item>Casa</item>
+        <item>Alternar X</item>
+        <item>Inclinación de Z</item>
         <item>D-Pad</item>
     </string-array>
 
@@ -365,12 +365,12 @@
         <item>2</item>
         <item>+</item>
         <item>-</item>
-        <item>Home</item>
-        <item>Toggle</item>
+        <item>Casa</item>
+        <item>Alternar</item>
         <item>D-Pad</item>
         <item>C</item>
         <item>Z</item>
-        <item>Nunchuk Stick</item>
+        <item>Palanca Nunchuk</item>
     </string-array>
 
     <string-array name="classicButtons">
@@ -382,27 +382,27 @@
         <item>2</item>
         <item>+</item>
         <item>-</item>
-        <item>Home</item>
+        <item>Casa</item>
         <item>L</item>
         <item>R</item>
         <item>ZL</item>
         <item>ZR</item>
         <item>D-Pad</item>
-        <item>Left Stick</item>
-        <item>Right Stick</item>
+        <item>Palanca Izquierda</item>
+        <item>Palanca Derecha</item>
     </string-array>
 
     <string-array name="doubleTap">
-        <item>Button A</item>
-        <item>Button B</item>
-        <item>Button 2</item>
+        <item>Botón A</item>
+        <item>Botón B</item>
+        <item>Botón 2</item>
     </string-array>
 
     <string-array name="doubleTapWithClassic">
-        <item>Button A</item>
-        <item>Button B</item>
-        <item>Button 2</item>
-        <item>Classic A</item>
+        <item>Botón A</item>
+        <item>Botón B</item>
+        <item>Botón 2</item>
+        <item>Clásico A</item>
     </string-array>
 
 
@@ -453,18 +453,18 @@
     </integer-array>
 
     <string-array name="convertCompressionGczEntries" translatable="false">
-        <item>Deflate</item>
+        <item>Desinflar</item>
     </string-array>
     <integer-array name="convertCompressionGczValues">
         <item>0</item>
     </integer-array>
 
     <string-array name="convertCompressionWiaEntries">
-        <item>No Compression</item>
-        <item>Purge</item>
-        <item>bzip2 (slow)</item>
-        <item>LZMA (slow)</item>
-        <item>LZMA2 (slow)</item>
+        <item>Sin Compresión</item>
+        <item>Purgar</item>
+        <item>bzip2 (lento)</item>
+        <item>LZMA (lento)</item>
+        <item>LZMA2 (lento)</item>
     </string-array>
     <integer-array name="convertCompressionWiaValues">
         <item>0</item>
@@ -475,11 +475,11 @@
     </integer-array>
 
     <string-array name="convertCompressionRvzEntries">
-        <item>No Compression</item>
-        <item>bzip2 (slow)</item>
-        <item>LZMA (slow)</item>
-        <item>LZMA2 (slow)</item>
-        <item>Zstandard (recommended)</item>
+        <item>Sin Compresión</item>
+        <item>bzip2 (lento)</item>
+        <item>LZMA (lento)</item>
+        <item>LZMA2 (lento)</item>
+        <item>Zstandard (recomendado)</item>
     </string-array>
     <integer-array name="convertCompressionRvzValues">
         <item>0</item>

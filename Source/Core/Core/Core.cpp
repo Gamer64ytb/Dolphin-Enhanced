@@ -836,10 +836,11 @@ void UpdateTitle()
 
   std::string S_FPS;
 
-  if(g_ActiveConfig.bShowFPS)
+  if (g_ActiveConfig.bShowFPS)
   {
-    S_FPS = StringFromFormat("|MMJR| FPS: %.0f | %.0f%% |",
-                            perf_stats.FPS, perf_stats.Speed);
+    S_FPS = StringFromFormat("DOLPHIN 360 | %s | FPS: %.0f | SPD: %.0f%% |",
+                             SConfig::GetInstance().GetGameID().c_str(),
+                             perf_stats.FPS, perf_stats.Speed);
   }
 
   // Update the audio timestretcher with the current speed

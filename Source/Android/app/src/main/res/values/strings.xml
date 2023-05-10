@@ -183,7 +183,7 @@
     <string name="osd_messages">Show On-Screen Display Messages</string>
     <string name="osd_messages_description">Display messages over the emulation screen area. These messages include memory card writes, video backend and CPU information, and JIT cache clearing.</string>
     <string name="updater_check_startup">Check for updates at startup</string>
-    <string name="updater_check_startup_description">If allowed, Dolphin |MMJR| will check for updates when opened. A pop-up will appear when a new version is available. An internet connection is required.</string>
+    <string name="updater_check_startup_description">If allowed, Dolphin 360 will check for updates when opened. A pop-up will appear when a new version is available. An internet connection is required.</string>
 
     <!-- Graphics Settings -->
     <string name="graphics_general">General</string>
@@ -199,7 +199,7 @@
     <string name="internal_resolution_description">A high resolution will improve visual quality a lot but is also quite heavy on performance and might cause glitches in certain games.</string>
     <string name="FSAA">Full-scene Anti-aliasing</string>
     <string name="load_hires_textures">Load Custom Textures</string>
-    <string name="load_hires_textures_description">Put your texture pack folder inside the Textures folder. Example: (dolphin-mmjr/Load/Textures/GZ2E01)</string>
+    <string name="load_hires_textures_description">Put your texture pack folder inside the Textures folder. Example: (dolphin-360/Load/Textures/GZ2E01)</string>
     <string name="cache_hires_textures">Prefetch Custom Textures</string>
     <string name="cache_hires_textures_description">Preload Custom Textures into RAM</string>
     <string name="FSAA_description">Reduces the amount of aliasing caused by rasterizing 3D graphics. Heavily decreases emulation speed and sometimes causes issues.</string>
@@ -360,9 +360,6 @@
 
     <string name="external_storage_not_mounted">The external storage needs to be available in order to use Dolphin</string>
 
-    <!-- Extra Leanback Homescreen Channels-->
-    <string name="homescreen_favorites">Favorites</string>
-
     <string name="state_saves">State Saves</string>
     <string name="save">Save</string>
     <string name="load">Load</string>
@@ -440,7 +437,7 @@
     <string name="convert_warning_iso">Removing junk data does not save any space when converting to ISO (unless you package the ISO file in a compressed file format such as ZIP afterwards). Do you want to continue anyway?</string>
     <string name="convert_warning_gcz">Converting Wii disc images to GCZ without removing junk data does not save any noticeable amount of space compared to converting to ISO. Do you want to continue anyway?</string>
     <string name="convert_success_message">The disc image was successfully converted.</string>
-    <string name="convert_failure_message">Dolphin |MMJR| failed to complete the requested action.</string>
+    <string name="convert_failure_message">Dolphin 360 failed to complete the requested action.</string>
     <string name="convert_format_info">
 ISO: A simple and robust format which is supported by many programs. It takes up more space
 than any other format.
@@ -454,7 +451,7 @@ It can efficiently compress both junk data and encrypted Wii data.
     </string>
 
     <!-- Updater Window -->
-    <string name="grid_menu_open_updater">MMJR Updater</string>
+    <string name="grid_menu_open_updater">Updater</string>
     <string name="updater_title">Updater</string>
     <string name="updater_error">An error has occurred. Please check your internet connection.</string>
     <string name="updater_uptodate">Up to date!</string>
@@ -469,7 +466,7 @@ It can efficiently compress both junk data and encrypted Wii data.
 
     <!-- Update available dialog -->
     <string name="updates_alert">Update available</string>
-    <string name="updater_alert_body">A new version of Dolphin |MMJR| is available, do you want to update?</string>
+    <string name="updater_alert_body">A new version of Dolphin 360 is available, do you want to update?</string>
     <string name="not_now">Not now</string>
     <string name="skip_version">Skip this version</string>
 
