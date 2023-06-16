@@ -181,19 +181,12 @@ bool FramebufferManager::CreateEFBFramebuffer()
     m_efb_resolve_color_texture = g_renderer->CreateTexture(
         TextureConfig(efb_color_texture_config.width, efb_color_texture_config.height, 1,
                       efb_color_texture_config.layers, 1, efb_color_texture_config.format, 0));
-    if (!m_efb_resolve_color_texture)
-      return false;
-  }
-
-  // We also need one to convert the D24S8 to R32F if that is being used (Adreno).
-  if (g_ActiveConfig.MultisamplingEnabled() || GetEFBDepthFormat() != AbstractTextureFormat::R32F)
-  {
     m_efb_depth_resolve_texture = g_renderer->CreateTexture(TextureConfig(
         efb_depth_texture_config.width, efb_depth_texture_config.height, 1,
         efb_depth_texture_config.layers, 1,
         AbstractTexture::GetColorFormatForDepthFormat(efb_depth_texture_config.format),
         AbstractTextureFlag_RenderTarget));
-    if (!m_efb_depth_resolve_texture)
+    if (!m_efb_resolve_color_texture || !m_efb_depth_resolve_texture)
       return false;
 
     m_efb_depth_resolve_framebuffer =
@@ -247,14 +240,10 @@ AbstractTexture* FramebufferManager::ResolveEFBColorTexture(const MathUtil::Rect
   return m_efb_resolve_color_texture.get();
 }
 
-AbstractTexture* FramebufferManager::ResolveEFBDepthTexture(const MathUtil::Rectangle<int>& region,
-                                                            bool force_r32f)
+AbstractTexture* FramebufferManager::ResolveEFBDepthTexture(const MathUtil::Rectangle<int>& region)
 {
-  if (!IsEFBMultisampled() &&
-    (!force_r32f || m_efb_depth_texture->GetFormat() == AbstractTextureFormat::D32F))
-  {
+  if (!IsEFBMultisampled())
     return m_efb_depth_texture.get();
-  }
 
   // It's not valid to resolve an out-of-range rectangle.
   MathUtil::Rectangle<int> clamped_region = region;
@@ -263,8 +252,7 @@ AbstractTexture* FramebufferManager::ResolveEFBDepthTexture(const MathUtil::Rect
   m_efb_depth_texture->FinishedRendering();
   g_renderer->BeginUtilityDrawing();
   g_renderer->SetAndDiscardFramebuffer(m_efb_depth_resolve_framebuffer.get());
-  g_renderer->SetPipeline(IsEFBMultisampled() ? m_efb_depth_resolve_pipeline.get() :
-                          m_efb_depth_cache.copy_pipeline.get());
+  g_renderer->SetPipeline(m_efb_depth_resolve_pipeline.get());
   g_renderer->SetTexture(0, m_efb_depth_texture.get());
   g_renderer->SetSamplerState(0, RenderState::GetPointSamplerState());
   g_renderer->SetViewportAndScissor(clamped_region);
@@ -350,7 +338,7 @@ bool FramebufferManager::IsEFBCacheTilePresent(bool depth, u32 x, u32 y, u32* ti
   {
     *tile_index =
         ((y / m_efb_cache_tile_size) * m_efb_cache_tiles_wide) + (x / m_efb_cache_tile_size);
-    return data.valid && data.tiles[*tile_index].present;
+    return data.valid && data.tiles[*tile_index];
   }
 }
 
@@ -378,15 +366,6 @@ u32 FramebufferManager::PeekEFBColor(u32 x, u32 y)
   if (!IsEFBCacheTilePresent(false, x, y, &tile_index))
     PopulateEFBCache(false, tile_index);
 
-  if (IsUsingTiledEFBCache())
-    m_efb_color_cache.tiles[tile_index].frame_access_mask |= 1;
-
-  if (m_efb_color_cache.needs_flush)
-  {
-    m_efb_color_cache.readback_texture->Flush();
-    m_efb_color_cache.needs_flush = false;
-  }
-
   u32 value;
   m_efb_color_cache.readback_texture->ReadTexel(x, y, &value);
   return value;
@@ -401,15 +380,6 @@ float FramebufferManager::PeekEFBDepth(u32 x, u32 y)
   u32 tile_index;
   if (!IsEFBCacheTilePresent(true, x, y, &tile_index))
     PopulateEFBCache(true, tile_index);
-
-  if (IsUsingTiledEFBCache())
-    m_efb_depth_cache.tiles[tile_index].frame_access_mask |= 1;
-
-  if (m_efb_depth_cache.needs_flush)
-  {
-    m_efb_depth_cache.readback_texture->Flush();
-    m_efb_depth_cache.needs_flush = false;
-  }
 
   float value;
   m_efb_depth_cache.readback_texture->ReadTexel(x, y, &value);
@@ -428,82 +398,23 @@ void FramebufferManager::SetEFBCacheTileSize(u32 size)
     PanicAlert("Failed to create EFB readback framebuffers");
 }
 
-void FramebufferManager::RefreshPeekCache()
-{
-  if (m_efb_color_cache.valid && m_efb_depth_cache.valid)
-  {
-    return;
-  }
-
-  bool flush_command_buffer = false;
-
-  if (IsUsingTiledEFBCache())
-  {
-    for (u32 i = 0; i < m_efb_color_cache.tiles.size(); i++)
-    {
-      if (m_efb_color_cache.tiles[i].frame_access_mask != 0 &&
-          (!m_efb_color_cache.valid || !m_efb_color_cache.tiles[i].present))
-      {
-        PopulateEFBCache(false, i, true);
-        flush_command_buffer = true;
-      }
-      if (m_efb_depth_cache.tiles[i].frame_access_mask != 0 &&
-          (!m_efb_depth_cache.valid || !m_efb_depth_cache.tiles[i].present))
-      {
-        PopulateEFBCache(true, i, true);
-        flush_command_buffer = true;
-      }
-    }
-  }
-  else
-  {
-    if (!m_efb_color_cache.valid)
-    {
-      PopulateEFBCache(false, 0, true);
-      flush_command_buffer = true;
-    }
-    if (!m_efb_depth_cache.valid)
-    {
-      PopulateEFBCache(true, 0, true);
-      flush_command_buffer = true;
-    }
-  }
-
-  if (flush_command_buffer)
-  {
-    g_renderer->Flush();
-  }
-}
-
 void FramebufferManager::InvalidatePeekCache(bool forced)
 {
   if (forced || m_efb_color_cache.out_of_date)
   {
     if (m_efb_color_cache.valid)
-    {
-      for (u32 i = 0; i < m_efb_color_cache.tiles.size(); i++)
-      {
-        m_efb_color_cache.tiles[i].present = false;
-      }
-    }
+      std::fill(m_efb_color_cache.tiles.begin(), m_efb_color_cache.tiles.end(), false);
 
     m_efb_color_cache.valid = false;
     m_efb_color_cache.out_of_date = false;
-    m_efb_color_cache.needs_flush = true;
   }
   if (forced || m_efb_depth_cache.out_of_date)
   {
     if (m_efb_depth_cache.valid)
-    {
-      for (u32 i = 0; i < m_efb_depth_cache.tiles.size(); i++)
-      {
-        m_efb_depth_cache.tiles[i].present = false;
-      }
-    }
+      std::fill(m_efb_depth_cache.tiles.begin(), m_efb_depth_cache.tiles.end(), false);
 
     m_efb_depth_cache.valid = false;
     m_efb_depth_cache.out_of_date = false;
-    m_efb_depth_cache.needs_flush = true;
   }
 }
 
@@ -516,18 +427,6 @@ void FramebufferManager::FlagPeekCacheAsOutOfDate()
 
   if (!g_ActiveConfig.bEFBAccessDeferInvalidation)
     InvalidatePeekCache();
-}
-
-void FramebufferManager::EndOfFrame()
-{
-  if (!IsUsingTiledEFBCache())
-    return;
-
-  for (u32 i = 0; i < m_efb_color_cache.tiles.size(); i++)
-  {
-    m_efb_color_cache.tiles[i].frame_access_mask <<= 1;
-    m_efb_depth_cache.tiles[i].frame_access_mask <<= 1;
-  }
 }
 
 bool FramebufferManager::CompileReadbackPipelines()
@@ -620,11 +519,9 @@ bool FramebufferManager::CreateReadbackFramebuffer()
     const u32 tiles_high = ((EFB_HEIGHT + (m_efb_cache_tile_size - 1)) / m_efb_cache_tile_size);
     const u32 total_tiles = tiles_wide * tiles_high;
     m_efb_color_cache.tiles.resize(total_tiles);
-    std::fill(m_efb_color_cache.tiles.begin(), m_efb_color_cache.tiles.end(),
-              EFBCacheTile{false, 0});
+    std::fill(m_efb_color_cache.tiles.begin(), m_efb_color_cache.tiles.end(), false);
     m_efb_depth_cache.tiles.resize(total_tiles);
-    std::fill(m_efb_depth_cache.tiles.begin(), m_efb_depth_cache.tiles.end(),
-              EFBCacheTile{false, 0});
+    std::fill(m_efb_depth_cache.tiles.begin(), m_efb_depth_cache.tiles.end(), false);
     m_efb_cache_tiles_wide = tiles_wide;
   }
 
@@ -643,7 +540,7 @@ void FramebufferManager::DestroyReadbackFramebuffer()
   DestroyCache(m_efb_depth_cache);
 }
 
-void FramebufferManager::PopulateEFBCache(bool depth, u32 tile_index, bool async)
+void FramebufferManager::PopulateEFBCache(bool depth, u32 tile_index)
 {
   g_vertex_manager->OnCPUEFBAccess();
 
@@ -698,19 +595,11 @@ void FramebufferManager::PopulateEFBCache(bool depth, u32 tile_index, bool async
   }
 
   // Wait until the copy is complete.
-  if (!async)
-  {
-    data.readback_texture->Flush();
-    data.needs_flush = false;
-  }
-  else
-  {
-    data.needs_flush = true;
-  }
+  data.readback_texture->Flush();
   data.valid = true;
   data.out_of_date = false;
   if (IsUsingTiledEFBCache())
-    data.tiles[tile_index].present = true;
+    data.tiles[tile_index] = true;
 }
 
 void FramebufferManager::ClearEFB(const MathUtil::Rectangle<int>& rc, bool clear_color,

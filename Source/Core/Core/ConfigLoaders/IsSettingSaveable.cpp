@@ -36,9 +36,6 @@ bool IsSettingSaveable(const Config::ConfigLocation& config_location)
       Config::MAIN_OVERCLOCK_ENABLE.location,
       Config::MAIN_OVERCLOCK.location,
       Config::MAIN_JIT_FOLLOW_BRANCH.location,
-      Config::MAIN_RAM_OVERRIDE_ENABLE.location,
-      Config::MAIN_MEM1_SIZE.location,
-      Config::MAIN_MEM2_SIZE.location,
 
       // Main.Controls
 
@@ -47,7 +44,6 @@ bool IsSettingSaveable(const Config::ConfigLocation& config_location)
       Config::MAIN_IR_VERTICAL_OFFSET.location,
 
       // Main.Display
-
 #ifndef ANDROID
       Config::MAIN_FULLSCREEN_DISPLAY_RES.location,
       Config::MAIN_FULLSCREEN.location,
@@ -137,7 +133,6 @@ bool IsSettingSaveable(const Config::ConfigLocation& config_location)
       Config::GFX_HACK_DISABLE_COPY_TO_VRAM.location,
       Config::GFX_HACK_DEFER_EFB_COPIES.location,
       Config::GFX_HACK_IMMEDIATE_XFB.location,
-      Config::GFX_HACK_SKIP_DUPLICATE_XFBS.location,
       Config::GFX_HACK_COPY_EFB_SCALED.location,
       Config::GFX_HACK_EFB_EMULATE_FORMAT_CHANGES.location,
       Config::GFX_HACK_TMEM_CACHE_EMULATION.location,

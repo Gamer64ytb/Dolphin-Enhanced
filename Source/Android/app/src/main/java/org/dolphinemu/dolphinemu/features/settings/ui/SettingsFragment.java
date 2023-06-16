@@ -1,6 +1,7 @@
 package org.dolphinemu.dolphinemu.features.settings.ui;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -10,15 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.dolphinemu.dolphinemu.ui.DividerItemDecoration;
+import com.nononsenseapps.filepicker.DividerItemDecoration;
 
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.features.settings.model.Settings;
 import org.dolphinemu.dolphinemu.features.settings.model.view.SettingsItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public final class SettingsFragment extends Fragment implements SettingsFragmentView
 {
@@ -29,36 +28,6 @@ public final class SettingsFragment extends Fragment implements SettingsFragment
   private ArrayList<SettingsItem> mSettingsList;
   private SettingsActivity mActivity;
   private SettingsAdapter mAdapter;
-	private static final Map<MenuTag, Integer> titles = new HashMap<>();
-
-	static
-	{
-		// if you added a new submenu section, add the title for that here.
-		titles.put(MenuTag.CONFIG, R.string.preferences_settings);
-		titles.put(MenuTag.CONFIG_GENERAL, R.string.general_submenu);
-		titles.put(MenuTag.CONFIG_INTERFACE, R.string.interface_submenu);
-		titles.put(MenuTag.CONFIG_GAME_CUBE, R.string.gamecube_submenu);
-		titles.put(MenuTag.CONFIG_WII, R.string.wii_submenu);
-		titles.put(MenuTag.WIIMOTE, R.string.grid_menu_wiimote_settings);
-		titles.put(MenuTag.WIIMOTE_EXTENSION, R.string.wiimote_extensions);
-		titles.put(MenuTag.GCPAD_TYPE, R.string.grid_menu_gcpad_settings);
-		titles.put(MenuTag.GRAPHICS, R.string.grid_menu_graphics_settings);
-		titles.put(MenuTag.HACKS, R.string.hacks_submenu);
-		titles.put(MenuTag.DEBUG, R.string.debug_submenu);
-		titles.put(MenuTag.ENHANCEMENTS, R.string.enhancements_submenu);
-		titles.put(MenuTag.GCPAD_1, R.string.controller_0);
-		titles.put(MenuTag.GCPAD_2, R.string.controller_1);
-		titles.put(MenuTag.GCPAD_3, R.string.controller_2);
-		titles.put(MenuTag.GCPAD_4, R.string.controller_3);
-		titles.put(MenuTag.WIIMOTE_1, R.string.wiimote_4);
-		titles.put(MenuTag.WIIMOTE_2, R.string.wiimote_5);
-		titles.put(MenuTag.WIIMOTE_3, R.string.wiimote_6);
-		titles.put(MenuTag.WIIMOTE_4, R.string.wiimote_7);
-		titles.put(MenuTag.WIIMOTE_EXTENSION_1, R.string.wiimote_extension_4);
-		titles.put(MenuTag.WIIMOTE_EXTENSION_2, R.string.wiimote_extension_5);
-		titles.put(MenuTag.WIIMOTE_EXTENSION_3, R.string.wiimote_extension_6);
-		titles.put(MenuTag.WIIMOTE_EXTENSION_4, R.string.wiimote_extension_7);
-	}
 
   public static Fragment newInstance(MenuTag menuTag, String gameId, Bundle extras)
   {
@@ -113,15 +82,8 @@ public final class SettingsFragment extends Fragment implements SettingsFragment
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
   {
-		Bundle args = getArguments();
-		MenuTag menuTag = (MenuTag) args.getSerializable(ARGUMENT_MENU_TAG);
-
-		if (titles.containsKey(menuTag))
-		{
-			getActivity().setTitle(titles.get(menuTag));
-		}
-
     //LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+    Drawable lineDivider = mActivity.getDrawable(R.drawable.line_divider);
     RecyclerView recyclerView = view.findViewById(R.id.list_settings);
 
     GridLayoutManager mgr = new GridLayoutManager(mActivity, 2);
@@ -139,7 +101,7 @@ public final class SettingsFragment extends Fragment implements SettingsFragment
 
     recyclerView.setAdapter(mAdapter);
     recyclerView.setLayoutManager(mgr);
-    recyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), null));
+    recyclerView.addItemDecoration(new DividerItemDecoration(lineDivider));
 
     showSettingsList(mActivity.getSettings());
   }

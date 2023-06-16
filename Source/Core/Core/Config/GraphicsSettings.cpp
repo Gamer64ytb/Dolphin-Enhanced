@@ -29,7 +29,7 @@ const ConfigInfo<bool> GFX_CROP{{System::GFX, "Settings", "Crop"}, false};
 const ConfigInfo<float> GFX_DISPLAY_SCALE{{System::GFX, "Settings", "DisplayScale"}, 1.0f};
 const ConfigInfo<int> GFX_SAFE_TEXTURE_CACHE_COLOR_SAMPLES{
     {System::GFX, "Settings", "SafeTextureCacheColorSamples"}, 128};
-const ConfigInfo<bool> GFX_SHOW_FPS{{System::GFX, "Settings", "ShowFPS"}, true};
+const ConfigInfo<bool> GFX_SHOW_FPS{{System::GFX, "Settings", "ShowFPS"}, false};
 const ConfigInfo<bool> GFX_SHOW_NETPLAY_PING{{System::GFX, "Settings", "ShowNetPlayPing"}, false};
 const ConfigInfo<bool> GFX_SHOW_NETPLAY_MESSAGES{{System::GFX, "Settings", "ShowNetPlayMessages"},
                                                  false};
@@ -72,17 +72,10 @@ const ConfigInfo<bool> GFX_BORDERLESS_FULLSCREEN{{System::GFX, "Settings", "Bord
                                                  false};
 const ConfigInfo<bool> GFX_ENABLE_VALIDATION_LAYER{
     {System::GFX, "Settings", "EnableValidationLayer"}, false};
-#if defined(ANDROID)
-const ConfigInfo<bool> GFX_BACKEND_MULTITHREADING{
-    {System::GFX, "Settings", "BackendMultithreading"}, false};
-const ConfigInfo<int> GFX_COMMAND_BUFFER_EXECUTE_INTERVAL{
-    {System::GFX, "Settings", "CommandBufferExecuteInterval"}, 0};
-#else
 const ConfigInfo<bool> GFX_BACKEND_MULTITHREADING{
     {System::GFX, "Settings", "BackendMultithreading"}, true};
 const ConfigInfo<int> GFX_COMMAND_BUFFER_EXECUTE_INTERVAL{
     {System::GFX, "Settings", "CommandBufferExecuteInterval"}, 100};
-#endif
 const ConfigInfo<bool> GFX_SHADER_CACHE{{System::GFX, "Settings", "ShaderCache"}, true};
 const ConfigInfo<bool> GFX_WAIT_FOR_SHADERS_BEFORE_STARTING{
     {System::GFX, "Settings", "WaitForShadersBeforeStarting"}, false};
@@ -117,8 +110,6 @@ const ConfigInfo<bool> GFX_ENHANCE_DISABLE_COPY_FILTER{
     {System::GFX, "Enhancements", "DisableCopyFilter"}, true};
 const ConfigInfo<bool> GFX_ENHANCE_ARBITRARY_MIPMAP_DETECTION{
     {System::GFX, "Enhancements", "ArbitraryMipmapDetection"}, true};
-const ConfigInfo<bool> GFX_ENHANCE_APPROXIMATE_LOGIC_OP{
-    {System::GFX, "Enhancements", "ApproximateLogicOp"}, true};
 const ConfigInfo<float> GFX_ENHANCE_ARBITRARY_MIPMAP_DETECTION_THRESHOLD{
     {System::GFX, "Enhancements", "ArbitraryMipmapDetectionThreshold"}, 14.0f};
 
@@ -139,7 +130,6 @@ const ConfigInfo<bool> GFX_HACK_DISABLE_COPY_TO_VRAM{{System::GFX, "Hacks", "Dis
                                                      false};
 const ConfigInfo<bool> GFX_HACK_DEFER_EFB_COPIES{{System::GFX, "Hacks", "DeferEFBCopies"}, true};
 const ConfigInfo<bool> GFX_HACK_IMMEDIATE_XFB{{System::GFX, "Hacks", "ImmediateXFBEnable"}, false};
-const ConfigInfo<bool> GFX_HACK_SKIP_DUPLICATE_XFBS{{System::GFX, "Hacks", "SkipDuplicateXFBs"},true};
 const ConfigInfo<bool> GFX_HACK_COPY_EFB_SCALED{{System::GFX, "Hacks", "EFBScaledCopy"}, true};
 const ConfigInfo<bool> GFX_HACK_EFB_EMULATE_FORMAT_CHANGES{
     {System::GFX, "Hacks", "EFBEmulateFormatChanges"}, false};

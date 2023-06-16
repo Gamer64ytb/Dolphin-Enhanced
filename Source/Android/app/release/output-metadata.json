@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "org.mm.j",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 15618,
+      "versionName": "af5bac6a8d-mmj",
+      "outputFile": "app-release.apk"
+    }
+  ],
+  "elementType": "File"
+}

@@ -18,11 +18,6 @@
 #include "Common/StringUtil.h"
 #endif
 
-#ifdef ANDROID
-#include "Common/StringUtil.h"
-#include "jni/AndroidCommon/AndroidCommon.h"
-#endif
-
 // User directory indices for GetUserPath
 enum
 {
@@ -110,10 +105,6 @@ public:
   u64 GetSize() const;
 
 private:
-#ifdef ANDROID
-  void AndroidContentInit(const std::string& path);
-#endif
-
   struct stat m_stat;
   bool m_exists;
 };
@@ -211,22 +202,14 @@ std::string GetExeDirectory();
 bool WriteStringToFile(const std::string& filename, std::string_view str);
 bool ReadFileToString(const std::string& filename, std::string& str);
 
-// To deal with Windows not fully supporting UTF-8 and Android not fully supporting paths.
+// To deal with Windows being dumb at unicode:
 template <typename T>
 void OpenFStream(T& fstream, const std::string& filename, std::ios_base::openmode openmode)
 {
 #ifdef _WIN32
   fstream.open(UTF8ToTStr(filename).c_str(), openmode);
 #else
-  // for some reason this code is causing issues on compile-time, so use the old one for now.
-  // ERROR: no member named '__open' in 'std::basic_fstream<char>'
-/*#ifdef ANDROID
-  // Unfortunately it seems like the non-standard __open is the only way to use a file descriptor
-  if (IsPathAndroidContent(filename))
-    fstream.__open(OpenAndroidContent(filename, OpenModeToAndroid(openmode)), openmode);
-  else
-#endif*/
-    fstream.open(filename.c_str(), openmode);
+  fstream.open(filename.c_str(), openmode);
 #endif
 }
 

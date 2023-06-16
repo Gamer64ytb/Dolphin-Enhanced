@@ -9,7 +9,7 @@ import org.dolphinemu.dolphinemu.BuildConfig;
  */
 public final class Log
 {
-  private static final String TAG = "Dolphin |MMJR|";
+  private static final String TAG = "Dolphin";
 
   private Log()
   {

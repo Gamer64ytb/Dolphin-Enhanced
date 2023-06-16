@@ -66,8 +66,6 @@ struct NetSettings
   bool m_FastDepthCalc;
   bool m_EnablePixelLighting;
   bool m_WidescreenHack;
-  bool m_HiresTextures;
-  bool m_CacheHiresTextures;
   bool m_ForceFiltering;
   int m_MaxAnisotropy;
   bool m_ForceTrueColor;

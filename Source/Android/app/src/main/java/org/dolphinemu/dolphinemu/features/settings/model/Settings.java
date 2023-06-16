@@ -1,7 +1,6 @@
 package org.dolphinemu.dolphinemu.features.settings.model;
 
 import androidx.annotation.Nullable;
-
 import android.text.TextUtils;
 
 import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile;

@@ -186,7 +186,7 @@ public:
   float EFBToScaledYf(float y) const;
 
   // Random utilities
-  void SaveScreenshot(std::string filename, bool wait_for_completion);
+  void SaveScreenshot(const std::string& filename, bool wait_for_completion);
   void DrawDebugText();
   void UpdateDebugTitle(const std::string& title) { m_debug_title_text = std::move(title); }
   void RenderText(const std::string& text, int left, int top, u32 color);

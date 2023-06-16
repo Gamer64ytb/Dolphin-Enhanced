@@ -29,13 +29,6 @@ enum class GameQuirk
   // "read" extension or IR data. This would break our current TAS/NetPlay implementation.
   DIRECTLY_READS_WIIMOTE_INPUT,
 
-  // Some games configure a mismatched number of texture coordinates or colors between the transform
-  // and TEV/BP stages of the rendering pipeline. Currently, Dolphin just skips over these objects
-  // as the hardware renderers are not equipped to handle the case where the registers between
-  // stages are mismatched.
-  MISMATCHED_GPU_TEXGENS_BETWEEN_XF_AND_BP,
-  MISMATCHED_GPU_COLORS_BETWEEN_XF_AND_BP,
-
   COUNT,
 };
 

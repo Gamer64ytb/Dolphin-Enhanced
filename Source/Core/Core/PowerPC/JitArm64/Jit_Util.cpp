@@ -39,13 +39,13 @@ private:
     switch (sbits)
     {
     case 8:
-      m_emit->STRB(IndexType::Unsigned, reg, X0, 0);
+      m_emit->STRB(INDEX_UNSIGNED, reg, X0, 0);
       break;
     case 16:
-      m_emit->STRH(IndexType::Unsigned, reg, X0, 0);
+      m_emit->STRH(INDEX_UNSIGNED, reg, X0, 0);
       break;
     case 32:
-      m_emit->STR(IndexType::Unsigned, reg, X0, 0);
+      m_emit->STR(INDEX_UNSIGNED, reg, X0, 0);
       break;
     default:
       ASSERT_MSG(DYNA_REC, false, "Unknown size %d passed to MMIOWriteCodeGenerator!", sbits);
@@ -127,18 +127,18 @@ private:
     {
     case 8:
       if (m_sign_extend && !dont_extend)
-        m_emit->LDRSB(IndexType::Unsigned, m_dst_reg, X0, 0);
+        m_emit->LDRSB(INDEX_UNSIGNED, m_dst_reg, X0, 0);
       else
-        m_emit->LDRB(IndexType::Unsigned, m_dst_reg, X0, 0);
+        m_emit->LDRB(INDEX_UNSIGNED, m_dst_reg, X0, 0);
       break;
     case 16:
       if (m_sign_extend && !dont_extend)
-        m_emit->LDRSH(IndexType::Unsigned, m_dst_reg, X0, 0);
+        m_emit->LDRSH(INDEX_UNSIGNED, m_dst_reg, X0, 0);
       else
-        m_emit->LDRH(IndexType::Unsigned, m_dst_reg, X0, 0);
+        m_emit->LDRH(INDEX_UNSIGNED, m_dst_reg, X0, 0);
       break;
     case 32:
-      m_emit->LDR(IndexType::Unsigned, m_dst_reg, X0, 0);
+      m_emit->LDR(INDEX_UNSIGNED, m_dst_reg, X0, 0);
       break;
     default:
       ASSERT_MSG(DYNA_REC, false, "Unknown size %d passed to MMIOReadCodeGenerator!", sbits);
@@ -192,33 +192,6 @@ private:
   bool m_sign_extend;
 };
 
-void ByteswapAfterLoad(ARM64XEmitter* emit, ARM64Reg dst_reg, ARM64Reg src_reg, u32 flags,
-                       bool is_reversed, bool is_extended)
-{
-  if (is_reversed == !(flags & BackPatchInfo::FLAG_REVERSE))
-  {
-    if (flags & BackPatchInfo::FLAG_SIZE_32)
-    {
-      emit->REV32(dst_reg, src_reg);
-      src_reg = dst_reg;
-    }
-    else if (flags & BackPatchInfo::FLAG_SIZE_16)
-    {
-      emit->REV16(dst_reg, src_reg);
-      src_reg = dst_reg;
-    }
-  }
-
-  if (!is_extended && (flags & BackPatchInfo::FLAG_EXTEND))
-  {
-    emit->SXTH(dst_reg, src_reg);
-    src_reg = dst_reg;
-  }
-
-  if (dst_reg != src_reg)
-    emit->MOV(dst_reg, src_reg);
-}
-
 void MMIOLoadToReg(MMIO::Mapping* mmio, Arm64Gen::ARM64XEmitter* emit, BitSet32 gprs_in_use,
                    BitSet32 fprs_in_use, ARM64Reg dst_reg, u32 address, u32 flags)
 {
@@ -240,8 +213,6 @@ void MMIOLoadToReg(MMIO::Mapping* mmio, Arm64Gen::ARM64XEmitter* emit, BitSet32 
                                    flags & BackPatchInfo::FLAG_EXTEND);
     mmio->GetHandlerForRead<u32>(address)->Visit(gen);
   }
-
-  ByteswapAfterLoad(emit, dst_reg, dst_reg, flags, false, true);
 }
 
 void MMIOWriteRegToAddr(MMIO::Mapping* mmio, Arm64Gen::ARM64XEmitter* emit, BitSet32 gprs_in_use,

@@ -61,10 +61,6 @@ namespace fs = std::filesystem;
 #include "DiscIO/Volume.h"
 #include "DiscIO/VolumeWad.h"
 
-#ifdef ANDROID
-#include "jni/AndroidCommon/AndroidCommon.h"
-#endif
-
 static std::vector<std::string> ReadM3UFile(const std::string& m3u_path,
                                             const std::string& folder_path)
 {
@@ -162,17 +158,8 @@ BootParameters::GenerateFromFile(std::vector<std::string> paths,
   if (paths.size() == 1)
     paths.clear();
 
-#ifdef ANDROID
-  if (extension.empty() && IsPathAndroidContent(path))
-  {
-    const std::string display_name = GetAndroidContentDisplayName(path);
-    SplitPath(display_name, nullptr, nullptr, &extension);
-    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-  }
-#endif
-
   static const std::unordered_set<std::string> disc_image_extensions = {
-      {".gcm", ".iso", ".tgc", ".wbfs", ".ciso", ".gcz", ".wia", ".rvz", ".dol", ".elf"}};
+      {".gcm", ".iso", ".tgc", ".wbfs", ".ciso", ".gcz", ".dol", ".elf"}};
   if (disc_image_extensions.find(extension) != disc_image_extensions.end() || is_drive)
   {
     std::unique_ptr<DiscIO::VolumeDisc> disc = DiscIO::CreateDisc(path);

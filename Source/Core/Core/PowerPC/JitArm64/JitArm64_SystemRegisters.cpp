@@ -41,10 +41,10 @@ void JitArm64::mtmsr(UGeckoInstruction inst)
   JITDISABLE(bJITSystemRegistersOff);
 
   gpr.BindToRegister(inst.RS, true);
-  STR(IndexType::Unsigned, gpr.R(inst.RS), PPC_REG, PPCSTATE_OFF(msr));
+  STR(INDEX_UNSIGNED, gpr.R(inst.RS), PPC_REG, PPCSTATE_OFF(msr));
 
-  gpr.Flush(FlushMode::All);
-  fpr.Flush(FlushMode::All);
+  gpr.Flush(FlushMode::FLUSH_ALL);
+  fpr.Flush(FlushMode::FLUSH_ALL);
 
   // Our jit cache also stores some MSR bits, as they have changed, we either
   // have to validate them in the BLR/RET check, or just flush the stack here.
@@ -59,7 +59,7 @@ void JitArm64::mfmsr(UGeckoInstruction inst)
   JITDISABLE(bJITSystemRegistersOff);
 
   gpr.BindToRegister(inst.RD, false);
-  LDR(IndexType::Unsigned, gpr.R(inst.RD), PPC_REG, PPCSTATE_OFF(msr));
+  LDR(INDEX_UNSIGNED, gpr.R(inst.RD), PPC_REG, PPCSTATE_OFF(msr));
 }
 
 void JitArm64::mcrf(UGeckoInstruction inst)
@@ -86,8 +86,8 @@ void JitArm64::mcrxr(UGeckoInstruction inst)
   ARM64Reg WB = DecodeReg(XB);
 
   // Copy XER[0-3] into CR[inst.CRFD]
-  LDRB(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(xer_ca));
-  LDRB(IndexType::Unsigned, WB, PPC_REG, PPCSTATE_OFF(xer_so_ov));
+  LDRB(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(xer_ca));
+  LDRB(INDEX_UNSIGNED, WB, PPC_REG, PPCSTATE_OFF(xer_so_ov));
 
   // [0 SO OV CA]
   ADD(WA, WA, WB, ArithOption(WB, ST_LSL, 2));
@@ -98,8 +98,8 @@ void JitArm64::mcrxr(UGeckoInstruction inst)
   LDR(XB, XB, XA);
 
   // Clear XER[0-3]
-  STRB(IndexType::Unsigned, WZR, PPC_REG, PPCSTATE_OFF(xer_ca));
-  STRB(IndexType::Unsigned, WZR, PPC_REG, PPCSTATE_OFF(xer_so_ov));
+  STRB(INDEX_UNSIGNED, WZR, PPC_REG, PPCSTATE_OFF(xer_ca));
+  STRB(INDEX_UNSIGNED, WZR, PPC_REG, PPCSTATE_OFF(xer_so_ov));
 
   gpr.Unlock(WA);
 }
@@ -110,7 +110,7 @@ void JitArm64::mfsr(UGeckoInstruction inst)
   JITDISABLE(bJITSystemRegistersOff);
 
   gpr.BindToRegister(inst.RD, false);
-  LDR(IndexType::Unsigned, gpr.R(inst.RD), PPC_REG, PPCSTATE_OFF(sr[inst.SR]));
+  LDR(INDEX_UNSIGNED, gpr.R(inst.RD), PPC_REG, PPCSTATE_OFF(sr[inst.SR]));
 }
 
 void JitArm64::mtsr(UGeckoInstruction inst)
@@ -119,7 +119,7 @@ void JitArm64::mtsr(UGeckoInstruction inst)
   JITDISABLE(bJITSystemRegistersOff);
 
   gpr.BindToRegister(inst.RS, true);
-  STR(IndexType::Unsigned, gpr.R(inst.RS), PPC_REG, PPCSTATE_OFF(sr[inst.SR]));
+  STR(INDEX_UNSIGNED, gpr.R(inst.RS), PPC_REG, PPCSTATE_OFF(sr[inst.SR]));
 }
 
 void JitArm64::mfsrin(UGeckoInstruction inst)
@@ -136,7 +136,7 @@ void JitArm64::mfsrin(UGeckoInstruction inst)
 
   UBFM(index, RB, 28, 31);
   ADD(index64, PPC_REG, index64, ArithOption(index64, ST_LSL, 2));
-  LDR(IndexType::Unsigned, gpr.R(d), index64, PPCSTATE_OFF(sr[0]));
+  LDR(INDEX_UNSIGNED, gpr.R(d), index64, PPCSTATE_OFF(sr[0]));
 
   gpr.Unlock(index);
 }
@@ -155,7 +155,7 @@ void JitArm64::mtsrin(UGeckoInstruction inst)
 
   UBFM(index, RB, 28, 31);
   ADD(index64, PPC_REG, index64, ArithOption(index64, ST_LSL, 2));
-  STR(IndexType::Unsigned, gpr.R(d), index64, PPCSTATE_OFF(sr[0]));
+  STR(INDEX_UNSIGNED, gpr.R(d), index64, PPCSTATE_OFF(sr[0]));
 
   gpr.Unlock(index);
 }
@@ -200,12 +200,12 @@ void JitArm64::twx(UGeckoInstruction inst)
   SwitchToFarCode();
   SetJumpTarget(far);
 
-  gpr.Flush(FlushMode::MaintainState);
-  fpr.Flush(FlushMode::MaintainState);
+  gpr.Flush(FlushMode::FLUSH_MAINTAIN_STATE);
+  fpr.Flush(FlushMode::FLUSH_MAINTAIN_STATE);
 
-  LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
+  LDR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
   ORR(WA, WA, 24, 0);  // Same as WA | EXCEPTION_PROGRAM
-  STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
+  STR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
   gpr.Unlock(WA);
 
   WriteExceptionExit(js.compilerPC);
@@ -216,8 +216,8 @@ void JitArm64::twx(UGeckoInstruction inst)
 
   if (!analyzer.HasOption(PPCAnalyst::PPCAnalyzer::OPTION_CONDITIONAL_CONTINUE))
   {
-    gpr.Flush(FlushMode::All);
-    fpr.Flush(FlushMode::All);
+    gpr.Flush(FlushMode::FLUSH_ALL);
+    fpr.Flush(FlushMode::FLUSH_ALL);
     WriteExit(js.compilerPC + 4);
   }
 }
@@ -255,14 +255,14 @@ void JitArm64::mfspr(UGeckoInstruction inst)
 
     MOVP2R(Xg, &CoreTiming::g);
 
-    LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(downcount));
+    LDR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(downcount));
     m_float_emit.SCVTF(SC, WA);
-    m_float_emit.LDR(32, IndexType::Unsigned, SD, Xg,
+    m_float_emit.LDR(32, INDEX_UNSIGNED, SD, Xg,
                      offsetof(CoreTiming::Globals, last_OC_factor_inverted));
     m_float_emit.FMUL(SC, SC, SD);
     m_float_emit.FCVTS(Xresult, SC, ROUND_Z);
 
-    LDP(IndexType::Signed, XA, XB, Xg, offsetof(CoreTiming::Globals, global_timer));
+    LDP(INDEX_SIGNED, XA, XB, Xg, offsetof(CoreTiming::Globals, global_timer));
     SXTW(XB, WB);
     SUB(Xresult, XB, Xresult);
     ADD(Xresult, Xresult, XA);
@@ -273,7 +273,7 @@ void JitArm64::mfspr(UGeckoInstruction inst)
     // into a block with only 50 downcount remaining, some games don't function correctly, such as
     // Karaoke Party Revolution, which won't get past the loading screen.
 
-    LDP(IndexType::Signed, XA, XB, Xg, offsetof(CoreTiming::Globals, fake_TB_start_value));
+    LDP(INDEX_SIGNED, XA, XB, Xg, offsetof(CoreTiming::Globals, fake_TB_start_value));
     SUB(Xresult, Xresult, XB);
 
     // a / 12 = (a * 0xAAAAAAAAAAAAAAAB) >> 67
@@ -282,7 +282,7 @@ void JitArm64::mfspr(UGeckoInstruction inst)
     UMULH(Xresult, Xresult, XB);
 
     ADD(Xresult, XA, Xresult, ArithOption(Xresult, ST_LSR, 3));
-    STR(IndexType::Unsigned, Xresult, PPC_REG, PPCSTATE_OFF(spr[SPR_TL]));
+    STR(INDEX_UNSIGNED, Xresult, PPC_REG, PPCSTATE_OFF(spr[SPR_TL]));
 
     if (CanMergeNextInstructions(1))
     {
@@ -329,10 +329,10 @@ void JitArm64::mfspr(UGeckoInstruction inst)
     gpr.BindToRegister(d, false);
     ARM64Reg RD = gpr.R(d);
     ARM64Reg WA = gpr.GetReg();
-    LDRH(IndexType::Unsigned, RD, PPC_REG, PPCSTATE_OFF(xer_stringctrl));
-    LDRB(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(xer_ca));
+    LDRH(INDEX_UNSIGNED, RD, PPC_REG, PPCSTATE_OFF(xer_stringctrl));
+    LDRB(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(xer_ca));
     ORR(RD, RD, WA, ArithOption(WA, ST_LSL, XER_CA_SHIFT));
-    LDRB(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(xer_so_ov));
+    LDRB(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(xer_so_ov));
     ORR(RD, RD, WA, ArithOption(WA, ST_LSL, XER_OV_SHIFT));
     gpr.Unlock(WA);
   }
@@ -343,7 +343,7 @@ void JitArm64::mfspr(UGeckoInstruction inst)
   default:
     gpr.BindToRegister(d, false);
     ARM64Reg RD = gpr.R(d);
-    LDR(IndexType::Unsigned, RD, PPC_REG, PPCSTATE_OFF(spr) + iIndex * 4);
+    LDR(INDEX_UNSIGNED, RD, PPC_REG, PPCSTATE_OFF(spr) + iIndex * 4);
     break;
   }
 }
@@ -393,11 +393,11 @@ void JitArm64::mtspr(UGeckoInstruction inst)
     ARM64Reg RD = gpr.R(inst.RD);
     ARM64Reg WA = gpr.GetReg();
     AND(WA, RD, 24, 30);
-    STRH(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(xer_stringctrl));
+    STRH(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(xer_stringctrl));
     UBFM(WA, RD, XER_CA_SHIFT, XER_CA_SHIFT + 1);
-    STRB(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(xer_ca));
+    STRB(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(xer_ca));
     UBFM(WA, RD, XER_OV_SHIFT, 31);  // Same as WA = RD >> XER_OV_SHIFT
-    STRB(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(xer_so_ov));
+    STRB(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(xer_so_ov));
     gpr.Unlock(WA);
   }
   break;
@@ -407,7 +407,7 @@ void JitArm64::mtspr(UGeckoInstruction inst)
 
   // OK, this is easy.
   ARM64Reg RD = gpr.R(inst.RD);
-  STR(IndexType::Unsigned, RD, PPC_REG, PPCSTATE_OFF(spr) + iIndex * 4);
+  STR(INDEX_UNSIGNED, RD, PPC_REG, PPCSTATE_OFF(spr) + iIndex * 4);
 }
 
 // Reads a given bit of a given CR register part.

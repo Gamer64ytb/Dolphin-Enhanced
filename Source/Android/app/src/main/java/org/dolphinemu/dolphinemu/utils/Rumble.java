@@ -55,7 +55,7 @@ public class Rumble
   {
     if (enable)
     {
-      if (phoneVibrator != null)
+      if(phoneVibrator != null)
         return;
 
       Vibrator vib = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
@@ -80,7 +80,7 @@ public class Rumble
   public static void checkRumble(int padId, double state)
   {
     long currentTime = System.currentTimeMillis();
-    if (currentTime - lastRumbleTime < 100)
+    if(currentTime - lastRumbleTime < 100)
       return;
     lastRumbleTime = currentTime;
 

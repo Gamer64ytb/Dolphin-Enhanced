@@ -4,10 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.dolphinemu.dolphinemu.R;
-import org.dolphinemu.dolphinemu.activities.ConvertActivity;
 import org.dolphinemu.dolphinemu.activities.EditorActivity;
 import org.dolphinemu.dolphinemu.activities.EmulationActivity;
 import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag;
@@ -25,6 +22,7 @@ import org.dolphinemu.dolphinemu.services.GameFileCacheService;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
 
 import java.io.File;
+
 
 public final class GameDetailsDialog extends DialogFragment
 {
@@ -111,14 +109,6 @@ public final class GameDetailsDialog extends DialogFragment
       this.dismiss();
       EmulationActivity.launch(getContext(), gameFile, gameFile.getLastSavedState());
     });
-
-		Button buttonConvert = contents.findViewById(R.id.button_convert);
-		buttonConvert.setOnClickListener(view ->
-		{
-			this.dismiss();
-			ConvertActivity.launch(getContext(), gameFile.getPath());
-		});
-		buttonConvert.setEnabled(gameFile.shouldAllowConversion());
 
     ImageView imageGameScreen = contents.findViewById(R.id.image_game_screen);
     gameFile.loadGameBanner(imageGameScreen);

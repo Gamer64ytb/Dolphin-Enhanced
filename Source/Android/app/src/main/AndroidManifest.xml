@@ -9,15 +9,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <uses-permission android:name="android.permission.VIBRATE" android:required="false"/>
 
     <application
         android:name=".DolphinApplication"
         android:label="@string/app_name"
-        android:icon="@drawable/ic_launcher"
-        android:requestLegacyExternalStorage="true"
-        android:theme="@style/DolphinBase"
+        android:icon="@mipmap/ic_launcher"
         android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="false"
         android:supportsRtl="true"
@@ -48,12 +45,10 @@
         <activity
             android:screenOrientation="userLandscape"
             android:name=".activities.EmulationActivity"
-            android:theme="@style/DolphinEmulationBase"
-            android:preferMinimalPostProcessing="true"/>
+            android:theme="@style/DolphinEmulationBase"/>
 
         <activity
             android:name=".activities.CustomFilePickerActivity"
-            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FilePickerTheme">
             <intent-filter>
@@ -68,10 +63,6 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/DolphinBase"/>
-
-        <activity
-            android:name=".activities.ConvertActivity"
-            android:theme="@style/DolphinBase" />
 
         <service android:name=".services.GameFileCacheService"/>
 

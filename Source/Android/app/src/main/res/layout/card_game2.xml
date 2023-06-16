@@ -3,82 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="8dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     android:transitionName="card_game"
-    app:cardCornerRadius="5dp"
-    app:cardBackgroundColor="@android:color/black"
-    app:cardElevation="8dp">
+    android:focusable="true"
+    android:clickable="true"
+    android:layout_margin="8dp"
+    app:cardElevation="8dp"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/image_game_screen"
+        android:src="@drawable/no_banner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:adjustViewBounds="true"
-        android:src="@drawable/no_banner"
-        tools:ignore="ContentDescription"/>
+        android:layout_gravity="center"/>
 
     <TextView
         android:id="@+id/text_game_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/text_platform"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/text_company"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/text_platform"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/text_game_caption"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="3dp">
-
-
-       <TextView
-            android:id="@+id/text_game_disc"
-            style="@android:style/TextAppearance.Material.Caption"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:paddingVertical="2dp"
-            android:paddingHorizontal="3dp"
-            android:background="@drawable/tag_purple_gradient"
-            android:visibility="visible"
-            tools:visibility="gone"
-            tools:text="Disc 1" />
-
-        <TextView
-            android:id="@+id/text_game_country"
-            style="@android:style/TextAppearance.Material.Caption"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingVertical="2dp"
-            android:paddingHorizontal="3dp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:background="@drawable/tag_purple_gradient"
-            tools:text="NTSC" />
-
-    </LinearLayout>
+        android:visibility="gone"/>
 
 </androidx.cardview.widget.CardView>
+

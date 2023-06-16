@@ -135,8 +135,6 @@ void DolphinAnalytics::ReportGameStart()
 constexpr std::array<const char*, 2> GAME_QUIRKS_NAMES{
     "icache-matters",
     "directly-reads-wiimote-input",
-    "mismatched-gpu-texgens-between-xf-and-bp",
-    "mismatched-gpu-colors-between-xf-and-bp",
 };
 static_assert(GAME_QUIRKS_NAMES.size() == static_cast<u32>(GameQuirk::COUNT),
               "Game quirks names and enum definition are out of sync.");

@@ -31,7 +31,7 @@ static void ReinitHardware()
   SConfig::GetInstance().bWii = false;
 
   // IOS clears mem2 and overwrites it with pseudo-random data (for security).
-  std::memset(Memory::m_pEXRAM, 0, Memory::GetExRamSizeReal());
+  std::memset(Memory::m_pEXRAM, 0, Memory::EXRAM_SIZE);
   // MIOS appears to only reset the DI and the PPC.
   DVDInterface::Reset();
   PowerPC::Reset();

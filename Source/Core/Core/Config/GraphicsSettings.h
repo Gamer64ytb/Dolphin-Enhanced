@@ -87,7 +87,6 @@ extern const ConfigInfo<std::string> GFX_ENHANCE_POST_SHADER;
 extern const ConfigInfo<bool> GFX_ENHANCE_FORCE_TRUE_COLOR;
 extern const ConfigInfo<bool> GFX_ENHANCE_DISABLE_COPY_FILTER;
 extern const ConfigInfo<bool> GFX_ENHANCE_ARBITRARY_MIPMAP_DETECTION;
-extern const ConfigInfo<bool> GFX_ENHANCE_APPROXIMATE_LOGIC_OP;
 extern const ConfigInfo<float> GFX_ENHANCE_ARBITRARY_MIPMAP_DETECTION_THRESHOLD;
 
 // Graphics.Hacks
@@ -102,7 +101,6 @@ extern const ConfigInfo<bool> GFX_HACK_SKIP_XFB_COPY_TO_RAM;
 extern const ConfigInfo<bool> GFX_HACK_DISABLE_COPY_TO_VRAM;
 extern const ConfigInfo<bool> GFX_HACK_DEFER_EFB_COPIES;
 extern const ConfigInfo<bool> GFX_HACK_IMMEDIATE_XFB;
-extern const ConfigInfo<bool> GFX_HACK_SKIP_DUPLICATE_XFBS;
 extern const ConfigInfo<bool> GFX_HACK_COPY_EFB_SCALED;
 extern const ConfigInfo<bool> GFX_HACK_EFB_EMULATE_FORMAT_CHANGES;
 extern const ConfigInfo<bool> GFX_HACK_TMEM_CACHE_EMULATION;

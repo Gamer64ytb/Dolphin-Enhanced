@@ -2,7 +2,8 @@
 <resources>
 
     <!-- Title of the app -->
-    <string name="app_name">Dolphin 360</string>
+    <string name="app_name">Dolphin</string>
+    <string name="app_name_version">Dolphin %1$s</string>
     <string name="host">app</string>
     <string name="scheme">dolphinemu</string>
 
@@ -30,15 +31,6 @@
     <string name="wiimote_5">Wii Remote 2</string>
     <string name="wiimote_6">Wii Remote 3</string>
     <string name="wiimote_7">Wii Remote 4</string>
-    <!-- END WARNING -->
-
-    <!-- WARNING Do not move these controller entries AT ALL COSTS! They are indexed with ints, and an assumption
-            is made that they are placed together so that we can access them sequentially in a loop.
-            Wiimotes start at 4 since they are mapped to padID's 4-7 in the native code.-->
-    <string name="wiimote_extension_4">Wii Remote Extension 1</string>
-    <string name="wiimote_extension_5">Wii Remote Extension 2</string>
-    <string name="wiimote_extension_6">Wii Remote Extension 3</string>
-    <string name="wiimote_extension_7">Wii Remote Extension 4</string>
     <!-- END WARNING -->
 
     <string name="wiimote_extensions">Extension</string>
@@ -156,7 +148,6 @@
     <string name="audio_stretch_description">Stretches audio to reduce stuttering. Increases latency.</string>
     <string name="audio_stretch_max_latency">Stretching Buffer Size</string>
     <string name="audio_stretch_max_latency_description">Size of audio stretch buffer in milliseconds. Values too low may cause audio crackling.</string>
-	<string name="gametdb_thanks">Thanks to Weihuoya, The Dolphin Official Team, Bankaimaster999, Gamer64_ytb for this emulator fork!</string>
 
     <string name="sync_on_skip_idle">Sync On Skip Idle</string>
     <string name="sync_on_skip_idle_description">Wait to process events until the GPU thread finished.</string>
@@ -167,7 +158,7 @@
     <string name="fast_disc_speed">Fast Disc Speed</string>
     <string name="fast_disc_speed_description">Accelerates the emulated disc speed, removing any loading emulation.</string>
     <string name="jit_follow_branch">JIT Follow Branch</string>
-    <string name="jit_follow_branch_description">JIT follow branch may greatly improve performance, but some games will crash with this enabled.</string>
+    <string name="jit_follow_branch_description">JIT follow branch is great improve performance, but some games will crash with this enabled.</string>
     <string name="audio_backend">Audio Backend</string>
     <string name="audio_backend_description">Set backend used for audio output.</string>
     <string name="enable_cheats">Enable Cheats</string>
@@ -176,14 +167,10 @@
 
     <!-- Interface Preference Fragment -->
     <string name="interface_submenu">Interface</string>
-    <string name="expand_to_cutout_area">Expand to Cutout Area</string>
-    <string name="expand_to_cutout_area_description">Expands the display area to include the cutout (or notch) area.</string>
     <string name="panic_handlers">Use Panic Handlers</string>
     <string name="panic_handlers_description">Show a message box when a potentially serious error has occurred. Disabling this may avoid annoying and non-fatal messages.</string>
     <string name="osd_messages">Show On-Screen Display Messages</string>
     <string name="osd_messages_description">Display messages over the emulation screen area. These messages include memory card writes, video backend and CPU information, and JIT cache clearing.</string>
-    <string name="updater_check_startup">Check for updates at startup</string>
-    <string name="updater_check_startup_description">If allowed, Dolphin 360 will check for updates when opened. A pop-up will appear when a new version is available. An internet connection is required.</string>
 
     <!-- Graphics Settings -->
     <string name="graphics_general">General</string>
@@ -198,10 +185,6 @@
     <string name="internal_resolution">Internal Resolution</string>
     <string name="internal_resolution_description">A high resolution will improve visual quality a lot but is also quite heavy on performance and might cause glitches in certain games.</string>
     <string name="FSAA">Full-scene Anti-aliasing</string>
-    <string name="load_hires_textures">Load Custom Textures</string>
-    <string name="load_hires_textures_description">Put your texture pack folder inside the Textures folder. Example: (dolphin-360/Load/Textures/GZ2E01)</string>
-    <string name="cache_hires_textures">Prefetch Custom Textures</string>
-    <string name="cache_hires_textures_description">Preload Custom Textures into RAM</string>
     <string name="FSAA_description">Reduces the amount of aliasing caused by rasterizing 3D graphics. Heavily decreases emulation speed and sometimes causes issues.</string>
     <string name="anisotropic_filtering">Anisotropic Filtering</string>
     <string name="anisotropic_filtering_description">Enhances visual quality of textures that are at oblique viewing angles. Might cause issues in a small number of games.</string>
@@ -223,8 +206,6 @@
     <string name="disable_copy_filter_description">Disables the blending of adjacent rows when copying the EFB. This is known in some games as \"deflickering\" or \"smoothing\". Disabling the filter is usually safe, and may result in a sharper image.</string>
     <string name="arbitrary_mipmap_detection">Arbitrary Mipmap Detection</string>
     <string name="arbitrary_mipmap_detection_description">Enables detection of arbitrary mipmaps, which some games use for special distance-based effects.\nMay have false positives that result in blurry textures at increased internal resolution, such as in games that use very low resolution mipmaps. Disabling this can also reduce stutter in games that frequently load new textures.\n\nIf unsure, leave this checked.</string>
-    <string name="approximate_logic_op">Approximate Logic Op</string>
-    <string name="approximate_logic_op_description">Enable this could fix graphical errors in some games, but may cause graphical errors in others!</string>
     <string name="wide_screen_hack">Widescreen Hack</string>
     <string name="wide_screen_hack_description">Forces the game to output graphics for any aspect ratio. Use with \"Aspect Ratio\" set to \"Force 16:9\" to force 4:3-only games to run at 16:9. Rarely produces good results and often partially breaks graphics and game UIs.\nUnnecessary (and detrimental) if using any AR/Gecko-code widescreen patches. If unsure, leave this unchecked.</string>
     <string name="backend_multithreading">Backend Multithreading</string> <!--Backend Multithreading is only disabled by default on Android  -->
@@ -252,8 +233,6 @@
     <string name="xfb_copy_method_description">Stores XFB Copies exclusively on the GPU, bypassing system memory. Causes graphical defects in a small number of games that need to readback from memory. If unsure, leave this checked.</string>
     <string name="immediate_xfb">Immediately Present XFB</string>
     <string name="immediate_xfb_description">Displays the XFB copies as soon as they are created, without waiting for scanout. Causes graphical defects in some games but reduces latency. If unsure, leave this unchecked.</string>
-    <string name="skip_duplicate_xfbs">Skip Presenting Duplicate Frames</string>
-    <string name="skip_duplicate_xfbs_description">Skips presentation of duplicate frames. This may improve performance on low-end devices, while making frame pacing less consistent. If unsure, leave this checked.</string>
     <string name="fast_depth_calculation">Fast Depth Calculation</string>
     <string name="fast_depth_calculation_description">Uses a less accurate algorithm to calculate depth values.</string>
     <string name="tmem_cache_emulation">TMEM Cache Emulation</string>
@@ -264,9 +243,6 @@
     <string name="shader_compilation_mode_description">Skip Drawing - Do not draw objects while shaders are compiling, will cause broken effects.</string>
     <string name="wait_for_shaders">Compile Shaders Before Starting</string>
     <string name="wait_for_shaders_description">This causes a delay when launching games, but will reduce stuttering early on.</string>
-    <string name="memory_override">Memory Override</string>
-    <string name="emulated_mem_size_override">Emulated Memory Size Override</string>
-    <string name="emulated_mem_size_override_description">Adjusts the amount of RAM in the emulated console.\n\nWARNING: Enabling this will completely break many games. Only a small number of games can benefit from this.</string>
 
     <!-- Debug -->
     <string name="debug_submenu">Debug</string>
@@ -285,7 +261,6 @@
     <string name="off">Off</string>
     <string name="clear">Clear</string>
     <string name="other">Other</string>
-    <string name="error">Error</string>
 
     <!-- Game Grid Screen-->
     <string name="grid_menu_config">Config</string>
@@ -294,13 +269,10 @@
     <string name="grid_menu_wiimote_settings">Wii Input</string>
     <string name="grid_menu_refresh">Refresh Library</string>
     <string name="grid_menu_open_file">Run Files</string>
-    <string name="grid_menu_install_wad">Install WAD</string>
-    <string name="wad_install_success">Successfully installed this title to the NAND.</string>
-    <string name="wad_install_failure">Failed to install this title to the NAND.</string>
 
     <!-- Add Directory Screen-->
     <string name="toggle_list">Toggle List</string>
-    <string name="add_directory_title">Add Games Folder</string>
+    <string name="add_directory_title">Add Folder to Library</string>
     <string name="add_directory_up_one_level">Up one level</string>
     <string name="add_directory_empty_folder">That folder is empty.</string>
 
@@ -313,8 +285,6 @@
     <string name="preferences_extensions">Extension Bindings</string>
 
     <!-- Emulation Menu -->
-    <string name="pause_emulation">Pause Emulation</string>
-    <string name="unpause_emulation">Unpause Emulation</string>
     <string name="emulation_screenshot">Take Screenshot</string>
     <string name="emulation_savestate">Save State</string>
     <string name="emulation_loadstate">Load State</string>
@@ -360,6 +330,9 @@
 
     <string name="external_storage_not_mounted">The external storage needs to be available in order to use Dolphin</string>
 
+    <!-- Extra Leanback Homescreen Channels-->
+    <string name="homescreen_favorites">Favorites</string>
+
     <string name="state_saves">State Saves</string>
     <string name="save">Save</string>
     <string name="load">Load</string>
@@ -367,7 +340,6 @@
     <string name="emulation_joystick_settings">Joystick Emulation</string>
     <string name="emulation_sensor_settings">Sensor Emulation</string>
     <string name="game_platform_wii">[Wii] %1$s %2$s</string>
-    <string name="game_country">%2$s</string>
     <string name="game_platform_ngc">[NGC] %1$s %2$s</string>
     <string name="game_platform_ware">[Ware] %1$s %2$s</string>
     <string name="game_platform_n64">[N64] %1$s %2$s</string>
@@ -379,7 +351,7 @@
     <string name="delete_game_setting">Delete Settings</string>
     <string name="delete_game_file">Delete Game</string>
     <string name="clear_game_data">Clear Cache</string>
-    <string name="cheat_code">Cheat / Ini Editor</string>
+    <string name="cheat_code">Cheat Code</string>
     <string name="toast_save_code_ok">Code Saved!</string>
     <string name="toast_save_code_no">Save Failed!</string>
     <string name="touch_screen_pointer">Touch Screen emulate IR</string>
@@ -412,62 +384,9 @@
     <string name="nnf_new_folder_ok">@android:string/ok</string>
     <string name="nnf_new_folder_cancel">@android:string/cancel</string>
 
-    <!-- File Pickers -->
-    <string name="no_file_extension">The selected file does not appear to have a file name extension.\n\nContinue anyway?</string>
-    <string name="wrong_file_extension_single">The selected file has the file name extension \"%1$s\", but \"%2$s\" was expected.\n\nContinue anyway?</string>
-    <string name="wrong_file_extension_multiple">The selected file has the file name extension \"%1$s\", but one of these extensions was expected: %2$s\n\nContinue anyway?</string>
-    <string name="wrong_file_extension_in_directory">No compatible files were found in the selected location.\n\nThe supported formats are: %1$s</string>
-
     <!-- Misc -->
     <string name="pitch">Total Pitch</string>
     <string name="yaw">Total Yaw</string>
     <string name="vertical_offset">Vertical Offset</string>
-    <string name="advanced_submenu2">Advanced Settings</string>
-    <string name="hires_textures_submenu">Custom Hires-Textures</string>
-    <string name="more_enhancements_submenu">More Enhancement Settings</string>
-
-    <!-- Convert Screen -->
-    <string name="convert_format">Format</string>
-    <string name="convert_block_size">Block Size</string>
-    <string name="convert_compression">Compression</string>
-    <string name="convert_compression_level">Compression Level</string>
-    <string name="convert_remove_junk_data">Remove Junk Data (Irreversible)</string>
-    <string name="convert_convert">Convert</string>
-    <string name="convert_converting">Converting</string>
-    <string name="convert_warning_iso">Removing junk data does not save any space when converting to ISO (unless you package the ISO file in a compressed file format such as ZIP afterwards). Do you want to continue anyway?</string>
-    <string name="convert_warning_gcz">Converting Wii disc images to GCZ without removing junk data does not save any noticeable amount of space compared to converting to ISO. Do you want to continue anyway?</string>
-    <string name="convert_success_message">The disc image was successfully converted.</string>
-    <string name="convert_failure_message">Dolphin 360 failed to complete the requested action.</string>
-    <string name="convert_format_info">
-ISO: A simple and robust format which is supported by many programs. It takes up more space
-than any other format.
-\n\nGCZ: A basic compressed format which is compatible with most versions of Dolphin and some
-other programs. It can\'t efficiently compress junk data (unless removed) or encrypted Wii data.
-\n\nWIA: An advanced compressed format which is compatible with Dolphin 5.0-12188 and later,
-and a few other programs. It can efficiently compress encrypted Wii data, but not junk data
-(unless removed).
-\n\nRVZ: An advanced compressed format which is compatible with Dolphin 5.0-12188 and later.
-It can efficiently compress both junk data and encrypted Wii data.
-    </string>
-
-    <!-- Updater Window -->
-    <string name="grid_menu_open_updater">Updater</string>
-    <string name="updater_title">Updater</string>
-    <string name="updater_error">An error has occurred. Please check your internet connection.</string>
-    <string name="updater_uptodate">Up to date!</string>
-    <string name="updater_newavailable">New version available</string>
-    <string name="button_download">Download</string>
-    <string name="button_install">Install</string>
-    <string name="version_description">Latest: %1$s</string>
-    <string name="current_version">Current version: %1$s</string>
-    <string name="download_size">Size: %1$.2f MB</string>
-    <string name="button_view_changelog">View changelog</string>
-    <string name="changelog_section">Version %1$s\nDate: %2$s\nChanges:\n%3$s\n\n</string>
-
-    <!-- Update available dialog -->
-    <string name="updates_alert">Update available</string>
-    <string name="updater_alert_body">A new version of Dolphin 360 is available, do you want to update?</string>
-    <string name="not_now">Not now</string>
-    <string name="skip_version">Skip this version</string>
 
 </resources>

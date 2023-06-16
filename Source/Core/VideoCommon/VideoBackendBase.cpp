@@ -13,7 +13,6 @@
 #include "Common/ChunkFile.h"
 #include "Common/CommonTypes.h"
 #include "Common/Event.h"
-#include "Common/FileUtil.h"
 #include "Common/Logging/Log.h"
 #include "Core/ConfigManager.h"
 #include "Core/Core.h"
@@ -21,7 +20,7 @@
 // TODO: ugly
 #ifdef _WIN32
 #include "VideoBackends/D3D/VideoBackend.h"
-
+#include "VideoBackends/D3D12/VideoBackend.h"
 #endif
 #ifndef ANDROID
 #include "VideoBackends/Null/VideoBackend.h"
@@ -148,7 +147,7 @@ u16 VideoBackendBase::Video_GetBoundingBox(int index)
     static bool warn_once = true;
     if (warn_once)
     {
-      ERROR_LOG(VIDEO, "BBox shall be used but it is disabled. Please use a Game INI to enable it "
+      ERROR_LOG(VIDEO, "BBox shall be used but it is disabled. Please use a gameini to enable it "
                        "for this game.");
     }
     warn_once = false;

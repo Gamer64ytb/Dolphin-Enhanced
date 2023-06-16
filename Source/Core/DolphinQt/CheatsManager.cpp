@@ -567,7 +567,7 @@ void CheatsManager::NewSearch()
     return;
 
   Core::RunAsCPUThread([&] {
-    for (u32 i = 0; i < Memory::GetRamSizeReal() - GetTypeSize(); i++)
+    for (u32 i = 0; i < Memory::REALRAM_SIZE - GetTypeSize(); i++)
     {
       if (PowerPC::HostIsRAMAddress(base_address + i) && matches_func(base_address + i))
         m_results.push_back(

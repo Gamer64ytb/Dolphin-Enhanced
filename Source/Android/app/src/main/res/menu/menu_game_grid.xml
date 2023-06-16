@@ -3,16 +3,23 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_settings_core"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/preferences_settings"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/menu_add_directory"
+        android:title="@string/add_directory_title"
+        android:icon="@drawable/ic_add"
+        app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/menu_add_directory"
-        android:icon="@drawable/ic_add"
-        android:title="@string/add_directory_title"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/menu_toggle_list"
+        android:title="@string/toggle_list"
+        android:icon="@drawable/ic_settings_graphics"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_settings_core"
+        android:title="@string/preferences_settings"
+        android:icon="@drawable/ic_settings_core"
+        app:showAsAction="never"/>
+
     <item
         android:id="@+id/menu_settings_gcpad"
         android:title="@string/grid_menu_gcpad_settings"
@@ -42,15 +49,5 @@
         android:icon="@android:drawable/ic_media_play"
         android:title="@string/grid_menu_open_file"
         app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/menu_install_wad"
-        android:title="@string/grid_menu_install_wad"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/updater_dialog"
-        android:title="@string/grid_menu_open_updater"
-        app:showAsAction="never"/>
 
 </menu>

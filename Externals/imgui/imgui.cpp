@@ -560,17 +560,17 @@ CODE
  Q: Where is the documentation?
  A: This library is poorly documented at the moment and expects of the user to be acquainted with C/C++.
     - Run the examples/ and explore them.
-    - See demo code in imgui_demo.cpp and particularly the ImGui::ShowDemoWindow() function.
-    - The demo covers most features of Dear ImGui, so you can read the code and see its output.
+    - See demo code in imgui_demo.cpp and particularly the ImGui::ShowDemoWindow() function. 
+    - The demo covers most features of Dear ImGui, so you can read the code and see its output. 
     - See documentation and comments at the top of imgui.cpp + effectively imgui.h.
-    - Dozens of standalone example applications using e.g. OpenGL/DirectX are provided in the examples/
+    - Dozens of standalone example applications using e.g. OpenGL/DirectX are provided in the examples/ 
       folder to explain how to integrate Dear ImGui with your own engine/application.
-    - Your programming IDE is your friend, find the type or function declaration to find comments
+    - Your programming IDE is your friend, find the type or function declaration to find comments 
       associated to it.
 
  Q: Which version should I get?
- A: I occasionally tag Releases (https://github.com/ocornut/imgui/releases) but it is generally safe
-    and recommended to sync to master/latest. The library is fairly stable and regressions tend to be
+ A: I occasionally tag Releases (https://github.com/ocornut/imgui/releases) but it is generally safe 
+    and recommended to sync to master/latest. The library is fairly stable and regressions tend to be 
     fixed fast when reported. You may also peak at the 'docking' branch which includes:
     - Docking/Merging features (https://github.com/ocornut/imgui/issues/2109)
     - Multi-viewport features (https://github.com/ocornut/imgui/issues/1542)
@@ -582,11 +582,11 @@ CODE
     for a list of games/software which are publicly known to use dear imgui. Please add yours if you can!
 
  Q: Why the odd dual naming, "Dear ImGui" vs "ImGui"?
- A: The library started its life as "ImGui" due to the fact that I didn't give it a proper name when
-    when I released 1.0, and had no particular expectation that it would take off. However, the term IMGUI
-    (immediate-mode graphical user interface) was coined before and is being used in variety of other
-    situations (e.g. Unity uses it own implementation of the IMGUI paradigm).
-    To reduce the ambiguity without affecting existing code bases, I have decided on an alternate,
+ A: The library started its life as "ImGui" due to the fact that I didn't give it a proper name when 
+    when I released 1.0, and had no particular expectation that it would take off. However, the term IMGUI 
+    (immediate-mode graphical user interface) was coined before and is being used in variety of other 
+    situations (e.g. Unity uses it own implementation of the IMGUI paradigm). 
+    To reduce the ambiguity without affecting existing code bases, I have decided on an alternate, 
     longer name "Dear ImGui" that people can use to refer to this specific library.
     Please try to refer to this library as "Dear ImGui".
 
@@ -5775,7 +5775,7 @@ void ImGui::PopItemWidth()
 }
 
 // Calculate default item width given value passed to PushItemWidth() or SetNextItemWidth(),
-// Then consume the
+// Then consume the 
 float ImGui::GetNextItemWidth()
 {
     ImGuiWindow* window = GImGui->CurrentWindow;

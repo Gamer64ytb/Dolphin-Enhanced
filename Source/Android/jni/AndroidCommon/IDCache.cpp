@@ -15,8 +15,6 @@ namespace IDCache
 {
 NativeLibrary sNativeLibrary;
 IniFile sIniFile;
-SafHandler sSafHandler;
-CompressCallback sCompressCallback;
 GameFile sGameFile;
 WiimoteAdapter sWiimoteAdapter;
 
@@ -40,53 +38,12 @@ void NativeLibrary::OnUnload(JNIEnv* env)
 
 void IniFile::OnLoad(JNIEnv* env)
 {
-  jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/utils/IniFile");
+  jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/model/IniFile");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  jclass section_clazz = env->FindClass("org/dolphinemu/dolphinemu/utils/IniFile$Section");
-  SectionClazz = reinterpret_cast<jclass>(env->NewGlobalRef(section_clazz));
-  Pointer = env->GetFieldID(clazz, "mPointer", "J");
-  SectionPointer = env->GetFieldID(section_clazz, "mPointer", "J");
-  SectionConstructor = env->GetMethodID(section_clazz, "<init>", "(Lorg/dolphinemu/dolphinemu/utils/IniFile;J)V");
+  Pointer = env->GetFieldID(Clazz, "mPointer", "J");
 }
 
 void IniFile::OnUnload(JNIEnv* env)
-{
-  env->DeleteGlobalRef(Clazz);
-  env->DeleteGlobalRef(SectionClazz);
-  Clazz = nullptr;
-  SectionClazz = nullptr;
-}
-
-void SafHandler::OnLoad(JNIEnv* env)
-{
-  jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/utils/SafHandler");
-  Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  jclass string_clazz = env->FindClass("java/lang/String");
-  StringClazz = reinterpret_cast<jclass>(env->NewGlobalRef(string_clazz));
-  OpenFd = env->GetStaticMethodID(Clazz, "openFd","(Ljava/lang/String;Ljava/lang/String;)I");
-  Delete = env->GetStaticMethodID(Clazz, "delete", "(Ljava/lang/String;)Z");
-  GetSizeAndIsDir = env->GetStaticMethodID(Clazz, "getSizeAndIsDirectory", "(Ljava/lang/String;)J");
-  GetDisplayName = env->GetStaticMethodID(Clazz, "getDisplayName", "(Ljava/lang/String;)Ljava/lang/String;");
-  GetChildNames = env->GetStaticMethodID(Clazz, "getChildNames", "(Ljava/lang/String;Z)[Ljava/lang/String;");
-  DoFileSearch = env->GetStaticMethodID(Clazz, "doFileSearch", "(Ljava/lang/String;[Ljava/lang/String;Z)[Ljava/lang/String;");
-}
-
-void SafHandler::OnUnload(JNIEnv* env)
-{
-  env->DeleteGlobalRef(Clazz);
-  env->DeleteGlobalRef(StringClazz);
-  Clazz = nullptr;
-  StringClazz = nullptr;
-}
-
-void CompressCallback::OnLoad(JNIEnv* env)
-{
-  jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/utils/CompressCallback");
-  Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  Run = env->GetMethodID(Clazz, "run", "(Ljava/lang/String;F)Z");
-}
-
-void CompressCallback::OnUnload(JNIEnv* env)
 {
   env->DeleteGlobalRef(Clazz);
   Clazz = nullptr;
@@ -157,8 +114,6 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 
   IDCache::sNativeLibrary.OnLoad(env);
   IDCache::sIniFile.OnLoad(env);
-  IDCache::sSafHandler.OnLoad(env);
-  IDCache::sCompressCallback.OnLoad(env);
   IDCache::sGameFile.OnLoad(env);
   IDCache::sWiimoteAdapter.OnLoad(env);
 
@@ -175,8 +130,6 @@ void JNI_OnUnload(JavaVM* vm, void* reserved)
 
   IDCache::sNativeLibrary.OnUnload(env);
   IDCache::sIniFile.OnUnload(env);
-  IDCache::sSafHandler.OnUnload(env);
-  IDCache::sCompressCallback.OnUnload(env);
   IDCache::sGameFile.OnUnload(env);
   IDCache::sWiimoteAdapter.OnUnload(env);
 }

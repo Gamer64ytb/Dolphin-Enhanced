@@ -116,6 +116,14 @@ enum Bug
   // It reduces what is needed for streaming to basically a memcpy call
   // It seems to work for all buffer types except GL_ARRAY_BUFFER
   BUG_BROKEN_BUFFER_STORAGE,
+  // Bug: Intel HD 3000 on OS X has broken primitive restart
+  // Affected devices: Intel HD 3000
+  // Affected OS: OS X
+  // Started Version: -1
+  // Ended Version: -1
+  // The drivers on OS X has broken primitive restart.
+  // Intel HD 4000 series isn't affected by the bug
+  BUG_PRIMITIVE_RESTART,
   // Bug: unsync mapping doesn't work fine
   // Affected devices: Nvidia driver, ARM Mali
   // Started Version: -1
@@ -229,7 +237,7 @@ enum Bug
   BUG_BROKEN_DUAL_SOURCE_BLENDING,
   // BUG: ImgTec GLSL shader compiler fails when negating the input to a bitwise operation
   // Started version: 1.5
-  // Ended version: 1.10
+  // Ended version: 1.8@4693462
   // Shaders that do something like "variable <<= (-othervariable);" cause the shader to
   // fail compilation with no useful diagnostic log. This can be worked around by storing
   // the negated value to a temporary variable then using that in the bitwise op.
@@ -273,21 +281,6 @@ enum Bug
   // The Vulkan spec allows the minDepth/maxDepth fields in the viewport to be reversed,
   // however the implementation is broken on some drivers.
   BUG_BROKEN_REVERSED_DEPTH_RANGE,
-
-  // BUG: Apparently ARM Mali GLSL compiler managed to break bitwise AND operations between
-  // two integers vectors, when one of them is non-constant (though the exact cases of when
-  // this occurs are still unclear). The resulting vector from the operation will be the
-  // constant vector.
-  // Easy enough to fix, just do the bitwise AND operation on the vector components first and
-  // then construct the final vector.
-  // Started version: -1
-  // Ended version: -1
-  BUG_BROKEN_VECTOR_BITWISE_AND,
-
-  // BUG: Cached memory is significantly slower for readbacks than coherent memory in the
-  // Mali Vulkan driver, causing high CPU usage in the __pi___inval_cache_range kernel
-  // function. This flag causes readback buffers to select the coherent type.
-  BUG_SLOW_CACHED_READBACK_MEMORY,
 };
 
 // Initializes our internal vendor, device family, and driver version

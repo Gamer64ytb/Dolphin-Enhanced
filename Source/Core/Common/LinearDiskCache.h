@@ -6,11 +6,12 @@
 
 #include <algorithm>
 #include <cstring>
+#include <fstream>
 #include <string>
 #include <type_traits>
 
 #include "Common/CommonTypes.h"
-#include "Common/File.h"
+#include "Common/FileUtil.h"
 #include "Common/Version.h"
 
 // On disk format:
@@ -53,6 +54,8 @@ public:
   // return number of read entries
   u32 OpenAndRead(const std::string& filename, LinearDiskCacheReader<K, V>& reader)
   {
+    using std::ios_base;
+
     // Since we're reading/writing directly to the storage of K instances,
     // K must be trivially copyable.
     static_assert(std::is_trivially_copyable<K>::value, "K must be a trivially copyable type");
@@ -62,12 +65,16 @@ public:
     m_num_entries = 0;
 
     // try opening for reading/writing
-    m_file.Open(filename, "r+b");
+    File::OpenFStream(m_file, filename, ios_base::in | ios_base::out | ios_base::binary);
 
-    const u64 file_size = m_file.GetSize();
+    m_file.seekg(0, std::ios::end);
+    std::fstream::pos_type end_pos = m_file.tellg();
+    m_file.seekg(0, std::ios::beg);
+    std::fstream::pos_type start_pos = m_file.tellg();
+    std::streamoff file_size = end_pos - start_pos;
 
     m_header.Init();
-    if (m_file.IsOpen() && ValidateHeader())
+    if (m_file.is_open() && ValidateHeader())
     {
       // good header, read some key/value pairs
       K key;
@@ -76,9 +83,11 @@ public:
       u32 value_size = 0;
       u32 entry_number = 0;
 
-      while (m_file.ReadArray(&value_size, 1))
+      std::fstream::pos_type last_pos = m_file.tellg();
+
+      while (Read(&value_size))
       {
-        const u64 next_extent = m_file.Tell() + sizeof(value_size) + value_size;
+        std::streamoff next_extent = (last_pos - start_pos) + sizeof(value_size) + value_size;
         if (next_extent > file_size)
           break;
 
@@ -86,8 +95,8 @@ public:
         value = new V[value_size];
 
         // read key/value and pass to reader
-        if (m_file.ReadArray(&key, 1) && m_file.ReadArray(value, value_size) &&
-            m_file.ReadArray(&entry_number, 1) && entry_number == m_num_entries + 1)
+        if (Read(&key) && Read(value, value_size) && Read(&entry_number) &&
+            entry_number == m_num_entries + 1)
         {
           reader.Read(key, value, value_size);
         }
@@ -97,8 +106,10 @@ public:
         }
 
         m_num_entries++;
+        last_pos = m_file.tellg();
       }
-      m_file.Clear();
+      m_file.seekp(last_pos);
+      m_file.clear();
 
       delete[] value;
       return m_num_entries;
@@ -107,16 +118,18 @@ public:
     // failed to open file for reading or bad header
     // close and recreate file
     Close();
-    m_file.Open(filename, "wb");
+    File::OpenFStream(m_file, filename, ios_base::out | ios_base::trunc | ios_base::binary);
     WriteHeader();
     return 0;
   }
 
-  void Sync() { m_file.Flush(); }
+  void Sync() { m_file.flush(); }
   void Close()
   {
-    if (m_file.IsOpen())
-      m_file.Close();
+    if (m_file.is_open())
+      m_file.close();
+    // clear any error flags
+    m_file.clear();
   }
 
   // Appends a key-value pair to the store.
@@ -124,21 +137,33 @@ public:
   {
     // TODO: Should do a check that we don't already have "key"? (I think each caller does that
     // already.)
-    m_file.WriteArray(&value_size, 1);
-    m_file.WriteArray(&key, 1);
-    m_file.WriteArray(value, value_size);
+    Write(&value_size);
+    Write(&key);
+    Write(value, value_size);
     m_num_entries++;
-    m_file.WriteArray(&m_num_entries, 1);
+    Write(&m_num_entries);
   }
 
 private:
-  void WriteHeader() { m_file.WriteArray(&m_header, 1); }
+  void WriteHeader() { Write(&m_header); }
   bool ValidateHeader()
   {
     char file_header[sizeof(Header)];
 
-    return (m_file.ReadArray(file_header, sizeof(Header)) &&
+    return (Read(file_header, sizeof(Header)) &&
             !memcmp((const char*)&m_header, file_header, sizeof(Header)));
+  }
+
+  template <typename D>
+  bool Write(const D* data, u32 count = 1)
+  {
+    return m_file.write(reinterpret_cast<const char*>(data), count * sizeof(D)).good();
+  }
+
+  template <typename D>
+  bool Read(D* data, u32 count = 1)
+  {
+    return m_file.read(reinterpret_cast<char*>(data), count * sizeof(D)).good();
   }
 
   struct Header
@@ -158,6 +183,6 @@ private:
 
   } m_header;
 
-  File::IOFile m_file;
+  std::fstream m_file;
   u32 m_num_entries;
 };

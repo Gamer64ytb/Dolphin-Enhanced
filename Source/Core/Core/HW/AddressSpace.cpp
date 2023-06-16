@@ -234,7 +234,6 @@ struct AccessorMapping
 
 struct CompositeAddressSpaceAccessors : Accessors
 {
-  CompositeAddressSpaceAccessors() = default;
   CompositeAddressSpaceAccessors(std::initializer_list<AccessorMapping> accessors)
       : m_accessor_mappings(accessors.begin(), accessors.end())
   {
@@ -304,7 +303,6 @@ private:
 
 struct SmallBlockAccessors : Accessors
 {
-  SmallBlockAccessors() = default;
   SmallBlockAccessors(u8** alloc_base, u32 size) : alloc_base(alloc_base), size(size) {}
 
   bool IsValidAddress(u32 address) const override
@@ -367,11 +365,14 @@ struct NullAccessors : Accessors
 
 static EffectiveAddressSpaceAccessors s_effective_address_space_accessors;
 static AuxiliaryAddressSpaceAccessors s_auxiliary_address_space_accessors;
-static SmallBlockAccessors s_mem1_address_space_accessors;
-static SmallBlockAccessors s_mem2_address_space_accessors;
-static SmallBlockAccessors s_fake_address_space_accessors;
-static CompositeAddressSpaceAccessors s_physical_address_space_accessors_gcn;
-static CompositeAddressSpaceAccessors s_physical_address_space_accessors_wii;
+static SmallBlockAccessors s_mem1_address_space_accessors{&Memory::m_pRAM, Memory::REALRAM_SIZE};
+static SmallBlockAccessors s_mem2_address_space_accessors{&Memory::m_pEXRAM, Memory::EXRAM_SIZE};
+static SmallBlockAccessors s_fake_address_space_accessors{&Memory::m_pFakeVMEM,
+                                                          Memory::FAKEVMEM_SIZE};
+static CompositeAddressSpaceAccessors s_physical_address_space_accessors_gcn{
+    {0x00000000, &s_mem1_address_space_accessors}};
+static CompositeAddressSpaceAccessors s_physical_address_space_accessors_wii{
+    {0x00000000, &s_mem1_address_space_accessors}, {0x10000000, &s_mem2_address_space_accessors}};
 static NullAccessors s_null_accessors;
 
 Accessors* GetAccessors(Type address_space)
@@ -409,16 +410,6 @@ Accessors* GetAccessors(Type address_space)
   }
 
   return &s_null_accessors;
-}
-
-void Init()
-{
-  s_mem1_address_space_accessors = {&Memory::m_pRAM, Memory::GetRamSizeReal()};
-  s_mem2_address_space_accessors = {&Memory::m_pEXRAM, Memory::GetExRamSizeReal()};
-  s_fake_address_space_accessors = {&Memory::m_pFakeVMEM, Memory::GetFakeVMemSize()};
-  s_physical_address_space_accessors_gcn = {{0x00000000, &s_mem1_address_space_accessors}};
-  s_physical_address_space_accessors_wii = {{0x00000000, &s_mem1_address_space_accessors},
-                                            {0x10000000, &s_mem2_address_space_accessors}};
 }
 
 }  // namespace AddressSpace

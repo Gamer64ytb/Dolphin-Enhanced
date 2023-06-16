@@ -5,13 +5,13 @@
     <item
         android:id="@+id/menu_toggle_list"
         android:title="@string/toggle_list"
-        android:icon="@drawable/ic_edit"
+        android:icon="@drawable/ic_refresh"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_download_gecko"
         android:title="@string/preferences_save_exit"
-        android:icon="@drawable/ic_cheat_load"
+        android:icon="@drawable/ic_settings_core"
         app:showAsAction="ifRoom"/>
 
 </menu>

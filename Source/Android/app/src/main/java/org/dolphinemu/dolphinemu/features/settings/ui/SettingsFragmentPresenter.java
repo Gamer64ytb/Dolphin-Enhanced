@@ -1,11 +1,11 @@
 package org.dolphinemu.dolphinemu.features.settings.ui;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.R;
+import org.dolphinemu.dolphinemu.features.settings.model.BooleanSetting;
 import org.dolphinemu.dolphinemu.features.settings.model.IntSetting;
 import org.dolphinemu.dolphinemu.features.settings.model.Setting;
 import org.dolphinemu.dolphinemu.features.settings.model.SettingSection;
@@ -158,7 +158,6 @@ public final class SettingsFragmentPresenter
     sl.add(new SubmenuSetting(null, null, R.string.gamecube_submenu, 0, MenuTag.CONFIG_GAME_CUBE));
     sl.add(new SubmenuSetting(null, null, R.string.wii_submenu, 0, MenuTag.CONFIG_WII));
     sl.add(new SubmenuSetting(null, null, R.string.debug_submenu, 0, MenuTag.DEBUG));
-	  sl.add(new HeaderSetting(null, null, R.string.gametdb_thanks, 0));
   }
 
   private void addGeneralSettings(ArrayList<SettingsItem> sl)
@@ -171,7 +170,7 @@ public final class SettingsFragmentPresenter
     Setting speedLimit = coreSection.getSetting(SettingsFile.KEY_SPEED_LIMIT);
     Setting syncOnSkipIdle = coreSection.getSetting(SettingsFile.KEY_SYNC_ON_SKIP_IDLE);
     //Setting mmuEmulation = coreSection.getSetting(SettingsFile.KEY_MMU_EMULATION);
-    Setting fastDiscSpeed = coreSection.getSetting(SettingsFile.KEY_FAST_DISC_SPEED);
+    //Setting fastDiscSpeed = coreSection.getSetting(SettingsFile.KEY_FAST_DISC_SPEED);
     Setting followBranch = coreSection.getSetting(SettingsFile.KEY_JIT_FOLLOW_BRANCH);
     Setting autoDiscChange = coreSection.getSetting(SettingsFile.KEY_AUTO_DISC_CHANGE);
     Setting audioStretch = coreSection.getSetting(SettingsFile.KEY_AUDIO_STRETCH);
@@ -179,7 +178,6 @@ public final class SettingsFragmentPresenter
     Setting audioBackend = mSettings.getSection(Settings.SECTION_INI_DSP)
       .getSetting(SettingsFile.KEY_AUDIO_BACKEND);
     Setting enableCheats = coreSection.getSetting(SettingsFile.KEY_ENABLE_CHEATS);
-		Setting emulatedMemSizeOverride = coreSection.getSetting(SettingsFile.KEY_EMULATED_MEM_SIZE_OVERRIDE);
 
     // TODO: Having different emuCoresEntries/emuCoresValues for each architecture is annoying.
     // The proper solution would be to have one emuCoresEntries and one emuCoresValues
@@ -202,21 +200,18 @@ public final class SettingsFragmentPresenter
     sl.add(new CheckBoxSetting(SettingsFile.KEY_DUAL_CORE, Settings.SECTION_INI_CORE,
       R.string.dual_core, R.string.dual_core_description, true, dualCore));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_OVERCLOCK_ENABLE, Settings.SECTION_INI_CORE,
-      R.string.overclock_enable, R.string.overclock_enable_description, true,
+      R.string.overclock_enable, R.string.overclock_enable_description, false,
       overclockEnable));
     sl.add(new SliderSetting(SettingsFile.KEY_OVERCLOCK_PERCENT, Settings.SECTION_INI_CORE,
-      R.string.overclock_title, R.string.overclock_title_description, 300, "%", 60,
+      R.string.overclock_title, R.string.overclock_title_description, 300, "%", 100,
       overclock));
     sl.add(new SliderSetting(SettingsFile.KEY_SPEED_LIMIT, Settings.SECTION_INI_CORE,
       R.string.speed_limit, 0, 200, "%", 100, speedLimit));
-    sl.add(new HeaderSetting(null, null,R.string.advanced_submenu2, 0));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_SYNC_ON_SKIP_IDLE, Settings.SECTION_INI_CORE,
       R.string.sync_on_skip_idle, R.string.sync_on_skip_idle_description, true,
       syncOnSkipIdle));
     //sl.add(new CheckBoxSetting(SettingsFile.KEY_MMU_EMULATION, Settings.SECTION_INI_CORE, R.string.mmu_emulation, R.string.mmu_emulation_description, false, mmuEmulation));
-    sl.add(new CheckBoxSetting(SettingsFile.KEY_FAST_DISC_SPEED, Settings.SECTION_INI_CORE,
-      R.string.fast_disc_speed, R.string.fast_disc_speed_description, false,
-      fastDiscSpeed));
+    //sl.add(new CheckBoxSetting(SettingsFile.KEY_FAST_DISC_SPEED, Settings.SECTION_INI_CORE, R.string.fast_disc_speed, R.string.fast_disc_speed_description, false, fastDiscSpeed));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_JIT_FOLLOW_BRANCH, Settings.SECTION_INI_CORE,
       R.string.jit_follow_branch, R.string.jit_follow_branch_description, true,
       followBranch));
@@ -225,11 +220,9 @@ public final class SettingsFragmentPresenter
     sl.add(new CheckBoxSetting(SettingsFile.KEY_AUTO_DISC_CHANGE, Settings.SECTION_INI_CORE,
       R.string.auto_disc_change, 0, false, autoDiscChange));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_AUDIO_STRETCH, Settings.SECTION_INI_CORE,
-      R.string.audio_stretch, R.string.audio_stretch_description, false,
-			audioStretch));
+      R.string.audio_stretch, R.string.audio_stretch_description, false, audioStretch));
     sl.add(new SliderSetting(SettingsFile.KEY_AUDIO_STRETCH_MAX_LATENCY, Settings.SECTION_INI_CORE,
-      R.string.audio_stretch_max_latency, R.string.audio_stretch_max_latency_description, 300,
-			"", 80, stretchLatency));
+      R.string.audio_stretch_max_latency, R.string.audio_stretch_max_latency_description, 300, "", 80, stretchLatency));
 
     String defaultAudioBackend = NativeLibrary.DefaultAudioBackend();
     String[] audioListEntries = NativeLibrary.GetAudioBackendList();
@@ -238,31 +231,15 @@ public final class SettingsFragmentPresenter
     sl.add(new StringSingleChoiceSetting(SettingsFile.KEY_AUDIO_BACKEND, Settings.SECTION_INI_DSP,
       R.string.audio_backend, 0, audioListEntries,
       audioListValues, defaultAudioBackend, audioBackend));
-
-		sl.add(new HeaderSetting(null, null, R.string.memory_override, 0));
-
-		sl.add(new CheckBoxSetting(SettingsFile.KEY_EMULATED_MEM_SIZE_OVERRIDE, Settings.SECTION_INI_CORE,
-			R.string.emulated_mem_size_override, R.string.emulated_mem_size_override_description, false,
-			emulatedMemSizeOverride));
   }
 
   private void addInterfaceSettings(ArrayList<SettingsItem> sl)
   {
     SettingSection uiSection = mSettings.getSection(Settings.SECTION_INI_INTERFACE);
-		Setting expandToCutoutArea = uiSection.getSetting(SettingsFile.KEY_EXPAND_TO_CUTOUT_AREA);
     Setting usePanicHandlers = uiSection.getSetting(SettingsFile.KEY_USE_PANIC_HANDLERS);
     Setting onScreenDisplayMessages = uiSection.getSetting(SettingsFile.KEY_OSD_MESSAGES);
     Setting useBuiltinTitleDatabase = uiSection.getSetting(SettingsFile.KEY_BUILTIN_TITLE_DATABASE);
-		Setting checkUpdates = uiSection.getSetting(SettingsFile.KEY_UPDATER_CHECK_UPDATES);
     Setting systemBack = uiSection.getSetting(SettingsFile.KEY_SYSTEM_BACK);
-
-		// Only android 9+ supports this feature.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-		{
-			sl.add(new CheckBoxSetting(SettingsFile.KEY_EXPAND_TO_CUTOUT_AREA, Settings.SECTION_INI_INTERFACE,
-				R.string.expand_to_cutout_area, R.string.expand_to_cutout_area_description, false,
-				expandToCutoutArea));
-		}
 
     sl.add(new CheckBoxSetting(SettingsFile.KEY_USE_PANIC_HANDLERS, Settings.SECTION_INI_INTERFACE,
       R.string.panic_handlers, R.string.panic_handlers_description, true, usePanicHandlers));
@@ -271,8 +248,6 @@ public final class SettingsFragmentPresenter
       onScreenDisplayMessages));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_BUILTIN_TITLE_DATABASE, Settings.SECTION_INI_INTERFACE,
       R.string.use_builtin_title_database, 0, true, useBuiltinTitleDatabase));
-		sl.add(new CheckBoxSetting(SettingsFile.KEY_UPDATER_CHECK_UPDATES, Settings.SECTION_INI_INTERFACE,
-			R.string.updater_check_startup, R.string.updater_check_startup_description, false, checkUpdates));
     sl.add(new InputBindingSetting(SettingsFile.KEY_SYSTEM_BACK, Settings.SECTION_INI_INTERFACE,
       R.string.system_back, systemBack));
   }
@@ -330,7 +305,7 @@ public final class SettingsFragmentPresenter
       R.string.sysconf_screensaver, 0, false, screensaver));
     sl.add(new SingleChoiceSetting(SettingsFile.KEY_SYSCONF_LANGUAGE, Settings.SECTION_WII_IPL,
       R.string.sysconf_language, 0, R.array.wiiSystemLanguageEntries,
-      R.array.wiiSystemLanguageValues, 1, language));
+      R.array.wiiSystemLanguageValues, 0, language));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_SYSCONF_WIDESCREEN, Settings.SECTION_WII_IPL,
       R.string.sysconf_widescreen, 0, true, widescreen));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_SYSCONF_PROGRESSIVE_SCAN, Settings.SECTION_WII_IPL,
@@ -406,7 +381,7 @@ public final class SettingsFragmentPresenter
       R.string.video_backend, 0, R.array.videoBackendEntries,
       R.array.videoBackendValues, 0, videoBackend));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_SHOW_FPS, Settings.SECTION_GFX_SETTINGS,
-      R.string.show_fps, R.string.show_fps_description, true, showFps));
+      R.string.show_fps, R.string.show_fps_description, false, showFps));
     sl.add(new SingleChoiceSetting(SettingsFile.KEY_SHADER_COMPILATION_MODE,
       Settings.SECTION_GFX_SETTINGS, R.string.shader_compilation_mode,
       R.string.shader_compilation_mode_description, R.array.shaderCompilationModeEntries,
@@ -435,8 +410,6 @@ public final class SettingsFragmentPresenter
     Setting fsaa = gfxSection.getSetting(SettingsFile.KEY_FSAA);
     Setting anisotropic = enhancementSection.getSetting(SettingsFile.KEY_ANISOTROPY);
     Setting shader = enhancementSection.getSetting(SettingsFile.KEY_POST_SHADER);
-    Setting hiresTextures = gfxSection.getSetting(SettingsFile.KEY_HIRES_TEXTURES);
-    Setting cacheHiresTextures = gfxSection.getSetting(SettingsFile.KEY_CACHE_HIRES_TEXTURES);
     Setting efbScaledCopy = hacksSection.getSetting(SettingsFile.KEY_SCALED_EFB);
     Setting perPixel = gfxSection.getSetting(SettingsFile.KEY_PER_PIXEL);
     Setting forceFilter = enhancementSection.getSetting(SettingsFile.KEY_FORCE_FILTERING);
@@ -444,20 +417,12 @@ public final class SettingsFragmentPresenter
     Setting disableCopyFilter = enhancementSection.getSetting(SettingsFile.KEY_DISABLE_COPY_FILTER);
     Setting arbitraryMipmapDetection =
             enhancementSection.getSetting(SettingsFile.KEY_ARBITRARY_MIPMAP_DETECTION);
-    Setting approximateLogicOp =
-            enhancementSection.getSetting(SettingsFile.KEY_APPROXIMATE_LOGIC_OP);
     Setting wideScreenHack = gfxSection.getSetting(SettingsFile.KEY_WIDE_SCREEN_HACK);
     Setting force24BitColor = enhancementSection.getSetting(SettingsFile.KEY_FORCE_24_BIT_COLOR);
 
     sl.add(new SingleChoiceSetting(SettingsFile.KEY_INTERNAL_RES, Settings.SECTION_GFX_SETTINGS,
       R.string.internal_resolution, R.string.internal_resolution_description,
       R.array.internalResolutionEntries, R.array.internalResolutionValues, 100, resolution));
-    sl.add(new HeaderSetting(null, null, R.string.hires_textures_submenu, 0));
-    sl.add(new CheckBoxSetting(SettingsFile.KEY_HIRES_TEXTURES, Settings.SECTION_GFX_SETTINGS,
-      R.string.load_hires_textures, R.string.load_hires_textures_description, false, hiresTextures));
-    sl.add(new CheckBoxSetting(SettingsFile.KEY_CACHE_HIRES_TEXTURES, Settings.SECTION_GFX_SETTINGS,
-      R.string.cache_hires_textures, R.string.cache_hires_textures_description, false, cacheHiresTextures));
-    sl.add(new HeaderSetting(null, null,R.string.more_enhancements_submenu, 0));
     sl.add(new SingleChoiceSetting(SettingsFile.KEY_FSAA, Settings.SECTION_GFX_SETTINGS,
       R.string.FSAA, R.string.FSAA_description, R.array.FSAAEntries, R.array.FSAAValues, 1,
       fsaa));
@@ -491,12 +456,9 @@ public final class SettingsFragmentPresenter
     sl.add(new CheckBoxSetting(SettingsFile.KEY_ARBITRARY_MIPMAP_DETECTION,
       Settings.SECTION_GFX_ENHANCEMENTS, R.string.arbitrary_mipmap_detection,
       R.string.arbitrary_mipmap_detection_description, true, arbitraryMipmapDetection));
-    sl.add(new CheckBoxSetting(SettingsFile.KEY_APPROXIMATE_LOGIC_OP,
-      Settings.SECTION_GFX_ENHANCEMENTS, R.string.approximate_logic_op,
-      R.string.approximate_logic_op_description, true, approximateLogicOp));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_WIDE_SCREEN_HACK, Settings.SECTION_GFX_SETTINGS,
-      R.string.wide_screen_hack, R.string.wide_screen_hack_description, false,
-      wideScreenHack));
+            R.string.wide_screen_hack, R.string.wide_screen_hack_description, false,
+            wideScreenHack));
   }
 
   private String capitalize(String text)
@@ -585,7 +547,6 @@ public final class SettingsFragmentPresenter
     Setting gpuTextureDecoding = gfxSection.getSetting(SettingsFile.KEY_GPU_TEXTURE_DECODING);
     Setting xfbToTexture = hacksSection.getSetting(SettingsFile.KEY_XFB_TEXTURE);
     Setting immediateXfb = hacksSection.getSetting(SettingsFile.KEY_IMMEDIATE_XFB);
-		Setting skipDuplicateXfbs = hacksSection.getSetting(SettingsFile.KEY_SKIP_DUPLICATE_XFBS);
     Setting fastDepth = gfxSection.getSetting(SettingsFile.KEY_FAST_DEPTH);
     Setting tmemEmu = hacksSection.getSetting(SettingsFile.KEY_TMEM_CACHE_EMULATION);
 
@@ -599,9 +560,9 @@ public final class SettingsFragmentPresenter
     sl.add(new CheckBoxSetting(SettingsFile.KEY_EFB_TEXTURE, Settings.SECTION_GFX_HACKS,
       R.string.efb_copy_method, R.string.efb_copy_method_description, true, efbToTexture));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_DEFER_EFB_COPIES, Settings.SECTION_GFX_HACKS,
-      R.string.defer_efb_copies, R.string.defer_efb_copies_description, true, deferEfbCopies));
+            R.string.defer_efb_copies, R.string.defer_efb_copies_description, true, deferEfbCopies));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_EFB_DEFER_INVALIDATION, Settings.SECTION_GFX_HACKS,
-      R.string.efb_defer_invalidation, R.string.efb_defer_invalidation_description, false, deferEfbInvalid));
+            R.string.efb_defer_invalidation, R.string.efb_defer_invalidation_description, false, deferEfbInvalid));
 
     sl.add(new HeaderSetting(null, null, R.string.texture_cache, 0));
     sl.add(new SingleChoiceSetting(SettingsFile.KEY_TEXCACHE_ACCURACY,
@@ -616,9 +577,6 @@ public final class SettingsFragmentPresenter
       R.string.xfb_copy_method, R.string.xfb_copy_method_description, true, xfbToTexture));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_IMMEDIATE_XFB, Settings.SECTION_GFX_HACKS,
       R.string.immediate_xfb, R.string.immediate_xfb_description, false, immediateXfb));
-		sl.add(new CheckBoxSetting(SettingsFile.KEY_SKIP_DUPLICATE_XFBS, Settings.SECTION_GFX_HACKS,
-			R.string.skip_duplicate_xfbs, R.string.skip_duplicate_xfbs_description, true,
-			skipDuplicateXfbs));
 
     sl.add(new HeaderSetting(null, null, R.string.other, 0));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_FAST_DEPTH, Settings.SECTION_GFX_SETTINGS,

@@ -26,13 +26,13 @@
     </style>
 
     <!-- Inherit from the material theme -->
-    <style name="DolphinBase" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="DolphinBase" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Main theme colors -->
         <!-- Branding color for the app bar -->
-        <item name="colorPrimary">@color/green_primary</item>
+        <item name="colorPrimary">@color/dolphin_blue</item>
         <!-- Darker variant for the status bar and contextual app bars -->
-        <item name="colorPrimaryDark">@color/green_primary_dark</item>
-        <item name="colorAccent">@color/green_accent</item>
+        <item name="colorPrimaryDark">@color/dolphin_blue_dark</item>
+        <item name="colorAccent">@color/dolphin_purple</item>
 
         <!-- Enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
@@ -41,20 +41,20 @@
     </style>
 
     <!-- Same as above, but use default action bar, and mandate margins. -->
-    <style name="DolphinSettingsBase" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/green_primary</item>
-        <item name="colorPrimaryDark">@color/green_primary_dark</item>
-        <item name="colorAccent">@color/green_accent</item>
+    <style name="DolphinSettingsBase" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/dolphin_blue</item>
+        <item name="colorPrimaryDark">@color/dolphin_blue_dark</item>
+        <item name="colorAccent">@color/dolphin_purple</item>
     </style>
 
     <!-- Themes for Dialogs -->
 
     <!-- Inherit from the Base Dolphin Dialog Theme -->
 
-    <style name="DolphinEmulationBase" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/green_primary</item>
-        <item name="colorPrimaryDark">@color/green_primary_dark</item>
-        <item name="colorAccent">@color/green_accent</item>
+    <style name="DolphinEmulationBase" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/dolphin_blue</item>
+        <item name="colorPrimaryDark">@color/dolphin_blue_dark</item>
+        <item name="colorAccent">@color/dolphin_purple</item>
         <item name="android:windowTranslucentNavigation">true</item>
 
         <item name="android:windowBackground">@android:color/black</item>
@@ -87,11 +87,14 @@
         <item name="android:textColor">@color/button_text_color</item>
     </style>
 
-    <!-- Inherit from a base file picker theme that handles day/night -->
-    <style name="FilePickerTheme" parent="FilePickerBaseTheme">
-        <item name="colorPrimary">@color/green_primary</item>
-        <item name="colorPrimaryDark">@color/green_primary_dark</item>
-        <item name="colorAccent">@color/green_accent</item>
+    <!-- You can also inherit from NNF_BaseTheme.Light -->
+    <style name="FilePickerTheme" parent="NNF_BaseTheme.Light">
+        <item name="colorPrimary">@color/dolphin_blue</item>
+        <item name="colorPrimaryDark">@color/dolphin_blue_dark</item>
+        <item name="colorAccent">@color/dolphin_purple</item>
+
+        <!--&lt;!&ndash; Setting a divider is entirely optional &ndash;&gt;-->
+        <item name="nnf_list_item_divider">@drawable/line_divider</item>
 
         <!-- Need to set this also to style create folder dialog -->
         <item name="alertDialogTheme">@style/FilePickerAlertDialogTheme</item>
@@ -101,10 +104,10 @@
         <item name="nnf_toolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
-    <style name="FilePickerAlertDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
-        <item name="colorPrimary">@color/green_primary</item>
-        <item name="colorPrimaryDark">@color/green_primary_dark</item>
-        <item name="colorAccent">@color/green_accent</item>
+    <style name="FilePickerAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorPrimary">@color/dolphin_blue</item>
+        <item name="colorPrimaryDark">@color/dolphin_blue_dark</item>
+        <item name="colorAccent">@color/dolphin_purple</item>
     </style>
 
 </resources>

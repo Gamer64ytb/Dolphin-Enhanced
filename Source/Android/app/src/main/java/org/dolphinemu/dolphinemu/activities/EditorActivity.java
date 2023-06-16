@@ -3,15 +3,14 @@ package org.dolphinemu.dolphinemu.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
@@ -30,7 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.dolphinemu.dolphinemu.ui.DividerItemDecoration;
+import com.nononsenseapps.filepicker.DividerItemDecoration;
 
 import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.R;
@@ -188,7 +187,7 @@ public class EditorActivity extends AppCompatActivity
       OkHttpClient downloader = new OkHttpClient();
       Response response = null;
       Request request = new Request.Builder()
-        .url("https://codes.rc24.xyz/txt.php?txt=" + gametdbId[0])
+        .url("https://www.geckocodes.org/txt.php?txt=" + gametdbId[0])
         .addHeader("Cookie", "challenge=BitMitigate.com")
         .build();
 
@@ -440,10 +439,11 @@ public class EditorActivity extends AppCompatActivity
     setTitle(gameId);
 
     // code list
+    Drawable lineDivider = getDrawable(R.drawable.line_divider);
     mListView = findViewById(R.id.code_list);
     mAdapter = new CheatEntryAdapter();
     mListView.setAdapter(mAdapter);
-    mListView.addItemDecoration(new DividerItemDecoration(this, null));
+    mListView.addItemDecoration(new DividerItemDecoration(lineDivider));
     mListView.setLayoutManager(new LinearLayoutManager(this));
 
     // code editor

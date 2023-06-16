@@ -5,7 +5,6 @@
 #pragma once
 
 #include <memory>
-#include <set>
 #include <string>
 #include <vector>
 
@@ -54,7 +53,7 @@ private:
   static bool LoadTexture(Level& level, const std::vector<u8>& buffer);
   static void Prefetch();
 
-  static std::set<std::string> GetTextureDirectories(const std::string& game_id);
+  static std::string GetTextureDirectory(const std::string& game_id);
 
   HiresTexture() {}
   bool m_has_arbitrary_mipmaps;

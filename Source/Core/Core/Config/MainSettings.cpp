@@ -8,7 +8,6 @@
 #include "Common/Config/Config.h"
 #include "Common/StringUtil.h"
 #include "Core/HW/EXI/EXI_Device.h"
-#include "Core/HW/Memmap.h"
 #include "Core/HW/SI/SI_Device.h"
 #include "Core/PowerPC/PowerPC.h"
 
@@ -93,11 +92,8 @@ const ConfigInfo<bool> MAIN_LOW_DCBZ_HACK{{System::Main, "Core", "LowDCBZHack"},
 const ConfigInfo<bool> MAIN_FPRF{{System::Main, "Core", "FPRF"}, false};
 const ConfigInfo<bool> MAIN_ACCURATE_NANS{{System::Main, "Core", "AccurateNaNs"}, false};
 const ConfigInfo<float> MAIN_EMULATION_SPEED{{System::Main, "Core", "EmulationSpeed"}, 1.0f};
-const ConfigInfo<float> MAIN_OVERCLOCK{{System::Main, "Core", "Overclock"}, 0.6f};
-const ConfigInfo<bool> MAIN_OVERCLOCK_ENABLE{{System::Main, "Core", "OverclockEnable"}, true};
-const ConfigInfo<bool> MAIN_RAM_OVERRIDE_ENABLE{{System::Main, "Core", "RAMOverrideEnable"}, false};
-const ConfigInfo<u32> MAIN_MEM1_SIZE{{System::Main, "Core", "MEM1Size"}, Memory::MEM1_SIZE_RETAIL};
-const ConfigInfo<u32> MAIN_MEM2_SIZE{{System::Main, "Core", "MEM2Size"}, Memory::MEM2_SIZE_RETAIL};
+const ConfigInfo<float> MAIN_OVERCLOCK{{System::Main, "Core", "Overclock"}, 1.0f};
+const ConfigInfo<bool> MAIN_OVERCLOCK_ENABLE{{System::Main, "Core", "OverclockEnable"}, false};
 const ConfigInfo<std::string> MAIN_GFX_BACKEND{{System::Main, "Core", "GFXBackend"}, ""};
 const ConfigInfo<std::string> MAIN_GPU_DETERMINISM_MODE{
     {System::Main, "Core", "GPUDeterminismMode"}, "auto"};

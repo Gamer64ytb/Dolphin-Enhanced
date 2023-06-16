@@ -1,85 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:background="?attr/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+        android:layout_alignParentTop="true" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:layout_centerInParent="true"
-        android:visibility="invisible" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_above="@id/button_cancel"
-        android:layout_below="@id/toolbar">
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/code_content"
+            android:hint="@string/cheat_code"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="top|start"
-            android:hint="@string/cheat_code"
-            android:inputType="textMultiLine"
             android:scrollbars="horizontal|vertical"
             android:textSize="14sp"
-            android:typeface="monospace" />
+            android:gravity="top|start"
+            android:typeface="monospace"
+            android:inputType="textMultiLine"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/code_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
     </FrameLayout>
 
     <View
         android:id="@+id/dummy_view"
-        android:layout_width="1px"
-        android:layout_height="1px"
-        android:layout_alignParentBottom="true"
+        android:visibility="invisible"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
+        android:layout_alignParentBottom="true"
+        android:layout_width="1px"
+        android:layout_height="1px"/>
 
     <Button
+        android:text="@android:string/cancel"
         android:id="@+id/button_cancel"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:textAllCaps="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@id/dummy_view"
-        android:background="@drawable/button_purple_gradient"
-        android:stateListAnimator="@null"
-        android:layout_marginHorizontal="3dp"
-        android:layout_marginVertical="3dp"
-        android:text="@android:string/cancel"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
+        android:stateListAnimator="@null"/>
 
     <Button
+        android:text="@string/save"
         android:id="@+id/button_confirm"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:textAllCaps="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginHorizontal="3dp"
-        android:layout_marginVertical="3dp"
         android:layout_toEndOf="@id/dummy_view"
-        android:background="@drawable/button_red_gradient"
-        android:stateListAnimator="@null"
-        android:text="@string/save"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
+        android:stateListAnimator="@null"/>
 
 </RelativeLayout>

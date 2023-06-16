@@ -581,17 +581,17 @@ void GameList::CompressISO(bool decompress)
       if (files.size() > 1)
         progress_dialog.setLabelText(tr("Decompressing...") + QStringLiteral("\n") +
                                      QFileInfo(QString::fromStdString(original_path)).fileName());
-      good = DiscIO::ConvertToPlain(original_path, dst_path.toStdString(), &CompressCB,
-                                    &progress_dialog);
+      good = DiscIO::DecompressBlobToFile(original_path, dst_path.toStdString(), &CompressCB,
+                                          &progress_dialog);
     }
     else
     {
       if (files.size() > 1)
         progress_dialog.setLabelText(tr("Compressing...") + QStringLiteral("\n") +
                                      QFileInfo(QString::fromStdString(original_path)).fileName());
-      good = DiscIO::ConvertToGCZ(original_path, dst_path.toStdString(),
-                                  file->GetPlatform() == DiscIO::Platform::WiiDisc ? 1 : 0, 16384,
-                                  &CompressCB, &progress_dialog);
+      good = DiscIO::CompressFileToBlob(original_path, dst_path.toStdString(),
+                                        file->GetPlatform() == DiscIO::Platform::WiiDisc ? 1 : 0,
+                                        16384, &CompressCB, &progress_dialog);
     }
 
     if (!good)

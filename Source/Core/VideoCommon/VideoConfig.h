@@ -69,7 +69,6 @@ struct VideoConfig final
   bool bForceTrueColor;
   bool bDisableCopyFilter;
   bool bArbitraryMipmapDetection;
-  bool bApproximateLogicOp;
   float fArbitraryMipmapDetectionThreshold;
 
   // Information
@@ -121,7 +120,6 @@ struct VideoConfig final
   bool bDisableCopyToVRAM;
   bool bDeferEFBCopies;
   bool bImmediateXFB;
-  bool bSkipPresentingDuplicateXFBs;
   bool bCopyEFBScaled;
   int iSafeTextureCache_ColorSamples;
   float fAspectRatioHackW, fAspectRatioHackH;

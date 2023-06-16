@@ -13,8 +13,6 @@ import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.widget.Toast;
 
-import androidx.annotation.Keep;
-
 import org.dolphinemu.dolphinemu.activities.EmulationActivity;
 import org.dolphinemu.dolphinemu.services.USBPermService;
 
@@ -24,8 +22,6 @@ import java.util.Map;
 public class Java_GCAdapter
 {
   public static UsbManager manager;
-
-	@Keep
   static byte[] controller_payload = new byte[37];
 
   static UsbDeviceConnection usb_con;
@@ -67,13 +63,11 @@ public class Java_GCAdapter
     usb_con.close();
   }
 
-	@Keep
   public static int GetFD()
   {
     return usb_con.getFileDescriptor();
   }
 
-	@Keep
   public static boolean QueryAdapter()
   {
     HashMap<String, UsbDevice> devices = manager.getDeviceList();
@@ -97,19 +91,16 @@ public class Java_GCAdapter
     usb_con.bulkTransfer(usb_out, init, init.length, 0);
   }
 
-	@Keep
   public static int Input()
   {
     return usb_con.bulkTransfer(usb_in, controller_payload, controller_payload.length, 16);
   }
 
-	@Keep
   public static int Output(byte[] rumble)
   {
     return usb_con.bulkTransfer(usb_out, rumble, 5, 16);
   }
 
-	@Keep
   public static boolean OpenAdapter()
   {
     HashMap<String, UsbDevice> devices = manager.getDeviceList();

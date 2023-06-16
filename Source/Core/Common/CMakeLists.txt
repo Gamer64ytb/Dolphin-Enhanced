@@ -167,13 +167,6 @@ if(NOT ANDROID)
   )
 endif()
 
-if (ANDROID)
-  target_link_libraries(common
-  PRIVATE
-    androidcommon
-  )
-endif()
-
 if(ANDROID)
   target_sources(common PRIVATE
     Logging/ConsoleListenerDroid.cpp

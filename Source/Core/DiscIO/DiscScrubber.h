@@ -34,12 +34,9 @@ public:
   DiscScrubber();
   ~DiscScrubber();
 
-  bool SetupScrub(const Volume* disc);
-
-  // Returns true if the specified 32 KiB block only contains unused data
+  bool SetupScrub(const Volume* disc, int block_size);
+  size_t GetNextBlock(File::IOFile& in, u8* buffer);
   bool CanBlockBeScrubbed(u64 offset) const;
-
-  static constexpr size_t CLUSTER_SIZE = 0x8000;
 
 private:
   struct PartitionHeader final

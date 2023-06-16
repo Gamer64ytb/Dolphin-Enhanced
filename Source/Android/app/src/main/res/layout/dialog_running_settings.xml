@@ -5,19 +5,19 @@
 
     <TextView
         android:id="@+id/text_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/green_primary"
         android:text="@string/grid_menu_config"
         android:textAlignment="center"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:background="@color/dolphin_blue"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_settings"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:background="@android:color/white"
         android:layout_below="@id/text_title"
-        android:background="@android:color/black" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

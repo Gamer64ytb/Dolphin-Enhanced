@@ -12,10 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.Surface;
 
-import androidx.annotation.Keep;
-
 import org.dolphinemu.dolphinemu.activities.EmulationActivity;
-import org.dolphinemu.dolphinemu.utils.CompressCallback;
 import org.dolphinemu.dolphinemu.utils.Log;
 import org.dolphinemu.dolphinemu.utils.Rumble;
 
@@ -212,15 +209,7 @@ public final class NativeLibrary
    */
   public static final String TouchScreenDevice = "Touchscreen";
 
-	public static boolean isValidFile(String filename)
-	{
-		String name = filename.toLowerCase();
-		return (name.endsWith(".gcm") || name.endsWith(".tgc") || name.endsWith(".iso") ||
-			name.endsWith(".ciso") || name.endsWith(".gcz") || name.endsWith(".wbfs") || name.endsWith(".wia") ||
-			name.endsWith(".rvz") || name.endsWith(".wad") || name.endsWith(".dol") || name.endsWith(".elf"));
-	}
-
-	/**
+  /**
    * Handles button press events for a gamepad.
    *
    * @param Device The input descriptor of the gamepad.
@@ -245,13 +234,19 @@ public final class NativeLibrary
    * @param padID Ignored for now. Future use would be to pass rumble to a connected controller
    * @param state Ignored for now since phone rumble can't just be 'turned' on/off
    */
-	@Keep
   public static void rumble(int padID, double state)
   {
     Rumble.checkRumble(padID, state);
   }
 
-  public static native boolean CheckIntegrity(String packageName, String label);
+  public static native void LoadGameIniFile(String gameId);
+
+  public static native void SaveGameIniFile(String gameId);
+
+  public static native void SetUserSetting(String gameID, String Section, String Key, String Value);
+
+  public static native void SetProfileSetting(String profile, String Section, String Key,
+          String Value);
 
   /**
    * Sets a value to a key in the given ini config file.
@@ -391,17 +386,8 @@ public final class NativeLibrary
 
   public static native void ReloadWiimoteConfig();
 
-	public static native boolean InstallWAD(String file);
-
-	public static native boolean ConvertDiscImage(String inPath, String outPath, int platform,
-					int format, int blockSize, int compression, int compressionLevel, boolean scrub,
-					CompressCallback callback);
-
-	public static native void ReloadConfig();
-
   private static boolean alertResult = false;
 
-	@Keep
   public static boolean displayAlertMsg(final String caption, final String text,
     final boolean yesNo)
   {
@@ -461,7 +447,7 @@ public final class NativeLibrary
       }
 
       // Show the AlertDialog on the main thread.
-      emulationActivity.runOnUiThread(builder::show);
+      emulationActivity.runOnUiThread(() -> builder.show());
 
       // Wait for the lock to notify that it is complete.
       synchronized (lock)

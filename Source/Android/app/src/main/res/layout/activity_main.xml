@@ -1,41 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent">
 
-    <RelativeLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_main"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:background="?attr/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_main"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/green_primary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/grid_games"
+        android:layout_below="@id/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/pager_platforms"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar_main"
-            android:layout_above="@id/tabs_platforms"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs_platforms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/green_primary"
-            android:layout_alignParentBottom="true"
-            app:tabTextAppearance="@style/MyCustomTextAppearance"
-            app:tabIndicatorColor="#FFFFFF"
-            app:tabMode="fixed"
-            app:tabGravity="fill"/>
-
-    </RelativeLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

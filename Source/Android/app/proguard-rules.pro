@@ -42,7 +42,7 @@
 -keep class org.dolphinemu.dolphinemu.utils.Java_GCAdapter { *; }
 -keep class org.dolphinemu.dolphinemu.utils.Java_WiimoteAdapter { *; }
 
--keep class org.dolphinemu.dolphinemu.utils.IniFile
--keepclassmembers class org.dolphinemu.dolphinemu.utils.IniFile { private <fields>; }
+-keep class org.dolphinemu.dolphinemu.model.IniFile
+-keepclassmembers class org.dolphinemu.dolphinemu.model.IniFile { private <fields>; }
 -keepclassmembers class org.dolphinemu.dolphinemu.model.GameFile { private <fields>; }
 -keepclassmembers class org.dolphinemu.dolphinemu.model.GameFile { private <init>(...); }

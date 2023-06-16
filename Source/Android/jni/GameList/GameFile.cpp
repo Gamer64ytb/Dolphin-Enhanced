@@ -118,24 +118,6 @@ JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getRevision
   return static_cast<jint>(GetPointer(env, obj)->GetRevision());
 }
 
-JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBlobType(JNIEnv* env,
-                                                                                 jobject obj)
-{
-  return static_cast<jint>(GetPointer(env, obj)->GetBlobType());
-}
-
-JNIEXPORT jboolean JNICALL
-Java_org_dolphinemu_dolphinemu_model_GameFile_shouldAllowConversion(JNIEnv* env, jobject obj)
-{
-  return static_cast<jboolean>(GetPointer(env, obj)->ShouldAllowConversion());
-}
-
-JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_isDatelDisc(JNIEnv* env,
-                                                                                     jobject obj)
-{
-  return static_cast<jboolean>(GetPointer(env, obj)->IsDatelDisc());
-}
-
 JNIEXPORT jintArray JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBanner(JNIEnv* env,
                                                                                     jobject obj)
 {

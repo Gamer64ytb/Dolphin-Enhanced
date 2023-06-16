@@ -48,7 +48,6 @@ public:
   std::optional<u8> GetDiscNumber(const Partition& partition = PARTITION_NONE) const override;
 
   Platform GetVolumeType() const override;
-  bool IsDatelDisc() const override;
   Region GetRegion() const override;
   Country GetCountry(const Partition& partition = PARTITION_NONE) const override;
   BlobType GetBlobType() const override;

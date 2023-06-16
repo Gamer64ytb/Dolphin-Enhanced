@@ -183,6 +183,8 @@ public:
     // by calling pop(), and to not have to solve memory leak problems.
     //
 
+    TPoolAllocator& operator=(const TPoolAllocator&);
+
 protected:
     friend struct tHeader;
 
@@ -241,7 +243,7 @@ protected:
     int numCalls;           // just an interesting statistic
     size_t totalBytes;      // just an interesting statistic
 private:
-    TPoolAllocator& operator=(const TPoolAllocator&);  // don't allow assignment operator
+        // don't allow assignment operator
     TPoolAllocator(const TPoolAllocator&);  // don't allow default copy constructor
 };
 
@@ -304,6 +306,7 @@ public:
     size_type max_size() const { return static_cast<size_type>(-1) / sizeof(T); }
     size_type max_size(int size) const { return static_cast<size_type>(-1) / size; }
 
+    void setAllocator(TPoolAllocator* a) { allocator = *a; }
     TPoolAllocator& getAllocator() const { return allocator; }
 
 protected:

@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.dolphinemu.dolphinemu.BuildConfig;
@@ -25,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 
 /**
  * A service that spawns its own thread in order to copy several binary and shader files
@@ -70,7 +70,7 @@ public final class DirectoryInitialization
           initializeInternalStorage(context);
           initializeExternalStorage(context);
           String lan = Locale.getDefault().getLanguage();
-          if (lan.equals("zh")) // needed?
+          if(lan.equals("zh"))
             lan = lan + "_" + Locale.getDefault().getCountry();
           NativeLibrary.setSystemLanguage(lan);
           mDirectoryState = DirectoryInitializationState.DIRECTORIES_INITIALIZED;
@@ -97,7 +97,7 @@ public final class DirectoryInitialization
       File externalPath = Environment.getExternalStorageDirectory();
       if (externalPath != null)
       {
-        File userPath = new File(externalPath, "dolphin-360");
+        File userPath = new File(externalPath, "dolphin-mmj");
         if (!userPath.isDirectory() && !userPath.mkdir())
         {
           return false;

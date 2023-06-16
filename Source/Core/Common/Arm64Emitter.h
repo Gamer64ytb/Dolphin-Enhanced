@@ -294,12 +294,12 @@ enum ShiftType
   ST_ROR = 3,
 };
 
-enum class IndexType
+enum IndexType
 {
-  Unsigned,
-  Post,
-  Pre,
-  Signed,  // used in LDP/STP
+  INDEX_UNSIGNED,
+  INDEX_POST,
+  INDEX_PRE,
+  INDEX_SIGNED,  // used in LDP/STP
 };
 
 enum ShiftAmount
@@ -354,14 +354,14 @@ enum PStateField
   FIELD_FPSR = 0x341,
 };
 
-enum class SystemHint
+enum SystemHint
 {
-  NOP,
-  YIELD,
-  WFE,
-  WFI,
-  SEV,
-  SEVL,
+  HINT_NOP = 0,
+  HINT_YIELD,
+  HINT_WFE,
+  HINT_WFI,
+  HINT_SEV,
+  HINT_SEVL,
 };
 
 enum BarrierType
@@ -875,14 +875,14 @@ public:
   }
 
   // This function expects you to have set up the state.
-  // Overwrites X0 and X8
+  // Overwrites X0 and X30
   template <typename T, typename... Args>
   ARM64Reg ABI_SetupLambda(const std::function<T(Args...)>* f)
   {
     auto trampoline = &ARM64XEmitter::CallLambdaTrampoline<T, Args...>;
-    MOVP2R(X8, trampoline);
-    MOVP2R(X0, const_cast<void*>((const void*)f));
-    return X8;
+    MOVI2R(X30, (uintptr_t)trampoline);
+    MOVI2R(X0, (uintptr_t) const_cast<void*>((const void*)f));
+    return X30;
   }
 
   // Plain function call

@@ -6,10 +6,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -27,6 +25,7 @@ import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization.DirectoryInitializationState;
 import org.dolphinemu.dolphinemu.utils.DirectoryStateReceiver;
 import org.dolphinemu.dolphinemu.utils.Log;
+
 
 public final class EmulationFragment extends Fragment implements SurfaceHolder.Callback, SensorEventListener
 {
@@ -345,10 +344,7 @@ public final class EmulationFragment extends Fragment implements SurfaceHolder.C
       else if (state == State.PAUSED)
       {
         NativeLibrary.SurfaceChanged(mSurface);
-				if (!EmulationActivity.getHasUserPausedEmulation())
-				{
-					NativeLibrary.UnPauseEmulation();
-				}
+        NativeLibrary.UnPauseEmulation();
       }
       else
       {

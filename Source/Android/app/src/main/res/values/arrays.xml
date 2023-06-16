@@ -157,50 +157,18 @@
 
     <!-- Internal Resolution Preference -->
     <string-array name="internalResolutionEntries" translatable="false">
-        <item>1x Native (640x528)</item>
-        <item>1.25x Native</item>
-        <item>1.5x Native (960x792)</item>
-        <item>1.75x Native</item>
-        <item>2x Native (1280x1056) for 720p</item>
-        <item>2.25x Native</item>
-        <item>2.5x Native (1600x1320)</item>
-        <item>2.75x Native</item>
-        <item>3x Native (1920x1584) for 1080p</item>
-        <item>3.25x Native</item>
-        <item>3.5x Native (2240x1853)</item>
-        <item>3.75x Native</item>
-        <item>4x Native (2560x2112) for 2K</item>
-        <item>4.25x Native</item>
-        <item>4.5x Native</item>
-        <item>4.75x Native</item>
-        <item>5x Native (3200x2640)</item>
-        <item>5.25x Native</item>
-        <item>5.5x Native</item>
-        <item>5.75x Native</item>
-        <item>6x Native (3840x3168) for 4K</item>
+        <item>1x (640x528)</item>
+        <item>1.5x (960x792) BUG</item>
+        <item>2x (1280x1056) 720p</item>
+        <item>3x (1920x1584) 1080p</item>
+        <item>4x (2560x2112) 2k</item>
     </string-array>
     <integer-array name="internalResolutionValues" translatable="false">
         <item>100</item>
-        <item>125</item>
         <item>150</item>
-        <item>175</item>
         <item>200</item>
-        <item>225</item>
-        <item>250</item>
-        <item>275</item>
         <item>300</item>
-        <item>325</item>
-        <item>350</item>
-        <item>375</item>
         <item>400</item>
-        <item>425</item>
-        <item>450</item>
-        <item>475</item>
-        <item>500</item>
-        <item>525</item>
-        <item>550</item>
-        <item>575</item>
-        <item>600</item>
     </integer-array>
 
     <!-- FSAA Preference -->
@@ -404,162 +372,5 @@
         <item>Button 2</item>
         <item>Classic A</item>
     </string-array>
-
-
-    <string-array name="convertFormatEntries" translatable="false">
-        <item>ISO</item>
-        <item>GCZ</item>
-        <item>WIA</item>
-        <item>RVZ</item>
-    </string-array>
-    <integer-array name="convertFormatValues">
-        <item>0</item>
-        <item>3</item>
-        <item>7</item>
-        <item>8</item>
-    </integer-array>
-
-    <string-array name="convertBlockSizeGczEntries">
-        <item>32 KiB</item>
-    </string-array>
-    <integer-array name="convertBlockSizeGczValues">
-        <item>32768</item>
-    </integer-array>
-
-    <string-array name="convertBlockSizeWiaEntries">
-        <item>2 MiB</item>
-    </string-array>
-    <integer-array name="convertBlockSizeWiaValues">
-        <item>2097152</item>
-    </integer-array>
-
-    <string-array name="convertBlockSizeRvzEntries">
-        <item>32 KiB</item>
-        <item>64 KiB</item>
-        <item>128 KiB</item>
-        <item>256 KiB</item>
-        <item>512 KiB</item>
-        <item>1 MiB</item>
-        <item>2 MiB</item>
-    </string-array>
-    <integer-array name="convertBlockSizeRvzValues">
-        <item>32768</item>
-        <item>65536</item>
-        <item>131072</item>
-        <item>262144</item>
-        <item>524288</item>
-        <item>1048576</item>
-        <item>2097152</item>
-    </integer-array>
-
-    <string-array name="convertCompressionGczEntries" translatable="false">
-        <item>Deflate</item>
-    </string-array>
-    <integer-array name="convertCompressionGczValues">
-        <item>0</item>
-    </integer-array>
-
-    <string-array name="convertCompressionWiaEntries">
-        <item>No Compression</item>
-        <item>Purge</item>
-        <item>bzip2 (slow)</item>
-        <item>LZMA (slow)</item>
-        <item>LZMA2 (slow)</item>
-    </string-array>
-    <integer-array name="convertCompressionWiaValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </integer-array>
-
-    <string-array name="convertCompressionRvzEntries">
-        <item>No Compression</item>
-        <item>bzip2 (slow)</item>
-        <item>LZMA (slow)</item>
-        <item>LZMA2 (slow)</item>
-        <item>Zstandard (recommended)</item>
-    </string-array>
-    <integer-array name="convertCompressionRvzValues">
-        <item>0</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-    </integer-array>
-
-    <string-array name="convertCompressionLevelEntries">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-    </string-array>
-    <integer-array name="convertCompressionLevelValues">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-    </integer-array>
-
-    <string-array name="convertCompressionLevelZstdEntries">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-        <item>13</item>
-        <item>14</item>
-        <item>15</item>
-        <item>16</item>
-        <item>17</item>
-        <item>18</item>
-        <item>19</item>
-        <item>20</item>
-        <item>21</item>
-        <item>22</item>
-    </string-array>
-    <integer-array name="convertCompressionLevelZstdValues">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-        <item>13</item>
-        <item>14</item>
-        <item>15</item>
-        <item>16</item>
-        <item>17</item>
-        <item>18</item>
-        <item>19</item>
-        <item>20</item>
-        <item>21</item>
-        <item>22</item>
-    </integer-array>
 
 </resources>

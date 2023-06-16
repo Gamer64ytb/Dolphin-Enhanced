@@ -345,9 +345,9 @@ void FifoPlayer::WriteMemory(const MemoryUpdate& memUpdate)
   u8* mem = nullptr;
 
   if (memUpdate.address & 0x10000000)
-    mem = &Memory::m_pEXRAM[memUpdate.address & Memory::GetExRamMask()];
+    mem = &Memory::m_pEXRAM[memUpdate.address & Memory::EXRAM_MASK];
   else
-    mem = &Memory::m_pRAM[memUpdate.address & Memory::GetRamMask()];
+    mem = &Memory::m_pRAM[memUpdate.address & Memory::RAM_MASK];
 
   std::copy(memUpdate.data.begin(), memUpdate.data.end(), mem);
 }

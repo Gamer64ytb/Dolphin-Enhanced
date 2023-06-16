@@ -1,11 +1,8 @@
 package org.dolphinemu.dolphinemu.adapters;
 
 import android.content.Context;
-
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +20,7 @@ public final class GameAdapter extends RecyclerView.Adapter<GameViewHolder> impl
   View.OnClickListener,
   View.OnLongClickListener
 {
+  private int mResourceId;
   private List<GameFile> mGameFiles;
 
   /**
@@ -46,13 +44,19 @@ public final class GameAdapter extends RecyclerView.Adapter<GameViewHolder> impl
   {
     // Create a new view.
     View gameCard = LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.card_game2, parent, false);
+      .inflate(viewType, parent, false);
 
     gameCard.setOnClickListener(this);
     gameCard.setOnLongClickListener(this);
 
     // Use that view to create a ViewHolder.
     return new GameViewHolder(gameCard);
+  }
+
+  @Override
+  public int getItemViewType(int position)
+  {
+    return mResourceId;
   }
 
   /**
@@ -120,14 +124,12 @@ public final class GameAdapter extends RecyclerView.Adapter<GameViewHolder> impl
           break;
       }
     }
-    String discInfo = discNumber > 1 ? "Disc-" + discNumber : "";
+    String discInfo = discNumber > 1 ? "DISC-" + discNumber : "";
     if (platform < 0 || platform >= platforms.length)
       platform = 2;
     if (country < 0 || country >= countryNames.length)
       country = countryNames.length - 1;
     holder.textPlatform.setText(context.getString(platforms[platform], countryNames[country], discInfo));
-    holder.textCountry.setText(countryNames[country]);
-		holder.textGameDisc.setText(discInfo);
     holder.gameFile = gameFile;
   }
 
@@ -163,6 +165,11 @@ public final class GameAdapter extends RecyclerView.Adapter<GameViewHolder> impl
     notifyDataSetChanged();
   }
 
+  public void setResourceId(int resId)
+  {
+    mResourceId = resId;
+  }
+
   /**
    * Launches the game that was clicked on.
    *
@@ -190,23 +197,4 @@ public final class GameAdapter extends RecyclerView.Adapter<GameViewHolder> impl
       activity.getSupportFragmentManager(), "GameDetailsDialog");
     return true;
   }
-
-	public static class SpacesItemDecoration extends RecyclerView.ItemDecoration
-	{
-		private int space;
-
-		public SpacesItemDecoration(int space)
-		{
-			this.space = space;
-		}
-
-		@Override
-		public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state)
-		{
-			outRect.left = space;
-			outRect.right = space;
-			outRect.bottom = space;
-			outRect.top = space;
-		}
-	}
 }

@@ -1,155 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#000000">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent">
 
     <ImageView
+        android:contentDescription="@string/game_platform_wii"
+        android:scaleType="centerCrop"
         android:id="@+id/image_game_screen"
         android:layout_width="match_parent"
         android:layout_height="160dp"
+        android:layout_marginBottom="6dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="6dp"
-        android:contentDescription="@string/game_platform_wii"
-        android:scaleType="centerCrop"
-        android:src="@drawable/no_banner" />
+        android:src="@drawable/no_banner"/>
 
     <TextView
         android:id="@+id/text_game_filename"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/image_game_screen"
         android:background="#AA333333"
-        android:paddingBottom="2dp"
         android:textColor="#E0E0E0"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:paddingBottom="2dp"
+        android:layout_alignBottom="@id/image_game_screen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/text_game_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/text_game_filename"
         android:background="#AA333333"
-        android:paddingTop="2dp"
         android:textColor="#F0F0F0"
-        android:textSize="14sp" />
+        android:paddingTop="2dp"
+        android:textSize="14sp"
+        android:layout_above="@id/text_game_filename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <View
         android:id="@+id/dummy_view"
-        android:layout_width="1px"
-        android:layout_height="1px"
-        android:layout_below="@id/image_game_screen"
+        android:visibility="invisible"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
+        android:layout_below="@id/image_game_screen"
+        android:layout_width="1px"
+        android:layout_height="1px"/>
 
     <!--  -->
     <Button
+        android:text="@string/delete_game_setting"
         android:id="@+id/button_delete_setting"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:textAllCaps="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/image_game_screen"
-        android:layout_marginHorizontal="4dp"
-        android:layout_marginVertical="3dp"
-
         android:layout_toStartOf="@id/dummy_view"
-        android:background="@drawable/button_purple_gradient"
-        android:stateListAnimator="@null"
-        android:text="@string/delete_game_setting"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
+        android:stateListAnimator="@null"/>
 
     <Button
+        android:text="@string/cheat_code"
         android:id="@+id/button_cheat_code"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:textAllCaps="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/image_game_screen"
         android:layout_toEndOf="@id/dummy_view"
-        android:background="@drawable/button_purple_gradient"
-        android:stateListAnimator="@null"
-        android:text="@string/cheat_code"
-        android:textAllCaps="false"
-        android:layout_marginHorizontal="4dp"
-        android:layout_marginVertical="3dp"
-        android:textColor="#FFFFFF" />
+        android:stateListAnimator="@null"/>
 
     <!--  -->
     <Button
+        android:text="@string/grid_menu_wiimote_settings"
         android:id="@+id/button_wiimote_settings"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:textAllCaps="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_delete_setting"
-        android:layout_marginHorizontal="4dp"
-        android:layout_marginVertical="3dp"
         android:layout_toStartOf="@id/dummy_view"
-        android:background="@drawable/button_purple_gradient"
-        android:stateListAnimator="@null"
-        android:text="@string/grid_menu_wiimote_settings"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
+        android:layout_below="@id/button_delete_setting"
+        android:stateListAnimator="@null"/>
 
     <Button
+        android:text="@string/grid_menu_gcpad_settings"
         android:id="@+id/button_gcpad_settings"
-        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:textAllCaps="false"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_cheat_code"
         android:layout_toEndOf="@id/dummy_view"
-        android:background="@drawable/button_purple_gradient"
-        android:layout_marginHorizontal="4dp"
-        android:layout_marginVertical="3dp"
-        android:stateListAnimator="@null"
-        android:text="@string/grid_menu_gcpad_settings"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
+        android:stateListAnimator="@null"/>
 
     <!--  -->
     <Button
+        android:text="@string/preferences_game_settings"
         android:id="@+id/button_game_setting"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:textAllCaps="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_wiimote_settings"
         android:layout_toStartOf="@id/dummy_view"
-        android:background="@drawable/button_purple_gradient"
-        android:stateListAnimator="@null"
-        android:text="@string/preferences_game_settings"
-        android:layout_marginHorizontal="4dp"
-        android:layout_marginVertical="3dp"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
+        android:layout_below="@id/button_wiimote_settings"
+        android:stateListAnimator="@null"/>
 
     <Button
+        android:text="@string/emulation_quickload"
         android:id="@+id/button_quick_load"
-        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:textAllCaps="false"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_gcpad_settings"
         android:layout_toEndOf="@id/dummy_view"
-        android:background="@drawable/button_purple_gradient"
-        android:layout_marginHorizontal="4dp"
-        android:layout_marginVertical="3dp"
-        android:textColor="#FFFFFF"
-        android:stateListAnimator="@null"
-        android:text="@string/emulation_quickload"
-        android:textAllCaps="false" />
-
-    <!--  -->
-    <Button
-        android:id="@+id/button_convert"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/button_quick_load"
-        android:layout_marginHorizontal="4dp"
-        android:layout_marginVertical="3dp"
-        android:background="@drawable/button_red_gradient"
-        android:stateListAnimator="@null"
-        android:text="@string/convert_convert"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF" />
+        android:stateListAnimator="@null"/>
 
 </RelativeLayout>

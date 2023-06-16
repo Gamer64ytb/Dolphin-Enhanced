@@ -11,8 +11,7 @@
     android:id="@+id/nnf_item_container"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="#000000"
-    android:backgroundTint="#000000"
+    android:background="?selectableItemBackground"
     android:focusable="true"
     android:nextFocusLeft="@+id/nnf_button_cancel"
     android:nextFocusRight="@id/checkbox"
@@ -25,11 +24,9 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:adjustViewBounds="true"
-        android:background="#000000"
-        android:backgroundTint="#000000"
         android:scaleType="center"
-        android:tint="@color/green_primary"
         app:srcCompat="@drawable/nnf_ic_folder_black_48dp"
+        android:tint="?attr/nnf_dir_icon_color"
         tools:ignore="ContentDescription" />
 
     <TextView
@@ -38,14 +35,13 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:textSize="15sp"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
         android:padding="8dp"
         android:singleLine="true"
-        android:text="@string/nnf_name"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp" />
+        android:text="@string/nnf_name" />
 
     <CheckBox
         android:id="@+id/checkbox"

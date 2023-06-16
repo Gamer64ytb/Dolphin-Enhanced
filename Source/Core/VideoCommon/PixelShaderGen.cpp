@@ -1297,25 +1297,9 @@ static void WriteStage(ShaderCode& out, const pixel_shader_uid_data* uid_data, i
   if (ac.dest >= GX_TEVREG0)
     out.SetConstantsUsed(C_COLORS + ac.dest, C_COLORS + ac.dest);
 
-  if (DriverDetails::HasBug(DriverDetails::BUG_BROKEN_VECTOR_BITWISE_AND))
-    {
-        out.Write("\ttevin_a = int4(%s & 255, %s & 255);\n", tev_c_input_table[cc.a],
-                  tev_a_input_table[ac.a]);
-        out.Write("\ttevin_b = int4(%s & 255, %s & 255);\n", tev_c_input_table[cc.b],
-                  tev_a_input_table[ac.b]);
-        out.Write("\ttevin_c = int4(%s & 255, %s & 255);\n", tev_c_input_table[cc.c],
-                  tev_a_input_table[ac.c]);
-    }
-    else {
-
-        out.Write("\ttevin_a = int4(%s, %s) & 255;\n", tev_c_input_table[cc.a],
-                  tev_a_input_table[ac.a]);
-        out.Write("\ttevin_b = int4(%s, %s) & 255;\n", tev_c_input_table[cc.b],
-                  tev_a_input_table[ac.b]);
-        out.Write("\ttevin_c = int4(%s, %s) & 255;\n", tev_c_input_table[cc.c],
-                  tev_a_input_table[ac.c]);
-    };
-
+  out.Write("\ttevin_a = int4(%s, %s) & 255;\n", tev_c_input_table[cc.a], tev_a_input_table[ac.a]);
+  out.Write("\ttevin_b = int4(%s, %s) & 255;\n", tev_c_input_table[cc.b], tev_a_input_table[ac.b]);
+  out.Write("\ttevin_c = int4(%s, %s) & 255;\n", tev_c_input_table[cc.c], tev_a_input_table[ac.c]);
   out.Write("\ttevin_d = int4(%s, %s);\n", tev_c_input_table[cc.d], tev_a_input_table[ac.d]);
 
   if (cc.bias != TEVBIAS_COMPARE || ac.bias != TEVBIAS_COMPARE)

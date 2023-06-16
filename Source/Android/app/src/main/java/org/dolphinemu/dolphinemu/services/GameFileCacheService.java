@@ -3,14 +3,11 @@ package org.dolphinemu.dolphinemu.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.dolphinemu.dolphinemu.model.GameFile;
 import org.dolphinemu.dolphinemu.model.GameFileCache;
-import org.dolphinemu.dolphinemu.ui.platform.Platform;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -26,8 +23,7 @@ public final class GameFileCacheService extends IntentService
   private static final String ACTION_RESCAN = "org.dolphinemu.dolphinemu.RESCAN_GAME_FILE_CACHE";
 
   private static GameFileCache gameFileCache = null;
-	private static final AtomicReference<GameFile[]> gameFiles =
-		new AtomicReference<>(new GameFile[]{});
+  private static AtomicReference<GameFile[]> gameFiles = new AtomicReference<>(new GameFile[]{});
 
   public GameFileCacheService()
   {
@@ -35,25 +31,16 @@ public final class GameFileCacheService extends IntentService
     super("GameFileCacheService");
   }
 
-	public static List<GameFile> getGameFilesForPlatform(Platform platform)
-	{
-		GameFile[] allGames = gameFiles.get();
-		ArrayList<GameFile> platformGames = new ArrayList<>();
-		for (GameFile game : allGames)
-		{
-			if (Platform.fromNativeInt(game.getPlatform()) == platform)
-			{
-				platformGames.add(game);
-			}
-		}
-		return platformGames;
-	}
+  public static List<GameFile> getAllGameFiles()
+  {
+    return Arrays.asList(gameFiles.get());
+  }
 
   public static GameFile getGameFileByPath(String path)
   {
-    for (GameFile game : gameFiles.get())
+    for(GameFile game : gameFiles.get())
     {
-      if (path.equals(game.getPath()))
+      if(path.equals(game.getPath()))
       {
         return game;
       }
@@ -152,7 +139,7 @@ public final class GameFileCacheService extends IntentService
       // Rescan the file system and update the game list cache with the results
       synchronized (gameFileCache)
       {
-        if (gameFileCache.scanLibrary())
+        if (gameFileCache.scanLibrary(this))
         {
           updateGameFileArray();
         }
@@ -164,7 +151,7 @@ public final class GameFileCacheService extends IntentService
   {
     GameFile[] gameFilesTemp = gameFileCache.getAllGames();
     Arrays.sort(gameFilesTemp, (lhs, rhs) -> {
-        int ret = lhs.getTitle().compareToIgnoreCase(rhs.getTitle());
+        int ret = lhs.getGameId().compareToIgnoreCase(rhs.getGameId());
         return ret == 0 ? Integer.compare(lhs.getDiscNumber(), rhs.getDiscNumber()) : ret;
     });
     gameFiles.set(gameFilesTemp);

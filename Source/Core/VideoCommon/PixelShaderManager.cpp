@@ -497,7 +497,7 @@ void PixelShaderManager::SetBoundingBoxActive(bool active)
     if (!g_ActiveConfig.backend_info.bSupportsBBox)
     {
       OSD::AddTypedMessage(OSD::MessageType::BoundingBoxNotice, "Bounding box is not available!",
-                           1);
+                           4000);
     }
     else if (g_ActiveConfig.bBBoxEnable)
     {

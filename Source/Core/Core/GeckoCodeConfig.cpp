@@ -19,8 +19,11 @@ namespace Gecko
 #ifndef ANDROID
 std::vector<GeckoCode> DownloadCodes(std::string gametdb_id, bool* succeeded)
 {
-  // codes.rc24.xyz is a mirror of the now defunct geckocodes.org.
-  std::string endpoint{"https://codes.rc24.xyz/txt.php?txt=" + gametdb_id};  Common::HttpRequest http;
+  std::string endpoint{"https://www.geckocodes.org/txt.php?txt=" + gametdb_id};
+  Common::HttpRequest http;
+
+  // Circumvent high-tech DDOS protection
+  http.SetCookies("challenge=BitMitigate.com;");
 
   // The server always redirects once to the same location.
   http.FollowRedirects(1);
@@ -83,11 +86,6 @@ std::vector<GeckoCode> DownloadCodes(std::string gametdb_id, bool* succeeded)
     {
       std::istringstream ssline(line);
       std::string addr, data;
-
-      // Some locales (e.g. fr_FR.UTF-8) don't split the string stream on space
-      // Use the C locale to workaround this behavior
-      ssline.imbue(std::locale::classic());
-
       ssline >> addr >> data;
       ssline.seekg(0);
 
@@ -123,7 +121,6 @@ std::vector<GeckoCode> DownloadCodes(std::string gametdb_id, bool* succeeded)
   return gcodes;
 }
 #endif
-
 std::vector<GeckoCode> LoadCodes(const IniFile& globalIni, const IniFile& localIni)
 {
   std::vector<GeckoCode> gcodes;
@@ -142,10 +139,6 @@ std::vector<GeckoCode> LoadCodes(const IniFile& globalIni, const IniFile& localI
     for (auto& line : lines)
     {
       std::istringstream ss(line);
-
-      // Some locales (e.g. fr_FR.UTF-8) don't split the string stream on space
-      // Use the C locale to workaround this behavior
-      ss.imbue(std::locale::classic());
 
       switch ((line)[0])
       {

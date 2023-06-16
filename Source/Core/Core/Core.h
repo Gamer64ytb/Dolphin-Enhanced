@@ -57,15 +57,6 @@ bool WantsDeterminism();
 void SetState(State state);
 State GetState();
 
-struct PerformanceStatistics
-{
-  float FPS;
-  float VPS;
-  float Speed;
-};
-
-const PerformanceStatistics& GetPerformanceStatistics();
-
 void SaveScreenShot(bool wait_for_completion = false);
 void SaveScreenShot(const std::string& name, bool wait_for_completion = false);
 

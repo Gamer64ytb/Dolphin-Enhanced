@@ -324,11 +324,11 @@ bool Renderer::CalculateTargetSize()
     const char* backend = SConfig::GetInstance().m_strVideoBackend.c_str();
     if (SConfig::GetInstance().bMMU)
     {
-      msg = StringFromFormat("Backend: %s - MMU: On - Resolution: %.02fx", backend, m_efb_scale / 100.0f);
+      msg = StringFromFormat("Backend: %s - MMU: On - Scale: %.02f", backend, m_efb_scale / 100.0f);
     }
     else
     {
-      msg = StringFromFormat("Backend: %s - Resolution: %.02fx", backend, m_efb_scale / 100.0f);
+      msg = StringFromFormat("Backend: %s - Scale: %.02f", backend, m_efb_scale / 100.0f);
     }
     OSD::AddTypedMessage(OSD::MessageType::EFBScale, msg, 4000);
     m_target_width = new_efb_width;
@@ -339,12 +339,12 @@ bool Renderer::CalculateTargetSize()
   return false;
 }
 
-void Renderer::SaveScreenshot(std::string filename, bool wait_for_completion)
+void Renderer::SaveScreenshot(const std::string& filename, bool wait_for_completion)
 {
   // We must not hold the lock while waiting for the screenshot to complete.
   {
     std::lock_guard<std::mutex> lk(m_screenshot_lock);
-    m_screenshot_name = std::move(filename);
+    m_screenshot_name = filename;
     m_screenshot_request.Set();
   }
 
@@ -441,15 +441,7 @@ void Renderer::CheckForConfigChanges()
 // Create On-Screen-Messages
 void Renderer::DrawDebugText()
 {
-  const Core::PerformanceStatistics& pstats = Core::GetPerformanceStatistics();
-  if (pstats.Speed > 90)
-  {
-    RenderText(m_debug_title_text, 10, 18, 0xFF29A329); // green
-  }
-  else
-  {
-    RenderText(m_debug_title_text, 10, 18, 0xFFFF0000); // red
-  }
+  RenderText(m_debug_title_text, 10, 18, 0xFF00FFFF);
 }
 
 void Renderer::RenderText(const std::string& text, int left, int top, u32 color)
@@ -852,18 +844,14 @@ void Renderer::Swap(u32 xfb_addr, u32 fb_width, u32 fb_stride, u32 fb_height, u6
   // behind the renderer.
   FlushFrameDump();
 
-  g_framebuffer_manager->EndOfFrame();
-
-    if (xfb_addr && fb_width && fb_stride && fb_height)
+  if (xfb_addr && fb_width && fb_stride && fb_height)
   {
     // Get the current XFB from texture cache
     MathUtil::Rectangle<int> xfb_rect;
     const auto* xfb_entry =
         g_texture_cache->GetXFBTexture(xfb_addr, fb_width, fb_height, fb_stride, &xfb_rect);
-    if (xfb_entry &&
-        (!g_ActiveConfig.bSkipPresentingDuplicateXFBs || xfb_entry->id != m_last_xfb_id))
+    if (xfb_entry && xfb_entry->id != m_last_xfb_id)
     {
-      const bool is_duplicate_frame = xfb_entry->id == m_last_xfb_id;
       m_last_xfb_id = xfb_entry->id;
 
       // Since we use the common pipelines here and draw vertices if a batch is currently being
@@ -898,16 +886,12 @@ void Renderer::Swap(u32 xfb_addr, u32 fb_width, u32 fb_stride, u32 fb_height, u6
         SetWindowSize(xfb_rect.GetWidth(), xfb_rect.GetHeight());
       }
 
-      if (!is_duplicate_frame)
-      {
-        if (IsFrameDumping())
-            DumpCurrentFrame(xfb_entry->texture.get(), xfb_rect, ticks);
+      if (IsFrameDumping())
+        DumpCurrentFrame(xfb_entry->texture.get(), xfb_rect, ticks);
 
-        // Begin new frame
-        m_frame_count++;
-        g_stats.ResetFrame();
-      }
-
+      // Begin new frame
+      m_frame_count++;
+      g_stats.ResetFrame();
       g_shader_cache->RetrieveAsyncShaders();
       g_vertex_manager->OnEndFrame();
 
@@ -921,12 +905,8 @@ void Renderer::Swap(u32 xfb_addr, u32 fb_width, u32 fb_stride, u32 fb_height, u6
       // rate and not waiting for vblank. Otherwise, we'd end up with a huge list of pending copies.
       g_texture_cache->FlushEFBCopies();
 
-      if (!is_duplicate_frame)
-      {
-        // Remove stale EFB/XFB copies.
-        g_texture_cache->Cleanup(m_frame_count);
-        Core::Callback_VideoCopiedToXFB(true);
-      }
+      // Remove stale EFB/XFB copies.
+      g_texture_cache->Cleanup(m_frame_count);
 
       // Handle any config changes, this gets propogated to the backend.
       if (g_ActiveConfig.bDirty)
@@ -937,6 +917,8 @@ void Renderer::Swap(u32 xfb_addr, u32 fb_width, u32 fb_stride, u32 fb_height, u6
       g_Config.iSaveTargetId = 0;
 
       EndUtilityDrawing();
+
+      Core::Callback_VideoCopiedToXFB(true);
     }
     else
     {

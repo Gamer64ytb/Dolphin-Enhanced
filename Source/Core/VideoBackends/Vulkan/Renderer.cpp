@@ -286,6 +286,7 @@ void Renderer::BindBackbuffer(const ClearColor& clear_color)
   {
     // Execute cmdbuffer before resizing, as the last frame could still be presenting.
     ExecuteCommandBuffer(false, true);
+    INFO_LOG(VIDEO, "Resizing swap chain due to suboptimal/out-of-date");
     m_swap_chain->ResizeSwapChain();
     res = m_swap_chain->AcquireNextImage();
   }

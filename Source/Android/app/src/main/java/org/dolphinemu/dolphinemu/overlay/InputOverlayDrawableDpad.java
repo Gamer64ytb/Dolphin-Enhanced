@@ -178,6 +178,8 @@ public final class InputOverlayDrawableDpad
   public void setAlpha(int value)
   {
     mDefaultStateBitmap.setAlpha(value);
+		mPressedOneDirectionStateBitmap.setAlpha(value);
+		mPressedTwoDirectionsStateBitmap.setAlpha(value);
   }
 
   private void setDpadState(int pointerX, int pointerY)

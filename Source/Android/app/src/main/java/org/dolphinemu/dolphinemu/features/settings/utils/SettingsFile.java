@@ -1,9 +1,9 @@
 package org.dolphinemu.dolphinemu.features.settings.utils;
 
 import androidx.annotation.NonNull;
-
 import android.text.TextUtils;
 
+import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.features.settings.model.BooleanSetting;
 import org.dolphinemu.dolphinemu.features.settings.model.FloatSetting;
 import org.dolphinemu.dolphinemu.features.settings.model.IntSetting;
@@ -13,7 +13,6 @@ import org.dolphinemu.dolphinemu.features.settings.model.Settings;
 import org.dolphinemu.dolphinemu.features.settings.model.StringSetting;
 import org.dolphinemu.dolphinemu.utils.BiMap;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
-import org.dolphinemu.dolphinemu.utils.IniFile;
 import org.dolphinemu.dolphinemu.utils.Log;
 
 import java.io.BufferedReader;
@@ -33,11 +32,7 @@ import java.util.TreeSet;
  */
 public final class SettingsFile
 {
-	// saf
-	public static final String KEY_ISO_PATH_BASE = "ISOPath";
-	public static final String KEY_ISO_PATHS = "ISOPaths";
-
-	public static final String FILE_NAME_DOLPHIN = "Dolphin";
+  public static final String FILE_NAME_DOLPHIN = "Dolphin";
   public static final String FILE_NAME_GFX = "GFX";
   public static final String FILE_NAME_GCPAD = "GCPadNew";
   public static final String FILE_NAME_WIIMOTE = "WiimoteNew";
@@ -56,7 +51,6 @@ public final class SettingsFile
   public static final String KEY_AUDIO_STRETCH_MAX_LATENCY = "AudioStretchMaxLatency";
   public static final String KEY_AUDIO_BACKEND = "Backend";
   public static final String KEY_ENABLE_CHEATS = "EnableCheats";
-	public static final String KEY_EMULATED_MEM_SIZE_OVERRIDE = "RAMOverrideEnable";
   public static final String KEY_AUTO_DISC_CHANGE = "AutoDiscChange";
   public static final String KEY_GAME_CUBE_LANGUAGE = "SelectedLanguage";
   public static final String KEY_OVERRIDE_GAME_CUBE_LANGUAGE = "OverrideGCLang";
@@ -64,15 +58,10 @@ public final class SettingsFile
   public static final String KEY_SLOT_B_DEVICE = "SlotB";
   public static final String KEY_SERIAL_PORT_1 = "SerialPort1";
 
-  // updater
-	public static final String KEY_UPDATER_CHECK_UPDATES = "UpdaterCheckUpdates";
-	public static final String KEY_UPDATER_SKIP_VERSION = "UpdaterSkipVersion";
-	public static final String KEY_UPDATER_PERMISSION_ASKED = "UpdaterPermissionAsked";
-
-	public static final String KEY_EXPAND_TO_CUTOUT_AREA = "ExpandToCutoutArea";
   public static final String KEY_USE_PANIC_HANDLERS = "UsePanicHandlers";
   public static final String KEY_OSD_MESSAGES = "OnScreenDisplayMessages";
   public static final String KEY_BUILTIN_TITLE_DATABASE = "UseBuiltinTitleDatabase";
+
 
   public static final String KEY_SHOW_FPS = "ShowFPS";
   public static final String KEY_INTERNAL_RES = "InternalResolution";
@@ -85,12 +74,9 @@ public final class SettingsFile
   public static final String KEY_DISABLE_FOG = "DisableFog";
   public static final String KEY_DISABLE_COPY_FILTER = "DisableCopyFilter";
   public static final String KEY_ARBITRARY_MIPMAP_DETECTION = "ArbitraryMipmapDetection";
-  public static final String KEY_APPROXIMATE_LOGIC_OP = "ApproximateLogicOp";
   public static final String KEY_WIDE_SCREEN_HACK = "wideScreenHack";
   public static final String KEY_FORCE_24_BIT_COLOR = "ForceTrueColor";
   public static final String KEY_BACKEND_MULTITHREADING = "BackendMultithreading";
-  public static final String KEY_HIRES_TEXTURES = "HiresTextures";
-  public static final String KEY_CACHE_HIRES_TEXTURES = "CacheHiresTextures";
 
   public static final String KEY_SKIP_EFB = "EFBAccessEnable";
   public static final String KEY_IGNORE_FORMAT = "EFBEmulateFormatChanges";
@@ -101,12 +87,11 @@ public final class SettingsFile
   public static final String KEY_GPU_TEXTURE_DECODING = "EnableGPUTextureDecoding";
   public static final String KEY_XFB_TEXTURE = "XFBToTextureEnable";
   public static final String KEY_IMMEDIATE_XFB = "ImmediateXFBEnable";
-	public static final String KEY_SKIP_DUPLICATE_XFBS = "SkipDuplicateXFBs";
-	public static final String KEY_FAST_DEPTH = "FastDepthCalc";
+  public static final String KEY_FAST_DEPTH = "FastDepthCalc";
   public static final String KEY_TMEM_CACHE_EMULATION = "TMEMCacheEmulation";
-	public static final String KEY_ASPECT_RATIO = "AspectRatio";
-	public static final String KEY_DISPLAY_SCALE = "DisplayScale";
-	public static final String KEY_SHADER_COMPILATION_MODE = "ShaderCompilationMode";
+  public static final String KEY_ASPECT_RATIO = "AspectRatio";
+  public static final String KEY_DISPLAY_SCALE = "DisplayScale";
+  public static final String KEY_SHADER_COMPILATION_MODE = "ShaderCompilationMode";
   public static final String KEY_WAIT_FOR_SHADERS = "WaitForShadersBeforeStarting";
 
   public static final String KEY_DEBUG_JITOFF = "JitOff";
@@ -466,7 +451,7 @@ public final class SettingsFile
     final HashMap<String, SettingSection> sections)
   {
     Set<String> sortedSections = new TreeSet<>(sections.keySet());
-		IniFile ini = new IniFile();
+    NativeLibrary.LoadGameIniFile(gameId);
     for (String sectionKey : sortedSections)
     {
       SettingSection section = sections.get(sectionKey);
@@ -490,12 +475,12 @@ public final class SettingsFile
         }
         else
         {
-					ini.setString(mapSectionNameFromIni(section.getName()), setting.getKey(),
-                  setting.getValueAsString());
+          NativeLibrary.SetUserSetting(gameId, mapSectionNameFromIni(section.getName()),
+                  setting.getKey(), setting.getValueAsString());
         }
       }
     }
-		ini.save(getCustomGameSettingsFile(gameId));
+    NativeLibrary.SaveGameIniFile(gameId);
   }
 
   /**
@@ -514,34 +499,24 @@ public final class SettingsFile
     String wiiConfigPath =
             DirectoryInitialization.getUserDirectory() + "/Config/Profiles/Wiimote/" +
                     profile + ".ini";
-    File wiiProfile = getWiiProfile(profile, padId);
+    File wiiProfile = new File(wiiConfigPath);
     // If it doesn't exist, create it
-		boolean wiiProfileExists = wiiProfile.exists();
-		if (!wiiProfileExists)
+    if (!wiiProfile.exists())
     {
       String defautlWiiProfilePath =
               DirectoryInitialization.getUserDirectory() +
                       "/Config/Profiles/Wiimote/WiimoteProfile.ini";
       DirectoryInitialization.copyFile(defautlWiiProfilePath, wiiConfigPath);
-		}
 
-		IniFile wiiProfileIni = new IniFile(wiiConfigPath);
-
-		if (!wiiProfileExists)
-		{
-			wiiProfileIni.setString(Settings.SECTION_PROFILE, "Device",
+      NativeLibrary.SetProfileSetting(profile, Settings.SECTION_PROFILE, "Device",
               "Android/" + (Integer.valueOf(padId) + 4) + "/Touchscreen");
     }
 
-		wiiProfileIni.setString(Settings.SECTION_PROFILE, key, value);
-		wiiProfileIni.save(wiiConfigPath);
+    NativeLibrary.SetProfileSetting(profile, Settings.SECTION_PROFILE, key, value);
 
     // Enable the profile
-		File gameSettingsFile = SettingsFile.getCustomGameSettingsFile(gameId);
-		IniFile gameSettingsIni = new IniFile(gameSettingsFile);
-		gameSettingsIni.setString(Settings.SECTION_CONTROLS,
+    NativeLibrary.SetUserSetting(gameId, Settings.SECTION_CONTROLS,
             KEY_WIIMOTE_PROFILE + (Integer.valueOf(padId) + 1), profile);
-		gameSettingsIni.save(gameSettingsFile);
   }
 
   private static String mapSectionNameFromIni(String generalSectionName)
@@ -565,7 +540,7 @@ public final class SettingsFile
   }
 
   @NonNull
-	public static File getSettingsFile(String fileName)
+  private static File getSettingsFile(String fileName)
   {
     return new File(DirectoryInitialization.getUserDirectory() + "/Config/" + fileName + ".ini");
   }
@@ -586,7 +561,7 @@ public final class SettingsFile
         ".ini");
   }
 
-  public static File getCustomGameSettingsFile(String gameId)
+  private static File getCustomGameSettingsFile(String gameId)
   {
 
     return new File(

@@ -7,13 +7,11 @@ import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.hardware.usb.UsbManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.InputDevice;
 import android.view.KeyEvent;
@@ -22,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -30,9 +27,6 @@ import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.dialogs.RunningSettingDialog;
 import org.dolphinemu.dolphinemu.dialogs.StateSavesDialog;
-import org.dolphinemu.dolphinemu.features.settings.model.BooleanSetting;
-import org.dolphinemu.dolphinemu.features.settings.model.Settings;
-import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile;
 import org.dolphinemu.dolphinemu.fragments.EmulationFragment;
 import org.dolphinemu.dolphinemu.model.GameFile;
 import org.dolphinemu.dolphinemu.overlay.InputOverlay;
@@ -40,6 +34,7 @@ import org.dolphinemu.dolphinemu.services.GameFileCacheService;
 import org.dolphinemu.dolphinemu.ui.main.MainActivity;
 import org.dolphinemu.dolphinemu.ui.platform.Platform;
 import org.dolphinemu.dolphinemu.utils.ControllerMappingHelper;
+import org.dolphinemu.dolphinemu.utils.FileBrowserHelper;
 import org.dolphinemu.dolphinemu.utils.Java_GCAdapter;
 import org.dolphinemu.dolphinemu.utils.Java_WiimoteAdapter;
 import org.dolphinemu.dolphinemu.utils.Rumble;
@@ -70,13 +65,7 @@ public final class EmulationActivity extends AppCompatActivity
   private String mSelectedGameId = "";
   private int mPlatform = 0;
   private String[] mPaths;
-	private static boolean sUserPausedEmulation;
   private String mSavedState;
-
-	private Settings mSettings;
-
-	private MenuItem mPauseEmulationButton;
-	private MenuItem mUnpauseEmulationButton;
 
   public static final String RUMBLE_PREF_KEY = "PhoneRumble";
 
@@ -85,7 +74,6 @@ public final class EmulationActivity extends AppCompatActivity
   public static final String EXTRA_SELECTED_GAMEID = "SelectedGameId";
   public static final String EXTRA_PLATFORM = "Platform";
   public static final String EXTRA_SAVED_STATE = "SavedState";
-	public static final String EXTRA_USER_PAUSED_EMULATION = "sUserPausedEmulation";
 
   public static void launch(Context context, GameFile game, String savedState)
   {
@@ -95,12 +83,7 @@ public final class EmulationActivity extends AppCompatActivity
     context.startActivity(intent);
   }
 
-	public static void launch(Context context, String filePath)
-	{
-		launchFile(context, new String[]{filePath});
-	}
-
-	public static EmulationActivity get()
+  public static EmulationActivity get()
   {
     return sActivity.get();
   }
@@ -148,16 +131,15 @@ public final class EmulationActivity extends AppCompatActivity
       Intent gameToEmulate = getIntent();
       mPaths = gameToEmulate.getStringArrayExtra(EXTRA_SELECTED_GAMES);
       mSavedState = gameToEmulate.getStringExtra(EXTRA_SAVED_STATE);
-			sUserPausedEmulation = gameToEmulate.getBooleanExtra(EXTRA_USER_PAUSED_EMULATION, false);
-      if (mPaths != null && mPaths.length > 0)
+      if(mPaths != null && mPaths.length > 0)
       {
         GameFile game = GameFileCacheService.getGameFileByPath(mPaths[0]);
-        if (game != null)
+        if(game != null)
         {
           mSelectedGameId = game.getGameId();
           mSelectedTitle = game.getTitle();
           mPlatform = game.getPlatform();
-          if (mPaths.length == 1)
+          if(mPaths.length == 1)
           {
             mPaths = GameFileCacheService.getAllDiscPaths(game);
           }
@@ -168,9 +150,6 @@ public final class EmulationActivity extends AppCompatActivity
     {
       restoreState(savedInstanceState);
     }
-
-		mSettings = new Settings();
-		mSettings.loadSettings(null);
 
     mControllerMappingHelper = new ControllerMappingHelper();
 
@@ -236,7 +215,6 @@ public final class EmulationActivity extends AppCompatActivity
     outState.putString(EXTRA_SELECTED_GAMEID, mSelectedGameId);
     outState.putInt(EXTRA_PLATFORM, mPlatform);
     outState.putString(EXTRA_SAVED_STATE, mSavedState);
-		outState.putBoolean(EXTRA_USER_PAUSED_EMULATION, sUserPausedEmulation);
     super.onSaveInstanceState(outState);
   }
 
@@ -273,7 +251,11 @@ public final class EmulationActivity extends AppCompatActivity
         // If the user picked a file, as opposed to just backing out.
         if (resultCode == MainActivity.RESULT_OK)
         {
-					NativeLibrary.ChangeDisc(result.getData().toString());
+          String newDiscPath = FileBrowserHelper.getSelectedDirectory(result);
+          if (!TextUtils.isEmpty(newDiscPath))
+          {
+            NativeLibrary.ChangeDisc(newDiscPath);
+          }
         }
         break;
     }
@@ -316,15 +298,6 @@ public final class EmulationActivity extends AppCompatActivity
     {
       getMenuInflater().inflate(R.menu.menu_emulation_wii, menu);
     }
-
-		mPauseEmulationButton = menu.findItem(R.id.menu_emulation_pause);
-		mUnpauseEmulationButton = menu.findItem(R.id.menu_emulation_unpause);
-
-		if (sUserPausedEmulation)
-		{
-			showUnpauseEmulationButton();
-		}
-
     return true;
   }
 
@@ -365,18 +338,6 @@ public final class EmulationActivity extends AppCompatActivity
         NativeLibrary.RefreshWiimotes();
         break;*/
 
-			case R.id.menu_emulation_pause:
-				sUserPausedEmulation = true;
-				NativeLibrary.PauseEmulation();
-				showUnpauseEmulationButton();
-				break;
-
-			case R.id.menu_emulation_unpause:
-				sUserPausedEmulation = false;
-				NativeLibrary.UnPauseEmulation();
-				showPauseEmulationButton();
-				break;
-
       // Screenshot capturing
       case R.id.menu_emulation_screenshot:
         NativeLibrary.SaveScreenShot();
@@ -388,10 +349,7 @@ public final class EmulationActivity extends AppCompatActivity
         break;
 
       case R.id.menu_change_disc:
-				Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-				intent.addCategory(Intent.CATEGORY_OPENABLE);
-				intent.setType("*/*");
-				startActivityForResult(intent, REQUEST_CHANGE_DISC);
+        FileBrowserHelper.openFilePicker(this, REQUEST_CHANGE_DISC, false);
         break;
 
       case R.id.menu_running_setting:
@@ -424,7 +382,7 @@ public final class EmulationActivity extends AppCompatActivity
       });
     builder.setOnDismissListener((dialogInterface) ->
     {
-      if (InputOverlay.sJoyStickSetting != joystick)
+      if(InputOverlay.sJoyStickSetting != joystick)
       {
         mEmulationFragment.refreshInputOverlay();
       }
@@ -439,7 +397,7 @@ public final class EmulationActivity extends AppCompatActivity
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(R.string.emulation_sensor_settings);
 
-    if (isGameCubeGame())
+    if(isGameCubeGame())
     {
       int sensor = InputOverlay.sSensorGCSetting;
       builder.setSingleChoiceItems(R.array.gcSensorSettings, sensor,
@@ -472,13 +430,13 @@ public final class EmulationActivity extends AppCompatActivity
 
   private void setSensorState(boolean enabled)
   {
-    if (enabled)
+    if(enabled)
     {
-      if (mSensorManager == null)
+      if(mSensorManager == null)
       {
         mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         Sensor rotationVector = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
-        if (rotationVector != null)
+        if(rotationVector != null)
         {
           mSensorManager.registerListener(mEmulationFragment, rotationVector, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
         }
@@ -486,7 +444,7 @@ public final class EmulationActivity extends AppCompatActivity
     }
     else
     {
-      if (mSensorManager != null)
+      if(mSensorManager != null)
       {
         mSensorManager.unregisterListener(mEmulationFragment);
         mSensorManager = null;
@@ -514,27 +472,10 @@ public final class EmulationActivity extends AppCompatActivity
   {
     super.onResume();
 
-		// Only android 9+ support this feature.
-		BooleanSetting expandToCutoutAreaSetting =
-			(BooleanSetting) mSettings.getSection(Settings.SECTION_INI_INTERFACE)
-				.getSetting(SettingsFile.KEY_EXPAND_TO_CUTOUT_AREA);
-		boolean expandToCutoutArea = expandToCutoutAreaSetting == null || expandToCutoutAreaSetting.getValue();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-		{
-			WindowManager.LayoutParams attributes = getWindow().getAttributes();
-
-			attributes.layoutInDisplayCutoutMode =
-				expandToCutoutArea ?
-					WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES :
-					WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER;
-
-			getWindow().setAttributes(attributes);
-		}
-
-    if (mSensorManager != null)
+    if(mSensorManager != null)
     {
       Sensor rotationVector = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
-      if (rotationVector != null)
+      if(rotationVector != null)
       {
         mSensorManager.registerListener(mEmulationFragment, rotationVector, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
       }
@@ -546,7 +487,7 @@ public final class EmulationActivity extends AppCompatActivity
   {
     super.onPause();
 
-    if (mSensorManager != null)
+    if(mSensorManager != null)
     {
       mSensorManager.unregisterListener(mEmulationFragment);
     }
@@ -568,7 +509,7 @@ public final class EmulationActivity extends AppCompatActivity
     InputOverlay.sJoystickRelative = mPreferences.getBoolean(InputOverlay.RELATIVE_PREF_KEY, true);
     InputOverlay.sIRRecenter = mPreferences.getBoolean(recenterKey, false);
 
-    if (isGameCubeGame())
+    if(isGameCubeGame())
       InputOverlay.sJoyStickSetting = InputOverlay.JOYSTICK_EMULATE_NONE;
 
     InputOverlay.sSensorGCSetting = InputOverlay.SENSOR_GC_NONE;
@@ -604,7 +545,7 @@ public final class EmulationActivity extends AppCompatActivity
     int button = event.getKeyCode();
     if (button == mBindingButton && input != null && mBindingDevice.equals(input.getDescriptor()))
     {
-      if (event.getAction() == KeyEvent.ACTION_DOWN)
+      if(event.getAction() == KeyEvent.ACTION_DOWN)
         onBackPressed();
       return true;
     }
@@ -762,28 +703,6 @@ public final class EmulationActivity extends AppCompatActivity
     alertDialog.show();
   }
 
-	private void showPauseEmulationButton()
-	{
-		mUnpauseEmulationButton.setVisible(false);
-		mPauseEmulationButton.setVisible(true);
-	}
-
-	private void showUnpauseEmulationButton()
-	{
-		mPauseEmulationButton.setVisible(false);
-		mUnpauseEmulationButton.setVisible(true);
-	}
-
-	public static boolean getHasUserPausedEmulation()
-	{
-		return sUserPausedEmulation;
-	}
-
-	public static void setHasUserPausedEmulation(boolean value)
-	{
-		sUserPausedEmulation = value;
-	}
-
   private void chooseController()
   {
     int controller = InputOverlay.sControllerType;
@@ -884,11 +803,11 @@ public final class EmulationActivity extends AppCompatActivity
     mBindingButton = -1;
 
     int descPos = binding.indexOf("Device ");
-    if (descPos == -1)
+    if(descPos == -1)
       return;
 
     int codePos = binding.indexOf("-Button ");
-    if (codePos == -1)
+    if(codePos == -1)
       return;
 
     String descriptor = binding.substring(descPos + 8, codePos - 1);

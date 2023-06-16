@@ -40,11 +40,9 @@
 
 #include "VideoCommon/OnScreenDisplay.h"
 
-// The minimum time it takes for the DVD drive to process a command (in microseconds)
-constexpr u64 MINIMUM_COMMAND_LATENCY_US = 300;
-
-// The time it takes for a read command to start (in microseconds)
-constexpr u64 READ_COMMAND_LATENCY_US = 600;
+// The minimum time it takes for the DVD drive to process a command (in
+// microseconds)
+constexpr u64 COMMAND_LATENCY_US = 300;
 
 // The size of the streaming buffer.
 constexpr u64 STREAMING_BUFFER_SIZE = 1024 * 1024;
@@ -1142,10 +1140,10 @@ void ExecuteCommand(u32 command_0, u32 command_1, u32 command_2, u32 output_addr
 
   if (!command_handled_by_thread)
   {
-    // TODO: Needs testing to determine if MINIMUM_COMMAND_LATENCY_US is accurate for this
-    CoreTiming::ScheduleEvent(
-        MINIMUM_COMMAND_LATENCY_US * (SystemTimers::GetTicksPerSecond() / 1000000),
-        s_finish_executing_command, PackFinishExecutingCommandUserdata(reply_type, interrupt_type));
+    // TODO: Needs testing to determine if COMMAND_LATENCY_US is accurate for this
+    CoreTiming::ScheduleEvent(COMMAND_LATENCY_US * (SystemTimers::GetTicksPerSecond() / 1000000),
+                              s_finish_executing_command,
+                              PackFinishExecutingCommandUserdata(reply_type, interrupt_type));
   }
 }
 
@@ -1216,11 +1214,7 @@ void ScheduleReads(u64 offset, u32 length, const DiscIO::Partition& partition, u
   const u32 ticks_per_second = SystemTimers::GetTicksPerSecond();
   const bool wii_disc = DVDThread::GetDiscType() == DiscIO::Platform::WiiDisc;
 
-// Whether we have performed a seek.
-bool seek = false;
-
-
-// Where the DVD read head is (usually parked at the end of the buffer,
+  // Where the DVD read head is (usually parked at the end of the buffer,
   // unless we've interrupted it mid-buffer-read).
   u64 head_position;
 
@@ -1234,7 +1228,6 @@ bool seek = false;
   // It's rounded to a whole ECC block and never uses Wii partition addressing.
   u64 dvd_offset = DVDThread::PartitionOffsetToRawOffset(offset, partition);
   dvd_offset = Common::AlignDown(dvd_offset, DVD_ECC_BLOCK_SIZE);
-  const u64 first_block = dvd_offset;
 
   if (SConfig::GetInstance().bFastDiscSpeed)
   {
@@ -1293,8 +1286,8 @@ bool seek = false;
             "Schedule reads: offset=0x%" PRIx64 " length=0x%" PRIx32 " address=0x%" PRIx32, offset,
             length, output_address);
 
-  s64 ticks_until_completion =
-      READ_COMMAND_LATENCY_US * (SystemTimers::GetTicksPerSecond() / 1000000);
+  // The DVD drive's minimum turnaround time on a command, based on a hardware test.
+  s64 ticks_until_completion = COMMAND_LATENCY_US * (SystemTimers::GetTicksPerSecond() / 1000000);
 
   u32 buffered_blocks = 0;
   u32 unbuffered_blocks = 0;
@@ -1331,7 +1324,6 @@ bool seek = false;
       if (dvd_offset != head_position)
       {
         // Unbuffered seek+read
-        seek = true;
         ticks_until_completion += static_cast<u64>(
             ticks_per_second * DVDMath::CalculateSeekTime(head_position, dvd_offset));
 
@@ -1371,43 +1363,27 @@ bool seek = false;
     dvd_offset += DVD_ECC_BLOCK_SIZE;
   } while (length > 0);
 
-// Evict blocks from the buffer which are unlikely to be used again after this read,
-// so that the buffer gets space for prefetching new blocks. Based on hardware testing,
-// the blocks which are kept are the most recently accessed block, the block immediately
-// before it, and all blocks after it.
-//
-// If the block immediately before the most recently accessed block is not kept, loading
-// screens in Pitfall: The Lost Expedition are longer than they should be.
-// https://bugs.dolphin-emu.org/issues/12279
-const u64 last_block = dvd_offset;
-constexpr u32 BUFFER_BACKWARD_SEEK_LIMIT = DVD_ECC_BLOCK_SIZE * 2;
-if (last_block - buffer_start <= BUFFER_BACKWARD_SEEK_LIMIT && buffer_start != buffer_end)
+  // Update the buffer based on this read. Based on experimental testing,
+  // we will only reuse the old buffer while reading forward. Note that the
+  // buffer start we calculate here is not the actual start of the buffer -
+  // it is just the start of the portion we need to read.
+  const u64 last_block = dvd_offset;
+  if (last_block == buffer_start + DVD_ECC_BLOCK_SIZE && buffer_start != buffer_end)
   {
-// Special case: reading the first two blocks of the buffer doesn't change the buffer state
+    // Special case: reading less than one block at the start of the
+    // buffer won't change the buffer state
   }
   else
   {
-// Note that the s_read_buffer_start_offset value we calculate here is not the
-// actual start of the buffer - it is just the start of the portion we need to read.
-// The actual start of the buffer is s_read_buffer_end_offset - STREAMING_BUFFER_SIZE.
     if (last_block >= buffer_end)
-    {
-    // Full buffer read
-    s_read_buffer_start_offset = last_block;
-    }
+      // Full buffer read
+      s_read_buffer_start_offset = last_block;
     else
-    {
-    // Partial buffer read
-    s_read_buffer_start_offset = buffer_end;
-    }
-    s_read_buffer_end_offset = last_block + STREAMING_BUFFER_SIZE - BUFFER_BACKWARD_SEEK_LIMIT;
-    if (seek)
-    {
-    // If we seek, the block preceding the first accessed block never gets read into the buffer
-    s_read_buffer_end_offset =
-    std::max(s_read_buffer_end_offset, first_block + STREAMING_BUFFER_SIZE);
-    }
-// Assume the buffer starts prefetching new blocks right after the end of the last operation
+      // Partial buffer read
+      s_read_buffer_start_offset = buffer_end;
+
+    s_read_buffer_end_offset = last_block + STREAMING_BUFFER_SIZE - DVD_ECC_BLOCK_SIZE;
+    // Assume the buffer starts reading right after the end of the last operation
     s_read_buffer_start_time = current_time + ticks_until_completion;
     s_read_buffer_end_time =
         s_read_buffer_start_time +

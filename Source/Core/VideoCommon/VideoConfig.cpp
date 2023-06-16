@@ -125,7 +125,6 @@ void VideoConfig::Refresh()
   bForceTrueColor = Config::Get(Config::GFX_ENHANCE_FORCE_TRUE_COLOR);
   bDisableCopyFilter = Config::Get(Config::GFX_ENHANCE_DISABLE_COPY_FILTER);
   bArbitraryMipmapDetection = Config::Get(Config::GFX_ENHANCE_ARBITRARY_MIPMAP_DETECTION);
-  bApproximateLogicOp = Config::Get(Config::GFX_ENHANCE_APPROXIMATE_LOGIC_OP);
   fArbitraryMipmapDetectionThreshold =
       Config::Get(Config::GFX_ENHANCE_ARBITRARY_MIPMAP_DETECTION_THRESHOLD);
 
@@ -138,7 +137,6 @@ void VideoConfig::Refresh()
   bDisableCopyToVRAM = Config::Get(Config::GFX_HACK_DISABLE_COPY_TO_VRAM);
   bDeferEFBCopies = Config::Get(Config::GFX_HACK_DEFER_EFB_COPIES);
   bImmediateXFB = Config::Get(Config::GFX_HACK_IMMEDIATE_XFB);
-  bSkipPresentingDuplicateXFBs = Config::Get(Config::GFX_HACK_SKIP_DUPLICATE_XFBS);
   bCopyEFBScaled = Config::Get(Config::GFX_HACK_COPY_EFB_SCALED);
   bEFBEmulateFormatChanges = Config::Get(Config::GFX_HACK_EFB_EMULATE_FORMAT_CHANGES);
   bTMEMCacheEmulation = Config::Get(Config::GFX_HACK_TMEM_CACHE_EMULATION);

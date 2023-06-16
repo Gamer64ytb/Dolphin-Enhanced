@@ -3,10 +3,8 @@ package org.dolphinemu.dolphinemu.features.settings.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;

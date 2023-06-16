@@ -4,17 +4,10 @@
     tools:context="org.dolphinemu.dolphinemu.activities.EmulationActivity">
 
     <item
-        android:id="@+id/menu_emulation_pause"
+        android:id="@+id/menu_emulation_screenshot"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_pause"
-        android:title="@string/pause_emulation"/>
-
-    <item
-        android:id="@+id/menu_emulation_unpause"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/lb_ic_play"
-        android:title="@string/unpause_emulation"
-        android:visible="false"/>
+        android:icon="@drawable/ic_screenshot"
+        android:title="@string/emulation_screenshot"/>
 
     <item
         android:id="@+id/menu_running_setting"
@@ -23,16 +16,16 @@
         android:title="@string/grid_menu_config"/>
 
     <item
-        android:id="@+id/menu_quicksave"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_quicksave"
-        android:title="@string/emulation_quicksave"/>
-
-    <item
         android:id="@+id/menu_emulation_choose_controller"
         android:icon="@drawable/ic_settings_gcpad"
         app:showAsAction="ifRoom"
         android:title="@string/emulation_choose_controller"/>
+
+    <item
+        android:id="@+id/menu_quicksave"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_quicksave"
+        android:title="@string/emulation_quicksave"/>
 
     <item
         android:id="@+id/menu_emulation_edit_layout"
@@ -63,11 +56,5 @@
         android:id="@+id/menu_change_disc"
         app:showAsAction="never"
         android:title="@string/emulation_change_disc"/>
-
-    <item
-        android:id="@+id/menu_emulation_screenshot"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_screenshot"
-        android:title="@string/emulation_screenshot"/>
 
 </menu>

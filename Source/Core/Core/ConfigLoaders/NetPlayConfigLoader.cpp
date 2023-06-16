@@ -49,7 +49,8 @@ public:
     layer->Set(Config::GFX_HACK_DISABLE_COPY_TO_VRAM, m_settings.m_DisableCopyToVRAM);
     layer->Set(Config::GFX_HACK_IMMEDIATE_XFB, m_settings.m_ImmediateXFBEnable);
     layer->Set(Config::GFX_HACK_EFB_EMULATE_FORMAT_CHANGES, m_settings.m_EFBEmulateFormatChanges);
-    layer->Set(Config::GFX_SAFE_TEXTURE_CACHE_COLOR_SAMPLES, m_settings.m_SafeTextureCacheColorSamples);
+    layer->Set(Config::GFX_SAFE_TEXTURE_CACHE_COLOR_SAMPLES,
+               m_settings.m_SafeTextureCacheColorSamples);
     layer->Set(Config::GFX_PERF_QUERIES_ENABLE, m_settings.m_PerfQueriesEnable);
     layer->Set(Config::MAIN_FPRF, m_settings.m_FPRF);
     layer->Set(Config::MAIN_ACCURATE_NANS, m_settings.m_AccurateNaNs);
@@ -76,8 +77,6 @@ public:
       layer->Set(Config::GFX_FAST_DEPTH_CALC, m_settings.m_FastDepthCalc);
       layer->Set(Config::GFX_ENABLE_PIXEL_LIGHTING, m_settings.m_EnablePixelLighting);
       layer->Set(Config::GFX_WIDESCREEN_HACK, m_settings.m_WidescreenHack);
-      layer->Set(Config::GFX_HIRES_TEXTURES, m_settings.m_HiresTextures);
-      layer->Set(Config::GFX_CACHE_HIRES_TEXTURES, m_settings.m_CacheHiresTextures);
       layer->Set(Config::GFX_ENHANCE_FORCE_FILTERING, m_settings.m_ForceFiltering);
       layer->Set(Config::GFX_ENHANCE_MAX_ANISOTROPY, m_settings.m_MaxAnisotropy);
       layer->Set(Config::GFX_ENHANCE_FORCE_TRUE_COLOR, m_settings.m_ForceTrueColor);
