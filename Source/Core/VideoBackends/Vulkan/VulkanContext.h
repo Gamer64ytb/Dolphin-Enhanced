@@ -5,6 +5,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "Common/CommonTypes.h"
@@ -99,8 +100,8 @@ public:
   float GetMaxSamplerAnisotropy() const { return m_device_properties.limits.maxSamplerAnisotropy; }
   // Finds a memory type index for the specified memory properties and the bits returned by
   // vkGetImageMemoryRequirements
-  bool GetMemoryType(u32 bits, VkMemoryPropertyFlags properties, u32* out_type_index);
-  u32 GetMemoryType(u32 bits, VkMemoryPropertyFlags properties);
+  std::optional<u32> GetMemoryType(u32 bits, VkMemoryPropertyFlags properties, bool strict,
+                                   bool* is_coherent = nullptr);
 
   void GetImageMemoryRequirements(VkImage image, VkMemoryRequirements* mem_reqs, bool* dedicated);
   void GetBufferMemoryRequirements(VkBuffer buffer, VkMemoryRequirements* mem_reqs, bool* dedicated);
@@ -112,7 +113,7 @@ public:
 
   // Finds a memory type for upload or readback buffers.
   u32 GetUploadMemoryType(u32 bits, bool* is_coherent = nullptr);
-  u32 GetReadbackMemoryType(u32 bits, bool* is_coherent = nullptr, bool* is_cached = nullptr);
+  u32 GetReadbackMemoryType(u32 bits, bool* is_coherent = nullptr);
 
 private:
   using ExtensionList = std::vector<const char*>;

@@ -547,6 +547,7 @@ public final class SettingsFragmentPresenter
     Setting gpuTextureDecoding = gfxSection.getSetting(SettingsFile.KEY_GPU_TEXTURE_DECODING);
     Setting xfbToTexture = hacksSection.getSetting(SettingsFile.KEY_XFB_TEXTURE);
     Setting immediateXfb = hacksSection.getSetting(SettingsFile.KEY_IMMEDIATE_XFB);
+		Setting skipDuplicateXfbs = hacksSection.getSetting(SettingsFile.KEY_SKIP_DUPLICATE_XFBS);
 		Setting approxLogicOpWithBlending =
 			gfxSection.getSetting(SettingsFile.KEY_APPROX_LOGIC_OP_WITH_BLENDING);
     Setting fastDepth = gfxSection.getSetting(SettingsFile.KEY_FAST_DEPTH);
@@ -579,6 +580,9 @@ public final class SettingsFragmentPresenter
       R.string.xfb_copy_method, R.string.xfb_copy_method_description, true, xfbToTexture));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_IMMEDIATE_XFB, Settings.SECTION_GFX_HACKS,
       R.string.immediate_xfb, R.string.immediate_xfb_description, false, immediateXfb));
+		sl.add(new CheckBoxSetting(SettingsFile.KEY_SKIP_DUPLICATE_XFBS, Settings.SECTION_GFX_HACKS,
+			R.string.skip_duplicate_xfbs, R.string.skip_duplicate_xfbs_description, true,
+			skipDuplicateXfbs));
 
     sl.add(new HeaderSetting(null, null, R.string.other, 0));
 		sl.add(new CheckBoxSetting(SettingsFile.KEY_APPROX_LOGIC_OP_WITH_BLENDING, Settings.SECTION_GFX_HACKS,

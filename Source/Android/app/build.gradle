@@ -22,7 +22,7 @@ android {
         // TODO If this is ever modified, change application_id in strings.xml
         applicationId "org.mm.j"
         minSdkVersion 24
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         versionCode(getBuildVersionCode())
 

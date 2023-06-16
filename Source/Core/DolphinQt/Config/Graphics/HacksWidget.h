@@ -49,4 +49,5 @@ private:
   void AddDescriptions();
 
   void UpdateDeferEFBCopiesEnabled();
+  void UpdateSkipPresentingDuplicateFramesEnabled();
 };

@@ -233,6 +233,8 @@
     <string name="xfb_copy_method_description">只将XFB保存在GPU，在少数游戏中会造成显示问题。如果不确定，请不要勾选此选项。</string>
     <string name="immediate_xfb">立即呈现</string>
     <string name="immediate_xfb_description">立即显示XFB而不等待扫描，在少数游戏中会造成显示问题，但减少了延迟。如果不确定，请不要勾选此选项。</string>
+    <string name="skip_duplicate_xfbs">跳过呈现重复帧</string>
+    <string name="skip_duplicate_xfbs_description">跳过重复帧的呈现。 这可能会提高低端设备的性能，同时降低帧同步的一致性。 如果不确定，请选中此项。</string>
     <string name="approx_logic_op_with_blending">带混合的近似逻辑运算</string>
     <string name="approx_logic_op_with_blending_description">这是一个巨大的 hack，之前已从 dolphin-emu 中删除，因为它会导致渲染中断。 不过，好像有些设备还是不支持逻辑运算。 因此，在少数情况下，黑客实际上让事情稍微好一些。 如果不确定，请不要选中此选项。</string>
     <string name="fast_depth_calculation">快速深度计算</string>
