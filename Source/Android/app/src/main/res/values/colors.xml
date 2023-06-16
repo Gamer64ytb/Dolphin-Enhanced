@@ -2,7 +2,8 @@
 <resources>
 
     <color name="dolphin_blue">#1960a4</color>
-    <color name="dolphin_blue_dark">#0f335b</color>
+    <!-- dolphin_blue_dark old color: #0f335b -->
+    <color name="dolphin_blue_dark">#1960a4</color>
     <color name="dolphin_purple">#651fff</color>
 
     <color name="circle_grey">#bdbdbd</color>

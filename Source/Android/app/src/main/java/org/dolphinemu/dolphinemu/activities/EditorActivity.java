@@ -3,7 +3,6 @@ package org.dolphinemu.dolphinemu.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -29,12 +28,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nononsenseapps.filepicker.DividerItemDecoration;
-
 import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.model.GameFile;
 import org.dolphinemu.dolphinemu.services.GameFileCacheService;
+import org.dolphinemu.dolphinemu.ui.DividerItemDecoration;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
 
 import java.io.BufferedReader;
@@ -439,11 +437,10 @@ public class EditorActivity extends AppCompatActivity
     setTitle(gameId);
 
     // code list
-    Drawable lineDivider = getDrawable(R.drawable.line_divider);
     mListView = findViewById(R.id.code_list);
     mAdapter = new CheatEntryAdapter();
     mListView.setAdapter(mAdapter);
-    mListView.addItemDecoration(new DividerItemDecoration(lineDivider));
+    mListView.addItemDecoration(new DividerItemDecoration(null));
     mListView.setLayoutManager(new LinearLayoutManager(this));
 
     // code editor

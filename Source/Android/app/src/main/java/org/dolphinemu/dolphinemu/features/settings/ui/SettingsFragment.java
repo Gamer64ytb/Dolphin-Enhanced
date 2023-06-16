@@ -1,7 +1,6 @@
 package org.dolphinemu.dolphinemu.features.settings.ui;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -11,11 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nononsenseapps.filepicker.DividerItemDecoration;
-
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.features.settings.model.Settings;
 import org.dolphinemu.dolphinemu.features.settings.model.view.SettingsItem;
+import org.dolphinemu.dolphinemu.ui.DividerItemDecoration;
 
 import java.util.ArrayList;
 
@@ -83,7 +81,6 @@ public final class SettingsFragment extends Fragment implements SettingsFragment
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
   {
     //LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-    Drawable lineDivider = mActivity.getDrawable(R.drawable.line_divider);
     RecyclerView recyclerView = view.findViewById(R.id.list_settings);
 
     GridLayoutManager mgr = new GridLayoutManager(mActivity, 2);
@@ -101,7 +98,7 @@ public final class SettingsFragment extends Fragment implements SettingsFragment
 
     recyclerView.setAdapter(mAdapter);
     recyclerView.setLayoutManager(mgr);
-    recyclerView.addItemDecoration(new DividerItemDecoration(lineDivider));
+    recyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), null));
 
     showSettingsList(mActivity.getSettings());
   }
