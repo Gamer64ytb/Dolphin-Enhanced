@@ -124,6 +124,7 @@ struct VideoConfig final
   int iSafeTextureCache_ColorSamples;
   float fAspectRatioHackW, fAspectRatioHackH;
   bool bEnablePixelLighting;
+  bool bApproximateLogicOpWithBlending;
   bool bFastDepthCalc;
   bool bVertexRounding;
   int iEFBAccessTileSize;

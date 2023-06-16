@@ -547,6 +547,8 @@ public final class SettingsFragmentPresenter
     Setting gpuTextureDecoding = gfxSection.getSetting(SettingsFile.KEY_GPU_TEXTURE_DECODING);
     Setting xfbToTexture = hacksSection.getSetting(SettingsFile.KEY_XFB_TEXTURE);
     Setting immediateXfb = hacksSection.getSetting(SettingsFile.KEY_IMMEDIATE_XFB);
+		Setting approxLogicOpWithBlending =
+			gfxSection.getSetting(SettingsFile.KEY_APPROX_LOGIC_OP_WITH_BLENDING);
     Setting fastDepth = gfxSection.getSetting(SettingsFile.KEY_FAST_DEPTH);
     Setting tmemEmu = hacksSection.getSetting(SettingsFile.KEY_TMEM_CACHE_EMULATION);
 
@@ -560,9 +562,9 @@ public final class SettingsFragmentPresenter
     sl.add(new CheckBoxSetting(SettingsFile.KEY_EFB_TEXTURE, Settings.SECTION_GFX_HACKS,
       R.string.efb_copy_method, R.string.efb_copy_method_description, true, efbToTexture));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_DEFER_EFB_COPIES, Settings.SECTION_GFX_HACKS,
-            R.string.defer_efb_copies, R.string.defer_efb_copies_description, true, deferEfbCopies));
+			R.string.defer_efb_copies, R.string.defer_efb_copies_description, true, deferEfbCopies));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_EFB_DEFER_INVALIDATION, Settings.SECTION_GFX_HACKS,
-            R.string.efb_defer_invalidation, R.string.efb_defer_invalidation_description, false, deferEfbInvalid));
+			R.string.efb_defer_invalidation, R.string.efb_defer_invalidation_description, false, deferEfbInvalid));
 
     sl.add(new HeaderSetting(null, null, R.string.texture_cache, 0));
     sl.add(new SingleChoiceSetting(SettingsFile.KEY_TEXCACHE_ACCURACY,
@@ -579,6 +581,9 @@ public final class SettingsFragmentPresenter
       R.string.immediate_xfb, R.string.immediate_xfb_description, false, immediateXfb));
 
     sl.add(new HeaderSetting(null, null, R.string.other, 0));
+		sl.add(new CheckBoxSetting(SettingsFile.KEY_APPROX_LOGIC_OP_WITH_BLENDING, Settings.SECTION_GFX_HACKS,
+			R.string.approx_logic_op_with_blending, R.string.approx_logic_op_with_blending_description,
+			false, approxLogicOpWithBlending));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_FAST_DEPTH, Settings.SECTION_GFX_SETTINGS,
       R.string.fast_depth_calculation, R.string.fast_depth_calculation_description, true, fastDepth));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_TMEM_CACHE_EMULATION, Settings.SECTION_GFX_HACKS,

@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Debug;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -33,6 +35,9 @@ import java.util.ArrayList;
 
 public class RunningSettingDialog extends DialogFragment
 {
+	public static final int MENU_MAIN = 0;
+	public static final int MENU_SETTINGS = 1;
+
   public class SettingsItem
   {
     // gfx
@@ -56,10 +61,25 @@ public class RunningSettingDialog extends DialogFragment
     public static final int SETTING_TOUCH_POINTER = 101;
     public static final int SETTING_TOUCH_POINTER_RECENTER = 102;
     public static final int SETTING_JOYSTICK_RELATIVE = 103;
+		// func
+		public static final int SETTING_LOAD_SUBMENU = 200;
+		public static final int SETTING_TAKE_SCREENSHOT = 201;
+		public static final int SETTING_EDIT_BUTTONS = 202;
+		public static final int SETTING_TOGGLE_BUTTONS = 203;
+		public static final int SETTING_QUICKSAVE = 204;
+		public static final int SETTING_QUICKLOAD = 205;
+		public static final int SETTING_STATESAVES = 206;
+		public static final int SETTING_ADJUST_SCALE = 207;
+		public static final int SETTING_CHOOSE_CONTROLLER = 208;
+		public static final int SETTING_JOYSTICK_EMULATION = 209;
+		public static final int SETTING_CHANGE_DISC = 210;
+		public static final int SETTING_SENSOR_EMULATION = 211;
+		public static final int SETTING_EXIT_GAME = 212;
     // view type
     public static final int TYPE_CHECKBOX = 0;
     public static final int TYPE_RADIO_GROUP = 1;
     public static final int TYPE_SEEK_BAR = 2;
+		public static final int TYPE_BUTTON = 3;
 
     private int mSetting;
     private String mName;
@@ -125,6 +145,89 @@ public class RunningSettingDialog extends DialogFragment
     public abstract void onClick(View clicked);
   }
 
+	public final class ButtonSettingViewHolder extends SettingViewHolder
+	{
+		SettingsItem mItem;
+		private TextView mName;
+
+		public ButtonSettingViewHolder(View itemView)
+		{
+			super(itemView);
+		}
+
+		@Override
+		protected void findViews(View root)
+		{
+			mName = root.findViewById(R.id.text_setting_name);
+		}
+
+		@Override
+		public void bind(SettingsItem item)
+		{
+			mItem = item;
+			mName.setText(item.getName());
+		}
+
+		@Override
+		public void onClick(View clicked)
+		{
+			EmulationActivity activity = (EmulationActivity)NativeLibrary.getEmulationContext();
+			switch (mItem.getSetting())
+			{
+				case SettingsItem.SETTING_LOAD_SUBMENU:
+					loadSubMenu(mItem.getValue());
+					break;
+				case SettingsItem.SETTING_TAKE_SCREENSHOT:
+					NativeLibrary.SaveScreenShot();
+					dismiss();
+					break;
+				case SettingsItem.SETTING_EDIT_BUTTONS:
+					activity.editControlsPlacement();
+					dismiss();
+					break;
+				case SettingsItem.SETTING_TOGGLE_BUTTONS:
+					activity.toggleControls();
+					dismiss();
+					break;
+				case SettingsItem.SETTING_QUICKSAVE:
+					NativeLibrary.SaveState(0, false);
+					dismiss();
+					break;
+				case SettingsItem.SETTING_QUICKLOAD:
+					NativeLibrary.LoadState(0);
+					dismiss();
+					break;
+				case SettingsItem.SETTING_STATESAVES:
+					activity.showStateSaves();
+					dismiss();
+					break;
+				case SettingsItem.SETTING_ADJUST_SCALE:
+					activity.adjustScale();
+					dismiss();
+					break;
+				case SettingsItem.SETTING_CHOOSE_CONTROLLER:
+					activity.chooseController();
+					dismiss();
+					break;
+				case SettingsItem.SETTING_JOYSTICK_EMULATION:
+					activity.showJoystickSettings();
+					dismiss();
+					break;
+				case SettingsItem.SETTING_CHANGE_DISC:
+					activity.changeDisc();
+					dismiss();
+					break;
+				case SettingsItem.SETTING_SENSOR_EMULATION:
+					activity.showSensorSettings();
+					dismiss();
+					break;
+				case SettingsItem.SETTING_EXIT_GAME:
+					activity.exitEmulation();
+					dismiss();
+					break;
+			}
+		}
+	}
 
   public final class CheckBoxSettingViewHolder extends SettingViewHolder
     implements CompoundButton.OnCheckedChangeListener
@@ -331,7 +434,31 @@ public class RunningSettingDialog extends DialogFragment
     private int[] mRunningSettings;
     private ArrayList<SettingsItem> mSettings;
 
-    public SettingsAdapter()
+		public void loadMainMenu()
+		{
+			EmulationActivity activity = (EmulationActivity)NativeLibrary.getEmulationContext();
+
+			mSettings = new ArrayList<>();
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_LOAD_SUBMENU, R.string.preferences_settings, SettingsItem.TYPE_BUTTON, MENU_SETTINGS));
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_TAKE_SCREENSHOT, R.string.emulation_screenshot, SettingsItem.TYPE_BUTTON, 0));
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_EDIT_BUTTONS, R.string.emulation_edit_layout, SettingsItem.TYPE_BUTTON, 0));
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_TOGGLE_BUTTONS, R.string.emulation_toggle_controls, SettingsItem.TYPE_BUTTON, 0));
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_QUICKSAVE, R.string.emulation_quicksave, SettingsItem.TYPE_BUTTON, 0));
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_QUICKLOAD, R.string.emulation_quickload, SettingsItem.TYPE_BUTTON, 0));
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_STATESAVES, R.string.state_saves, SettingsItem.TYPE_BUTTON, 0));
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_ADJUST_SCALE, R.string.emulation_control_scale, SettingsItem.TYPE_BUTTON, 0));
+			if (!activity.isGameCubeGame())
+			{
+				mSettings.add(new SettingsItem(SettingsItem.SETTING_CHOOSE_CONTROLLER, R.string.emulation_choose_controller, SettingsItem.TYPE_BUTTON, 0));
+				mSettings.add(new SettingsItem(SettingsItem.SETTING_JOYSTICK_EMULATION, R.string.emulation_joystick_settings, SettingsItem.TYPE_BUTTON, 0));
+			}
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_CHANGE_DISC, R.string.emulation_change_disc, SettingsItem.TYPE_BUTTON, 0));
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_SENSOR_EMULATION, R.string.emulation_sensor_settings, SettingsItem.TYPE_BUTTON, 0));
+			mSettings.add(new SettingsItem(SettingsItem.SETTING_EXIT_GAME, R.string.emulation_exit, SettingsItem.TYPE_BUTTON, 0));
+			notifyDataSetChanged();
+		}
+
+		public void loadSettingsMenu()
     {
       int i = 0;
       final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -342,7 +469,7 @@ public class RunningSettingDialog extends DialogFragment
       mSettings.add(new SettingsItem(SettingsItem.SETTING_PHONE_RUMBLE, R.string.emulation_control_rumble,
         SettingsItem.TYPE_CHECKBOX, mRumble));
 
-      if(!EmulationActivity.get().isGameCubeGame())
+      if (!EmulationActivity.get().isGameCubeGame())
       {
         mTouchPointer = prefs.getInt(InputOverlay.POINTER_PREF_KEY, 0);
         mSettings.add(new SettingsItem(SettingsItem.SETTING_TOUCH_POINTER,
@@ -385,7 +512,7 @@ public class RunningSettingDialog extends DialogFragment
       mSettings.add(new SettingsItem(SettingsItem.SETTING_JIT_FOLLOW_BRANCH,
         R.string.jit_follow_branch, SettingsItem.TYPE_CHECKBOX, mRunningSettings[i++]));
 
-      if(!EmulationActivity.get().isGameCubeGame())
+      if (!EmulationActivity.get().isGameCubeGame())
       {
         mSettings.add(new SettingsItem(SettingsItem.SETTING_IR_PITCH,
           R.string.pitch, SettingsItem.TYPE_SEEK_BAR, mRunningSettings[i++]));
@@ -394,6 +521,7 @@ public class RunningSettingDialog extends DialogFragment
         mSettings.add(new SettingsItem(SettingsItem.SETTING_IR_VERTICAL_OFFSET,
           R.string.vertical_offset, SettingsItem.TYPE_SEEK_BAR, mRunningSettings[i++]));
       }
+			notifyDataSetChanged();
     }
 
     @NonNull
@@ -413,6 +541,9 @@ public class RunningSettingDialog extends DialogFragment
         case SettingsItem.TYPE_SEEK_BAR:
           itemView = inflater.inflate(R.layout.list_item_running_seekbar, parent, false);
           return new SeekBarSettingViewHolder(itemView);
+				case SettingsItem.TYPE_BUTTON:
+					itemView = inflater.inflate(R.layout.list_item_running_button, parent, false);
+					return new ButtonSettingViewHolder(itemView);
       }
       return null;
     }
@@ -437,18 +568,24 @@ public class RunningSettingDialog extends DialogFragment
 
     public void saveSettings()
     {
+			// don't constantly save settings
+			if (mRunningSettings == null)
+			{
+				return;
+			}
+
       // prefs
       SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
 
       int rumble = mSettings.get(0).getValue();
-      if(mRumble != rumble)
+      if (mRumble != rumble)
       {
         editor.putBoolean(EmulationActivity.RUMBLE_PREF_KEY, rumble > 0);
         Rumble.setPhoneRumble(getActivity(), rumble > 0);
       }
       mSettings.remove(0);
 
-      if(!EmulationActivity.get().isGameCubeGame())
+      if (!EmulationActivity.get().isGameCubeGame())
       {
         int pointer = mSettings.get(0).getValue();
         if(mTouchPointer != pointer)
@@ -470,7 +607,7 @@ public class RunningSettingDialog extends DialogFragment
       }
 
       int relative = mSettings.get(0).getValue();
-      if(mJoystickRelative != relative)
+      if (mJoystickRelative != relative)
       {
         editor.putBoolean(InputOverlay.RELATIVE_PREF_KEY, relative > 0);
         InputOverlay.sJoystickRelative = relative > 0;
@@ -490,6 +627,7 @@ public class RunningSettingDialog extends DialogFragment
           isChanged = true;
         }
       }
+			// only apply if user changed settings
       if (isChanged)
       {
         NativeLibrary.setRunningSettings(newSettings);
@@ -504,7 +642,12 @@ public class RunningSettingDialog extends DialogFragment
     return new RunningSettingDialog();
   }
 
+	private int mMenu;
+	private TextView mTitle;
+	private TextView mInfo;
+	private Handler mHandler;
   private SettingsAdapter mAdapter;
+	private DialogInterface.OnDismissListener mDismissListener;
 
   @NonNull
   @Override
@@ -513,6 +656,11 @@ public class RunningSettingDialog extends DialogFragment
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     ViewGroup contents = (ViewGroup) getActivity().getLayoutInflater()
       .inflate(R.layout.dialog_running_settings, null);
+
+		mTitle = contents.findViewById(R.id.text_title);
+		mInfo = contents.findViewById(R.id.text_info);
+		mHandler = new Handler(getActivity().getMainLooper());
+		setHeapInfo();
 
     int columns = 1;
     Drawable lineDivider = getContext().getDrawable(R.drawable.line_divider);
@@ -523,14 +671,51 @@ public class RunningSettingDialog extends DialogFragment
     recyclerView.setAdapter(mAdapter);
     recyclerView.addItemDecoration(new DividerItemDecoration(lineDivider));
     builder.setView(contents);
+		loadSubMenu(MENU_MAIN);
     return builder.create();
   }
+
+	// display ram usage
+	public void setHeapInfo()
+	{
+		long heapsize = Debug.getNativeHeapAllocatedSize() >> 20;
+		mInfo.setText(String.format("%dMB", heapsize));
+		mHandler.postDelayed(this::setHeapInfo, 1000);
+	}
+
+	public void setOnDismissListener(DialogInterface.OnDismissListener listener)
+	{
+		mDismissListener = listener;
+	}
 
   @Override
   public void onDismiss(DialogInterface dialog)
   {
-    super.onDismiss(dialog);
-    mAdapter.saveSettings();
+		super.onDismiss(dialog);
+		if (mMenu == MENU_SETTINGS)
+		{
+			mAdapter.saveSettings();
+		}
+		if (mDismissListener != null)
+		{
+			mDismissListener.onDismiss(dialog);
+		}
+		mHandler.removeCallbacksAndMessages(null);
   }
 
+	private void loadSubMenu(int menu)
+	{
+		if (menu == MENU_MAIN)
+		{
+			EmulationActivity activity = (EmulationActivity)NativeLibrary.getEmulationContext();
+			mTitle.setText(activity.getTitle());
+			mAdapter.loadMainMenu();
+		}
+		else if (menu == MENU_SETTINGS)
+		{
+			mTitle.setText(R.string.preferences_settings);
+			mAdapter.loadSettingsMenu();
+		}
+		mMenu = menu;
+	}
 }

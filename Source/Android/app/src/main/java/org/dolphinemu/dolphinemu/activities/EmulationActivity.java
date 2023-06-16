@@ -8,7 +8,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -50,13 +49,11 @@ public final class EmulationActivity extends AppCompatActivity
   public static final int REQUEST_CHANGE_DISC = 1;
 
   private SensorManager mSensorManager;
-  private View mDecorView;
   private EmulationFragment mEmulationFragment;
 
   private SharedPreferences mPreferences;
   private ControllerMappingHelper mControllerMappingHelper;
 
-  private boolean mStopEmulation;
   private boolean mMenuVisible;
   private String mBindingDevice;
   private int mBindingButton;
@@ -131,7 +128,7 @@ public final class EmulationActivity extends AppCompatActivity
       Intent gameToEmulate = getIntent();
       mPaths = gameToEmulate.getStringArrayExtra(EXTRA_SELECTED_GAMES);
       mSavedState = gameToEmulate.getStringExtra(EXTRA_SAVED_STATE);
-      if(mPaths != null && mPaths.length > 0)
+      if (mPaths != null && mPaths.length > 0)
       {
         GameFile game = GameFileCacheService.getGameFileByPath(mPaths[0]);
         if(game != null)
@@ -139,7 +136,7 @@ public final class EmulationActivity extends AppCompatActivity
           mSelectedGameId = game.getGameId();
           mSelectedTitle = game.getTitle();
           mPlatform = game.getPlatform();
-          if(mPaths.length == 1)
+          if (mPaths.length == 1)
           {
             mPaths = GameFileCacheService.getAllDiscPaths(game);
           }
@@ -153,19 +150,7 @@ public final class EmulationActivity extends AppCompatActivity
 
     mControllerMappingHelper = new ControllerMappingHelper();
 
-    // Get a handle to the Window containing the UI.
-    mDecorView = getWindow().getDecorView();
-    mDecorView.setOnSystemUiVisibilityChangeListener(visibility ->
-    {
-      if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-      {
-        // Go back to immersive fullscreen mode in 3s
-        Handler handler = new Handler(getMainLooper());
-        handler.postDelayed(this::enableFullscreenImmersive, 3000 /* 3s */);
-      }
-    });
     // Set these options now so that the SurfaceView the game renders into is the right size.
-    mStopEmulation = false;
     enableFullscreenImmersive();
 
     Java_GCAdapter.manager = (UsbManager) getSystemService(Context.USB_SERVICE);
@@ -193,6 +178,15 @@ public final class EmulationActivity extends AppCompatActivity
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     loadPreferences();
   }
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus)
+	{
+		if (hasFocus)
+		{
+			enableFullscreenImmersive();
+		}
+	}
 
   @Override
   protected void onDestroy()
@@ -230,16 +224,23 @@ public final class EmulationActivity extends AppCompatActivity
   @Override
   public void onBackPressed()
   {
-    if (mMenuVisible)
-    {
-      mStopEmulation = true;
-      mEmulationFragment.stopEmulation();
-      finish();
-    }
-    else
-    {
-      disableFullscreenImmersive();
-    }
+		if (mMenuVisible)
+		{
+			mEmulationFragment.stopEmulation();
+			finish();
+		}
+		else
+		{
+			mMenuVisible = true;
+			mEmulationFragment.stopConfiguringControls();
+			RunningSettingDialog dialog = RunningSettingDialog.newInstance();
+			dialog.show(getSupportFragmentManager(), "RunningSettingDialog");
+			dialog.setOnDismissListener(v ->
+			{
+				mMenuVisible = false;
+				enableFullscreenImmersive();
+			});
+		}
   }
 
   @Override
@@ -263,113 +264,21 @@ public final class EmulationActivity extends AppCompatActivity
 
   private void enableFullscreenImmersive()
   {
-    if (mStopEmulation)
-    {
-      return;
-    }
-    mMenuVisible = false;
-    // It would be nice to use IMMERSIVE_STICKY, but that doesn't show the toolbar.
-    mDecorView.setSystemUiVisibility(
-      View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-        View.SYSTEM_UI_FLAG_FULLSCREEN |
-        View.SYSTEM_UI_FLAG_IMMERSIVE);
+		getWindow().getDecorView().setSystemUiVisibility(
+			View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+				View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+				View.SYSTEM_UI_FLAG_FULLSCREEN |
+				View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
   }
 
-  private void disableFullscreenImmersive()
-  {
-    mMenuVisible = true;
-    mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-      | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-      | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-  }
-
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu)
-  {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    if (isGameCubeGame())
-    {
-      getMenuInflater().inflate(R.menu.menu_emulation, menu);
-    }
-    else
-    {
-      getMenuInflater().inflate(R.menu.menu_emulation_wii, menu);
-    }
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item)
-  {
-    switch (item.getItemId())
-    {
-      // Edit the placement of the controls
-      case R.id.menu_emulation_edit_layout:
-        editControlsPlacement();
-        break;
-
-      case R.id.menu_emulation_joystick_settings:
-        showJoystickSettings();
-        break;
-
-      case R.id.menu_emulation_sensor_settings:
-        showSensorSettings();
-        break;
-
-      // Enable/Disable specific buttons or the entire input overlay.
-      case R.id.menu_emulation_toggle_controls:
-        toggleControls();
-        break;
-
-      // Adjust the scale of the overlay controls.
-      case R.id.menu_emulation_adjust_scale:
-        adjustScale();
-        break;
-
-      // (Wii games only) Change the controller for the input overlay.
-      case R.id.menu_emulation_choose_controller:
-        chooseController();
-        break;
-
-      /*case R.id.menu_refresh_wiimotes:
-        NativeLibrary.RefreshWiimotes();
-        break;*/
-
-      // Screenshot capturing
-      case R.id.menu_emulation_screenshot:
-        NativeLibrary.SaveScreenShot();
-        break;
-
-      // Quick save / load
-      case R.id.menu_quicksave:
-        showStateSaves();
-        break;
-
-      case R.id.menu_change_disc:
-        FileBrowserHelper.openFilePicker(this, REQUEST_CHANGE_DISC, false);
-        break;
-
-      case R.id.menu_running_setting:
-        RunningSettingDialog.newInstance()
-          .show(getSupportFragmentManager(), "RunningSettingDialog");
-        break;
-
-      default:
-        return false;
-    }
-
-    return true;
-  }
-
-  private void showStateSaves()
+  public void showStateSaves()
   {
     StateSavesDialog.newInstance(mSelectedGameId).show(getSupportFragmentManager(), "StateSavesDialog");
   }
 
-  private void showJoystickSettings()
+  public void showJoystickSettings()
   {
     final int joystick = InputOverlay.sJoyStickSetting;
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -392,7 +301,7 @@ public final class EmulationActivity extends AppCompatActivity
     alertDialog.show();
   }
 
-  private void showSensorSettings()
+  public void showSensorSettings()
   {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(R.string.emulation_sensor_settings);
@@ -455,7 +364,7 @@ public final class EmulationActivity extends AppCompatActivity
     mEmulationFragment.onAccuracyChanged(null, 0);
   }
 
-  private void editControlsPlacement()
+  public void editControlsPlacement()
   {
     if (mEmulationFragment.isConfiguringControls())
     {
@@ -579,7 +488,7 @@ public final class EmulationActivity extends AppCompatActivity
       return false;
   }
 
-  private void toggleControls()
+  public void toggleControls()
   {
     final SharedPreferences.Editor editor = mPreferences.edit();
     final int controller = InputOverlay.sControllerType;
@@ -631,7 +540,7 @@ public final class EmulationActivity extends AppCompatActivity
     alertDialog.show();
   }
 
-  private void adjustScale()
+  public void adjustScale()
   {
     LayoutInflater inflater = LayoutInflater.from(this);
     View view = inflater.inflate(R.layout.dialog_input_adjust, null);
@@ -703,7 +612,12 @@ public final class EmulationActivity extends AppCompatActivity
     alertDialog.show();
   }
 
-  private void chooseController()
+	public void changeDisc()
+	{
+		FileBrowserHelper.openFilePicker(this, REQUEST_CHANGE_DISC, false);
+	}
+
+  public void chooseController()
   {
     int controller = InputOverlay.sControllerType;
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -796,6 +710,12 @@ public final class EmulationActivity extends AppCompatActivity
   {
     mEmulationFragment.updateTouchPointer();
   }
+
+	public void exitEmulation()
+	{
+		mEmulationFragment.stopEmulation();
+		finish();
+	}
 
   public void bindSystemBack(String binding)
   {

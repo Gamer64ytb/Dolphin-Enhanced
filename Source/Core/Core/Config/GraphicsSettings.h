@@ -51,6 +51,7 @@ extern const ConfigInfo<int> GFX_BITRATE_KBPS;
 extern const ConfigInfo<bool> GFX_INTERNAL_RESOLUTION_FRAME_DUMPS;
 extern const ConfigInfo<bool> GFX_ENABLE_GPU_TEXTURE_DECODING;
 extern const ConfigInfo<bool> GFX_ENABLE_PIXEL_LIGHTING;
+extern const ConfigInfo<bool> GFX_APPROXIMATE_LOGIC_OP_WITH_BLENDING;
 extern const ConfigInfo<bool> GFX_FAST_DEPTH_CALC;
 extern const ConfigInfo<int> GFX_MSAA;
 extern const ConfigInfo<bool> GFX_SSAA;

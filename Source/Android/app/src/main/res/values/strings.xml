@@ -233,6 +233,8 @@
     <string name="xfb_copy_method_description">Stores XFB Copies exclusively on the GPU, bypassing system memory. Causes graphical defects in a small number of games that need to readback from memory. If unsure, leave this checked.</string>
     <string name="immediate_xfb">Immediately Present XFB</string>
     <string name="immediate_xfb_description">Displays the XFB copies as soon as they are created, without waiting for scanout. Causes graphical defects in some games but reduces latency. If unsure, leave this unchecked.</string>
+    <string name="approx_logic_op_with_blending">Approximate Logic Op With Blending</string>
+    <string name="approx_logic_op_with_blending_description">This is a giant hack which was previously removed from dolphin-emu because it causes broken rendering. However, it seems that some devices still do not support logical operations. Therefore, for a handful of cases where the hack actually makes things slightly better. If unsure, leave this unchecked.</string>
     <string name="fast_depth_calculation">Fast Depth Calculation</string>
     <string name="fast_depth_calculation_description">Uses a less accurate algorithm to calculate depth values.</string>
     <string name="tmem_cache_emulation">TMEM Cache Emulation</string>

@@ -93,6 +93,7 @@ void VideoConfig::Refresh()
   bInternalResolutionFrameDumps = Config::Get(Config::GFX_INTERNAL_RESOLUTION_FRAME_DUMPS);
   bEnableGPUTextureDecoding = Config::Get(Config::GFX_ENABLE_GPU_TEXTURE_DECODING);
   bEnablePixelLighting = Config::Get(Config::GFX_ENABLE_PIXEL_LIGHTING);
+  bApproximateLogicOpWithBlending = Config::Get(Config::GFX_APPROXIMATE_LOGIC_OP_WITH_BLENDING);
   bFastDepthCalc = Config::Get(Config::GFX_FAST_DEPTH_CALC);
   iMultisamples = Config::Get(Config::GFX_MSAA);
   bSSAA = Config::Get(Config::GFX_SSAA);

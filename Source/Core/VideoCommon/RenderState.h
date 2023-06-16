@@ -68,6 +68,10 @@ union BlendingState
 {
   void Generate(const BPMemory& bp);
 
+  // HACK: Replaces logical operations with blend operations.
+  // Will not be bit-correct, and in some cases not even remotely in the same ballpark.
+  void ApproximateLogicOpWithBlending();
+
   bool IsDualSourceBlend() const
   {
     return dstalpha && (srcfactor == BlendMode::SRCALPHA || srcfactor == BlendMode::INVSRCALPHA);

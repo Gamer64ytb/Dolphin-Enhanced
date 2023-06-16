@@ -58,6 +58,8 @@ const ConfigInfo<bool> GFX_ENABLE_GPU_TEXTURE_DECODING{
     {System::GFX, "Settings", "EnableGPUTextureDecoding"}, false};
 const ConfigInfo<bool> GFX_ENABLE_PIXEL_LIGHTING{{System::GFX, "Settings", "EnablePixelLighting"},
                                                  false};
+const ConfigInfo<bool> GFX_APPROXIMATE_LOGIC_OP_WITH_BLENDING{{System::GFX, "Settings",
+            "ApproximateLogicOpWithBlending"}, false};
 const ConfigInfo<bool> GFX_FAST_DEPTH_CALC{{System::GFX, "Settings", "FastDepthCalc"}, true};
 const ConfigInfo<int> GFX_MSAA{{System::GFX, "Settings", "MSAA"}, 1};
 const ConfigInfo<bool> GFX_SSAA{{System::GFX, "Settings", "SSAA"}, false};
