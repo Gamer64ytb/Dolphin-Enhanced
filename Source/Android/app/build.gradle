@@ -33,7 +33,7 @@ android {
         release {
             keyAlias 'dolphin-release-key'
             keyPassword 'zhangwei'
-            storeFile file('home/gamer64/Android/android-sign-key/dolphin-release-key.jks')
+            storeFile file('home/gamer64/android-sign-key/dolphin-release-key.jks')
             storePassword 'zhangwei'
         }
     }
