@@ -32,22 +32,16 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button_load_state"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="70dp"
-        android:layout_height="28dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/spacing_small"
-        android:layout_marginTop="@dimen/spacing_small"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_toStartOf="@+id/separator"
-        android:background="@color/dolphin_blue"
-        android:backgroundTint="@color/dolphin_blue"
-        android:minWidth="0dp"
-        android:stateListAnimator="@null"
         android:text="@string/load"
-        android:textColor="@android:color/white" />
+        android:id="@+id/button_load_state"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:minWidth="0dp"
+        android:layout_margin="@dimen/spacing_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/separator"
+        android:stateListAnimator="@null"/>
 
     <View
         android:id="@+id/separator"
@@ -58,21 +52,15 @@
         android:background="@color/light_grey"/>
 
     <Button
-        android:id="@+id/button_save_state"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="70dp"
-        android:layout_height="28dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/spacing_small"
-        android:layout_marginTop="@dimen/spacing_small"
-        android:layout_marginEnd="@dimen/spacing_small"
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:background="@color/dolphin_blue"
-        android:backgroundTint="@color/dolphin_blue"
-        android:minWidth="0dp"
-        android:stateListAnimator="@null"
         android:text="@string/save"
-        android:textColor="@android:color/white" />
+        android:id="@+id/button_save_state"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:minWidth="0dp"
+        android:layout_margin="@dimen/spacing_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:stateListAnimator="@null"/>
 
 </RelativeLayout>
