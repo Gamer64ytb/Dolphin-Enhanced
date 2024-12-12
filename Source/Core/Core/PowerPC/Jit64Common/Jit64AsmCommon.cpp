@@ -489,6 +489,7 @@ void QuantizedMemoryRoutines::GenQuantizedLoad(bool single, EQuantizeType type, 
 
   int size = sizes[type] * (single ? 1 : 2);
   bool isInline = quantize != -1;
+  bool safe_access = m_jit.jo.memcheck || !m_jit.jo.fastmem;
 
   // illegal
   if (type == QUANTIZE_INVALID1 || type == QUANTIZE_INVALID2 || type == QUANTIZE_INVALID3)
@@ -506,7 +507,7 @@ void QuantizedMemoryRoutines::GenQuantizedLoad(bool single, EQuantizeType type, 
 
   bool extend = single && (type == QUANTIZE_S8 || type == QUANTIZE_S16);
 
-  if (m_jit.jo.memcheck)
+  if (safe_access)
   {
     BitSet32 regsToSave = QUANTIZED_REGS_TO_SAVE_LOAD;
     int flags = isInline ? 0 :
@@ -632,8 +633,9 @@ void QuantizedMemoryRoutines::GenQuantizedLoadFloat(bool single, bool isInline)
 {
   int size = single ? 32 : 64;
   bool extend = false;
+  bool safe_access = m_jit.jo.memcheck || !m_jit.jo.fastmem;
 
-  if (m_jit.jo.memcheck)
+  if (safe_access)
   {
     BitSet32 regsToSave = QUANTIZED_REGS_TO_SAVE;
     int flags = isInline ? 0 :
@@ -644,7 +646,7 @@ void QuantizedMemoryRoutines::GenQuantizedLoadFloat(bool single, bool isInline)
 
   if (single)
   {
-    if (m_jit.jo.memcheck)
+    if (safe_access)
     {
       MOVD_xmm(XMM0, R(RSCRATCH_EXTRA));
     }
