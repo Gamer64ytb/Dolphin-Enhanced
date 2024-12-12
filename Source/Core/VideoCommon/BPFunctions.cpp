@@ -64,13 +64,26 @@ void SetScissor()
 
 void SetViewport()
 {
-  int scissor_x_off = bpmem.scissorOffset.x * 2;
-  int scissor_y_off = bpmem.scissorOffset.y * 2;
-  float x = g_renderer->EFBToScaledXf(xfmem.viewport.xOrig - xfmem.viewport.wd - scissor_x_off);
-  float y = g_renderer->EFBToScaledYf(xfmem.viewport.yOrig + xfmem.viewport.ht - scissor_y_off);
+  const int scissor_x_off = bpmem.scissorOffset.x * 2;
+  const int scissor_y_off = bpmem.scissorOffset.y * 2;
+  float raw_x = xfmem.viewport.xOrig - xfmem.viewport.wd - scissor_x_off;
+  float raw_y = xfmem.viewport.yOrig + xfmem.viewport.ht - scissor_y_off;
+  float raw_width = 2.0f * xfmem.viewport.wd;
+  float raw_height = -2.0f * xfmem.viewport.ht;
+  if (g_ActiveConfig.UseVertexRounding())
+  {
+    // Round the viewport to match full 1x IR pixels as well.
+    // This eliminates a line in the archery mode in Wii Sports Resort at 3x IR and higher.
+    raw_x = std::round(raw_x);
+    raw_y = std::round(raw_y);
+    raw_width = std::round(raw_width);
+    raw_height = std::round(raw_height);
+  }
 
-  float width = g_renderer->EFBToScaledXf(2.0f * xfmem.viewport.wd);
-  float height = g_renderer->EFBToScaledYf(-2.0f * xfmem.viewport.ht);
+  float x = g_renderer->EFBToScaledXf(raw_x);
+  float y = g_renderer->EFBToScaledYf(raw_y);
+  float width = g_renderer->EFBToScaledXf(raw_width);
+  float height = g_renderer->EFBToScaledYf(raw_height);
   float min_depth = (xfmem.viewport.farZ - xfmem.viewport.zRange) / 16777216.0f;
   float max_depth = xfmem.viewport.farZ / 16777216.0f;
   if (width < 0.f)

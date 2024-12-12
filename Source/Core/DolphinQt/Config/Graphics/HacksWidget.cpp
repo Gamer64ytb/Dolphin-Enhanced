@@ -257,9 +257,9 @@ void HacksWidget::AddDescriptions()
       QT_TR_NOOP("Disables bounding box emulation.\n\nThis may improve GPU performance "
                  "significantly, but some games will break.\n\nIf unsure, leave this checked.");
   static const char TR_VERTEX_ROUNDING_DESCRIPTION[] =
-      QT_TR_NOOP("Rounds 2D vertices to whole pixels.\n\nFixes graphical problems in some games at "
-                 "higher internal resolutions. This setting has no effect when native internal "
-                 "resolution is used.\n\nIf unsure, leave this unchecked.");
+      QT_TR_NOOP("Rounds 2D vertices to whole pixels and rounds the viewport size to a whole number.\n\n"
+                 "Fixes graphical problems in some games at higher internal resolutions. This setting has no "
+                 "effect when native internal resolution is used.\n\nIf unsure, leave this unchecked.");
 
   AddDescription(m_skip_efb_cpu, TR_SKIP_EFB_CPU_ACCESS_DESCRIPTION);
   AddDescription(m_ignore_format_changes, TR_IGNORE_FORMAT_CHANGE_DESCRIPTION);
