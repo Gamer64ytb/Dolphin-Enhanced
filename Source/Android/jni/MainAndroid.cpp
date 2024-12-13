@@ -433,12 +433,13 @@ JNIEXPORT jintArray JNICALL
 Java_org_dolphinemu_dolphinemu_NativeLibrary_getRunningSettings(JNIEnv* env, jobject obj)
 {
   int i = 0;
-  int settings[14];
+  int settings[15];
 
   // gfx
   settings[i++] = Config::Get(Config::GFX_SHOW_FPS);
   settings[i++] = Config::Get(Config::GFX_HACK_EFB_ACCESS_ENABLE) == false;
   settings[i++] = Config::Get(Config::GFX_HACK_SKIP_EFB_COPY_TO_RAM);
+  settings[i++] = Config::Get(Config::GFX_HACK_VI_SKIP);
   settings[i++] = Config::Get(Config::GFX_HACK_EFB_EMULATE_FORMAT_CHANGES) == false;
   settings[i++] = Config::Get(Config::GFX_ENHANCE_ARBITRARY_MIPMAP_DETECTION);
   settings[i++] = Config::Get(Config::GFX_HACK_IMMEDIATE_XFB);
@@ -474,6 +475,7 @@ JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_NativeLibrary_setRunningSe
   Config::Set(Config::LayerType::LocalGame, Config::GFX_SHOW_FPS, settings[i++]);
   Config::Set(Config::LayerType::LocalGame, Config::GFX_HACK_EFB_ACCESS_ENABLE, settings[i++] == 0);
   Config::Set(Config::LayerType::LocalGame, Config::GFX_HACK_SKIP_EFB_COPY_TO_RAM, settings[i++]);
+  Config::Set(Config::LayerType::LocalGame, Config::GFX_HACK_VI_SKIP, settings[i++]);
   Config::Set(Config::LayerType::LocalGame, Config::GFX_HACK_EFB_EMULATE_FORMAT_CHANGES,
               settings[i++] == 0);
   Config::Set(Config::LayerType::LocalGame, Config::GFX_ENHANCE_ARBITRARY_MIPMAP_DETECTION,
