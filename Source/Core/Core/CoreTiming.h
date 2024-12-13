@@ -108,4 +108,6 @@ void SetFakeTBStartTicks(u64 val);
 
 void ForceExceptionCheck(s64 cycles);
 
+void Throttle(const s64 target_cycle);
+
 }  // namespace CoreTiming

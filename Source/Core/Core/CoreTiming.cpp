@@ -75,6 +75,19 @@ static u64 s_fake_dec_start_ticks;
 // Are we in a function that has been called from Advance()
 static bool s_is_global_timer_sane;
 
+// We could add it to CommonTypes, but it's actually only used here.
+using Clock = std::chrono::steady_clock;
+using TimePoint = Clock::time_point;
+using DT = Clock::duration;
+using DT_us = std::chrono::duration<double, std::micro>;
+using DT_ms = std::chrono::duration<double, std::milli>;
+using DT_s = std::chrono::duration<double, std::ratio<1>>;
+
+static s64 s_throttle_last_cycle = 0;
+static TimePoint s_throttle_deadline = Clock::now();
+static s64 s_throttle_clock_per_sec;
+static s64 s_throttle_min_clock_per_sleep;
+
 Globals g;
 
 static EventType* s_ev_lost = nullptr;
@@ -135,6 +148,10 @@ void Init()
   // executing the first PPC cycle of each slice to prepare the slice length and downcount for
   // that slice.
   s_is_global_timer_sane = true;
+
+  // Reset data used by the throttling system
+  s_throttle_last_cycle = 0;
+  s_throttle_deadline = Clock::now();
 
   s_event_fifo_id = 0;
   s_ev_lost = RegisterEvent("_lost_event", &EmptyTimedCallback);
@@ -331,6 +348,8 @@ void Advance()
     {
       std::pop_heap(s_event_queue.begin(), s_event_queue.end(), std::greater<Event>());
       s_event_queue.pop_back();
+
+      Throttle(evt.time);
       evt.type->callback(evt.userdata, g.global_timer - evt.time);
     }
     else
@@ -352,6 +371,51 @@ void Advance()
   PowerPC::CheckExternalExceptions();
 }
 
+void Throttle(const s64 target_cycle)
+{
+  // Based on number of cycles and emulation speed, increase the target deadline
+  const s64 cycles = target_cycle - s_throttle_last_cycle;
+
+  // Prevent any throttling code if the amount of time passed is < ~0.122ms
+  if (cycles < s_throttle_min_clock_per_sleep)
+    return;
+
+  s_throttle_last_cycle = target_cycle;
+
+  const double speed =
+      Core::GetIsThrottlerTempDisabled() ? 0.0 : SConfig::GetInstance().m_EmulationSpeed;
+
+  if (0.0 < speed)
+    s_throttle_deadline +=
+        std::chrono::duration_cast<DT>(DT_s(cycles) / (speed * s_throttle_clock_per_sec));
+
+  // A maximum fallback is used to prevent the system from sleeping for
+  // too long or going full speed in an attempt to catch up to timings.
+  const DT max_fallback =
+      std::chrono::duration_cast<DT>(DT_ms(SConfig::GetInstance().iTimingVariance));
+
+  const TimePoint time = Clock::now();
+  const TimePoint min_deadline = time - max_fallback;
+  const TimePoint max_deadline = time + max_fallback;
+
+  if (s_throttle_deadline > max_deadline)
+  {
+    s_throttle_deadline = max_deadline;
+  }
+  else if (s_throttle_deadline < min_deadline)
+  {
+    DEBUG_LOG(COMMON, "System can not to keep up with timings! [relaxing timings by %s us]",
+              DT_us(min_deadline - s_throttle_deadline).count());
+    s_throttle_deadline = min_deadline;
+  }
+
+  // Only sleep if we are behind the deadline
+  if (time < s_throttle_deadline)
+  {
+    std::this_thread::sleep_until(s_throttle_deadline);
+  }
+}
+
 void LogPendingEvents()
 {
   auto clone = s_event_queue;
@@ -366,6 +430,9 @@ void LogPendingEvents()
 // Should only be called from the CPU thread after the PPC clock has changed
 void AdjustEventQueueTimes(u32 new_ppc_clock, u32 old_ppc_clock)
 {
+  s_throttle_clock_per_sec = new_ppc_clock;
+  s_throttle_min_clock_per_sleep = new_ppc_clock / 1200;
+
   for (Event& ev : s_event_queue)
   {
     const s64 ticks = (ev.time - g.global_timer) * new_ppc_clock / old_ppc_clock;
