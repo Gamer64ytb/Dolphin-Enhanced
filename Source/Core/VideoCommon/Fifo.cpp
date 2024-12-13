@@ -25,6 +25,7 @@
 #include "VideoCommon/CPMemory.h"
 #include "VideoCommon/CommandProcessor.h"
 #include "VideoCommon/DataReader.h"
+#include "VideoCommon/FramebufferManager.h"
 #include "VideoCommon/OpcodeDecoding.h"
 #include "VideoCommon/VertexLoaderManager.h"
 #include "VideoCommon/VertexManagerBase.h"
@@ -387,6 +388,7 @@ void RunGpuLoop()
             if (old >= param.iSyncGpuMaxDistance)
               s_sync_wakeup_event.Set();
           }
+          g_framebuffer_manager->RefreshPeekCache();
         }
       },
       100);
