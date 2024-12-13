@@ -787,10 +787,14 @@ void Update(u64 ticks)
     s_ticks_last_line_start = CoreTiming::GetTicks();
   }
 
+  // TODO: Find out why skipping interrupts acts as a frame-skip
+  if (CoreTiming::GetVISkip())
+    return;
+
   UpdateInterrupts();
 }
 
-// Create a fake VI mode for a fifolog
+// Create a fake VI mode for a fifo-log
 void FakeVIUpdate(u32 xfb_address, u32 fb_width, u32 fb_stride, u32 fb_height)
 {
   bool interlaced = fb_height > 480 / 2;

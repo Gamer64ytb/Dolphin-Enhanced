@@ -128,6 +128,7 @@ struct VideoConfig final
   bool bApproximateLogicOpWithBlending;
   bool bFastDepthCalc;
   bool bVertexRounding;
+  bool bVISkip;
   int iEFBAccessTileSize;
   int iLog;           // CONF_ bits
   int iSaveTargetId;  // TODO: Should be dropped

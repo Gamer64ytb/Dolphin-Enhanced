@@ -237,6 +237,8 @@
     <string name="skip_duplicate_xfbs_description">Skips presentation of duplicate frames. This may improve performance on low-end devices, while making frame pacing less consistent. If unsure, leave this checked.</string>
     <string name="approx_logic_op_with_blending">Approximate Logic Op With Blending</string>
     <string name="approx_logic_op_with_blending_description">This is a giant hack which was previously removed from dolphin-emu because it causes broken rendering. However, it seems that some devices still do not support logical operations. Therefore, for a handful of cases where the hack actually makes things slightly better. If unsure, leave this unchecked.</string>
+    <string name="vi_skip">VBI Skip</string>
+    <string name="vi_skip_description">Skips Vertical Blank Interrupts when lag is detected, allowing for smooth audio playback when emulation speed is not 100%. Can cause freezes and compatibility issues.</string>
     <string name="fast_depth_calculation">Fast Depth Calculation</string>
     <string name="fast_depth_calculation_description">Uses a less accurate algorithm to calculate depth values.</string>
     <string name="tmem_cache_emulation">TMEM Cache Emulation</string>

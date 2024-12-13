@@ -107,6 +107,7 @@ extern const ConfigInfo<bool> GFX_HACK_COPY_EFB_SCALED;
 extern const ConfigInfo<bool> GFX_HACK_EFB_EMULATE_FORMAT_CHANGES;
 extern const ConfigInfo<bool> GFX_HACK_TMEM_CACHE_EMULATION;
 extern const ConfigInfo<bool> GFX_HACK_VERTEX_ROUDING;
+extern const ConfigInfo<bool> GFX_HACK_VI_SKIP;
 
 // Graphics.GameSpecific
 

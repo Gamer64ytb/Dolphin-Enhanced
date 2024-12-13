@@ -140,6 +140,7 @@ const ConfigInfo<bool> GFX_HACK_EFB_EMULATE_FORMAT_CHANGES{
 const ConfigInfo<bool> GFX_HACK_TMEM_CACHE_EMULATION{{System::GFX, "Hacks", "TMEMCacheEmulation"},
                                                      true};
 const ConfigInfo<bool> GFX_HACK_VERTEX_ROUDING{{System::GFX, "Hacks", "VertexRounding"}, false};
+const ConfigInfo<bool> GFX_HACK_VI_SKIP{{System::GFX, "Hacks", "VISkip"}, false};
 
 // Graphics.GameSpecific
 

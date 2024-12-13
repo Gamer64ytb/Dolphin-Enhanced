@@ -103,10 +103,12 @@ void HacksWidget::CreateWidgets()
   m_disable_bounding_box =
       new GraphicsBool(tr("Disable Bounding Box"), Config::GFX_HACK_BBOX_ENABLE, true);
   m_vertex_rounding = new GraphicsBool(tr("Vertex Rounding"), Config::GFX_HACK_VERTEX_ROUDING);
+  m_vi_skip = new GraphicsBool(tr("VBI Skip"), Config::GFX_HACK_VI_SKIP);
 
   other_layout->addWidget(m_fast_depth_calculation, 0, 0);
   other_layout->addWidget(m_disable_bounding_box, 0, 1);
   other_layout->addWidget(m_vertex_rounding, 1, 0);
+  other_layout->addWidget(m_vi_skip, 2, 0);
 
   main_layout->addWidget(efb_box);
   main_layout->addWidget(texture_cache_box);
@@ -142,6 +144,8 @@ void HacksWidget::ConnectWidgets()
   connect(m_store_xfb_copies, &QCheckBox::stateChanged,
           [this](int) { UpdateDeferEFBCopiesEnabled(); });
   connect(m_immediate_xfb, &QCheckBox::stateChanged,
+          [this](int) { UpdateSkipPresentingDuplicateFramesEnabled(); });
+  connect(m_vi_skip, &QCheckBox::stateChanged,
           [this](int) { UpdateSkipPresentingDuplicateFramesEnabled(); });
 }
 
@@ -260,6 +264,11 @@ void HacksWidget::AddDescriptions()
       QT_TR_NOOP("Rounds 2D vertices to whole pixels and rounds the viewport size to a whole number.\n\n"
                  "Fixes graphical problems in some games at higher internal resolutions. This setting has no "
                  "effect when native internal resolution is used.\n\nIf unsure, leave this unchecked.");
+  static const char TR_VI_SKIP_DESCRIPTION[] =
+      QT_TR_NOOP("Skips Vertical Blank Interrupts when lag is detected, allowing for "
+                 "smooth audio playback when emulation speed is not 100%.\n\n"
+                 "WARNING: Can cause freezes and compatibility issues.\n\n"
+                 "If unsure, leave this unchecked.");
 
   AddDescription(m_skip_efb_cpu, TR_SKIP_EFB_CPU_ACCESS_DESCRIPTION);
   AddDescription(m_ignore_format_changes, TR_IGNORE_FORMAT_CHANGE_DESCRIPTION);
@@ -273,6 +282,7 @@ void HacksWidget::AddDescriptions()
   AddDescription(m_fast_depth_calculation, TR_FAST_DEPTH_CALC_DESCRIPTION);
   AddDescription(m_disable_bounding_box, TR_DISABLE_BOUNDINGBOX_DESCRIPTION);
   AddDescription(m_vertex_rounding, TR_VERTEX_ROUNDING_DESCRIPTION);
+  AddDescription(m_vi_skip, TR_VI_SKIP_DESCRIPTION);
 }
 
 void HacksWidget::UpdateDeferEFBCopiesEnabled()
@@ -287,5 +297,12 @@ void HacksWidget::UpdateSkipPresentingDuplicateFramesEnabled()
 {
   // If Immediate XFB is on, there's no point to skipping duplicate XFB copies as immediate presents
   // when the XFB is created, therefore all XFB copies will be unique.
-  m_skip_duplicate_xfbs->setEnabled(!m_immediate_xfb->isChecked());
+  // This setting is also required for VI skip to work.
+
+  const bool disabled = m_immediate_xfb->isChecked() || m_vi_skip->isChecked();
+
+  if (disabled)
+    m_skip_duplicate_xfbs->setChecked(true);
+
+  m_skip_duplicate_xfbs->setEnabled(!disabled);
 }

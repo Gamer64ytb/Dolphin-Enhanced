@@ -110,4 +110,7 @@ void ForceExceptionCheck(s64 cycles);
 
 void Throttle(const s64 target_cycle);
 
+// Used By VideoInterface
+bool GetVISkip();
+
 }  // namespace CoreTiming

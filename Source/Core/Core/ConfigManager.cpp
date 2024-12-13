@@ -217,6 +217,7 @@ void SConfig::SaveCoreSettings(IniFile& ini)
 
   core->Set("SkipIPL", bHLE_BS2);
   core->Set("TimingVariance", iTimingVariance);
+  core->Set("MaxFallback", iMaxFallback);
   core->Set("CPUCore", cpu_core);
   core->Set("JITFollowBranch", bJITFollowBranch);
   core->Set("Fastmem", bFastmem);
@@ -505,6 +506,7 @@ void SConfig::LoadCoreSettings(IniFile& ini)
   core->Get("Fastmem", &bFastmem, true);
   core->Get("DSPHLE", &bDSPHLE, true);
   core->Get("TimingVariance", &iTimingVariance, 40);
+  core->Get("MaxFallback", &iMaxFallback, 100);
   core->Get("CPUThread", &bCPUThread, true);
   core->Get("SyncOnSkipIdle", &bSyncGPUOnSkipIdleHack, true);
   core->Get("EnableCheats", &bEnableCheats, false);
@@ -769,6 +771,7 @@ void SConfig::LoadDefaults()
 
   cpu_core = PowerPC::DefaultCPUCore();
   iTimingVariance = 40;
+  iMaxFallback = 100;
   bCPUThread = false;
   bSyncGPUOnSkipIdleHack = true;
   bRunCompareServer = false;
