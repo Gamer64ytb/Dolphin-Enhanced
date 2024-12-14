@@ -549,8 +549,8 @@ public final class SettingsFragmentPresenter
     Setting immediateXfb = hacksSection.getSetting(SettingsFile.KEY_IMMEDIATE_XFB);
     Setting skipDuplicateXfbs = hacksSection.getSetting(SettingsFile.KEY_SKIP_DUPLICATE_XFBS);
     Setting approxLogicOpWithBlending =
-            gfxSection.getSetting(SettingsFile.KEY_APPROX_LOGIC_OP_WITH_BLENDING);
-    Setting viSkip = gfxSection.getSetting(SettingsFile.KEY_VI_SKIP);
+            hacksSection.getSetting(SettingsFile.KEY_APPROX_LOGIC_OP_WITH_BLENDING);
+    Setting viSkip = hacksSection.getSetting(SettingsFile.KEY_VI_SKIP);
     Setting fastDepth = gfxSection.getSetting(SettingsFile.KEY_FAST_DEPTH);
     Setting tmemEmu = hacksSection.getSetting(SettingsFile.KEY_TMEM_CACHE_EMULATION);
 
