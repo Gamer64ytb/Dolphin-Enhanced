@@ -279,8 +279,7 @@
     <!-- Add Directory Screen-->
     <string name="toggle_list">切换列表</string>
     <string name="add_directory_title">将文件夹添加到游戏库</string>
-    <string name="add_directory_up_one_level">Up one level</string>
-    <string name="add_directory_empty_folder">That folder is empty.</string>
+    <string name="current_directory">当前目录</string>
 
     <!-- Preferences Screen -->
     <string name="preferences_save_exit">Save and Exit</string>

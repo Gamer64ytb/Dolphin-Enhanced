@@ -279,8 +279,7 @@
     <!-- Add Directory Screen-->
     <string name="toggle_list">Toggle List</string>
     <string name="add_directory_title">Add Folder to Library</string>
-    <string name="add_directory_up_one_level">Up one level</string>
-    <string name="add_directory_empty_folder">That folder is empty.</string>
+    <string name="current_directory">Current Directory</string>
 
     <!-- Preferences Screen -->
     <string name="preferences_save_exit">Save and Exit</string>
