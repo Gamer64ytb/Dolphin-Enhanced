@@ -152,8 +152,7 @@ void Init()
   s_is_global_timer_sane = true;
 
   // Reset data used by the throttling system
-  s_throttle_last_cycle = 0;
-  s_throttle_deadline = Clock::now();
+  ResetThrottle(0);
 
   s_event_fifo_id = 0;
   s_ev_lost = RegisterEvent("_lost_event", &EmptyTimedCallback);
@@ -221,7 +220,16 @@ void DoState(PointerWrap& p)
   // The exact layout of the heap in memory is implementation defined, therefore it is platform
   // and library version specific.
   if (p.GetMode() == PointerWrap::MODE_READ)
+  {
+    // When loading from a save state, we must assume the Event order is random and meaningless.
+    // The exact layout of the heap in memory is implementation defined, therefore it is platform
+    // and library version specific.
     std::make_heap(s_event_queue.begin(), s_event_queue.end(), std::greater<Event>());
+
+    // The stave state has changed the time, so our previous Throttle targets are invalid.
+    // Especially when global_time goes down; So we create a fake throttle update.
+    ResetThrottle(g.global_timer);
+  }
 }
 
 // This should only be called from the CPU thread. If you are calling
@@ -423,6 +431,12 @@ void Throttle(const s64 target_cycle)
   {
     std::this_thread::sleep_until(s_throttle_deadline);
   }
+}
+
+void ResetThrottle(s64 cycle)
+{
+  s_throttle_last_cycle = cycle;
+  s_throttle_deadline = Clock::now();
 }
 
 bool GetVISkip()

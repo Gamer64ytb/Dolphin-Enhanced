@@ -138,6 +138,7 @@ bool IsSettingSaveable(const Config::ConfigLocation& config_location)
       Config::GFX_HACK_EFB_EMULATE_FORMAT_CHANGES.location,
       Config::GFX_HACK_TMEM_CACHE_EMULATION.location,
       Config::GFX_HACK_VERTEX_ROUDING.location,
+      Config::GFX_HACK_VI_SKIP.location,
 
       // Graphics.GameSpecific
 

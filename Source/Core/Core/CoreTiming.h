@@ -109,6 +109,7 @@ void SetFakeTBStartTicks(u64 val);
 void ForceExceptionCheck(s64 cycles);
 
 void Throttle(const s64 target_cycle);
+void ResetThrottle(s64 cycle);
 
 // Used By VideoInterface
 bool GetVISkip();
