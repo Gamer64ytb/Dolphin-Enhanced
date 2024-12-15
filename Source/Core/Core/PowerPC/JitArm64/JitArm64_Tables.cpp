@@ -347,8 +347,8 @@ constexpr GekkoOPTemplate table63[] = {
     {40, &JitArm64::fp_logic},               // fnegx
     {12, &JitArm64::frspx},                  // frspx
 
-    {64, &JitArm64::FallBackToInterpreter},   // mcrfs
-    {583, &JitArm64::FallBackToInterpreter},  // mffsx
+    {64, &JitArm64::mcrfs},                   // mcrfs
+    {583, &JitArm64::mffsx},                  // mffsx
     {70, &JitArm64::FallBackToInterpreter},   // mtfsb0x
     {38, &JitArm64::FallBackToInterpreter},   // mtfsb1x
     {134, &JitArm64::FallBackToInterpreter},  // mtfsfix
