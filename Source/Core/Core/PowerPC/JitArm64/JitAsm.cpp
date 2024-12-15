@@ -23,7 +23,7 @@ using namespace Arm64Gen;
 void JitArm64::GenerateAsm()
 {
   // This value is all of the callee saved registers that we are required to save.
-  // According to the AACPS64 we need to save R19 ~ R30 and ARM64Reg::Q8 ~ ARM64Reg::Q15.
+  // According to the AACPS64 we need to save R19 ~ R30 and Q8 ~ Q15.
   const u32 ALL_CALLEE_SAVED = 0x7FF80000;
   const u32 ALL_CALLEE_SAVED_FPR = 0x0000FF00;
   BitSet32 regs_to_save(ALL_CALLEE_SAVED);
@@ -367,13 +367,13 @@ void JitArm64::GenerateFPRF(bool single)
 
 void JitArm64::GenerateQuantizedLoadStores()
 {
-  // ARM64Reg::X0 is the scale
-  // ARM64Reg::X1 is address
-  // ARM64Reg::X2 is a temporary on stores
-  // ARM64Reg::X30 is LR
-  // ARM64Reg::Q0 is the return for loads
+  // X0 is the scale
+  // X1 is address
+  // X2 is a temporary on stores
+  // X30 is LR
+  // Q0 is the return for loads
   //    is the register for stores
-  // ARM64Reg::Q1 is a temporary
+  // Q1 is a temporary
   ARM64Reg addr_reg = ARM64Reg::X1;
   ARM64Reg scale_reg = ARM64Reg::X0;
   ARM64FloatEmitter float_emit(this);
