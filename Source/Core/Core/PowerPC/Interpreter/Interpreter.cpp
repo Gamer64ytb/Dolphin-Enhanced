@@ -152,7 +152,11 @@ int Interpreter::SingleStepInner()
   if (HandleFunctionHooking(PC))
   {
     UpdatePC();
-    return PPCTables::GetOpInfo(m_prev_inst)->numCycles;
+
+    const GekkoOPInfo* opinfo = PPCTables::GetOpInfo(m_prev_inst);
+    PowerPC::UpdatePerformanceMonitor(opinfo->numCycles, (opinfo->flags & FL_LOADSTORE) != 0,
+                                      (opinfo->flags & FL_USE_FPU) != 0);
+    return opinfo->numCycles;
   }
 
 #ifdef USE_GDBSTUB

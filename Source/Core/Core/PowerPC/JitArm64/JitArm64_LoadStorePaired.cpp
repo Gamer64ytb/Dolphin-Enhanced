@@ -82,8 +82,8 @@ void JitArm64::psq_l(UGeckoInstruction inst)
     UBFM(scale_reg, scale_reg, 24, 29);  // Scale
 
     MOVP2R(ARM64Reg::X30, inst.W ? single_load_quantized : paired_load_quantized);
-    LDR(ARM64Reg::X30, ARM64Reg::X30, ArithOption(EncodeRegTo64(type_reg), true));
-    BLR(ARM64Reg::X30);
+    LDR(EncodeRegTo64(type_reg), ARM64Reg::X30, ArithOption(EncodeRegTo64(type_reg), true));
+    BLR(EncodeRegTo64(type_reg));
 
     VS = fpr.RW(inst.RS, RegType::Single);
     m_float_emit.ORR(EncodeRegToDouble(VS), ARM64Reg::D0, ARM64Reg::D0);

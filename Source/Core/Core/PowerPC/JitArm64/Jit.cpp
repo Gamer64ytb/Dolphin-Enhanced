@@ -159,9 +159,9 @@ void JitArm64::FallBackToInterpreter(UGeckoInstruction inst)
   }
 
   Interpreter::Instruction instr = PPCTables::GetInterpreterOp(inst);
+  MOVP2R(ARM64Reg::X8, instr);
   MOVI2R(ARM64Reg::W0, inst.hex);
-  MOVP2R(ARM64Reg::X30, instr);
-  BLR(ARM64Reg::X30);
+  BLR(ARM64Reg::X8);
 
   if (js.op->opinfo->flags & FL_ENDBLOCK)
   {
@@ -215,10 +215,10 @@ void JitArm64::HLEFunction(u32 hook_index)
   gpr.Flush(FlushMode::All);
   fpr.Flush(FlushMode::All);
 
+  MOVP2R(ARM64Reg::X8, &HLE::Execute);
   MOVI2R(ARM64Reg::W0, js.compilerPC);
   MOVI2R(ARM64Reg::W1, hook_index);
-  MOVP2R(ARM64Reg::X30, &HLE::Execute);
-  BLR(ARM64Reg::X30);
+  BLR(ARM64Reg::X8);
 }
 
 void JitArm64::DoNothing(UGeckoInstruction inst)
@@ -243,6 +243,16 @@ void JitArm64::Cleanup()
     MOVP2R(ARM64Reg::X0, &GPFifo::UpdateGatherPipe);
     BLR(ARM64Reg::X0);
     SetJumpTarget(exit);
+  }
+
+  // SPEED HACK: MMCR0/MMCR1 should be checked at run-time, not at compile time.
+  if (MMCR0.Hex || MMCR1.Hex)
+  {
+    MOVP2R(ARM64Reg::X8, &PowerPC::UpdatePerformanceMonitor);
+    MOVI2R(ARM64Reg::X0, js.downcountAmount);
+    MOVI2R(ARM64Reg::X1, js.numLoadStoreInst);
+    MOVI2R(ARM64Reg::X2, js.numFloatingPointInst);
+    BLR(ARM64Reg::X8);
   }
 }
 
@@ -448,10 +458,10 @@ void JitArm64::WriteExceptionExit(u32 destination, bool only_external)
   STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(pc));
   STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
   if (only_external)
-    MOVP2R(ARM64Reg::X30, &PowerPC::CheckExternalExceptions);
+    MOVP2R(ARM64Reg::X8, &PowerPC::CheckExternalExceptions);
   else
-    MOVP2R(ARM64Reg::X30, &PowerPC::CheckExceptions);
-  BLR(ARM64Reg::X30);
+    MOVP2R(ARM64Reg::X8, &PowerPC::CheckExceptions);
+  BLR(ARM64Reg::X8);
   LDR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
 
   SetJumpTarget(no_exceptions);
@@ -624,6 +634,8 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
   js.skipInstructions = 0;
   js.curBlock = b;
   js.carryFlagSet = false;
+  js.numLoadStoreInst = 0;
+  js.numFloatingPointInst = 0;
 
   u8* const start = GetWritableCodePtr();
   b->checkedEntry = start;
@@ -717,8 +729,8 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
       SetJumpTarget(Exception);
       ABI_PushRegisters(regs_in_use);
       m_float_emit.ABI_PushRegisters(fprs_in_use, ARM64Reg::X30);
-      MOVP2R(ARM64Reg::X30, &GPFifo::FastCheckGatherPipe);
-      BLR(ARM64Reg::X30);
+      MOVP2R(ARM64Reg::X8, &GPFifo::FastCheckGatherPipe);
+      BLR(ARM64Reg::X8);
       m_float_emit.ABI_PopRegisters(fprs_in_use, ARM64Reg::X30);
       ABI_PopRegisters(regs_in_use);
 
@@ -813,6 +825,12 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
       // If we have a register that will never be used again, flush it.
       gpr.StoreRegisters(~op.gprInUse);
       fpr.StoreRegisters(~op.fprInUse);
+
+      if (opinfo->flags & FL_LOADSTORE)
+        ++js.numLoadStoreInst;
+
+      if (opinfo->flags & FL_USE_FPU)
+        ++js.numFloatingPointInst;
     }
 
     i += js.skipInstructions;

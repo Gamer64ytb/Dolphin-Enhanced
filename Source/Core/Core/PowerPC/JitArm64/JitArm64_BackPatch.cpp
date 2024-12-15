@@ -185,49 +185,49 @@ void JitArm64::EmitBackpatchRoutine(u32 flags, bool fastmem, bool do_farcode, AR
       {
         m_float_emit.FCVT(32, 64, ARM64Reg::D0, RS);
         m_float_emit.UMOV(32, ARM64Reg::W0, ARM64Reg::Q0, 0);
-        MOVP2R(ARM64Reg::X30, &PowerPC::Write_U32);
-        BLR(ARM64Reg::X30);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U32);
+        BLR(ARM64Reg::X8);
       }
       else if (flags & BackPatchInfo::FLAG_SIZE_F32I)
       {
         m_float_emit.UMOV(32, ARM64Reg::W0, RS, 0);
-        MOVP2R(ARM64Reg::X30, &PowerPC::Write_U32);
-        BLR(ARM64Reg::X30);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U32);
+        BLR(ARM64Reg::X8);
       }
       else if (flags & BackPatchInfo::FLAG_SIZE_F32X2)
       {
         m_float_emit.FCVTN(32, ARM64Reg::D0, RS);
         m_float_emit.UMOV(64, ARM64Reg::X0, ARM64Reg::D0, 0);
         ROR(ARM64Reg::X0, ARM64Reg::X0, 32);
-        MOVP2R(ARM64Reg::X30, &PowerPC::Write_U64);
-        BLR(ARM64Reg::X30);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U64);
+        BLR(ARM64Reg::X8);
       }
       else if (flags & BackPatchInfo::FLAG_SIZE_F32X2I)
       {
         m_float_emit.UMOV(64, ARM64Reg::X0, RS, 0);
         ROR(ARM64Reg::X0, ARM64Reg::X0, 32);
-        MOVP2R(ARM64Reg::X30, &PowerPC::Write_U64);
-        BLR(ARM64Reg::X30);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U64);
+        BLR(ARM64Reg::X8);
       }
       else
       {
-        MOVP2R(ARM64Reg::X30, &PowerPC::Write_U64);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U64);
         m_float_emit.UMOV(64, ARM64Reg::X0, RS, 0);
-        BLR(ARM64Reg::X30);
+        BLR(ARM64Reg::X8);
       }
     }
     else if (flags & BackPatchInfo::FLAG_LOAD && flags & BackPatchInfo::FLAG_MASK_FLOAT)
     {
       if (flags & BackPatchInfo::FLAG_SIZE_F32)
       {
-        MOVP2R(ARM64Reg::X30, &PowerPC::Read_U32);
-        BLR(ARM64Reg::X30);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Read_U32);
+        BLR(ARM64Reg::X8);
         m_float_emit.INS(32, RS, 0, ARM64Reg::X0);
       }
       else
       {
-        MOVP2R(ARM64Reg::X30, &PowerPC::Read_F64);
-        BLR(ARM64Reg::X30);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Read_F64);
+        BLR(ARM64Reg::X8);
         m_float_emit.INS(64, RS, 0, ARM64Reg::X0);
       }
     }
@@ -236,29 +236,29 @@ void JitArm64::EmitBackpatchRoutine(u32 flags, bool fastmem, bool do_farcode, AR
       MOV(ARM64Reg::W0, RS);
 
       if (flags & BackPatchInfo::FLAG_SIZE_32)
-        MOVP2R(ARM64Reg::X30, &PowerPC::Write_U32);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U32);
       else if (flags & BackPatchInfo::FLAG_SIZE_16)
-        MOVP2R(ARM64Reg::X30, &PowerPC::Write_U16);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U16);
       else
-        MOVP2R(ARM64Reg::X30, &PowerPC::Write_U8);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U8);
 
-      BLR(ARM64Reg::X30);
+      BLR(ARM64Reg::X8);
     }
     else if (flags & BackPatchInfo::FLAG_ZERO_256)
     {
-      MOVP2R(ARM64Reg::X30, &PowerPC::ClearCacheLine);
-      BLR(ARM64Reg::X30);
+      MOVP2R(ARM64Reg::X8, &PowerPC::ClearCacheLine);
+      BLR(ARM64Reg::X8);
     }
     else
     {
       if (flags & BackPatchInfo::FLAG_SIZE_32)
-        MOVP2R(ARM64Reg::X30, &PowerPC::Read_U32);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Read_U32);
       else if (flags & BackPatchInfo::FLAG_SIZE_16)
-        MOVP2R(ARM64Reg::X30, &PowerPC::Read_U16);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Read_U16);
       else if (flags & BackPatchInfo::FLAG_SIZE_8)
-        MOVP2R(ARM64Reg::X30, &PowerPC::Read_U8);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Read_U8);
 
-      BLR(ARM64Reg::X30);
+      BLR(ARM64Reg::X8);
 
       if (!(flags & BackPatchInfo::FLAG_REVERSE))
       {
