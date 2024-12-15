@@ -239,6 +239,7 @@ protected:
   void GenerateCommonAsm();
   void GenerateConvertDoubleToSingle();
   void GenerateConvertSingleToDouble();
+  void GenerateFPRF(bool single);
   void GenerateQuantizedLoadStores();
 
   // Profiling
@@ -266,6 +267,8 @@ protected:
                void (ARM64XEmitter::*op)(Arm64Gen::ARM64Reg, Arm64Gen::ARM64Reg, u64,
                                          Arm64Gen::ARM64Reg),
                bool Rc = false);
+
+  void SetFPRFIfNeeded(bool single, Arm64Gen::ARM64Reg reg);
 
   // <Fastmem fault location, slowmem handler location>
   std::map<const u8*, FastmemArea> m_fault_to_handler;
