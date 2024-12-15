@@ -1627,18 +1627,26 @@ void ARM64XEmitter::UBFM(ARM64Reg Rd, ARM64Reg Rn, u32 immr, u32 imms)
 void ARM64XEmitter::BFI(ARM64Reg Rd, ARM64Reg Rn, u32 lsb, u32 width)
 {
   u32 size = Is64Bit(Rn) ? 64 : 32;
-  ASSERT_MSG(DYNA_REC, (lsb + width) <= size,
+  ASSERT_MSG(DYNA_REC, lsb < size && width >= 1 && width <= size - lsb,
              "%s passed lsb %d and width %d which is greater than the register size!", __func__,
              lsb, width);
-  EncodeBitfieldMOVInst(1, Rd, Rn, (size - lsb) % size, width - 1);
+  BFM(Rd, Rn, (size - lsb) % size, width - 1);
+}
+void ARM64XEmitter::BFXIL(ARM64Reg Rd, ARM64Reg Rn, u32 lsb, u32 width)
+{
+  u32 size = Is64Bit(Rn) ? 64 : 32;
+  ASSERT_MSG(DYNA_REC, lsb < size && width >= 1 && width <= size - lsb,
+             "%s passed lsb %d and width %d which is greater than the register size!", __func__,
+             lsb, width);
+  BFM(Rd, Rn, lsb, lsb + width - 1);
 }
 void ARM64XEmitter::UBFIZ(ARM64Reg Rd, ARM64Reg Rn, u32 lsb, u32 width)
 {
   u32 size = Is64Bit(Rn) ? 64 : 32;
-  ASSERT_MSG(DYNA_REC, (lsb + width) <= size,
+  ASSERT_MSG(DYNA_REC, lsb < size && width >= 1 && width <= size - lsb,
              "%s passed lsb %d and width %d which is greater than the register size!", __func__,
              lsb, width);
-  EncodeBitfieldMOVInst(2, Rd, Rn, (size - lsb) % size, width - 1);
+  UBFM(Rd, Rn, (size - lsb) % size, width - 1);
 }
 void ARM64XEmitter::EXTR(ARM64Reg Rd, ARM64Reg Rn, ARM64Reg Rm, u32 shift)
 {
@@ -3489,6 +3497,14 @@ void ARM64FloatEmitter::FCMLE(u8 size, ARM64Reg Rd, ARM64Reg Rn)
 void ARM64FloatEmitter::FCMLT(u8 size, ARM64Reg Rd, ARM64Reg Rn)
 {
   Emit2RegMisc(IsQuad(Rd), 0, 2 | (size >> 6), 0xE, Rd, Rn);
+}
+void ARM64FloatEmitter::FACGE(u8 size, ARM64Reg Rd, ARM64Reg Rn, ARM64Reg Rm)
+{
+  EmitThreeSame(1, size >> 6, 0x1D, Rd, Rn, Rm);
+}
+void ARM64FloatEmitter::FACGT(u8 size, ARM64Reg Rd, ARM64Reg Rn, ARM64Reg Rm)
+{
+  EmitThreeSame(1, 2 | (size >> 6), 0x1D, Rd, Rn, Rm);
 }
 
 void ARM64FloatEmitter::FCSEL(ARM64Reg Rd, ARM64Reg Rn, ARM64Reg Rm, CCFlags cond)

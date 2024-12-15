@@ -991,7 +991,7 @@ u32 PPCAnalyzer::Analyze(u32 address, CodeBlock* block, CodeBuffer* buffer, std:
 
     op.fprIsSingle = fprIsSingle;
     op.fprIsDuplicated = fprIsDuplicated;
-    op.fprIsStoreSafe = fprIsStoreSafe;
+    op.fprIsStoreSafeBeforeInst = fprIsStoreSafe;
     if (op.fregOut >= 0)
     {
       fprIsSingle[op.fregOut] = false;
@@ -1025,6 +1025,7 @@ u32 PPCAnalyzer::Analyze(u32 address, CodeBlock* block, CodeBuffer* buffer, std:
       if (!strncmp(op.opinfo->opname, "mtfs", 4))
         fprIsStoreSafe = BitSet32(0);
     }
+    op.fprIsStoreSafeAfterInst = fprIsStoreSafe;
 
     if (op.opinfo->type == OpType::StorePS || op.opinfo->type == OpType::LoadPS)
     {

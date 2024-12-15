@@ -63,7 +63,8 @@ struct CodeOp  // 16B
   // whether an fpr is the output of a single-precision arithmetic instruction, i.e. whether we can
   // safely
   // skip PPC_FP.
-  BitSet32 fprIsStoreSafe;
+  BitSet32 fprIsStoreSafeBeforeInst;
+  BitSet32 fprIsStoreSafeAfterInst;
 };
 
 struct BlockStats

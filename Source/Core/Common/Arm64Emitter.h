@@ -790,6 +790,7 @@ public:
   void SBFM(ARM64Reg Rd, ARM64Reg Rn, u32 immr, u32 imms);
   void UBFM(ARM64Reg Rd, ARM64Reg Rn, u32 immr, u32 imms);
   void BFI(ARM64Reg Rd, ARM64Reg Rn, u32 lsb, u32 width);
+  void BFXIL(ARM64Reg Rd, ARM64Reg Rn, u32 lsb, u32 width);
   void UBFIZ(ARM64Reg Rd, ARM64Reg Rn, u32 lsb, u32 width);
 
   // Extract register (ROR with two inputs, if same then faster on A67)
@@ -1080,6 +1081,8 @@ public:
   void FCMGT(u8 size, ARM64Reg Rd, ARM64Reg Rn);
   void FCMLE(u8 size, ARM64Reg Rd, ARM64Reg Rn);
   void FCMLT(u8 size, ARM64Reg Rd, ARM64Reg Rn);
+  void FACGE(u8 size, ARM64Reg Rd, ARM64Reg Rn, ARM64Reg Rm);
+  void FACGT(u8 size, ARM64Reg Rd, ARM64Reg Rn, ARM64Reg Rm);
 
   // Conditional select
   void FCSEL(ARM64Reg Rd, ARM64Reg Rn, ARM64Reg Rm, CCFlags cond);

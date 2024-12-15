@@ -59,6 +59,7 @@ void CPUInfo::Detect()
   CPU64bit = true;
   Mode64bit = true;
   vendor = CPUVendor::ARM;
+  bFlushToZero = true;
 
   // Get the information about the CPU
   num_cores = sysconf(_SC_NPROCESSORS_CONF);
