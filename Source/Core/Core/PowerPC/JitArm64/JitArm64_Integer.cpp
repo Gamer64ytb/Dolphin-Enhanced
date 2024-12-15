@@ -27,7 +27,25 @@ void JitArm64::ComputeRC0(u64 imm)
   gpr.BindCRToRegister(0, false);
   MOVI2R(gpr.CR(0), imm);
   if (imm & 0x80000000)
-    SXTW(gpr.CR(0), DecodeReg(gpr.CR(0)));
+    SXTW(gpr.CR(0), EncodeRegTo32(gpr.CR(0)));
+}
+
+void JitArm64::ComputeCarry(ARM64Reg reg)
+{
+  js.carryFlagSet = false;
+
+  if (!js.op->wantsCA)
+    return;
+
+  if (CanMergeNextInstructions(1) && js.op[1].wantsCAInFlags)
+  {
+    CMP(reg, 1);
+    js.carryFlagSet = true;
+  }
+  else
+  {
+    STRB(INDEX_UNSIGNED, reg, PPC_REG, PPCSTATE_OFF(xer_ca));
+  }
 }
 
 void JitArm64::ComputeCarry(bool Carry)
@@ -46,7 +64,7 @@ void JitArm64::ComputeCarry(bool Carry)
     return;
   }
 
-  STRB(INDEX_UNSIGNED, WSP, PPC_REG, PPCSTATE_OFF(xer_ca));
+  STRB(INDEX_UNSIGNED, ARM64Reg::WSP, PPC_REG, PPCSTATE_OFF(xer_ca));
 }
 
 void JitArm64::ComputeCarry()
@@ -71,7 +89,7 @@ void JitArm64::FlushCarry()
     return;
 
   ARM64Reg WA = gpr.GetReg();
-  CSINC(WA, WSP, WSP, CC_CC);
+  CSINC(WA, ARM64Reg::WSP, ARM64Reg::WSP, CC_CC);
   STRB(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(xer_ca));
   gpr.Unlock(WA);
 
@@ -399,7 +417,7 @@ void JitArm64::negx(UGeckoInstruction inst)
   else
   {
     gpr.BindToRegister(d, d == a);
-    SUB(gpr.R(d), WSP, gpr.R(a));
+    SUB(gpr.R(d), ARM64Reg::WSP, gpr.R(a));
     if (inst.Rc)
       ComputeRC0(gpr.R(d));
   }
@@ -463,7 +481,7 @@ void JitArm64::cmpl(UGeckoInstruction inst)
 
   if (gpr.IsImm(b) && !gpr.GetImm(b))
   {
-    MOV(DecodeReg(CR), gpr.R(a));
+    MOV(EncodeRegTo32(CR), gpr.R(a));
     return;
   }
 
@@ -519,7 +537,7 @@ void JitArm64::cmpli(UGeckoInstruction inst)
 
   if (!B)
   {
-    MOV(DecodeReg(CR), gpr.R(a));
+    MOV(EncodeRegTo32(CR), gpr.R(a));
     return;
   }
 
@@ -655,7 +673,7 @@ void JitArm64::srawix(UGeckoInstruction inst)
     if (js.op->wantsCA)
     {
       ARM64Reg WA = gpr.GetReg();
-      ARM64Reg dest = inplace_carry ? WA : WSP;
+      ARM64Reg dest = inplace_carry ? WA : ARM64Reg::WSP;
       if (a != s)
       {
         ASR(RA, RS, amount);
@@ -674,7 +692,7 @@ void JitArm64::srawix(UGeckoInstruction inst)
       }
       else
       {
-        CSINC(WA, WSP, WSP, CC_EQ);
+        CSINC(WA, ARM64Reg::WSP, ARM64Reg::WSP, CC_EQ);
         STRB(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(xer_ca));
       }
       gpr.Unlock(WA);
@@ -829,7 +847,7 @@ void JitArm64::addzex(UGeckoInstruction inst)
   if (js.carryFlagSet)
   {
     gpr.BindToRegister(d, d == a);
-    ADCS(gpr.R(d), gpr.R(a), WZR);
+    ADCS(gpr.R(d), gpr.R(a), ARM64Reg::WZR);
   }
   else if (d == a)
   {
@@ -891,8 +909,8 @@ void JitArm64::subfex(UGeckoInstruction inst)
     ARM64Reg WA = gpr.GetReg();
     if (js.carryFlagSet)
     {
-      MOVI2R(WA, ~i + j, gpr.R(d));
-      ADC(gpr.R(d), WA, WZR);
+      MOVI2R(WA, ~i + j);
+      ADC(gpr.R(d), WA, ARM64Reg::WZR);
     }
     else
     {
@@ -990,7 +1008,7 @@ void JitArm64::subfzex(UGeckoInstruction inst)
   if (js.carryFlagSet)
   {
     MVN(gpr.R(d), gpr.R(a));
-    ADCS(gpr.R(d), gpr.R(d), WZR);
+    ADCS(gpr.R(d), gpr.R(d), ARM64Reg::WZR);
   }
   else
   {
@@ -1053,7 +1071,7 @@ void JitArm64::addex(UGeckoInstruction inst)
     if (js.carryFlagSet)
     {
       MOVI2R(WA, i + j);
-      ADC(gpr.R(d), WA, WZR);
+      ADC(gpr.R(d), WA, ARM64Reg::WZR);
     }
     else
     {
@@ -1249,6 +1267,12 @@ void JitArm64::slwx(UGeckoInstruction inst)
     if (inst.Rc)
       ComputeRC0(gpr.GetImm(a));
   }
+  else if (gpr.IsImm(s) && gpr.GetImm(s) == 0)
+  {
+    gpr.SetImmediate(a, 0);
+    if (inst.Rc)
+      ComputeRC0(0);
+  }
   else if (gpr.IsImm(b))
   {
     u32 i = gpr.GetImm(b);
@@ -1335,7 +1359,6 @@ void JitArm64::srawx(UGeckoInstruction inst)
   JITDISABLE(bJITIntegerOff);
 
   int a = inst.RA, b = inst.RB, s = inst.RS;
-  bool inplace_carry = CanMergeNextInstructions(1) && js.op[1].wantsCAInFlags;
 
   if (gpr.IsImm(b) && gpr.IsImm(s))
   {
@@ -1356,16 +1379,84 @@ void JitArm64::srawx(UGeckoInstruction inst)
       ComputeRC0(gpr.GetImm(a));
     return;
   }
-
-  if (gpr.IsImm(b) && !js.op->wantsCA)
+  else if (gpr.IsImm(s) && gpr.GetImm(s) == 0)
+  {
+      gpr.SetImmediate(a, 0);
+      ComputeCarry(false);
+      if (inst.Rc)
+          ComputeRC0(0);
+      return;
+  }
+  else if (gpr.IsImm(b))
   {
     int amount = gpr.GetImm(b);
-    if (amount & 0x20)
-      amount = 0x1F;
+
+    bool special = amount & 0x20;
+    amount &= 0x1f;
+
+    if (special)
+    {
+      gpr.BindToRegister(a, a == s);
+
+      ASR(gpr.R(a), gpr.R(s), 31);
+
+      if (js.op->wantsCA)
+      {
+        CMN(gpr.R(s), gpr.R(s));
+        ComputeCarry();
+      }
+    }
+    else if (amount == 0)
+    {
+      if (a != s)
+      {
+        gpr.BindToRegister(a, false);
+
+        MOV(gpr.R(a), gpr.R(s));
+      }
+
+      ComputeCarry(false);
+    }
+    else if (!js.op->wantsCA)
+    {
+      gpr.BindToRegister(a, a == s);
+
+      ASR(gpr.R(a), gpr.R(s), amount);
+    }
     else
-      amount &= 0x1F;
-    gpr.BindToRegister(a, a == s);
-    ASR(gpr.R(a), gpr.R(s), amount);
+    {
+      gpr.BindToRegister(a, a == s);
+
+      ARM64Reg WA = gpr.GetReg();
+
+      if (a != s)
+      {
+        ASR(gpr.R(a), gpr.R(s), amount);
+
+        // To compute the PPC carry flag, we do the following:
+        // 1. Take the bits which were shifted out, and create a temporary where they are in the
+        //    most significant positions (followed by zeroes).
+        // 2. Bitwise AND this temporary with the result of ASR. (Each bit which was shifted out
+        //    gets ANDed with a copy of the sign bit.)
+        // 3. Set the carry to the inverse of the Z flag. (The carry is set iff the sign bit was 1
+        //    and at least one of the bits which were shifted out were 1.)
+        TST(gpr.R(a), gpr.R(s), ArithOption(gpr.R(s), ST_LSL, 32 - amount));
+      }
+      else
+      {
+        // TODO: If we implement register renaming, we can use the above approach for a == s too
+
+        LSL(WA, gpr.R(s), 32 - amount);
+        ASR(gpr.R(a), gpr.R(s), amount);
+        TST(WA, gpr.R(a));
+      }
+
+      CSET(WA, CC_NEQ);
+
+      ComputeCarry(WA);
+
+      gpr.Unlock(WA);
+    }
   }
   else if (!js.op->wantsCA)
   {
@@ -1400,7 +1491,7 @@ void JitArm64::srawx(UGeckoInstruction inst)
 
     MOVI2R(WA, 32);
     SUB(WC, WA, WC);
-    LSL(WC, RS, WC);
+    LSLV(WC, RS, WC);
     CMP(WC, 0);
     CSET(WA, CC_NEQ);
     FixupBranch end = B();
@@ -1408,22 +1499,14 @@ void JitArm64::srawx(UGeckoInstruction inst)
     SetJumpTarget(bit_is_not_zero);
     CMP(RS, 0);
     CSET(WA, CC_LT);
-    CSINV(WB, WZR, WZR, CC_GE);
+    CSINV(WB, ARM64Reg::WZR, ARM64Reg::WZR, CC_GE);
 
     SetJumpTarget(is_zero);
     SetJumpTarget(bit_is_zero);
     SetJumpTarget(end);
 
     MOV(gpr.R(a), WB);
-    if (inplace_carry)
-    {
-      CMP(WA, 1);
-      ComputeCarry();
-    }
-    else
-    {
-      STRB(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(xer_ca));
-    }
+    ComputeCarry(WA);
 
     gpr.Unlock(WA, WB, WC);
   }
