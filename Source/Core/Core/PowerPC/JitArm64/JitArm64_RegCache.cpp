@@ -175,7 +175,7 @@ void Arm64GPRCache::FlushRegister(size_t index, bool maintain_state)
   {
     ARM64Reg host_reg = reg.GetReg();
     if (reg.IsDirty())
-      m_emit->STR(INDEX_UNSIGNED, host_reg, PPC_REG, guest_reg.ppc_offset);
+      m_emit->STR(IndexType::Unsigned, host_reg, PPC_REG, guest_reg.ppc_offset);
 
     if (!maintain_state)
     {
@@ -187,14 +187,15 @@ void Arm64GPRCache::FlushRegister(size_t index, bool maintain_state)
   {
     if (!reg.GetImm())
     {
-      m_emit->STR(INDEX_UNSIGNED, bitsize == 64 ? ARM64Reg::ZR : ARM64Reg::WZR, PPC_REG, guest_reg.ppc_offset);
+      m_emit->STR(IndexType::Unsigned, bitsize == 64 ? ARM64Reg::ZR : ARM64Reg::WZR,
+                  PPC_REG, guest_reg.ppc_offset);
     }
     else
     {
       ARM64Reg host_reg = bitsize != 64 ? GetReg() : EncodeRegTo64(GetReg());
 
       m_emit->MOVI2R(host_reg, reg.GetImm());
-      m_emit->STR(INDEX_UNSIGNED, host_reg, PPC_REG, guest_reg.ppc_offset);
+      m_emit->STR(IndexType::Unsigned, host_reg, PPC_REG, guest_reg.ppc_offset);
 
       UnlockRegister(EncodeRegTo32(host_reg));
     }
@@ -221,7 +222,7 @@ void Arm64GPRCache::FlushRegisters(BitSet32 regs, bool maintain_state)
           size_t ppc_offset = GetGuestByIndex(i).ppc_offset;
           ARM64Reg RX1 = R(GetGuestByIndex(i));
           ARM64Reg RX2 = R(GetGuestByIndex(i + 1));
-          m_emit->STP(INDEX_SIGNED, RX1, RX2, PPC_REG, ppc_offset);
+          m_emit->STP(IndexType::Signed, RX1, RX2, PPC_REG, ppc_offset);
           if (!maintain_state)
           {
             UnlockRegister(EncodeRegTo32(RX1));
@@ -298,7 +299,7 @@ ARM64Reg Arm64GPRCache::R(const GuestRegInfo& guest_reg)
     ARM64Reg host_reg = bitsize != 64 ? GetReg() : EncodeRegTo64(GetReg());
     reg.Load(host_reg);
     reg.SetDirty(false);
-    m_emit->LDR(INDEX_UNSIGNED, host_reg, PPC_REG, guest_reg.ppc_offset);
+    m_emit->LDR(IndexType::Unsigned, host_reg, PPC_REG, guest_reg.ppc_offset);
     return host_reg;
   }
   break;
@@ -331,7 +332,7 @@ void Arm64GPRCache::BindToRegister(const GuestRegInfo& guest_reg, bool do_load)
     const ARM64Reg host_reg = bitsize != 64 ? GetReg() : EncodeRegTo64(GetReg());
     reg.Load(host_reg);
     if (do_load)
-      m_emit->LDR(INDEX_UNSIGNED, host_reg, PPC_REG, guest_reg.ppc_offset);
+      m_emit->LDR(IndexType::Unsigned, host_reg, PPC_REG, guest_reg.ppc_offset);
   }
 }
 
@@ -464,7 +465,7 @@ ARM64Reg Arm64FPRCache::R(size_t preg, RegType type)
       // Load the high 64bits from the file and insert them in to the high 64bits of the host
       // register
       const ARM64Reg tmp_reg = GetReg();
-      m_float_emit->LDR(64, INDEX_UNSIGNED, tmp_reg, PPC_REG, PPCSTATE_OFF(ps[preg].ps1));
+      m_float_emit->LDR(64, IndexType::Unsigned, tmp_reg, PPC_REG, PPCSTATE_OFF(ps[preg].ps1));
       m_float_emit->INS(64, host_reg, 1, tmp_reg, 0);
       UnlockRegister(tmp_reg);
 
@@ -517,7 +518,7 @@ ARM64Reg Arm64FPRCache::R(size_t preg, RegType type)
       reg.Load(host_reg, RegType::LowerPair);
     }
     reg.SetDirty(false);
-    m_float_emit->LDR(load_size, INDEX_UNSIGNED, host_reg, PPC_REG, PPCSTATE_OFF(ps[preg].ps0));
+    m_float_emit->LDR(load_size, IndexType::Unsigned, host_reg, PPC_REG, PPCSTATE_OFF(ps[preg].ps0));
     return host_reg;
   }
   default:
@@ -565,7 +566,8 @@ ARM64Reg Arm64FPRCache::RW(size_t preg, RegType type)
       // We are doing a full 128bit store because it takes 2 cycles on a Cortex-A57 to do a 128bit
       // store.
       // It would take longer to do an insert to a temporary and a 64bit store than to just do this.
-      m_float_emit->STR(128, INDEX_UNSIGNED, flush_reg, PPC_REG, PPCSTATE_OFF(ps[preg].ps0));
+      m_float_emit->STR(128, IndexType::Unsigned, flush_reg, PPC_REG,
+                        PPCSTATE_OFF(ps[preg].ps0));
       break;
         case RegType::DuplicatedSingle:
       flush_reg = GetReg();
@@ -573,7 +575,8 @@ ARM64Reg Arm64FPRCache::RW(size_t preg, RegType type)
       [[fallthrough]];
     case RegType::Duplicated:
       // Store PSR1 (which is equal to PSR0) in memory.
-      m_float_emit->STR(64, INDEX_UNSIGNED, flush_reg, PPC_REG, PPCSTATE_OFF(ps[preg].ps1));
+      m_float_emit->STR(64, IndexType::Unsigned, flush_reg, PPC_REG,
+                        PPCSTATE_OFF(ps[preg].ps1));
       break;
     default:
       // All other types doesn't store anything in PSR1.
@@ -699,7 +702,7 @@ void Arm64FPRCache::FlushRegister(size_t preg, bool maintain_state)
       store_size = 64;
 
     if (dirty)
-      m_float_emit->STR(store_size, INDEX_UNSIGNED, host_reg, PPC_REG, PPCSTATE_OFF(ps[preg].ps0));
+      m_float_emit->STR(store_size, IndexType::Unsigned, host_reg, PPC_REG, PPCSTATE_OFF(ps[preg].ps0));
 
     if (!maintain_state)
     {
@@ -713,10 +716,12 @@ void Arm64FPRCache::FlushRegister(size_t preg, bool maintain_state)
     {
       // If the paired registers were at the start of ppcState we could do an STP here.
       // Too bad moving them would break savestate compatibility between x86_64 and AArch64
-      // m_float_emit->STP(64, INDEX_SIGNED, host_reg, host_reg, PPC_REG,
+      // m_float_emit->STP(64, IndexType::Signed, host_reg, host_reg, PPC_REG,
       // PPCSTATE_OFF(ps[preg].ps0));
-      m_float_emit->STR(64, INDEX_UNSIGNED, host_reg, PPC_REG, PPCSTATE_OFF(ps[preg].ps0));
-      m_float_emit->STR(64, INDEX_UNSIGNED, host_reg, PPC_REG, PPCSTATE_OFF(ps[preg].ps1));
+      m_float_emit->STR(64, IndexType::Unsigned, host_reg, PPC_REG,
+                        PPCSTATE_OFF(ps[preg].ps0));
+      m_float_emit->STR(64, IndexType::Unsigned, host_reg, PPC_REG,
+                        PPCSTATE_OFF(ps[preg].ps1));
     }
 
     if (!maintain_state)

@@ -118,8 +118,8 @@ void JitArm64::EmitBackpatchRoutine(u32 flags, bool fastmem, bool do_farcode, AR
     {
       // This literally only stores 32bytes of zeros to the target address
       ADD(addr, addr, MEM_REG);
-      STP(INDEX_SIGNED, ARM64Reg::ZR, ARM64Reg::ZR, addr, 0);
-      STP(INDEX_SIGNED, ARM64Reg::ZR, ARM64Reg::ZR, addr, 16);
+      STP(IndexType::Signed, ARM64Reg::ZR, ARM64Reg::ZR, addr, 0);
+      STP(IndexType::Signed, ARM64Reg::ZR, ARM64Reg::ZR, addr, 16);
     }
     else
     {

@@ -152,9 +152,9 @@ void JitArm64::FallBackToInterpreter(UGeckoInstruction inst)
     // also flush the program counter
     ARM64Reg WA = gpr.GetReg();
     MOVI2R(WA, js.compilerPC);
-    STR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(pc));
+    STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(pc));
     ADD(WA, WA, 4);
-    STR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(npc));
+    STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(npc));
     gpr.Unlock(WA);
   }
 
@@ -168,7 +168,7 @@ void JitArm64::FallBackToInterpreter(UGeckoInstruction inst)
     if (js.isLastInstruction)
     {
       ARM64Reg WA = gpr.GetReg();
-      LDR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(npc));
+      LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(npc));
       WriteExceptionExit(WA);
       gpr.Unlock(WA);
     }
@@ -176,7 +176,7 @@ void JitArm64::FallBackToInterpreter(UGeckoInstruction inst)
     {
       // only exit if ppcstate.npc was changed
       ARM64Reg WA = gpr.GetReg();
-      LDR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(npc));
+      LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(npc));
       ARM64Reg WB = gpr.GetReg();
       MOVI2R(WB, js.compilerPC + 4);
       CMP(WB, WA);
@@ -191,7 +191,7 @@ void JitArm64::FallBackToInterpreter(UGeckoInstruction inst)
   if (jo.memcheck && (js.op->opinfo->flags & FL_LOADSTORE))
   {
     ARM64Reg WA = gpr.GetReg();
-    LDR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
+    LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
     FixupBranch noException = TBZ(WA, IntLog2(EXCEPTION_DSI));
 
     FixupBranch handleException = B();
@@ -236,7 +236,7 @@ void JitArm64::Cleanup()
 {
   if (jo.optimizeGatherPipe && js.fifoBytesSinceCheck > 0)
   {
-    LDP(INDEX_SIGNED, ARM64Reg::X0, ARM64Reg::X1, PPC_REG, PPCSTATE_OFF(gather_pipe_ptr));
+    LDP(IndexType::Signed, ARM64Reg::X0, ARM64Reg::X1, PPC_REG, PPCSTATE_OFF(gather_pipe_ptr));
     SUB(ARM64Reg::X0, ARM64Reg::X0, ARM64Reg::X1);
     CMP(ARM64Reg::X0, GPFifo::GATHER_PIPE_SIZE);
     FixupBranch exit = B(CC_LT);
@@ -248,9 +248,9 @@ void JitArm64::Cleanup()
 
 void JitArm64::DoDownCount()
 {
-  LDR(INDEX_UNSIGNED, ARM64Reg::W0, PPC_REG, PPCSTATE_OFF(downcount));
+  LDR(IndexType::Unsigned, ARM64Reg::W0, PPC_REG, PPCSTATE_OFF(downcount));
   SUBSI2R(ARM64Reg::W0, ARM64Reg::W0, js.downcountAmount, ARM64Reg::W1);
-  STR(INDEX_UNSIGNED, ARM64Reg::W0, PPC_REG, PPCSTATE_OFF(downcount));
+  STR(IndexType::Unsigned, ARM64Reg::W0, PPC_REG, PPCSTATE_OFF(downcount));
 }
 
 void JitArm64::ResetStack()
@@ -258,7 +258,7 @@ void JitArm64::ResetStack()
   if (!m_enable_blr_optimization)
     return;
 
-  LDR(INDEX_UNSIGNED, ARM64Reg::X0, PPC_REG, PPCSTATE_OFF(stored_stack_pointer));
+  LDR(IndexType::Unsigned, ARM64Reg::X0, PPC_REG, PPCSTATE_OFF(stored_stack_pointer));
   ADD(ARM64Reg::SP, ARM64Reg::X0, 0);
 }
 
@@ -309,7 +309,7 @@ void JitArm64::WriteExit(u32 destination, bool LK, u32 exit_address_after_return
     // Push {ARM_PC+20; PPC_PC} on the stack
     MOVI2R(ARM64Reg::X1, exit_address_after_return);
     ADR(ARM64Reg::X0, 20);
-    STP(INDEX_PRE, ARM64Reg::X0, ARM64Reg::X1, ARM64Reg::SP, -16);
+    STP(IndexType::Pre, ARM64Reg::X0, ARM64Reg::X1, ARM64Reg::SP, -16);
   }
 
   JitBlock* b = js.curBlock;
@@ -355,7 +355,7 @@ void JitArm64::WriteExit(Arm64Gen::ARM64Reg dest, bool LK, u32 exit_address_afte
     // Push {ARM_PC, PPC_PC} on the stack
     MOVI2R(ARM64Reg::X1, exit_address_after_return);
     ADR(ARM64Reg::X0, 12);
-    STP(INDEX_PRE, ARM64Reg::X0, ARM64Reg::X1, ARM64Reg::SP, -16);
+    STP(IndexType::Pre, ARM64Reg::X0, ARM64Reg::X1, ARM64Reg::SP, -16);
 
     BL(dispatcher);
 
@@ -384,7 +384,7 @@ void JitArm64::FakeLKExit(u32 exit_address_after_return)
   ARM64Reg code_reg = gpr.GetReg();
   MOVI2R(after_reg, exit_address_after_return);
   ADR(EncodeRegTo64(code_reg), 12);
-  STP(INDEX_PRE, EncodeRegTo64(code_reg), EncodeRegTo64(after_reg), ARM64Reg::SP, -16);
+  STP(IndexType::Pre, EncodeRegTo64(code_reg), EncodeRegTo64(after_reg), ARM64Reg::SP, -16);
   gpr.Unlock(after_reg, code_reg);
 
   FixupBranch skip_exit = BL();
@@ -419,7 +419,7 @@ void JitArm64::WriteBLRExit(Arm64Gen::ARM64Reg dest)
   EndTimeProfile(js.curBlock);
 
   // Check if {ARM_PC, PPC_PC} matches the current state.
-  LDP(INDEX_POST, ARM64Reg::X2, ARM64Reg::X1, ARM64Reg::SP, 16);
+  LDP(IndexType::Post, ARM64Reg::X2, ARM64Reg::X1, ARM64Reg::SP, 16);
   CMP(ARM64Reg::W1, DISPATCHER_PC);
   FixupBranch no_match = B(CC_NEQ);
 
@@ -441,18 +441,18 @@ void JitArm64::WriteExceptionExit(u32 destination, bool only_external)
   Cleanup();
   DoDownCount();
 
-  LDR(INDEX_UNSIGNED, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(Exceptions));
+  LDR(IndexType::Unsigned, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(Exceptions));
   MOVI2R(DISPATCHER_PC, destination);
   FixupBranch no_exceptions = CBZ(ARM64Reg::W30);
 
-  STR(INDEX_UNSIGNED, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(pc));
-  STR(INDEX_UNSIGNED, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
+  STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(pc));
+  STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
   if (only_external)
     MOVP2R(ARM64Reg::X30, &PowerPC::CheckExternalExceptions);
   else
     MOVP2R(ARM64Reg::X30, &PowerPC::CheckExceptions);
   BLR(ARM64Reg::X30);
-  LDR(INDEX_UNSIGNED, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
+  LDR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
 
   SetJumpTarget(no_exceptions);
 
@@ -469,17 +469,17 @@ void JitArm64::WriteExceptionExit(ARM64Reg dest, bool only_external)
   Cleanup();
   DoDownCount();
 
-  LDR(INDEX_UNSIGNED, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(Exceptions));
+  LDR(IndexType::Unsigned, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(Exceptions));
   FixupBranch no_exceptions = CBZ(ARM64Reg::W30);
 
-  STR(INDEX_UNSIGNED, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(pc));
-  STR(INDEX_UNSIGNED, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
+  STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(pc));
+  STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
   if (only_external)
     MOVP2R(EncodeRegTo64(DISPATCHER_PC), &PowerPC::CheckExternalExceptions);
   else
     MOVP2R(EncodeRegTo64(DISPATCHER_PC), &PowerPC::CheckExceptions);
   BLR(EncodeRegTo64(DISPATCHER_PC));
-  LDR(INDEX_UNSIGNED, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
+  LDR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
 
   SetJumpTarget(no_exceptions);
 
@@ -496,7 +496,7 @@ bool JitArm64::HandleFunctionHooking(u32 address)
     if (type != HLE::HookType::Replace)
       return false;
 
-    LDR(INDEX_UNSIGNED, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
+    LDR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
     js.downcountAmount += js.st.numCycles;
     WriteExit(DISPATCHER_PC);
     return true;
@@ -514,14 +514,14 @@ void JitArm64::DumpCode(const u8* start, const u8* end)
 void JitArm64::BeginTimeProfile(JitBlock* b)
 {
   MOVP2R(ARM64Reg::X0, &b->profile_data);
-  LDR(INDEX_UNSIGNED, ARM64Reg::X1, ARM64Reg::X0, offsetof(JitBlock::ProfileData, runCount));
+  LDR(IndexType::Unsigned, ARM64Reg::X1, ARM64Reg::X0, offsetof(JitBlock::ProfileData, runCount));
   ADD(ARM64Reg::X1, ARM64Reg::X1, 1);
 
   // Fetch the current counter register
   CNTVCT(ARM64Reg::X2);
 
   // stores runCount and ticStart
-  STP(INDEX_SIGNED, ARM64Reg::X1, ARM64Reg::X2, ARM64Reg::X0, offsetof(JitBlock::ProfileData, runCount));
+  STP(IndexType::Signed, ARM64Reg::X1, ARM64Reg::X2, ARM64Reg::X0, offsetof(JitBlock::ProfileData, runCount));
 }
 
 void JitArm64::EndTimeProfile(JitBlock* b)
@@ -534,17 +534,17 @@ void JitArm64::EndTimeProfile(JitBlock* b)
 
   MOVP2R(ARM64Reg::X0, &b->profile_data);
 
-  LDR(INDEX_UNSIGNED, ARM64Reg::X2, ARM64Reg::X0, offsetof(JitBlock::ProfileData, ticStart));
+  LDR(IndexType::Unsigned, ARM64Reg::X2, ARM64Reg::X0, offsetof(JitBlock::ProfileData, ticStart));
   SUB(ARM64Reg::X1, ARM64Reg::X1, ARM64Reg::X2);
 
   // loads ticCounter and downcountCounter
-  LDP(INDEX_SIGNED, ARM64Reg::X2, ARM64Reg::X3, ARM64Reg::X0,
+  LDP(IndexType::Signed, ARM64Reg::X2, ARM64Reg::X3, ARM64Reg::X0,
       offsetof(JitBlock::ProfileData, ticCounter));
   ADD(ARM64Reg::X2, ARM64Reg::X2, ARM64Reg::X1);
   ADDI2R(ARM64Reg::X3, ARM64Reg::X3, js.downcountAmount, ARM64Reg::X1);
 
   // stores ticCounter and downcountCounter
-  STP(INDEX_SIGNED, ARM64Reg::X2, ARM64Reg::X3, ARM64Reg::X0,
+  STP(IndexType::Signed, ARM64Reg::X2, ARM64Reg::X3, ARM64Reg::X0,
       offsetof(JitBlock::ProfileData, ticCounter));
 }
 
@@ -652,13 +652,13 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
     int gqr = *code_block.m_gqr_used.begin();
     if (!code_block.m_gqr_modified[gqr] && !GQR(gqr))
     {
-      LDR(INDEX_UNSIGNED, ARM64Reg::W0, PPC_REG, PPCSTATE_OFF(spr[SPR_GQR0]) + gqr * 4);
+      LDR(IndexType::Unsigned, ARM64Reg::W0, PPC_REG, PPCSTATE_OFF(spr[SPR_GQR0]) + gqr * 4);
       FixupBranch no_fail = CBZ(ARM64Reg::W0);
       FixupBranch fail = B();
       SwitchToFarCode();
       SetJumpTarget(fail);
       MOVI2R(DISPATCHER_PC, js.blockStart);
-      STR(INDEX_UNSIGNED, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(pc));
+      STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(pc));
       MOVI2R(ARM64Reg::W0, static_cast<u32>(JitInterface::ExceptionType::PairedQuantize));
       MOVP2R(ARM64Reg::X1, &JitInterface::CompileExceptionCheck);
       BLR(ARM64Reg::X1);
@@ -723,12 +723,12 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
       ABI_PopRegisters(regs_in_use);
 
       // Inline exception check
-      LDR(INDEX_UNSIGNED, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(Exceptions));
+      LDR(IndexType::Unsigned, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(Exceptions));
       TBZ(ARM64Reg::W30, 3, done_here);  // EXCEPTION_EXTERNAL_INT
-      LDR(INDEX_UNSIGNED, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(msr));
+      LDR(IndexType::Unsigned, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(msr));
       TBZ(ARM64Reg::W30, 11, done_here);
       MOVP2R(ARM64Reg::X30, &ProcessorInterface::m_InterruptCause);
-      LDR(INDEX_UNSIGNED, ARM64Reg::W30, ARM64Reg::X30, 0);
+      LDR(IndexType::Unsigned, ARM64Reg::W30, ARM64Reg::X30, 0);
       TST(ARM64Reg::W30, 23, 2);
       B(CC_EQ, done_here);
 
@@ -749,17 +749,17 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
     {
       ARM64Reg WA = gpr.GetReg();
       ARM64Reg XA = EncodeRegTo64(WA);
-      LDR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
+      LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
       FixupBranch NoExtException = TBZ(WA, 3);  // EXCEPTION_EXTERNAL_INT
       FixupBranch Exception = B();
       SwitchToFarCode();
       const u8* done_here = GetCodePtr();
       FixupBranch exit = B();
       SetJumpTarget(Exception);
-      LDR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(msr));
+      LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(msr));
       TBZ(WA, 11, done_here);
       MOVP2R(XA, &ProcessorInterface::m_InterruptCause);
-      LDR(INDEX_UNSIGNED, WA, XA, 0);
+      LDR(IndexType::Unsigned, WA, XA, 0);
       TST(WA, 23, 2);
       B(CC_EQ, done_here);
       gpr.Unlock(WA);
@@ -781,7 +781,7 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
       {
         // This instruction uses FPU - needs to add FP exception bailout
         ARM64Reg WA = gpr.GetReg();
-        LDR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(msr));
+        LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(msr));
         FixupBranch b1 = TBNZ(WA, 13);  // Test FP enabled bit
 
         FixupBranch far = B();
@@ -791,9 +791,9 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
         gpr.Flush(FlushMode::MaintainState);
         fpr.Flush(FlushMode::MaintainState);
 
-        LDR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
+        LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
         ORR(WA, WA, 26, 0);  // EXCEPTION_FPU_UNAVAILABLE
-        STR(INDEX_UNSIGNED, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
+        STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
 
         gpr.Unlock(WA);
 

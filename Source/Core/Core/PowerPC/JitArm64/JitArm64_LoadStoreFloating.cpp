@@ -357,7 +357,7 @@ void JitArm64::stfXX(UGeckoInstruction inst)
       else
         accessSize = 32;
 
-      LDR(INDEX_UNSIGNED, ARM64Reg::X0, PPC_REG, PPCSTATE_OFF(gather_pipe_ptr));
+      LDR(IndexType::Unsigned, ARM64Reg::X0, PPC_REG, PPCSTATE_OFF(gather_pipe_ptr));
       if (flags & BackPatchInfo::FLAG_SIZE_F64)
       {
         m_float_emit.REV64(8, ARM64Reg::Q0, V0);
@@ -372,10 +372,10 @@ void JitArm64::stfXX(UGeckoInstruction inst)
         m_float_emit.REV32(8, ARM64Reg::D0, V0);
       }
 
-      m_float_emit.STR(accessSize, INDEX_POST, accessSize == 64 ? ARM64Reg::Q0 : ARM64Reg::D0,
+      m_float_emit.STR(accessSize, IndexType::Post, accessSize == 64 ? ARM64Reg::Q0 : ARM64Reg::D0,
                        ARM64Reg::X0, accessSize >> 3);
 
-      STR(INDEX_UNSIGNED, ARM64Reg::X0, PPC_REG, PPCSTATE_OFF(gather_pipe_ptr));
+      STR(IndexType::Unsigned, ARM64Reg::X0, PPC_REG, PPCSTATE_OFF(gather_pipe_ptr));
       js.fifoBytesSinceCheck += accessSize >> 3;
 
       if (update)
