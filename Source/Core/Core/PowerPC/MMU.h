@@ -24,8 +24,8 @@ float HostRead_F32(u32 address);
 double HostRead_F64(u32 address);
 u32 HostRead_Instruction(u32 address);
 
-void HostWrite_U8(u8 var, u32 address);
-void HostWrite_U16(u16 var, u32 address);
+void HostWrite_U8(u32 var, u32 address);
+void HostWrite_U16(u32 var, u32 address);
 void HostWrite_U32(u32 var, u32 address);
 void HostWrite_U64(u64 var, u32 address);
 void HostWrite_F32(float var, u32 address);
@@ -66,12 +66,12 @@ double Read_F64(u32 address);
 u32 Read_U8_ZX(u32 address);
 u32 Read_U16_ZX(u32 address);
 
-void Write_U8(u8 var, u32 address);
-void Write_U16(u16 var, u32 address);
+void Write_U8(u32 var, u32 address);
+void Write_U16(u32 var, u32 address);
 void Write_U32(u32 var, u32 address);
 void Write_U64(u64 var, u32 address);
 
-void Write_U16_Swap(u16 var, u32 address);
+void Write_U16_Swap(u32 var, u32 address);
 void Write_U32_Swap(u32 var, u32 address);
 void Write_U64_Swap(u64 var, u32 address);
 
@@ -107,16 +107,18 @@ constexpr int BAT_INDEX_SHIFT = 17;
 constexpr u32 BAT_PAGE_SIZE = 1 << BAT_INDEX_SHIFT;
 constexpr u32 BAT_MAPPED_BIT = 0x1;
 constexpr u32 BAT_PHYSICAL_BIT = 0x2;
-constexpr u32 BAT_RESULT_MASK = UINT32_C(~0x3);
+constexpr u32 BAT_WI_BIT = 0x4;
+constexpr u32 BAT_RESULT_MASK = UINT32_C(~0x7);
 using BatTable = std::array<u32, 1 << (32 - BAT_INDEX_SHIFT)>;  // 128 KB
 extern BatTable ibat_table;
 extern BatTable dbat_table;
-inline bool TranslateBatAddess(const BatTable& bat_table, u32* address)
+inline bool TranslateBatAddess(const BatTable& bat_table, u32* address, bool* wi)
 {
   u32 bat_result = bat_table[*address >> BAT_INDEX_SHIFT];
   if ((bat_result & BAT_MAPPED_BIT) == 0)
     return false;
   *address = (bat_result & BAT_RESULT_MASK) | (*address & (BAT_PAGE_SIZE - 1));
+  *wi = (bat_result & BAT_WI_BIT) != 0;
   return true;
 }
 
