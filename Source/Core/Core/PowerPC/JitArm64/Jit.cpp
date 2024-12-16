@@ -53,7 +53,7 @@ void JitArm64::Init()
   jo.fastmem_arena = SConfig::GetInstance().bFastmem && Memory::InitFastmemArena();
   jo.enableBlocklink = true;
   jo.optimizeGatherPipe = true;
-  UpdateMemoryOptions();
+  UpdateMemoryAndExceptionOptions();
   gpr.Init(this);
   fpr.Init(this);
   blocks.Init();
@@ -128,7 +128,7 @@ void JitArm64::ClearCache()
   blocks.Clear();
   ClearCodeSpace();
   farcode.ClearCodeSpace();
-  UpdateMemoryOptions();
+  UpdateMemoryAndExceptionOptions();
 
   GenerateAsm();
 }
@@ -187,25 +187,14 @@ void JitArm64::FallBackToInterpreter(UGeckoInstruction inst)
       gpr.Unlock(WA);
     }
   }
+  else if (ShouldHandleFPExceptionForInstruction(js.op))
+  {
+    WriteConditionalExceptionExit(EXCEPTION_PROGRAM);
+  }
 
   if (jo.memcheck && (js.op->opinfo->flags & FL_LOADSTORE))
   {
-    ARM64Reg WA = gpr.GetReg();
-    LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
-    FixupBranch noException = TBZ(WA, IntLog2(EXCEPTION_DSI));
-
-    FixupBranch handleException = B();
-    SwitchToFarCode();
-    SetJumpTarget(handleException);
-
-    gpr.Flush(FlushMode::MaintainState);
-    fpr.Flush(FlushMode::MaintainState);
-
-    WriteExceptionExit(js.compilerPC);
-
-    SwitchToNearCode();
-    SetJumpTarget(noException);
-    gpr.Unlock(WA);
+    WriteConditionalExceptionExit(EXCEPTION_DSI);
   }
 }
 
@@ -496,6 +485,26 @@ void JitArm64::WriteExceptionExit(ARM64Reg dest, bool only_external)
   EndTimeProfile(js.curBlock);
 
   B(dispatcher);
+}
+
+void JitArm64::WriteConditionalExceptionExit(int exception)
+{
+  ARM64Reg WA = gpr.GetReg();
+  LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
+  FixupBranch noException = TBZ(WA, IntLog2(exception));
+
+  FixupBranch handleException = B();
+  SwitchToFarCode();
+  SetJumpTarget(handleException);
+
+  gpr.Flush(FlushMode::MaintainState);
+  fpr.Flush(FlushMode::MaintainState);
+
+  WriteExceptionExit(js.compilerPC);
+
+  SwitchToNearCode();
+  SetJumpTarget(noException);
+  gpr.Unlock(WA);
 }
 
 bool JitArm64::HandleFunctionHooking(u32 address)

@@ -76,6 +76,7 @@ void JitArm64::ps_mulsX(UGeckoInstruction inst)
   INSTRUCTION_START
   JITDISABLE(bJITPairedOff);
   FALLBACK_IF(inst.Rc);
+  FALLBACK_IF(jo.fp_exceptions);
 
   const u32 a = inst.FA;
   const u32 c = inst.FC;
@@ -107,6 +108,7 @@ void JitArm64::ps_maddXX(UGeckoInstruction inst)
   INSTRUCTION_START
   JITDISABLE(bJITPairedOff);
   FALLBACK_IF(inst.Rc);
+  FALLBACK_IF(jo.fp_exceptions);
 
   const u32 a = inst.FA;
   const u32 b = inst.FB;
@@ -313,6 +315,7 @@ void JitArm64::ps_sumX(UGeckoInstruction inst)
   INSTRUCTION_START
   JITDISABLE(bJITPairedOff);
   FALLBACK_IF(inst.Rc);
+  FALLBACK_IF(jo.fp_exceptions);
 
   const u32 a = inst.FA;
   const u32 b = inst.FB;
@@ -362,6 +365,7 @@ void JitArm64::ps_res(UGeckoInstruction inst)
   INSTRUCTION_START
   JITDISABLE(bJITPairedOff);
   FALLBACK_IF(inst.Rc);
+  FALLBACK_IF(jo.fp_exceptions || jo.div_by_zero_exceptions);
 
   const u32 b = inst.FB;
   const u32 d = inst.FD;
@@ -394,6 +398,7 @@ void JitArm64::ps_rsqrte(UGeckoInstruction inst)
   INSTRUCTION_START
   JITDISABLE(bJITPairedOff);
   FALLBACK_IF(inst.Rc);
+  FALLBACK_IF(jo.fp_exceptions || jo.div_by_zero_exceptions);
 
   const u32 b = inst.FB;
   const u32 d = inst.FD;

@@ -51,6 +51,8 @@ protected:
     bool fastmem;
     bool fastmem_arena;
     bool memcheck;
+    bool fp_exceptions;
+    bool div_by_zero_exceptions;
     bool profile_blocks;
   };
   struct JitState
@@ -102,7 +104,9 @@ protected:
 
   bool CanMergeNextInstructions(int count) const;
 
-  void UpdateMemoryOptions();
+  void UpdateMemoryAndExceptionOptions();
+
+  bool ShouldHandleFPExceptionForInstruction(const PPCAnalyst::CodeOp* op);
 
 public:
   JitBase();

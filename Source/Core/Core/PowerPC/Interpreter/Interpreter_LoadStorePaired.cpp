@@ -312,7 +312,7 @@ void Interpreter::psq_l(UGeckoInstruction inst)
 {
   if (HID2.LSQE == 0)
   {
-    GenerateProgramException();
+    GenerateProgramException(ProgramExceptionCause::IllegalInstruction);
     return;
   }
 
@@ -324,7 +324,7 @@ void Interpreter::psq_lu(UGeckoInstruction inst)
 {
   if (HID2.LSQE == 0)
   {
-    GenerateProgramException();
+    GenerateProgramException(ProgramExceptionCause::IllegalInstruction);
     return;
   }
 
@@ -342,7 +342,7 @@ void Interpreter::psq_st(UGeckoInstruction inst)
 {
   if (HID2.LSQE == 0)
   {
-    GenerateProgramException();
+    GenerateProgramException(ProgramExceptionCause::IllegalInstruction);
     return;
   }
 
@@ -354,7 +354,7 @@ void Interpreter::psq_stu(UGeckoInstruction inst)
 {
   if (HID2.LSQE == 0)
   {
-    GenerateProgramException();
+    GenerateProgramException(ProgramExceptionCause::IllegalInstruction);
     return;
   }
 

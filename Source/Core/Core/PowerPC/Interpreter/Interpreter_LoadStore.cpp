@@ -454,7 +454,7 @@ void Interpreter::dcbi(UGeckoInstruction inst)
 {
   if (MSR.PR)
   {
-    GenerateProgramException();
+    GenerateProgramException(ProgramExceptionCause::PrivilegedInstruction);
     return;
   }
 
@@ -518,7 +518,7 @@ void Interpreter::dcbz_l(UGeckoInstruction inst)
 {
   if (!HID2.LCE)
   {
-    GenerateProgramException();
+    GenerateProgramException(ProgramExceptionCause::IllegalInstruction);
     return;
   }
 
@@ -1053,7 +1053,7 @@ void Interpreter::tlbie(UGeckoInstruction inst)
 {
   if (MSR.PR)
   {
-    GenerateProgramException();
+    GenerateProgramException(ProgramExceptionCause::PrivilegedInstruction);
     return;
   }
 
@@ -1067,7 +1067,7 @@ void Interpreter::tlbsync(UGeckoInstruction inst)
 {
   if (MSR.PR)
   {
-    GenerateProgramException();
+    GenerateProgramException(ProgramExceptionCause::PrivilegedInstruction);
   }
 
   // Ignored

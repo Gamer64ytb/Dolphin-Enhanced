@@ -1303,6 +1303,8 @@ bool NetPlayServer::StartGame()
   spac << m_settings.m_EFBEmulateFormatChanges;
   spac << m_settings.m_SafeTextureCacheColorSamples;
   spac << m_settings.m_PerfQueriesEnable;
+  spac << m_settings.m_FloatExceptions;
+  spac << m_settings.m_DivideByZeroExceptions;
   spac << m_settings.m_FPRF;
   spac << m_settings.m_AccurateNaNs;
   spac << m_settings.m_SyncOnSkipIdle;

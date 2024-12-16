@@ -65,6 +65,8 @@ extern const ConfigInfo<int> MAIN_SYNC_GPU_MIN_DISTANCE;
 extern const ConfigInfo<float> MAIN_SYNC_GPU_OVERCLOCK;
 extern const ConfigInfo<bool> MAIN_FAST_DISC_SPEED;
 extern const ConfigInfo<bool> MAIN_LOW_DCBZ_HACK;
+extern const ConfigInfo<bool> MAIN_FLOAT_EXCEPTIONS;
+extern const ConfigInfo<bool> MAIN_DIVIDE_BY_ZERO_EXCEPTIONS;
 extern const ConfigInfo<bool> MAIN_FPRF;
 extern const ConfigInfo<bool> MAIN_ACCURATE_NANS;
 extern const ConfigInfo<float> MAIN_EMULATION_SPEED;

@@ -75,6 +75,8 @@ private:
   bool bJITFollowBranch;
   bool bEnableCheats;
   bool bSyncGPUOnSkipIdleHack;
+  bool bFloatExceptions;
+  bool bDivideByZeroExceptions;
   bool bFPRF;
   bool bAccurateNaNs;
   bool bMMU;
@@ -110,6 +112,8 @@ void ConfigCache::SaveConfig(const SConfig& config)
   bJITFollowBranch = config.bJITFollowBranch;
   bEnableCheats = config.bEnableCheats;
   bSyncGPUOnSkipIdleHack = config.bSyncGPUOnSkipIdleHack;
+  bFloatExceptions = config.bFloatExceptions;
+  bDivideByZeroExceptions = config.bDivideByZeroExceptions;
   bFPRF = config.bFPRF;
   bAccurateNaNs = config.bAccurateNaNs;
   bMMU = config.bMMU;
@@ -154,6 +158,8 @@ void ConfigCache::RestoreConfig(SConfig* config)
   config->bJITFollowBranch = bJITFollowBranch;
   config->bEnableCheats = bEnableCheats;
   config->bSyncGPUOnSkipIdleHack = bSyncGPUOnSkipIdleHack;
+  config->bFloatExceptions = bFloatExceptions;
+  config->bDivideByZeroExceptions = bDivideByZeroExceptions;
   config->bFPRF = bFPRF;
   config->bAccurateNaNs = bAccurateNaNs;
   config->bMMU = bMMU;
@@ -256,6 +262,9 @@ bool BootCore(std::unique_ptr<BootParameters> boot, const WindowSystemInfo& wsi)
     core_section->Get("EnableCheats", &StartUp.bEnableCheats, StartUp.bEnableCheats);
     core_section->Get("SyncOnSkipIdle", &StartUp.bSyncGPUOnSkipIdleHack,
                       StartUp.bSyncGPUOnSkipIdleHack);
+    core_section->Get("FloatExceptions", &StartUp.bFloatExceptions, StartUp.bFloatExceptions);
+    core_section->Get("DivByZeroExceptions", &StartUp.bDivideByZeroExceptions,
+                      StartUp.bDivideByZeroExceptions);
     core_section->Get("AlphaPassShadowHack", &StartUp.m_AlphaPassShadowHack, false);
     core_section->Get("LogicOpsDrawHack", &StartUp.m_LogicOpsDrawHack, false);
     core_section->Get("FPRF", &StartUp.bFPRF, StartUp.bFPRF);
@@ -372,6 +381,8 @@ bool BootCore(std::unique_ptr<BootParameters> boot, const WindowSystemInfo& wsi)
     StartUp.bFPRF = netplay_settings.m_FPRF;
     StartUp.bAccurateNaNs = netplay_settings.m_AccurateNaNs;
     StartUp.bSyncGPUOnSkipIdleHack = netplay_settings.m_SyncOnSkipIdle;
+    StartUp.bFloatExceptions = netplay_settings.m_FloatExceptions;
+    StartUp.bDivideByZeroExceptions = netplay_settings.m_DivideByZeroExceptions;
     StartUp.bSyncGPU = netplay_settings.m_SyncGPU;
     StartUp.iSyncGpuMaxDistance = netplay_settings.m_SyncGpuMaxDistance;
     StartUp.iSyncGpuMinDistance = netplay_settings.m_SyncGpuMinDistance;

@@ -109,6 +109,8 @@ struct SConfig
   bool bJITBranchOff = false;
 
   bool bFastmem;
+  bool bFloatExceptions = false;
+  bool bDivideByZeroExceptions = false;
   bool bFPRF = false;
   bool bAccurateNaNs = false;
 

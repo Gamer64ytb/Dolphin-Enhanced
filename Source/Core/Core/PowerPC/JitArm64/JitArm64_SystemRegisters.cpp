@@ -5,9 +5,11 @@
 #include "Common/Arm64Emitter.h"
 #include "Common/Assert.h"
 #include "Common/CommonTypes.h"
+#include "Common/MathUtil.h"
 
 #include "Core/Core.h"
 #include "Core/CoreTiming.h"
+#include "Core/PowerPC/Interpreter/ExceptionUtils.h"
 #include "Core/PowerPC/JitArm64/Jit.h"
 #include "Core/PowerPC/PPCTables.h"
 #include "Core/PowerPC/PowerPC.h"
@@ -35,10 +37,30 @@ FixupBranch JitArm64::JumpIfCRFieldBit(int field, int bit, bool jump_if_set)
   }
 }
 
+void JitArm64::UpdateFPExceptionSummary(ARM64Reg fpscr)
+{
+  ARM64Reg WA = gpr.GetReg();
+
+  // fpscr.VX = (fpscr & FPSCR_VX_ANY) != 0
+  MOVI2R(WA, FPSCR_VX_ANY);
+  TST(WA, fpscr);
+  CSET(WA, CCFlags::CC_NEQ);
+  BFI(fpscr, WA, IntLog2(FPSCR_VX), 1);
+
+  // fpscr.FEX = ((fpscr >> 22) & (fpscr & FPSCR_ANY_E)) != 0
+  AND(WA, fpscr, 0xF8, 32);
+  TST(WA, fpscr, ArithOption(fpscr, ShiftType::LSR, 22));
+  CSET(WA, CCFlags::CC_NEQ);
+  BFI(fpscr, WA, IntLog2(FPSCR_FEX), 1);
+
+  gpr.Unlock(WA);
+}
+
 void JitArm64::mtmsr(UGeckoInstruction inst)
 {
   INSTRUCTION_START
   JITDISABLE(bJITSystemRegistersOff);
+  FALLBACK_IF(jo.fp_exceptions);
 
   gpr.BindToRegister(inst.RS, true);
   STR(IndexType::Unsigned, gpr.R(inst.RS), PPC_REG, PPCSTATE_OFF(msr));
@@ -206,6 +228,10 @@ void JitArm64::twx(UGeckoInstruction inst)
   LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
   ORR(WA, WA, 24, 0);  // Same as WA | EXCEPTION_PROGRAM
   STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
+
+  MOVI2R(WA, static_cast<u32>(ProgramExceptionCause::Trap));
+  STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(spr[SPR_SRR1]));
+
   gpr.Unlock(WA);
 
   WriteExceptionExit(js.compilerPC);
@@ -733,6 +759,8 @@ void JitArm64::mcrfs(UGeckoInstruction inst)
   if (mask != 0)
   {
     ANDI2R(WA, WA, ~mask);
+
+    UpdateFPExceptionSummary(WA);
     STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
   }
 
@@ -755,22 +783,9 @@ void JitArm64::mffsx(UGeckoInstruction inst)
   LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
 
   ARM64Reg VD = fpr.RW(inst.FD, RegType::LowerPair);
-  ARM64Reg WB = gpr.GetReg();
 
-  // FPSCR.FEX = 0;
-  // FPSCR.VX = (FPSCR.Hex & FPSCR_VX_ANY) != 0;
-  // (FEX is right next to VX, so we can set both using one BFI instruction)
-  MOVI2R(WB, FPSCR_VX_ANY);
-  TST(WA, WB);
-  CSET(WB, CCFlags::CC_NEQ);
-  BFI(WA, WB, 31 - 2, 2);
-
-  STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
-
-  // Vd = FPSCR.Hex | 0xFFF8'0000'0000'0000;
   ORR(XA, XA, 13, 12, true);
   m_float_emit.FMOV(EncodeRegToDouble(VD), XA);
 
   gpr.Unlock(WA);
-  gpr.Unlock(WB);
 }

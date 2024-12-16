@@ -259,10 +259,12 @@ protected:
   void WriteExit(Arm64Gen::ARM64Reg dest, bool LK = false, u32 exit_address_after_return = 0);
   void WriteExceptionExit(u32 destination, bool only_external = false);
   void WriteExceptionExit(Arm64Gen::ARM64Reg dest, bool only_external = false);
+  void WriteConditionalExceptionExit(int exception);
   void FakeLKExit(u32 exit_address_after_return);
   void WriteBLRExit(Arm64Gen::ARM64Reg dest);
 
   Arm64Gen::FixupBranch JumpIfCRFieldBit(int field, int bit, bool jump_if_set);
+  void UpdateFPExceptionSummary(Arm64Gen::ARM64Reg fpscr);
 
   void ComputeRC0(Arm64Gen::ARM64Reg reg);
   void ComputeRC0(u64 imm);

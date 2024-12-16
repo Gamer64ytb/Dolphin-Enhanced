@@ -521,8 +521,12 @@ void PPCAnalyzer::SetInstructionStats(CodeBlock* block, CodeOp* code, const Gekk
   code->wantsCR0 = false;
   code->wantsCR1 = false;
 
+  bool first_fpu_instruction = false;
   if (opinfo->flags & FL_USE_FPU)
+  {
+    first_fpu_instruction = !block->m_fpa->any;
     block->m_fpa->any = true;
+  }
 
   if (opinfo->flags & FL_TIMER)
     block->m_gpa->anyTimer = true;
