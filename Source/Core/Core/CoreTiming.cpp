@@ -86,8 +86,8 @@ using DT_s = std::chrono::duration<double, std::ratio<1>>;
 
 static s64 s_throttle_last_cycle = 0;
 static TimePoint s_throttle_deadline = Clock::now();
-static s64 s_throttle_clock_per_sec;
-static s64 s_throttle_min_clock_per_sleep;
+static s64 s_throttle_clock_per_sec = 0;
+static s64 s_throttle_min_clock_per_sleep = 0;
 static bool s_throttle_disable_vi_int = false;
 
 Globals g;
