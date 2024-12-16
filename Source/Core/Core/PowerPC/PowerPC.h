@@ -292,4 +292,6 @@ inline void SetXER_OV(bool value)
 
 void UpdateFPRF(double dvalue);
 
+void RoundingModeUpdated();
+
 }  // namespace PowerPC
