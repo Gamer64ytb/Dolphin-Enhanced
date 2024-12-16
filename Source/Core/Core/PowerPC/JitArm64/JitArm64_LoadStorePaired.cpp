@@ -167,13 +167,6 @@ void JitArm64::psq_stXX(UGeckoInstruction inst)
   constexpr ARM64Reg addr_reg = ARM64Reg::W1;
   constexpr ARM64Reg type_reg = ARM64Reg::W2;
 
-  BitSet32 gprs_in_use = gpr.GetCallerSavedUsed();
-  BitSet32 fprs_in_use = fpr.GetCallerSavedUsed();
-
-  // Wipe the registers we are using as temporaries
-  gprs_in_use &= BitSet32(~7);
-  fprs_in_use &= BitSet32(~3);
-
   if (inst.RA || update)  // Always uses the register on update
   {
     if (indexed)
@@ -196,6 +189,13 @@ void JitArm64::psq_stXX(UGeckoInstruction inst)
     gpr.BindToRegister(inst.RA, false);
     MOV(gpr.R(inst.RA), addr_reg);
   }
+
+  BitSet32 gprs_in_use = gpr.GetCallerSavedUsed();
+  BitSet32 fprs_in_use = fpr.GetCallerSavedUsed();
+
+  // Wipe the registers we are using as temporaries
+  gprs_in_use &= BitSet32(~7);
+  fprs_in_use &= BitSet32(~3);
 
   if (js.assumeNoPairedQuantize)
   {
