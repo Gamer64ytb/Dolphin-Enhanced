@@ -232,7 +232,7 @@ void JitArm64::twx(UGeckoInstruction inst)
   MOVI2R(WA, static_cast<u32>(ProgramExceptionCause::Trap));
   STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(spr[SPR_SRR1]));
 
-  WriteExceptionExit(js.compilerPC);
+  WriteExceptionExit(js.compilerPC, false, true);
 
   SwitchToNearCode();
 

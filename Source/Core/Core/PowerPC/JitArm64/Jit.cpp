@@ -435,32 +435,13 @@ void JitArm64::WriteBLRExit(Arm64Gen::ARM64Reg dest)
   B(dispatcher);
 }
 
-void JitArm64::WriteExceptionExit(u32 destination, bool only_external)
+void JitArm64::WriteExceptionExit(u32 destination, bool only_external, bool always_exception)
 {
-  Cleanup();
-  DoDownCount();
-
-  LDR(IndexType::Unsigned, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(Exceptions));
   MOVI2R(DISPATCHER_PC, destination);
-  FixupBranch no_exceptions = CBZ(ARM64Reg::W30);
-
-  STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(pc));
-  STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
-  if (only_external)
-    MOVP2R(ARM64Reg::X8, &PowerPC::CheckExternalExceptions);
-  else
-    MOVP2R(ARM64Reg::X8, &PowerPC::CheckExceptions);
-  BLR(ARM64Reg::X8);
-  LDR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
-
-  SetJumpTarget(no_exceptions);
-
-  EndTimeProfile(js.curBlock);
-
-  B(dispatcher);
+  WriteExceptionExit(DISPATCHER_PC, only_external, always_exception);
 }
 
-void JitArm64::WriteExceptionExit(ARM64Reg dest, bool only_external)
+void JitArm64::WriteExceptionExit(ARM64Reg dest, bool only_external, bool always_exception)
 {
   if (dest != DISPATCHER_PC)
     MOV(DISPATCHER_PC, dest);
@@ -468,8 +449,12 @@ void JitArm64::WriteExceptionExit(ARM64Reg dest, bool only_external)
   Cleanup();
   DoDownCount();
 
-  LDR(IndexType::Unsigned, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(Exceptions));
-  FixupBranch no_exceptions = CBZ(ARM64Reg::W30);
+  FixupBranch no_exceptions;
+  if (!always_exception)
+  {
+    LDR(IndexType::Unsigned, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(Exceptions));
+    no_exceptions = CBZ(ARM64Reg::W30);
+  }
 
   STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(pc));
   STR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
@@ -480,7 +465,8 @@ void JitArm64::WriteExceptionExit(ARM64Reg dest, bool only_external)
   BLR(EncodeRegTo64(DISPATCHER_PC));
   LDR(IndexType::Unsigned, DISPATCHER_PC, PPC_REG, PPCSTATE_OFF(npc));
 
-  SetJumpTarget(no_exceptions);
+  if (!always_exception)
+    SetJumpTarget(no_exceptions);
 
   EndTimeProfile(js.curBlock);
 
@@ -500,7 +486,7 @@ void JitArm64::WriteConditionalExceptionExit(int exception)
   gpr.Flush(FlushMode::MaintainState, WA);
   fpr.Flush(FlushMode::MaintainState, ARM64Reg::INVALID_REG);
 
-  WriteExceptionExit(js.compilerPC);
+  WriteExceptionExit(js.compilerPC, false, true);
 
   SwitchToNearCode();
   SetJumpTarget(noException);
@@ -756,7 +742,7 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
 
       gpr.Flush(FlushMode::MaintainState, ARM64Reg::W30);
       fpr.Flush(FlushMode::MaintainState, ARM64Reg::INVALID_REG);
-      WriteExceptionExit(js.compilerPC, true);
+      WriteExceptionExit(js.compilerPC, true, true);
       SwitchToNearCode();
       SetJumpTarget(exit);
       gpr.Unlock(ARM64Reg::W30);
@@ -788,7 +774,7 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
 
       gpr.Flush(FlushMode::MaintainState, WA);
       fpr.Flush(FlushMode::MaintainState, ARM64Reg::INVALID_REG);
-      WriteExceptionExit(js.compilerPC, true);
+      WriteExceptionExit(js.compilerPC, true, true);
       SwitchToNearCode();
       SetJumpTarget(NoExtException);
       SetJumpTarget(exit);
@@ -821,7 +807,7 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
 
         gpr.Unlock(WA);
 
-        WriteExceptionExit(js.compilerPC);
+        WriteExceptionExit(js.compilerPC, false, true);
 
         SwitchToNearCode();
 
