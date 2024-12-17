@@ -241,7 +241,7 @@ void JitArm64::SafeStoreFromReg(s32 dest, u32 value, s32 regOffset, u32 flags, s
     LDR(IndexType::Unsigned, ARM64Reg::X0, PPC_REG, PPCSTATE_OFF(gather_pipe_ptr));
 
     ARM64Reg temp = ARM64Reg::W1;
-    temp = ByteswapBeforeStore(this, temp, RS, flags, true);
+    temp = ByteswapBeforeStore(this, &m_float_emit, temp, RS, flags, true);
 
     if (accessSize == 32)
       STR(IndexType::Post, temp, ARM64Reg::X0, 4);
@@ -273,6 +273,20 @@ void JitArm64::SafeStoreFromReg(s32 dest, u32 value, s32 regOffset, u32 flags, s
   }
 
   gpr.Unlock(ARM64Reg::W0, ARM64Reg::W1, ARM64Reg::W30);
+}
+
+FixupBranch JitArm64::CheckIfSafeAddress(Arm64Gen::ARM64Reg addr, Arm64Gen::ARM64Reg tmp1,
+                                         Arm64Gen::ARM64Reg tmp2)
+{
+  tmp2 = EncodeRegTo64(tmp2);
+
+  MOVP2R(tmp2, PowerPC::dbat_table.data());
+  LSR(tmp1, addr, PowerPC::BAT_INDEX_SHIFT);
+  LDR(tmp1, tmp2, ArithOption(tmp1, true));
+  FixupBranch pass = TBNZ(tmp1, IntLog2(PowerPC::BAT_PHYSICAL_BIT));
+  FixupBranch fail = B();
+  SetJumpTarget(pass);
+  return fail;
 }
 
 void JitArm64::lXX(UGeckoInstruction inst)
