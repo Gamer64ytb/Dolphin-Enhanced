@@ -65,8 +65,8 @@ void JitArm64::mtmsr(UGeckoInstruction inst)
   gpr.BindToRegister(inst.RS, true);
   STR(IndexType::Unsigned, gpr.R(inst.RS), PPC_REG, PPCSTATE_OFF(msr));
 
-  gpr.Flush(FlushMode::All);
-  fpr.Flush(FlushMode::All);
+  gpr.Flush(FlushMode::All, ARM64Reg::INVALID_REG);
+  fpr.Flush(FlushMode::All, ARM64Reg::INVALID_REG);
 
   // Our jit cache also stores some MSR bits, as they have changed, we either
   // have to validate them in the BLR/RET check, or just flush the stack here.
@@ -222,8 +222,8 @@ void JitArm64::twx(UGeckoInstruction inst)
   SwitchToFarCode();
   SetJumpTarget(far);
 
-  gpr.Flush(FlushMode::MaintainState);
-  fpr.Flush(FlushMode::MaintainState);
+  gpr.Flush(FlushMode::MaintainState, WA);
+  fpr.Flush(FlushMode::MaintainState, ARM64Reg::INVALID_REG);
 
   LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
   ORR(WA, WA, 24, 0);  // Same as WA | EXCEPTION_PROGRAM
@@ -231,8 +231,6 @@ void JitArm64::twx(UGeckoInstruction inst)
 
   MOVI2R(WA, static_cast<u32>(ProgramExceptionCause::Trap));
   STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(spr[SPR_SRR1]));
-
-  gpr.Unlock(WA);
 
   WriteExceptionExit(js.compilerPC);
 
@@ -242,10 +240,12 @@ void JitArm64::twx(UGeckoInstruction inst)
 
   if (!analyzer.HasOption(PPCAnalyst::PPCAnalyzer::OPTION_CONDITIONAL_CONTINUE))
   {
-    gpr.Flush(FlushMode::All);
-    fpr.Flush(FlushMode::All);
+    gpr.Flush(FlushMode::All, WA);
+    fpr.Flush(FlushMode::All, ARM64Reg::INVALID_REG);
     WriteExit(js.compilerPC + 4);
   }
+
+  gpr.Unlock(WA);
 }
 
 void JitArm64::mfspr(UGeckoInstruction inst)
