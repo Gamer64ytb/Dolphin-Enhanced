@@ -18,8 +18,6 @@
 // ----------
 #pragma once
 
-#include <rangeset/rangesizeset.h>
-
 #include "Common/CommonTypes.h"
 #include "Common/x64ABI.h"
 #include "Common/x64Emitter.h"
@@ -58,12 +56,7 @@ public:
   // Jit!
 
   void Jit(u32 em_address) override;
-  void Jit(u32 em_address, bool clear_cache_and_retry_on_failure);
-  bool DoJit(u32 em_address, JitBlock* b, u32 nextPC);
-
-  // Finds a free memory region and sets the near and far code emitters to point at that region.
-  // Returns false if no free memory region can be found for either of the two.
-  bool SetEmitterStateToFreeCodeRegion();
+  u8* DoJit(u32 em_address, JitBlock* b, u32 nextPC);
 
   BitSet32 CallerSavedRegistersInUse() const;
   BitSet8 ComputeStaticGQRs(const PPCAnalyst::CodeBlock&) const;
@@ -253,8 +246,6 @@ private:
   void AllocStack();
   void FreeStack();
 
-  void ResetFreeMemoryRanges();
-
   JitBlockCache blocks{*this};
   TrampolineCache trampolines{*this};
 
@@ -266,9 +257,6 @@ private:
   bool m_enable_blr_optimization;
   bool m_cleanup_after_stackfault;
   u8* m_stack;
-
-  HyoutaUtilities::RangeSizeSet<u8*> m_free_ranges_near;
-  HyoutaUtilities::RangeSizeSet<u8*> m_free_ranges_far;
 };
 
 void LogGeneratedX86(size_t size, const PPCAnalyst::CodeBuffer& code_buffer, const u8* normalEntry,

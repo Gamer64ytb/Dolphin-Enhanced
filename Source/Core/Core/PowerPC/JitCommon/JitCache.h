@@ -28,12 +28,6 @@ struct JitBlock
 {
   bool OverlapsPhysicalRange(u32 address, u32 length) const;
 
-  // Memory range this code block takes up in near and far code caches.
-  u8* near_begin;
-  u8* near_end;
-  u8* far_begin;
-  u8* far_end;
-
   // A special entry point for block linking; usually used to check the
   // downcount.
   u8* checkedEntry;
@@ -130,7 +124,7 @@ public:
   explicit JitBaseBlockCache(JitBase& jit);
   virtual ~JitBaseBlockCache();
 
-  virtual void Init();
+  void Init();
   void Shutdown();
   void Clear();
   void Reset();
@@ -157,8 +151,6 @@ public:
   void ErasePhysicalRange(u32 address, u32 length);
 
 protected:
-  virtual void DestroyBlock(JitBlock& block);
-
   JitBase& m_jit;
 
 private:
@@ -168,6 +160,7 @@ private:
   void LinkBlockExits(JitBlock& block);
   void LinkBlock(JitBlock& block);
   void UnlinkBlock(const JitBlock& block);
+  void DestroyBlock(JitBlock& block);
 
   JitBlock* MoveBlockIntoFastCache(u32 em_address, u32 msr);
 

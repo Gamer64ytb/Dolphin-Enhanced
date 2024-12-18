@@ -738,8 +738,6 @@ else()
   message(STATUS "libsystemd not found, disabling traversal server watchdog support")
 endif()
 
-add_subdirectory(Externals/rangeset)
-
 ########################################
 # Pre-build events: Define configuration variables and write SCM info header
 #
