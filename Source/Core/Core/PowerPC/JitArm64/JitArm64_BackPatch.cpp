@@ -163,14 +163,12 @@ void JitArm64::EmitBackpatchRoutine(u32 flags, bool fastmem, bool do_farcode, AR
       if (dst_reg != src_reg)
         MOV(dst_reg, src_reg);
 
-      const bool reverse = (flags & BackPatchInfo::FLAG_REVERSE) != 0;
-
       if (access_size == 64)
-        MOVP2R(ARM64Reg::X8, reverse ? &PowerPC::Write_U64_Swap : &PowerPC::Write_U64);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U64);
       else if (access_size == 32)
-        MOVP2R(ARM64Reg::X8, reverse ? &PowerPC::Write_U32_Swap : &PowerPC::Write_U32);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U32);
       else if (access_size == 16)
-        MOVP2R(ARM64Reg::X8, reverse ? &PowerPC::Write_U16_Swap : &PowerPC::Write_U16);
+        MOVP2R(ARM64Reg::X8, &PowerPC::Write_U16);
       else
         MOVP2R(ARM64Reg::X8, &PowerPC::Write_U8);
 
