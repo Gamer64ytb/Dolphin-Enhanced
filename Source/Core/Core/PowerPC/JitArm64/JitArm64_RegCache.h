@@ -37,6 +37,7 @@ static_assert(PPCSTATE_OFF(xer_so_ov) < 4096, "STRB can't store xer_so_ov!");
 enum class RegType
 {
   NotLoaded,
+  Discarded,   // Reg is not loaded because we know it won't be read before the next write
   Register,         // Reg type is register
   Immediate,         // Reg is really a IMM
   LowerPair,  // Only the lower pair of a paired register
@@ -74,6 +75,15 @@ public:
     m_value = imm;
 
     m_reg = Arm64Gen::ARM64Reg::INVALID_REG;
+  }
+  void Discard()
+  {
+    // Invalidate any previous information
+    m_type = RegType::Discarded;
+    m_reg = Arm64Gen::ARM64Reg::INVALID_REG;
+
+    // Arbitrarily large value that won't roll over on a lot of increments
+    m_last_used = 0xFFFF;
   }
   void Flush()
   {
@@ -132,6 +142,7 @@ public:
   void Init(JitArm64* jit);
 
   virtual void Start(PPCAnalyst::BlockRegStats& stats) {}
+  void DiscardRegisters(BitSet32 regs);
   // Flushes the register cache in different ways depending on the mode.
   // A temporary register must be supplied when flushing GPRs with FlushMode::MaintainState,
   // but in other cases it can be set to ARM64Reg::INVALID_REG when convenient for the caller.
@@ -189,6 +200,7 @@ protected:
   virtual void FlushByHost(Arm64Gen::ARM64Reg host_reg,
                            Arm64Gen::ARM64Reg tmp_reg = Arm64Gen::ARM64Reg::INVALID_REG) = 0;
 
+  void DiscardRegister(size_t preg);
   virtual void FlushRegister(size_t preg, bool maintain_state, Arm64Gen::ARM64Reg tmp_reg) = 0;
 
   void IncrementAllUsed()

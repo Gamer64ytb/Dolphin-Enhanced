@@ -1113,8 +1113,8 @@ bool Jit64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
       // output, which needs to be bound in the actual instruction compilation.
       // TODO: make this smarter in the case that we're actually register-starved, i.e.
       // prioritize the more important registers.
-      gpr.PreloadRegisters(op.regsIn & op.gprInReg);
-      fpr.PreloadRegisters(op.fregsIn & op.fprInXmm);
+      gpr.PreloadRegisters(op.regsIn & op.gprInUse & ~op.gprDiscardable);
+      fpr.PreloadRegisters(op.fregsIn & op.fprInXmm & ~op.fprDiscardable);
 
       CompileInstruction(op);
 
@@ -1161,7 +1161,13 @@ bool Jit64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
       gpr.Commit();
       fpr.Commit();
 
-      // If we have a register that will never be used again, flush it.
+      // If we have a register that will never be used again, discard or flush it.
+      // TODO: Merge JIT Register Cache Off
+      /* if (!SConfig::GetInstance().bJITRegisterCacheOff)
+      {
+        gpr.Discard(op.gprDiscardable);
+        fpr.Discard(op.fprDiscardable);
+      } */
       gpr.Flush(~op.gprInUse);
       fpr.Flush(~op.fprInUse);
 
