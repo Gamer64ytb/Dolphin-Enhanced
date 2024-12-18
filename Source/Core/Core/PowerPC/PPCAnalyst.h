@@ -67,6 +67,16 @@ struct CodeOp  // 16B
   // skip PPC_FP.
   BitSet32 fprIsStoreSafeBeforeInst;
   BitSet32 fprIsStoreSafeAfterInst;
+
+  BitSet32 GetFregsOut() const
+  {
+    BitSet32 result;
+
+    if (fregOut >= 0)
+      result[fregOut] = true;
+
+    return result;
+  }
 };
 
 struct BlockStats

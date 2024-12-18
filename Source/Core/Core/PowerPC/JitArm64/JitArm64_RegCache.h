@@ -143,6 +143,7 @@ public:
 
   virtual void Start(PPCAnalyst::BlockRegStats& stats) {}
   void DiscardRegisters(BitSet32 regs);
+  void ResetRegisters(BitSet32 regs);
   // Flushes the register cache in different ways depending on the mode.
   // A temporary register must be supplied when flushing GPRs with FlushMode::MaintainState,
   // but in other cases it can be set to ARM64Reg::INVALID_REG when convenient for the caller.

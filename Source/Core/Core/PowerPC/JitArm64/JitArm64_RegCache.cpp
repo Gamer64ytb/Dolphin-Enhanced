@@ -27,8 +27,21 @@ void Arm64RegCache::Init(JitArm64* jit)
 
 void Arm64RegCache::DiscardRegisters(BitSet32 regs)
 {
-  for (int j : regs)
-    DiscardRegister(j);
+  for (int i : regs)
+    DiscardRegister(i);
+}
+
+void Arm64RegCache::ResetRegisters(BitSet32 regs)
+{
+  for (int i : regs)
+  {
+    OpArg& reg = m_guest_registers[i];
+    ARM64Reg host_reg = reg.GetReg();
+
+    ASSERT_MSG(DYNAREC, host_reg == ARM64Reg::INVALID_REG,
+               "Attempted to reset a loaded register (did you mean to flush it?)");
+    reg.Flush();
+  }
 }
 
 ARM64Reg Arm64RegCache::GetReg()
