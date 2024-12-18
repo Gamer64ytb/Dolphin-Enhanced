@@ -169,7 +169,7 @@ public final class SettingsFragmentPresenter
     Setting overclock = coreSection.getSetting(SettingsFile.KEY_OVERCLOCK_PERCENT);
     Setting speedLimit = coreSection.getSetting(SettingsFile.KEY_SPEED_LIMIT);
     Setting syncOnSkipIdle = coreSection.getSetting(SettingsFile.KEY_SYNC_ON_SKIP_IDLE);
-    //Setting mmuEmulation = coreSection.getSetting(SettingsFile.KEY_MMU_EMULATION);
+    Setting mmu = coreSection.getSetting(SettingsFile.KEY_MMU);
     Setting fastDiscSpeed = coreSection.getSetting(SettingsFile.KEY_FAST_DISC_SPEED);
     Setting followBranch = coreSection.getSetting(SettingsFile.KEY_JIT_FOLLOW_BRANCH);
     Setting autoDiscChange = coreSection.getSetting(SettingsFile.KEY_AUTO_DISC_CHANGE);
@@ -210,7 +210,8 @@ public final class SettingsFragmentPresenter
     sl.add(new CheckBoxSetting(SettingsFile.KEY_SYNC_ON_SKIP_IDLE, Settings.SECTION_INI_CORE,
       R.string.sync_on_skip_idle, R.string.sync_on_skip_idle_description, true,
       syncOnSkipIdle));
-    //sl.add(new CheckBoxSetting(SettingsFile.KEY_MMU_EMULATION, Settings.SECTION_INI_CORE, R.string.mmu_emulation, R.string.mmu_emulation_description, false, mmuEmulation));
+    sl.add(new CheckBoxSetting(SettingsFile.KEY_MMU, Settings.SECTION_INI_CORE,
+      R.string.mmu_enable, R.string.mmu_enable_description, false, mmu));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_FAST_DISC_SPEED, Settings.SECTION_INI_CORE,
       R.string.fast_disc_speed, R.string.fast_disc_speed_description, false, fastDiscSpeed));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_JIT_FOLLOW_BRANCH, Settings.SECTION_INI_CORE,

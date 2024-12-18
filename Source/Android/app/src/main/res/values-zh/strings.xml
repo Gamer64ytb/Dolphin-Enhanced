@@ -153,10 +153,10 @@
     <string name="sync_on_skip_idle_description">保证CPU和GPU同步执行。取消可以提升性能，但部分游戏会有问题。</string>
     <string name="sync_gpu_overclock">Sync GPU Overclock</string>
     <string name="sync_gpu_overclock_description">Set time threshold to sync with GPU thread.</string>
-    <string name="mmu_emulation">MMU Emulation</string>
-    <string name="mmu_emulation_description">Stop MMU emulation is great for performance, but game may get garbage data or even crash! **Save state is not compatible with different setting.**</string>
+    <string name="mmu_enable">Enable MMU</string>
+    <string name="mmu_enable_description">Enables the Memory Management Unit. Needed for some games, but may reduce performance.</string>
     <string name="fast_disc_speed">Fast Disc Speed</string>
-    <string name="fast_disc_speed_description">Accelerates the emulated disc speed, removing any loading emulation.</string>
+    <string name="fast_disc_speed_description">Accelerates the emulated disc speed, reducing loading times. Some games that rely on accurate disc speed emulation could become unstable, fail to read data and crash.</string>
     <string name="jit_follow_branch">JIT分支优化</string>
     <string name="jit_follow_branch_description">JIT分支优化可以提升性能，但部分游戏会有问题。</string>
     <string name="audio_backend">音频后端</string>
