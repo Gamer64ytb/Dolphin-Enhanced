@@ -89,6 +89,7 @@ static bool s_wants_determinism;
 static Common::Timer s_timer;
 static std::atomic<u32> s_drawn_frame;
 static std::atomic<u32> s_drawn_video;
+static PerformanceStatistics s_last_perf_stats;
 
 static bool s_is_stopping = false;
 static bool s_hardware_initialized = false;
@@ -233,6 +234,8 @@ bool Init(std::unique_ptr<BootParameters> boot, const WindowSystemInfo& wsi)
 
   // Issue any API calls which must occur on the main thread for the graphics backend.
   g_video_backend->PrepareWindow(wsi);
+
+  s_last_perf_stats = {};
 
   // Start the emu thread
   s_emu_thread = std::thread(EmuThread, std::move(boot), wsi);
@@ -810,6 +813,11 @@ void Callback_VideoCopiedToXFB(bool video_update)
   }
 }
 
+const PerformanceStatistics& GetPerformanceStatistics()
+{
+  return s_last_perf_stats;
+}
+
 void UpdateTitle()
 {
   u32 ElapseTime = (u32)s_timer.GetTimeDifference();
@@ -818,22 +826,23 @@ void UpdateTitle()
   if (ElapseTime == 0)
     ElapseTime = 1;
 
-  float FPS = s_drawn_frame.load() * 1000.0f / ElapseTime;
-  float VPS = s_drawn_video.load() * 1000.0f / ElapseTime;
-  float Speed = VPS * 100.0f / VideoInterface::GetTargetRefreshRate();
+  s_last_perf_stats.FPS = s_drawn_frame.load() * 1000.0f / ElapseTime;
+  s_last_perf_stats.VPS = s_drawn_video.load() * 1000.0f / ElapseTime;
+  s_last_perf_stats.Speed = s_last_perf_stats.VPS * 100.0f / VideoInterface::GetTargetRefreshRate();
 
   std::string SFPS;
 
   if(g_ActiveConfig.bShowFPS)
   {
-    SFPS = StringFromFormat("FPS: %.0f - VPS: %.0f - %.0f%%", FPS, VPS, Speed);
+    SFPS = StringFromFormat("FPS: %.0f - VPS: %.0f - %.0f%%",
+                            s_last_perf_stats.FPS, s_last_perf_stats.VPS, s_last_perf_stats.Speed);
   }
 
   // Update the audio timestretcher with the current speed
   if (g_sound_stream)
   {
     Mixer* pMixer = g_sound_stream->GetMixer();
-    pMixer->UpdateSpeed((float)Speed / 100);
+    pMixer->UpdateSpeed(s_last_perf_stats.Speed / 100);
   }
 
   g_renderer->UpdateDebugTitle(SFPS);

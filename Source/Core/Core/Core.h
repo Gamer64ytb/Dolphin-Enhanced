@@ -71,6 +71,15 @@ void OnFrameEnd();
 void VideoThrottle();
 void RequestRefreshInfo();
 
+struct PerformanceStatistics
+{
+  float FPS;
+  float VPS;
+  float Speed;
+};
+
+const PerformanceStatistics& GetPerformanceStatistics();
+
 void UpdateTitle();
 
 // Run a function as the CPU thread.

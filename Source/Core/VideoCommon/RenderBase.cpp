@@ -441,7 +441,15 @@ void Renderer::CheckForConfigChanges()
 // Create On-Screen-Messages
 void Renderer::DrawDebugText()
 {
-  RenderText(m_debug_title_text, 10, 18, 0xFF00FFFF);
+  const Core::PerformanceStatistics& p_stats = Core::GetPerformanceStatistics();
+
+  u32 color;
+  if (p_stats.Speed > 90)
+    color = 0xFF00FFFF; // Blue
+  else
+    color = 0xFFFF0000; // Red
+
+  RenderText(m_debug_title_text, 10, 18, color);
 }
 
 void Renderer::RenderText(const std::string& text, int left, int top, u32 color)
