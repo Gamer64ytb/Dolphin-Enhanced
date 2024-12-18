@@ -258,4 +258,5 @@ private:
   QAction* m_jit_paired_off;
   QAction* m_jit_systemregisters_off;
   QAction* m_jit_branch_off;
+  QAction* m_jit_register_cache_off;
 };

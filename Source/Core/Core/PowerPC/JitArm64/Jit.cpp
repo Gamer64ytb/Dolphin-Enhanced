@@ -914,6 +914,13 @@ bool JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
         js.firstFPInstructionFound = true;
       }
 
+      if (SConfig::GetInstance().bJITRegisterCacheOff)
+      {
+        gpr.Flush(FlushMode::All, ARM64Reg::INVALID_REG);
+        fpr.Flush(FlushMode::All, ARM64Reg::INVALID_REG);
+        FlushCarry();
+      }
+
       CompileInstruction(op);
 
       js.fpr_is_store_safe = op.fprIsStoreSafeAfterInst;
@@ -922,12 +929,11 @@ bool JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
         FlushCarry();
 
       // If we have a register that will never be used again, discard or flush it.
-      // TODO: Merge JIT Register Cache Off
-      /* if (!SConfig::GetInstance().bJITRegisterCacheOff)
+      if (!SConfig::GetInstance().bJITRegisterCacheOff)
       {
         gpr.DiscardRegisters(op.gprDiscardable);
         fpr.DiscardRegisters(op.fprDiscardable);
-      } */
+      }
       gpr.StoreRegisters(~op.gprInUse);
       fpr.StoreRegisters(~op.fprInUse);
 
