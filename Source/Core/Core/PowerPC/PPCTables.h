@@ -60,9 +60,9 @@ enum
   FL_OUT_FLOAT_D = (1ull << 28),  // frD is used as a destination.
   // Used in the case of double ops (they don't modify the top half of the output)
   FL_INOUT_FLOAT_D = FL_IN_FLOAT_D | FL_OUT_FLOAT_D,
-  FL_PROGRAMEXCEPTION = (1ull << 32),  // May generate a system exception.
-  FL_FLOAT_EXCEPTION = (1ull << 33),   // May generate a program exception (floating point).
-  FL_FLOAT_DIV = (1ull << 34),  // May generate a program exception (FP) due to division by 0.
+  FL_PROGRAMEXCEPTION = (1ull << 29),  // May generate a system exception.
+  FL_FLOAT_EXCEPTION = (1ull << 30),   // May generate a program exception (floating point).
+  FL_FLOAT_DIV = (1ull << 31),  // May generate a program exception (FP) due to division by 0.
 };
 
 enum class OpType

@@ -828,7 +828,8 @@ void UpdateTitle()
 
   s_last_perf_stats.FPS = s_drawn_frame.load() * 1000.0f / ElapseTime;
   s_last_perf_stats.VPS = s_drawn_video.load() * 1000.0f / ElapseTime;
-  s_last_perf_stats.Speed = s_last_perf_stats.VPS * 100.0f / VideoInterface::GetTargetRefreshRate();
+  s_last_perf_stats.Speed = s_last_perf_stats.VPS * 100.0f /
+      VideoInterface::GetTargetRefreshRate();
 
   std::string SFPS;
 
