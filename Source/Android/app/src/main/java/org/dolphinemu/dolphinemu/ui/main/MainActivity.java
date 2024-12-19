@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -25,7 +26,6 @@ import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag;
 import org.dolphinemu.dolphinemu.features.settings.ui.SettingsActivity;
 import org.dolphinemu.dolphinemu.model.GameFileCache;
 import org.dolphinemu.dolphinemu.services.GameFileCacheService;
-import org.dolphinemu.dolphinemu.ui.DividerItemDecoration;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
 import org.dolphinemu.dolphinemu.utils.FileBrowserHelper;
 import org.dolphinemu.dolphinemu.utils.PermissionsHandler;
@@ -110,7 +110,7 @@ public final class MainActivity extends AppCompatActivity
   private void findViews()
   {
     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-    mDivider = new DividerItemDecoration(null);
+    mDivider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
     mToolbar = findViewById(R.id.toolbar_main);
     mGameList = findViewById(R.id.grid_games);
     mAdapter = new GameAdapter();

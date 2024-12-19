@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -32,7 +33,6 @@ import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.model.GameFile;
 import org.dolphinemu.dolphinemu.services.GameFileCacheService;
-import org.dolphinemu.dolphinemu.ui.DividerItemDecoration;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
 
 import java.io.BufferedReader;
@@ -445,7 +445,8 @@ public class EditorActivity extends AppCompatActivity
     mListView = findViewById(R.id.code_list);
     mAdapter = new CheatEntryAdapter();
     mListView.setAdapter(mAdapter);
-    mListView.addItemDecoration(new DividerItemDecoration(null));
+    mListView.addItemDecoration(new DividerItemDecoration(this,
+      DividerItemDecoration.VERTICAL));
     mListView.setLayoutManager(new LinearLayoutManager(this));
 
     // code editor

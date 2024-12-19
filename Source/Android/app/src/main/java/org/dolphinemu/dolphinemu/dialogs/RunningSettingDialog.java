@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +27,6 @@ import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.activities.EmulationActivity;
 import org.dolphinemu.dolphinemu.overlay.InputOverlay;
-import org.dolphinemu.dolphinemu.ui.DividerItemDecoration;
 import org.dolphinemu.dolphinemu.utils.Rumble;
 
 import java.util.ArrayList;
@@ -665,7 +665,8 @@ public class RunningSettingDialog extends DialogFragment
     recyclerView.setLayoutManager(layoutManager);
     mAdapter = new SettingsAdapter();
     recyclerView.setAdapter(mAdapter);
-    recyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), null));
+    recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(),
+      DividerItemDecoration.VERTICAL));
     builder.setView(contents);
     loadSubMenu(MENU_MAIN);
     return builder.create();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +14,6 @@ import android.view.ViewGroup;
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.features.settings.model.Settings;
 import org.dolphinemu.dolphinemu.features.settings.model.view.SettingsItem;
-import org.dolphinemu.dolphinemu.ui.DividerItemDecoration;
 
 import java.util.ArrayList;
 
@@ -98,7 +98,8 @@ public final class SettingsFragment extends Fragment implements SettingsFragment
 
     recyclerView.setAdapter(mAdapter);
     recyclerView.setLayoutManager(mgr);
-    recyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), null));
+    recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(),
+      DividerItemDecoration.VERTICAL));
 
     showSettingsList(mActivity.getSettings());
   }

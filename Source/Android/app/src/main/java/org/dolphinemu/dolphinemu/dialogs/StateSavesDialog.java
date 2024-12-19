@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import android.widget.TextView;
 
 import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.R;
-import org.dolphinemu.dolphinemu.ui.DividerItemDecoration;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
 
 import java.io.File;
@@ -211,7 +211,8 @@ public class StateSavesDialog extends DialogFragment
     recyclerView.setLayoutManager(layoutManager);
     mAdapter = new StateSavesAdapter(this, getArguments().getString(ARG_GAME_ID));
     recyclerView.setAdapter(mAdapter);
-    recyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), null));
+    recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(),
+      DividerItemDecoration.VERTICAL));
     builder.setView(contents);
     return builder.create();
   }
