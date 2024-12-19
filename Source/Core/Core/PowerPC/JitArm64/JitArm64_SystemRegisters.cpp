@@ -808,12 +808,20 @@ void JitArm64::mtfsb0x(UGeckoInstruction inst)
   JITDISABLE(bJITSystemRegistersOff);
   FALLBACK_IF(inst.Rc);
 
-  u32 mask = ~(0x80000000 >> inst.CRBD);
+  const u32 mask = 0x80000000 >> inst.CRBD;
+  const u32 inverted_mask = ~mask;
+
+  if (mask == FPSCR_FEX || mask == FPSCR_VX)
+    return;
 
   ARM64Reg WA = gpr.GetReg();
 
   LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
-  AND(WA, WA, mask, 29);
+
+  AND(WA, WA, inverted_mask, 29);
+
+  if ((mask & (FPSCR_ANY_X | FPSCR_ANY_E)) != 0)
+    UpdateFPExceptionSummary(WA);
   STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
 
   gpr.Unlock(WA);
