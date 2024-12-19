@@ -843,3 +843,70 @@ void JitArm64::mtfsb1x(UGeckoInstruction inst)
   if (inst.CRBD >= 29)
     UpdateRoundingMode();
 }
+
+void JitArm64::mtfsfix(UGeckoInstruction inst)
+{
+  INSTRUCTION_START
+  JITDISABLE(bJITSystemRegistersOff);
+  FALLBACK_IF(inst.Rc);
+  u8 imm = (inst.hex >> (31 - 19)) & 0xF;
+  u8 shift = 28 - 4 * inst.CRFD;
+  ARM64Reg WA = gpr.GetReg();
+  LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
+  if (imm == 0xF)
+  {
+    // yes, that's probably not a good implementation, but i'll be fixing it
+    // while adapting to raise program exception on floating point exceptions
+    ORR(WA, WA, 0xF << shift, 29);
+  }
+  else if (imm == 0x0)
+  {
+    BFI(WA, ARM64Reg::WZR, shift, 4);
+  }
+  else
+  {
+    ARM64Reg WB = gpr.GetReg();
+    MOVZ(WB, imm);
+    BFI(WA, WB, shift, 4);
+    gpr.Unlock(WB);
+  }
+  STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
+  gpr.Unlock(WA);
+  // Field 7 contains NI and RN.
+  if (inst.CRFD == 7)
+    UpdateRoundingMode();
+}
+
+void JitArm64::mtfsfx(UGeckoInstruction inst)
+{
+  INSTRUCTION_START
+  JITDISABLE(bJITSystemRegistersOff);
+  FALLBACK_IF(inst.Rc);
+  u32 mask = 0;
+  for (int i = 0; i < 8; i++)
+  {
+    if (inst.FM & (1 << i))
+      mask |= 0xFU << (4 * i);
+  }
+  if (mask == 0xFFFFFFFF)
+  {
+    ARM64Reg VB = fpr.R(inst.FB, RegType::LowerPair);
+    m_float_emit.STR(32, IndexType::Unsigned, VB, PPC_REG, PPCSTATE_OFF(fpscr));
+  }
+  else if (mask != 0)
+  {
+    ARM64Reg VB = fpr.R(inst.FB, RegType::LowerPair);
+    ARM64Reg V0 = fpr.GetReg();
+    ARM64Reg V1 = fpr.GetReg();
+    ARM64Reg WA = gpr.GetReg();
+    m_float_emit.LDR(32, IndexType::Unsigned, V0, PPC_REG, PPCSTATE_OFF(fpscr));
+    MOVI2R(WA, mask);
+    m_float_emit.FMOV(EncodeRegToSingle(V1), WA);
+    m_float_emit.BIT(EncodeRegToDouble(V0), EncodeRegToDouble(VB), EncodeRegToDouble(V1));
+    m_float_emit.STR(32, IndexType::Unsigned, V0, PPC_REG, PPCSTATE_OFF(fpscr));
+    fpr.Unlock(V0, V1);
+    gpr.Unlock(WA);
+  }
+  if (inst.FM & 1)
+    UpdateRoundingMode();
+}
