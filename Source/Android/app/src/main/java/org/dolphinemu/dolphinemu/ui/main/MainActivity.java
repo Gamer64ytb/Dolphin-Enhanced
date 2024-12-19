@@ -259,6 +259,7 @@ public final class MainActivity extends AppCompatActivity
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent result)
   {
+    super.onActivityResult(requestCode, resultCode, result);
     switch (requestCode)
     {
       case REQUEST_ADD_DIRECTORY:

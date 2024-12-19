@@ -246,19 +246,18 @@ public final class EmulationActivity extends AppCompatActivity
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent result)
   {
-    switch (requestCode)
+    super.onActivityResult(requestCode, resultCode, result);
+    if (requestCode == REQUEST_CHANGE_DISC)
     {
-      case REQUEST_CHANGE_DISC:
-        // If the user picked a file, as opposed to just backing out.
-        if (resultCode == MainActivity.RESULT_OK)
+      // If the user picked a file, as opposed to just backing out.
+      if (resultCode == MainActivity.RESULT_OK)
+      {
+        String newDiscPath = FileBrowserHelper.getSelectedDirectory(result);
+        if (!TextUtils.isEmpty(newDiscPath))
         {
-          String newDiscPath = FileBrowserHelper.getSelectedDirectory(result);
-          if (!TextUtils.isEmpty(newDiscPath))
-          {
-            NativeLibrary.ChangeDisc(newDiscPath);
-          }
+          NativeLibrary.ChangeDisc(newDiscPath);
         }
-        break;
+      }
     }
   }
 
