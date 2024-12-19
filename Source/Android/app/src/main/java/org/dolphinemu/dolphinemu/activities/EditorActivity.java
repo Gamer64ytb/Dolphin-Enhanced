@@ -185,7 +185,7 @@ public class EditorActivity extends AppCompatActivity
       OkHttpClient downloader = new OkHttpClient();
       Response response = null;
       Request request = new Request.Builder()
-        .url("https://www.geckocodes.org/txt.php?txt=" + gametdbId[0])
+        .url("https://codes.rc24.xyz/txt.php?txt=" + gametdbId[0])
         .addHeader("Cookie", "challenge=BitMitigate.com")
         .build();
 
@@ -417,8 +417,11 @@ public class EditorActivity extends AppCompatActivity
   private final int SECTION_GECKO_ENABLED = 3;
   private final String[] SECTIONS = {"[ActionReplay]", "[ActionReplay_Enabled]", "[Gecko]", "[Gecko_Enabled]"};
 
+  private String mGameId;
   private GameFile mGameFile;
+  private boolean mCancelSave;
   private EditText mEditor;
+  private Button mBtnConfirm;
   private RecyclerView mListView;
   private CheatEntryAdapter mAdapter;
   private ProgressBar mProgressBar;
@@ -433,8 +436,10 @@ public class EditorActivity extends AppCompatActivity
 
     final String gamePath = getIntent().getStringExtra(ARG_GAME_PATH);
     final GameFile gameFile = GameFileCacheService.addOrGet(gamePath);
-    final String gameId = gameFile.getGameId();
-    setTitle(gameId);
+
+    mGameId = gameFile.getGameId();
+
+    setTitle(mGameId);
 
     // code list
     mListView = findViewById(R.id.code_list);
@@ -452,26 +457,33 @@ public class EditorActivity extends AppCompatActivity
 
     mEditor.addTextChangedListener(new IniTextWatcher());
     mEditor.setHorizontallyScrolling(true);
-    setGameSettings(gameId, mEditor);
-    loadCheatList();
 
-    // show
-    toggleListView(true);
-
-    Button buttonConfirm = findViewById(R.id.button_confirm);
-    buttonConfirm.setOnClickListener(view ->
-    {
-      AcceptCheatCode(gameId, mEditor);
-      mEditor.clearFocus();
-      finish();
-    });
-
+    mCancelSave = false;
     Button buttonCancel = findViewById(R.id.button_cancel);
     buttonCancel.setOnClickListener(view ->
     {
-      mEditor.clearFocus();
+      mCancelSave = true;
       finish();
     });
+
+    mBtnConfirm = findViewById(R.id.button_confirm);
+    mBtnConfirm.setOnClickListener(view ->
+      toggleListView(mEditor.getVisibility() == View.VISIBLE));
+
+    // show
+    setGameSettings(mEditor);
+    loadCheatList();
+    toggleListView(true);
+  }
+
+  @Override
+  protected void onDestroy()
+  {
+    super.onDestroy();
+    if (!mCancelSave)
+    {
+      AcceptCheatCode(mEditor);
+    }
   }
 
   @Override
@@ -485,14 +497,10 @@ public class EditorActivity extends AppCompatActivity
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
   {
-    switch (item.getItemId())
+    if (item.getItemId() == R.id.menu_download_gecko)
     {
-      case R.id.menu_download_gecko:
-        DownloadGeckoCodes(mGameFile.getGameTdbId(), mEditor);
-        return true;
-      case R.id.menu_toggle_list:
-        toggleListView(mEditor.getVisibility() == View.VISIBLE);
-        return true;
+      DownloadGeckoCodes(mGameFile.getGameTdbId(), mEditor);
+      return true;
     }
     return false;
   }
@@ -506,11 +514,13 @@ public class EditorActivity extends AppCompatActivity
       mListView.setVisibility(View.VISIBLE);
       mEditor.setVisibility(View.INVISIBLE);
       loadCheatList();
+      mBtnConfirm.setText(R.string.edit_cheat);
     }
     else
     {
       mListView.setVisibility(View.INVISIBLE);
       mEditor.setVisibility(View.VISIBLE);
+      mBtnConfirm.setText(R.string.cheat_list);
     }
   }
 
@@ -733,9 +743,9 @@ public class EditorActivity extends AppCompatActivity
     }
   }
 
-  private BufferedReader getConfigReader(String gameId)
+  private BufferedReader getConfigReader()
   {
-    String filename = DirectoryInitialization.getLocalSettingFile(gameId);
+    String filename = DirectoryInitialization.getLocalSettingFile(mGameId);
     File configFile = new File(filename);
     BufferedReader reader = null;
 
@@ -750,11 +760,11 @@ public class EditorActivity extends AppCompatActivity
         reader = null;
       }
     }
-    else if (gameId.length() > 3)
+    else if (mGameId.length() > 3)
     {
       try
       {
-        String path = "Sys/GameSettings/" + gameId + ".ini";
+        String path = "Sys/GameSettings/" + mGameId + ".ini";
         reader = new BufferedReader(new InputStreamReader(getAssets().open(path)));
       }
       catch (IOException e)
@@ -766,7 +776,7 @@ public class EditorActivity extends AppCompatActivity
       {
         try
         {
-          String path = "Sys/GameSettings/" + gameId.substring(0, 3) + ".ini";
+          String path = "Sys/GameSettings/" + mGameId.substring(0, 3) + ".ini";
           reader = new BufferedReader(new InputStreamReader(getAssets().open(path)));
         }
         catch (IOException e)
@@ -779,9 +789,9 @@ public class EditorActivity extends AppCompatActivity
     return reader;
   }
 
-  private void setGameSettings(String gameId, EditText editCode)
+  private void setGameSettings(EditText editCode)
   {
-    BufferedReader reader = getConfigReader(gameId);
+    BufferedReader reader = getConfigReader();
     if (reader == null)
     {
       return;
@@ -867,7 +877,7 @@ public class EditorActivity extends AppCompatActivity
     return ((st > 0) || (len < text.length())) ? text.substring(st, len) : text;
   }
 
-  private void AcceptCheatCode(String gameId, EditText editCode)
+  private void AcceptCheatCode(EditText editCode)
   {
     StringBuilder configSB = new StringBuilder();
     String content = editCode.getText().toString();
@@ -922,7 +932,7 @@ public class EditorActivity extends AppCompatActivity
       configSB.append(content);
     }
 
-    String filename = DirectoryInitialization.getLocalSettingFile(gameId);
+    String filename = DirectoryInitialization.getLocalSettingFile(mGameId);
     boolean saved = false;
     try
     {

@@ -357,7 +357,10 @@
     <string name="delete_game_setting">删除设置</string>
     <string name="delete_game_file">Delete Game</string>
     <string name="clear_game_data">清除缓存</string>
+    <string name="cheat_load">作弊加载</string>
     <string name="cheat_code">金手指</string>
+    <string name="cheat_list">金手指列表</string>
+    <string name="edit_cheat">编辑金手指</string>
     <string name="toast_save_code_ok">保存成功！</string>
     <string name="toast_save_code_no">保存失败！</string>
     <string name="touch_screen_pointer">触摸屏模拟IR</string>
