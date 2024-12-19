@@ -15,5 +15,14 @@ add_dolphin_test(ESFormatsTest IOS/ES/FormatsTest.cpp IOS/ES/TestBinaryData.cpp)
 add_dolphin_test(FileSystemTest IOS/FS/FileSystemTest.cpp)
 
 if(_M_X86)
-  add_dolphin_test(PowerPCTest PowerPC/Jit64Common/Frsqrte.cpp)
+  add_dolphin_test(PowerPCTest
+    PowerPC/Jit64Common/ConvertDoubleToSingle.cpp
+    PowerPC/Jit64Common/Frsqrte.cpp
+  )
+elseif(_M_ARM_64)
+  add_dolphin_test(PowerPCTest
+    PowerPC/JitArm64/ConvertSingleDouble.cpp
+    PowerPC/JitArm64/FPRF.cpp
+    PowerPC/JitArm64/MovI2R.cpp
+  )
 endif()
