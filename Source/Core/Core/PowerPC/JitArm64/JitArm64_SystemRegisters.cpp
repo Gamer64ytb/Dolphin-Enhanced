@@ -820,3 +820,26 @@ void JitArm64::mtfsb0x(UGeckoInstruction inst)
   if (inst.CRBD >= 29)
     UpdateRoundingMode();
 }
+
+void JitArm64::mtfsb1x(UGeckoInstruction inst)
+{
+  INSTRUCTION_START
+  JITDISABLE(bJITSystemRegistersOff);
+  FALLBACK_IF(inst.Rc);
+  u32 mask = 0x80000000 >> inst.CRBD;
+  ARM64Reg WA = gpr.GetReg();
+  LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
+  if (mask & FPSCR_ANY_X)
+  {
+    ARM64Reg WB = gpr.GetReg();
+    TST(WA, mask, 29);
+    ORR(WB, WA, 32 - 31, 0);
+    CSEL(WA, WA, WB, CCFlags::CC_NEQ);
+    gpr.Unlock(WB);
+  }
+  ORR(WA, WA, mask, 29);
+  STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
+  gpr.Unlock(WA);
+  if (inst.CRBD >= 29)
+    UpdateRoundingMode();
+}
