@@ -16,7 +16,7 @@
 #include <algorithm>
 #include <cctype>
 #include <ctime>
-#include <discord-rpc/include/discord_rpc.h>
+#include <discord_rpc.h>
 #include <string>
 
 #endif
