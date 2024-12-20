@@ -37,7 +37,6 @@
     <ClInclude Include="CommonFuncs.h" />
     <ClInclude Include="CommonPaths.h" />
     <ClInclude Include="CommonTypes.h" />
-    <ClInclude Include="Compiler.h" />
     <ClInclude Include="Config\Config.h" />
     <ClInclude Include="Config\Enums.h" />
     <ClInclude Include="Config\Layer.h" />
@@ -279,6 +278,7 @@
     </ClInclude>
     <ClInclude Include="VariantUtil.h" />
     <ClInclude Include="DynamicLibrary.h" />
+    <ClInclude Include="Inline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDUtils.cpp" />
