@@ -2208,7 +2208,7 @@ static void InitExtensionList(GLContext* context)
     default:
     case 450:
     {
-      std::string gl450exts[] = {
+      static const char* const gl450exts[] = {
           "GL_ARB_ES3_1_compatibility",
           "GL_ARB_clip_control",
           "GL_ARB_conditional_render_inverted",
@@ -2226,7 +2226,7 @@ static void InitExtensionList(GLContext* context)
     }
     case 440:
     {
-      std::string gl440exts[] = {
+      static const char* const gl440exts[] = {
           "GL_ARB_buffer_storage",
           "GL_ARB_clear_texture",
           "GL_ARB_enhanced_layouts",
@@ -2242,7 +2242,7 @@ static void InitExtensionList(GLContext* context)
     }
     case 430:
     {
-      std::string gl430exts[] = {
+      static const char* const gl430exts[] = {
           "GL_ARB_ES3_compatibility",
           "GL_ARB_arrays_of_arrays",
           "GL_ARB_clear_buffer_object",
@@ -2270,7 +2270,7 @@ static void InitExtensionList(GLContext* context)
     }
     case 420:
     {
-      std::string gl420exts[] = {
+      static const char* const gl420exts[] = {
           "GL_ARB_base_instance",
           "GL_ARB_compressed_texture_pixel_storage",
           "GL_ARB_conservative_depth",
@@ -2290,7 +2290,7 @@ static void InitExtensionList(GLContext* context)
     }
     case 410:
     {
-      std::string gl410exts[] = {
+      static const char* const gl410exts[] = {
           "GL_ARB_ES2_compatibility",
           "GL_ARB_get_program_binary",
           "GL_ARB_separate_shader_objects",
@@ -2304,7 +2304,7 @@ static void InitExtensionList(GLContext* context)
     }
     case 400:
     {
-      std::string gl400exts[] = {
+      static const char* const gl400exts[] = {
           "GL_ARB_draw_indirect",
           "GL_ARB_gpu_shader5",
           "GL_ARB_gpu_shader_fp64",
@@ -2324,7 +2324,7 @@ static void InitExtensionList(GLContext* context)
     }
     case 330:
     {
-      std::string gl330exts[] = {
+      static const char* const gl330exts[] = {
           "GL_ARB_shader_bit_encoding",
           "GL_ARB_blend_func_extended",
           "GL_ARB_explicit_attrib_location",
@@ -2342,7 +2342,7 @@ static void InitExtensionList(GLContext* context)
     }
     case 320:
     {
-      std::string gl320exts[] = {
+      static const char* const gl320exts[] = {
           "GL_ARB_geometry_shader4",
           "GL_ARB_sync",
           "GL_ARB_vertex_array_bgra",
@@ -2360,7 +2360,7 @@ static void InitExtensionList(GLContext* context)
     case 310:
     {
       // Can't add NV_primitive_restart since function name changed
-      std::string gl310exts[] = {
+      static const char* const gl310exts[] = {
           "GL_ARB_draw_instanced",
           "GL_ARB_copy_buffer",
           "GL_ARB_texture_buffer_object",
@@ -2376,7 +2376,7 @@ static void InitExtensionList(GLContext* context)
     {
       // Quite a lot of these had their names changed when merged in to core
       // Disable the ones that have
-      std::string gl300exts[] = {
+      static const char* const gl300exts[] = {
           "GL_ARB_map_buffer_range",
           "GL_ARB_color_buffer_float",
           "GL_ARB_texture_float",

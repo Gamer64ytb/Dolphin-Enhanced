@@ -397,7 +397,7 @@ void PostProcessing::BlitFromTexture(const MathUtil::Rectangle<int>& dst,
 
 std::string PostProcessing::GetUniformBufferHeader() const
 {
-  std::stringstream ss;
+  std::ostringstream ss;
   u32 unused_counter = 1;
   if (g_ActiveConfig.backend_info.api_type == APIType::D3D)
     ss << "cbuffer PSBlock : register(b0) {\n";
@@ -455,7 +455,7 @@ std::string PostProcessing::GetUniformBufferHeader() const
 
 std::string PostProcessing::GetHeader() const
 {
-  std::stringstream ss;
+  std::ostringstream ss;
   ss << GetUniformBufferHeader();
   if (g_ActiveConfig.backend_info.api_type == APIType::D3D)
   {
@@ -543,7 +543,7 @@ void main(in float3 v_tex0_ : TEXCOORD0, out float4 ocol0_ : SV_Target)
 
 bool PostProcessing::CompileVertexShader()
 {
-  std::stringstream ss;
+  std::ostringstream ss;
   ss << GetUniformBufferHeader();
 
   if (g_ActiveConfig.backend_info.api_type == APIType::D3D)
