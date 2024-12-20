@@ -1114,36 +1114,38 @@ void VolumeVerifier::Process()
   const bool is_data_needed = m_calculating_any_hash || content_read || block_read;
   const bool read_succeeded = is_data_needed && ReadChunkAndWaitForAsyncOperations(bytes_to_read);
 
+  if (!read_succeeded)
+  {
+    ERROR_LOG(DISCIO, "Read failed at 0x%" PRIx64 " to 0x%" PRIx64, m_progress,
+              m_progress + bytes_to_read);
+
+    m_read_errors_occurred = true;
+    m_calculating_any_hash = false;
+  }
+
   if (m_calculating_any_hash)
   {
-    if (!read_succeeded)
+    if (m_hashes_to_calculate.crc32)
     {
-      m_calculating_any_hash = false;
+      m_crc32_future = std::async(std::launch::async, [this] {
+        // It would be nice to use crc32_z here instead of crc32, but it isn't available on Android
+        m_crc32_context =
+            crc32(m_crc32_context, m_data.data(), static_cast<unsigned int>(m_data.size()));
+      });
     }
-    else
+
+    if (m_hashes_to_calculate.md5)
     {
-      if (m_hashes_to_calculate.crc32)
-      {
-        m_crc32_future = std::async(std::launch::async, [this] {
-          // Would be nice to use crc32_z here instead of crc32, but it isn't available on Android
-          m_crc32_context =
-              crc32(m_crc32_context, m_data.data(), static_cast<unsigned int>(m_data.size()));
-        });
-      }
+      m_md5_future = std::async(std::launch::async, [this] {
+        mbedtls_md5_update_ret(&m_md5_context, m_data.data(), m_data.size());
+      });
+    }
 
-      if (m_hashes_to_calculate.md5)
-      {
-        m_md5_future = std::async(std::launch::async, [this] {
-          mbedtls_md5_update_ret(&m_md5_context, m_data.data(), m_data.size());
-        });
-      }
-
-      if (m_hashes_to_calculate.sha1)
-      {
-        m_sha1_future = std::async(std::launch::async, [this] {
-          mbedtls_sha1_update_ret(&m_sha1_context, m_data.data(), m_data.size());
-        });
-      }
+    if (m_hashes_to_calculate.sha1)
+    {
+      m_sha1_future = std::async(std::launch::async, [this] {
+        mbedtls_sha1_update_ret(&m_sha1_context, m_data.data(), m_data.size());
+      });
     }
   }
 
@@ -1236,9 +1238,6 @@ void VolumeVerifier::Finish()
 
   WaitForAsyncOperations();
 
-  ASSERT(m_content_index == m_content_offsets.size());
-  ASSERT(m_block_index == m_blocks.size());
-
   if (m_calculating_any_hash)
   {
     if (m_hashes_to_calculate.crc32)
@@ -1262,25 +1261,35 @@ void VolumeVerifier::Finish()
     }
   }
 
+  if (m_read_errors_occurred)
+    AddProblem(Severity::Medium, Common::GetStringT("Some of the data could not be read."));
+
+  bool file_too_small = false;
+
+  if (m_content_index != m_content_offsets.size() || m_block_index != m_blocks.size())
+    file_too_small = true;
+
   if (IsDisc(m_volume.GetVolumeType()) &&
       (m_volume.IsSizeAccurate() || m_volume.SupportsIntegrityCheck()))
   {
     u64 volume_size = m_volume.IsSizeAccurate() ? m_volume.GetSize() : m_biggest_verified_offset;
     if (m_biggest_referenced_offset > volume_size)
-    {
-      const bool second_layer_missing =
-          m_biggest_referenced_offset > SL_DVD_SIZE && m_volume.GetSize() >= SL_DVD_SIZE;
-      std::string text =
-          second_layer_missing ?
-              Common::GetStringT("This disc image is too small and lacks some data. The problem is "
-                                 "most likely that this is a dual-layer disc that has been dumped "
-                                 "as a single-layer disc.") :
-              Common::GetStringT("This disc image is too small and lacks some data. If your "
-                                 "dumping program saved the disc image as several parts, you need "
-                                 "to merge them into one file.");
-      AddProblem(Severity::High, std::move(text));
-      return;
-    }
+      file_too_small = true;
+  }
+
+  if (file_too_small)
+  {
+    const bool second_layer_missing =
+        m_biggest_referenced_offset > SL_DVD_SIZE && m_volume.GetSize() >= SL_DVD_SIZE;
+    std::string text =
+        second_layer_missing ?
+            Common::GetStringT("This disc image is too small and lacks some data. The problem is "
+                               "most likely that this is a dual-layer disc that has been dumped "
+                               "as a single-layer disc.") :
+            Common::GetStringT("This disc image is too small and lacks some data. If your "
+                               "dumping program saved the disc image as several parts, you need "
+                               "to merge them into one file.");
+    AddProblem(Severity::High, std::move(text));
   }
 
   for (auto [partition, blocks] : m_block_errors)
