@@ -423,10 +423,10 @@ bool WIARVZFileReader<RVZ>::ReadWiiDecrypted(u64 offset, u64 size, u8* out_ptr,
         (Common::swap32(data.first_sector) - partition_first_sector) * VolumeWii::BLOCK_DATA_SIZE;
     const u64 data_size = Common::swap32(data.number_of_sectors) * VolumeWii::BLOCK_DATA_SIZE;
 
-    if (!ReadFromGroups(&offset, &size, &out_ptr, chunk_size, VolumeWii::BLOCK_DATA_SIZE,
-                        data_offset, data_size, Common::swap32(data.group_index),
-                        Common::swap32(data.number_of_groups),
-                        std::max<u64>(1, chunk_size / VolumeWii::GROUP_DATA_SIZE)))
+    if (!ReadFromGroups(
+            &offset, &size, &out_ptr, chunk_size, VolumeWii::BLOCK_DATA_SIZE, data_offset,
+            data_size, Common::swap32(data.group_index), Common::swap32(data.number_of_groups),
+            std::max<u32>(1, static_cast<u32>(chunk_size / VolumeWii::GROUP_DATA_SIZE))))
     {
       return false;
     }
@@ -1723,19 +1723,24 @@ WIARVZFileReader<RVZ>::Convert(BlobReader* infile, const VolumeDisc* infile_volu
   const size_t raw_data_entries_size = raw_data_entries.size() * sizeof(RawDataEntry);
   const size_t group_entries_size = group_entries.size() * sizeof(GroupEntry);
 
-  // Conservative estimate for how much space will be taken up by headers.
-  // The compression methods None and Purge have very predictable overhead,
-  // and the other methods are able to compress group entries well
+  // An estimate for how much space will be taken up by headers.
+  // We will reserve this much space at the beginning of the file, and if the headers don't
+  // fit on that space, we will need to write them at the end of the file instead.
   const u64 headers_size_upper_bound = [&] {
+    // 0x100 is added to account for compression overhead (in particular for Purge).
     u64 upper_bound = sizeof(WIAHeader1) + sizeof(WIAHeader2) + partition_entries_size +
                       raw_data_entries_size + 0x100;
 
-    // RVZ's added data in GroupEntry usually compresses well
+    // RVZ's added data in GroupEntry usually compresses well, so we'll assume the compression ratio
+    // for RVZ GroupEntries is 9 / 16 or better. This constant is somehwat arbitrarily chosen, but
+    // no games were found that get a worse compression ratio than that. There are some games that
+    // get a worse ratio than 1 / 2, such as Metroid: Other M (PAL) with the default settings.
     if (RVZ && compression_type > WIARVZCompressionType::Purge)
-      upper_bound += group_entries_size / 2;
+      upper_bound += static_cast<u64>(group_entries_size) * 9 / 16;
     else
       upper_bound += group_entries_size;
 
+    // This alignment is also somewhat arbitrary.
     return Common::AlignUp(upper_bound, VolumeWii::BLOCK_TOTAL_SIZE);
   }();
 
