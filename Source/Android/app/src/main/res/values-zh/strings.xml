@@ -309,6 +309,7 @@
     <string name="emulation_done">完成</string>
     <string name="emulation_toggle_controls">按钮显示</string>
     <string name="emulation_toggle_all">切换全部</string>
+    <string name="emulation_control_adjust">调整控制</string>
     <string name="emulation_control_scale">调整比例</string>
     <string name="emulation_control_alpha">调整透明度</string>
     <string name="emulation_control_reset_layout">重置布局</string>

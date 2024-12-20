@@ -68,7 +68,7 @@ public class RunningSettingDialog extends DialogFragment
     public static final int SETTING_QUICKSAVE = 204;
     public static final int SETTING_QUICKLOAD = 205;
     public static final int SETTING_STATESAVES = 206;
-    public static final int SETTING_ADJUST_SCALE = 207;
+    public static final int SETTING_ADJUST_CONTROLS = 207;
     public static final int SETTING_CHOOSE_CONTROLLER = 208;
     public static final int SETTING_JOYSTICK_EMULATION = 209;
     public static final int SETTING_CHANGE_DISC = 210;
@@ -200,8 +200,8 @@ public class RunningSettingDialog extends DialogFragment
 		  activity.showStateSaves();
           dismiss();
           break;
-		case SettingsItem.SETTING_ADJUST_SCALE:
-		  activity.adjustScale();
+		case SettingsItem.SETTING_ADJUST_CONTROLS:
+		  activity.adjustControls();
           dismiss();
           break;
 		case SettingsItem.SETTING_CHOOSE_CONTROLLER:
@@ -441,7 +441,7 @@ public class RunningSettingDialog extends DialogFragment
       mSettings.add(new SettingsItem(SettingsItem.SETTING_QUICKSAVE, R.string.emulation_quicksave, SettingsItem.TYPE_BUTTON, 0));
       mSettings.add(new SettingsItem(SettingsItem.SETTING_QUICKLOAD, R.string.emulation_quickload, SettingsItem.TYPE_BUTTON, 0));
       mSettings.add(new SettingsItem(SettingsItem.SETTING_STATESAVES, R.string.state_saves, SettingsItem.TYPE_BUTTON, 0));
-      mSettings.add(new SettingsItem(SettingsItem.SETTING_ADJUST_SCALE, R.string.emulation_control_scale, SettingsItem.TYPE_BUTTON, 0));
+      mSettings.add(new SettingsItem(SettingsItem.SETTING_ADJUST_CONTROLS, R.string.emulation_control_adjust, SettingsItem.TYPE_BUTTON, 0));
       if (!activity.isGameCubeGame())
       {
 		mSettings.add(new SettingsItem(SettingsItem.SETTING_CHOOSE_CONTROLLER, R.string.emulation_choose_controller, SettingsItem.TYPE_BUTTON, 0));

@@ -182,10 +182,10 @@ public final class EmulationActivity extends AppCompatActivity
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus)
 	{
-		if (hasFocus)
-		{
-			enableFullscreenImmersive();
-		}
+	  if (hasFocus)
+      {
+	    enableFullscreenImmersive();
+      }
 	}
 
   @Override
@@ -224,23 +224,23 @@ public final class EmulationActivity extends AppCompatActivity
   @Override
   public void onBackPressed()
   {
-		if (mMenuVisible)
-		{
-			mEmulationFragment.stopEmulation();
-			finish();
-		}
-		else
-		{
-			mMenuVisible = true;
-			mEmulationFragment.stopConfiguringControls();
-			RunningSettingDialog dialog = RunningSettingDialog.newInstance();
-			dialog.show(getSupportFragmentManager(), "RunningSettingDialog");
-			dialog.setOnDismissListener(v ->
-			{
-				mMenuVisible = false;
-				enableFullscreenImmersive();
-			});
-		}
+    if (mMenuVisible)
+    {
+	  mEmulationFragment.stopEmulation();
+	  finish();
+    }
+    else
+    {
+	  mMenuVisible = true;
+      mEmulationFragment.stopConfiguringControls();
+      RunningSettingDialog dialog = RunningSettingDialog.newInstance();
+      dialog.show(getSupportFragmentManager(), "RunningSettingDialog");
+      dialog.setOnDismissListener(v ->
+      {
+	    mMenuVisible = false;
+        enableFullscreenImmersive();
+      });
+    }
   }
 
   @Override
@@ -263,13 +263,13 @@ public final class EmulationActivity extends AppCompatActivity
 
   private void enableFullscreenImmersive()
   {
-		getWindow().getDecorView().setSystemUiVisibility(
-			View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-				View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-				View.SYSTEM_UI_FLAG_FULLSCREEN |
-				View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    getWindow().getDecorView().setSystemUiVisibility(
+      View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+	  View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+      View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+	  View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+	  View.SYSTEM_UI_FLAG_FULLSCREEN |
+	  View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
   }
 
   public void showStateSaves()
@@ -285,12 +285,10 @@ public final class EmulationActivity extends AppCompatActivity
 
     builder.setSingleChoiceItems(R.array.wiiJoystickSettings, joystick,
       (dialog, indexSelected) ->
-      {
-        InputOverlay.sJoyStickSetting = indexSelected;
-      });
+        InputOverlay.sJoyStickSetting = indexSelected);
     builder.setOnDismissListener((dialogInterface) ->
     {
-      if(InputOverlay.sJoyStickSetting != joystick)
+      if (InputOverlay.sJoyStickSetting != joystick)
       {
         mEmulationFragment.refreshInputOverlay();
       }
@@ -305,31 +303,23 @@ public final class EmulationActivity extends AppCompatActivity
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(R.string.emulation_sensor_settings);
 
-    if(isGameCubeGame())
+    if (isGameCubeGame())
     {
       int sensor = InputOverlay.sSensorGCSetting;
       builder.setSingleChoiceItems(R.array.gcSensorSettings, sensor,
         (dialog, indexSelected) ->
-        {
-          InputOverlay.sSensorGCSetting = indexSelected;
-        });
+          InputOverlay.sSensorGCSetting = indexSelected);
       builder.setOnDismissListener((dialogInterface) ->
-      {
-        setSensorState(InputOverlay.sSensorGCSetting > 0);
-      });
+        setSensorState(InputOverlay.sSensorGCSetting > 0));
     }
     else
     {
       int sensor = InputOverlay.sSensorWiiSetting;
       builder.setSingleChoiceItems(R.array.wiiSensorSettings, sensor,
         (dialog, indexSelected) ->
-        {
-          InputOverlay.sSensorWiiSetting = indexSelected;
-        });
+          InputOverlay.sSensorWiiSetting = indexSelected);
       builder.setOnDismissListener((dialogInterface) ->
-      {
-        setSensorState(InputOverlay.sSensorWiiSetting > 0);
-      });
+        setSensorState(InputOverlay.sSensorWiiSetting > 0));
     }
 
     AlertDialog alertDialog = builder.create();
@@ -338,9 +328,9 @@ public final class EmulationActivity extends AppCompatActivity
 
   private void setSensorState(boolean enabled)
   {
-    if(enabled)
+    if (enabled)
     {
-      if(mSensorManager == null)
+      if (mSensorManager == null)
       {
         mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         Sensor rotationVector = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
@@ -352,14 +342,13 @@ public final class EmulationActivity extends AppCompatActivity
     }
     else
     {
-      if(mSensorManager != null)
+      if (mSensorManager != null)
       {
         mSensorManager.unregisterListener(mEmulationFragment);
         mSensorManager = null;
       }
     }
 
-    //
     mEmulationFragment.onAccuracyChanged(null, 0);
   }
 
@@ -380,10 +369,10 @@ public final class EmulationActivity extends AppCompatActivity
   {
     super.onResume();
 
-    if(mSensorManager != null)
+    if (mSensorManager != null)
     {
       Sensor rotationVector = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
-      if(rotationVector != null)
+      if (rotationVector != null)
       {
         mSensorManager.registerListener(mEmulationFragment, rotationVector, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
       }
@@ -395,7 +384,7 @@ public final class EmulationActivity extends AppCompatActivity
   {
     super.onPause();
 
-    if(mSensorManager != null)
+    if (mSensorManager != null)
     {
       mSensorManager.unregisterListener(mEmulationFragment);
     }
@@ -453,7 +442,7 @@ public final class EmulationActivity extends AppCompatActivity
     int button = event.getKeyCode();
     if (button == mBindingButton && input != null && mBindingDevice.equals(input.getDescriptor()))
     {
-      if(event.getAction() == KeyEvent.ACTION_DOWN)
+      if (event.getAction() == KeyEvent.ACTION_DOWN)
         onBackPressed();
       return true;
     }
@@ -539,7 +528,7 @@ public final class EmulationActivity extends AppCompatActivity
     alertDialog.show();
   }
 
-  public void adjustScale()
+  public void adjustControls()
   {
     LayoutInflater inflater = LayoutInflater.from(this);
     View view = inflater.inflate(R.layout.dialog_input_adjust, null);
@@ -603,9 +592,7 @@ public final class EmulationActivity extends AppCompatActivity
     });
     builder.setNeutralButton(getString(R.string.emulation_control_reset_layout),
       (dialogInterface, i) ->
-      {
-        mEmulationFragment.resetCurrentLayout();
-      });
+        mEmulationFragment.resetCurrentLayout());
 
     AlertDialog alertDialog = builder.create();
     alertDialog.show();
@@ -613,7 +600,7 @@ public final class EmulationActivity extends AppCompatActivity
 
 	public void changeDisc()
 	{
-		FileBrowserHelper.openFilePicker(this, REQUEST_CHANGE_DISC, false);
+	  FileBrowserHelper.openFilePicker(this, REQUEST_CHANGE_DISC, false);
 	}
 
   public void chooseController()
@@ -623,9 +610,7 @@ public final class EmulationActivity extends AppCompatActivity
     builder.setTitle(R.string.emulation_choose_controller);
     builder.setSingleChoiceItems(R.array.controllersEntries, controller,
       (dialog, indexSelected) ->
-      {
-        InputOverlay.sControllerType = indexSelected;
-      });
+        InputOverlay.sControllerType = indexSelected);
     builder.setNeutralButton(getString(R.string.emulation_reload_wiimote_config),
       (dialogInterface, i) ->
       {
@@ -710,11 +695,11 @@ public final class EmulationActivity extends AppCompatActivity
     mEmulationFragment.updateTouchPointer();
   }
 
-	public void exitEmulation()
-	{
-		mEmulationFragment.stopEmulation();
-		finish();
-	}
+  public void exitEmulation()
+  {
+    mEmulationFragment.stopEmulation();
+	finish();
+  }
 
   public void bindSystemBack(String binding)
   {
@@ -722,11 +707,11 @@ public final class EmulationActivity extends AppCompatActivity
     mBindingButton = -1;
 
     int descPos = binding.indexOf("Device ");
-    if(descPos == -1)
+    if (descPos == -1)
       return;
 
     int codePos = binding.indexOf("-Button ");
-    if(codePos == -1)
+    if (codePos == -1)
       return;
 
     String descriptor = binding.substring(descPos + 8, codePos - 1);

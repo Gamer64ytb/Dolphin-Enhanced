@@ -309,6 +309,7 @@
     <string name="emulation_done">Done</string>
     <string name="emulation_toggle_controls">Toggle Controls</string>
     <string name="emulation_toggle_all">Toggle All</string>
+    <string name="emulation_control_adjust">Adjust Controls</string>
     <string name="emulation_control_scale">Adjust Scale</string>
     <string name="emulation_control_alpha">Adujst Opacity</string>
     <string name="emulation_control_reset_layout">Reset Layout</string>
