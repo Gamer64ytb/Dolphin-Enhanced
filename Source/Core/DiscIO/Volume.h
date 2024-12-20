@@ -26,18 +26,18 @@ class VolumeWAD;
 
 struct Partition final
 {
-  Partition() : offset(std::numeric_limits<u64>::max()) {}
-  explicit Partition(u64 offset_) : offset(offset_) {}
-  bool operator==(const Partition& other) const { return offset == other.offset; }
-  bool operator!=(const Partition& other) const { return !(*this == other); }
-  bool operator<(const Partition& other) const { return offset < other.offset; }
-  bool operator>(const Partition& other) const { return other < *this; }
-  bool operator<=(const Partition& other) const { return !(*this < other); }
-  bool operator>=(const Partition& other) const { return !(*this > other); }
-  u64 offset;
+  constexpr Partition() = default;
+  constexpr explicit Partition(u64 offset_) : offset(offset_) {}
+  constexpr bool operator==(const Partition& other) const { return offset == other.offset; }
+  constexpr bool operator!=(const Partition& other) const { return !(*this == other); }
+  constexpr bool operator<(const Partition& other) const { return offset < other.offset; }
+  constexpr bool operator>(const Partition& other) const { return other < *this; }
+  constexpr bool operator<=(const Partition& other) const { return !(*this < other); }
+  constexpr bool operator>=(const Partition& other) const { return !(*this > other); }
+  u64 offset{std::numeric_limits<u64>::max()};
 };
 
-const Partition PARTITION_NONE(std::numeric_limits<u64>::max() - 1);
+constexpr Partition PARTITION_NONE(std::numeric_limits<u64>::max() - 1);
 
 class Volume
 {
@@ -76,6 +76,12 @@ public:
   }
   virtual std::vector<u8> GetContent(u16 index) const { return {}; }
   virtual std::vector<u64> GetContentOffsets() const { return {}; }
+  virtual bool CheckContentIntegrity(const IOS::ES::Content& content,
+                                     const std::vector<u8>& encrypted_data,
+                                     const IOS::ES::TicketReader& ticket) const
+  {
+    return false;
+  }
   virtual bool CheckContentIntegrity(const IOS::ES::Content& content, u64 content_offset,
                                      const IOS::ES::TicketReader& ticket) const
   {
@@ -109,6 +115,11 @@ public:
   virtual Platform GetVolumeType() const = 0;
   virtual bool SupportsIntegrityCheck() const { return false; }
   virtual bool CheckH3TableIntegrity(const Partition& partition) const { return false; }
+  virtual bool CheckBlockIntegrity(u64 block_index, const std::vector<u8>& encrypted_data,
+                                   const Partition& partition) const
+  {
+    return false;
+  }
   virtual bool CheckBlockIntegrity(u64 block_index, const Partition& partition) const
   {
     return false;

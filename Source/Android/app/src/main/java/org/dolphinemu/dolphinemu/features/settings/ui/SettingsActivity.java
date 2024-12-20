@@ -83,11 +83,10 @@ public final class SettingsActivity extends AppCompatActivity implements Setting
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
   {
-    switch (item.getItemId())
+    if (item.getItemId() == R.id.menu_save_exit)
     {
-      case R.id.menu_save_exit:
-        finish();
-        return true;
+      finish();
+      return true;
     }
     return false;
   }
