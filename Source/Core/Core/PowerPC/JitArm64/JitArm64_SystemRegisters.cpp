@@ -56,18 +56,6 @@ void JitArm64::UpdateFPExceptionSummary(ARM64Reg fpscr)
   gpr.Unlock(WA);
 }
 
-void JitArm64::UpdateRoundingMode()
-{
-  const BitSet32 gprs_to_save = gpr.GetCallerSavedUsed();
-  const BitSet32 fprs_to_save = fpr.GetCallerSavedUsed();
-  ABI_PushRegisters(gprs_to_save);
-  m_float_emit.ABI_PushRegisters(fprs_to_save, ARM64Reg::X8);
-  MOVP2R(ARM64Reg::X8, &PowerPC::RoundingModeUpdated);
-  BLR(ARM64Reg::X8);
-  m_float_emit.ABI_PopRegisters(fprs_to_save, ARM64Reg::X8);
-  ABI_PopRegisters(gprs_to_save);
-}
-
 void JitArm64::mtmsr(UGeckoInstruction inst)
 {
   INSTRUCTION_START
@@ -800,31 +788,4 @@ void JitArm64::mffsx(UGeckoInstruction inst)
   m_float_emit.FMOV(EncodeRegToDouble(VD), XA);
 
   gpr.Unlock(WA);
-}
-
-void JitArm64::mtfsb0x(UGeckoInstruction inst)
-{
-  INSTRUCTION_START
-  JITDISABLE(bJITSystemRegistersOff);
-  FALLBACK_IF(inst.Rc);
-
-  const u32 mask = 0x80000000 >> inst.CRBD;
-  const u32 inverted_mask = ~mask;
-
-  if (mask == FPSCR_FEX || mask == FPSCR_VX)
-    return;
-
-  ARM64Reg WA = gpr.GetReg();
-
-  LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
-
-  AND(WA, WA, inverted_mask, 29);
-
-  if ((mask & (FPSCR_ANY_X | FPSCR_ANY_E)) != 0)
-    UpdateFPExceptionSummary(WA);
-  STR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(fpscr));
-
-  gpr.Unlock(WA);
-  if (inst.CRBD >= 29)
-    UpdateRoundingMode();
 }

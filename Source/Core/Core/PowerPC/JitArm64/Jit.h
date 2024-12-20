@@ -124,7 +124,6 @@ public:
   void mtcrf(UGeckoInstruction inst);
   void mcrfs(UGeckoInstruction inst);
   void mffsx(UGeckoInstruction inst);
-  void mtfsb0x(UGeckoInstruction inst);
 
   // LoadStore
   void lXX(UGeckoInstruction inst);
@@ -257,7 +256,6 @@ protected:
   void WriteBLRExit(Arm64Gen::ARM64Reg dest);
 
   Arm64Gen::FixupBranch JumpIfCRFieldBit(int field, int bit, bool jump_if_set);
-  void UpdateRoundingMode();
   void UpdateFPExceptionSummary(Arm64Gen::ARM64Reg fpscr);
 
   void ComputeRC0(Arm64Gen::ARM64Reg reg);
