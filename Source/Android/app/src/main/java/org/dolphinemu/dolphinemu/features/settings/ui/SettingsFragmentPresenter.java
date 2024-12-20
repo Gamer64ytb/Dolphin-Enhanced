@@ -218,10 +218,10 @@ public final class SettingsFragmentPresenter
     sl.add(new CheckBoxSetting(SettingsFile.KEY_JIT_FOLLOW_BRANCH, Settings.SECTION_INI_CORE,
       R.string.jit_follow_branch, R.string.jit_follow_branch_description, true,
       followBranch));
-    sl.add(new CheckBoxSetting(SettingsFile.KEY_ENABLE_CHEATS, Settings.SECTION_INI_CORE,
-      R.string.enable_cheats, R.string.enable_cheats_description, false, enableCheats));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_OVERRIDE_REGION_SETTINGS, Settings.SECTION_INI_CORE,
       R.string.override_region_settings, 0, false, overrideRegionSettings));
+    sl.add(new CheckBoxSetting(SettingsFile.KEY_ENABLE_CHEATS, Settings.SECTION_INI_CORE,
+      R.string.enable_cheats, R.string.enable_cheats_description, false, enableCheats));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_AUTO_DISC_CHANGE, Settings.SECTION_INI_CORE,
       R.string.auto_disc_change, 0, false, autoDiscChange));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_AUDIO_STRETCH, Settings.SECTION_INI_CORE,

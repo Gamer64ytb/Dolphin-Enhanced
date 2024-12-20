@@ -14,5 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fragment"
+        android:background="@color/dolphin_background"
         android:layout_gravity="center"/>
 </merge>

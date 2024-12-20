@@ -27,7 +27,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_settings"
-        android:background="?android:attr/colorBackground"
+        android:background="@color/dolphin_background"
         android:layout_below="@id/text_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
