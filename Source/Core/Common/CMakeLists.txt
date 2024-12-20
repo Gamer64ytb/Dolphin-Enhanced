@@ -78,6 +78,7 @@ add_library(common
   MemArena.h
   MemoryUtil.cpp
   MemoryUtil.h
+  MinizipUtil.h
   MsgHandler.cpp
   MsgHandler.h
   NandPaths.cpp
@@ -130,6 +131,7 @@ PUBLIC
   enet
   fmt::fmt
   ${MBEDTLS_LIBRARIES}
+  minizip
 
 PRIVATE
   ${ICONV_LIBRARIES}

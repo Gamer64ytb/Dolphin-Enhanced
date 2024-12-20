@@ -537,9 +537,9 @@ endif()
 
 if(NOT ANDROID)
   add_subdirectory(Externals/cpp-optparse)
-  add_subdirectory(Externals/minizip)
   include_directories(External/minizip)
 endif()
+add_subdirectory(Externals/minizip)
 add_subdirectory(Externals/fmt EXCLUDE_FROM_ALL)
 add_subdirectory(Externals/glslang)
 
@@ -695,13 +695,13 @@ else()
   set(CURL_LIBRARIES curl)
   include_directories(BEFORE Externals/curl/include)
 endif()
+endif()
 
 # pugixml
 find_package(pugixml)
 if(NOT pugixml_FOUND)
   message(STATUS "Using static pugixml from Externals")
   add_subdirectory(Externals/pugixml)
-endif()
 endif()
 
 # iconv
