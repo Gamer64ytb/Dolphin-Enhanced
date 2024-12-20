@@ -172,6 +172,7 @@ public final class SettingsFragmentPresenter
     Setting mmu = coreSection.getSetting(SettingsFile.KEY_MMU);
     Setting fastDiscSpeed = coreSection.getSetting(SettingsFile.KEY_FAST_DISC_SPEED);
     Setting followBranch = coreSection.getSetting(SettingsFile.KEY_JIT_FOLLOW_BRANCH);
+    Setting overrideRegionSettings = coreSection.getSetting(SettingsFile.KEY_OVERRIDE_REGION_SETTINGS);
     Setting autoDiscChange = coreSection.getSetting(SettingsFile.KEY_AUTO_DISC_CHANGE);
     Setting audioStretch = coreSection.getSetting(SettingsFile.KEY_AUDIO_STRETCH);
     Setting stretchLatency = coreSection.getSetting(SettingsFile.KEY_AUDIO_STRETCH_MAX_LATENCY);
@@ -219,12 +220,15 @@ public final class SettingsFragmentPresenter
       followBranch));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_ENABLE_CHEATS, Settings.SECTION_INI_CORE,
       R.string.enable_cheats, R.string.enable_cheats_description, false, enableCheats));
+    sl.add(new CheckBoxSetting(SettingsFile.KEY_OVERRIDE_REGION_SETTINGS, Settings.SECTION_INI_CORE,
+      R.string.override_region_settings, 0, false, overrideRegionSettings));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_AUTO_DISC_CHANGE, Settings.SECTION_INI_CORE,
       R.string.auto_disc_change, 0, false, autoDiscChange));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_AUDIO_STRETCH, Settings.SECTION_INI_CORE,
       R.string.audio_stretch, R.string.audio_stretch_description, false, audioStretch));
     sl.add(new SliderSetting(SettingsFile.KEY_AUDIO_STRETCH_MAX_LATENCY, Settings.SECTION_INI_CORE,
-      R.string.audio_stretch_max_latency, R.string.audio_stretch_max_latency_description, 300, "", 80, stretchLatency));
+      R.string.audio_stretch_max_latency, R.string.audio_stretch_max_latency_description, 300, "",
+      80, stretchLatency));
 
     String defaultAudioBackend = NativeLibrary.DefaultAudioBackend();
     String[] audioListEntries = NativeLibrary.GetAudioBackendList();
@@ -258,7 +262,6 @@ public final class SettingsFragmentPresenter
   {
     SettingSection coreSection = mSettings.getSection(Settings.SECTION_INI_CORE);
     Setting systemLanguage = coreSection.getSetting(SettingsFile.KEY_GAME_CUBE_LANGUAGE);
-    Setting overrideGCLanguage = coreSection.getSetting(SettingsFile.KEY_OVERRIDE_GAME_CUBE_LANGUAGE);
     Setting slotADevice = coreSection.getSetting(SettingsFile.KEY_SLOT_A_DEVICE);
     Setting slotBDevice = coreSection.getSetting(SettingsFile.KEY_SLOT_B_DEVICE);
     Setting serialDevice = coreSection.getSetting(SettingsFile.KEY_SERIAL_PORT_1);
@@ -266,9 +269,6 @@ public final class SettingsFragmentPresenter
     sl.add(new SingleChoiceSetting(SettingsFile.KEY_GAME_CUBE_LANGUAGE, Settings.SECTION_INI_CORE,
       R.string.gamecube_system_language, 0, R.array.gameCubeSystemLanguageEntries,
       R.array.gameCubeSystemLanguageValues, 0, systemLanguage));
-    sl.add(new CheckBoxSetting(SettingsFile.KEY_OVERRIDE_GAME_CUBE_LANGUAGE,
-      Settings.SECTION_INI_CORE, R.string.override_gamecube_language, 0, false,
-      overrideGCLanguage));
     sl.add(new SingleChoiceSetting(SettingsFile.KEY_SLOT_A_DEVICE, Settings.SECTION_INI_CORE,
       R.string.slot_a_device, 0, R.array.slotDeviceEntries, R.array.slotDeviceValues, 8,
       slotADevice));

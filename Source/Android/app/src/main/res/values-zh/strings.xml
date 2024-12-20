@@ -133,7 +133,6 @@
     <string name="overclock_warning">警告：更改默认值（100％）可能导致游戏出现异常问题。</string>
     <string name="gamecube_submenu">GameCube</string>
     <string name="gamecube_system_language">系统语言</string>
-    <string name="override_gamecube_language">覆盖NTSC游戏语言</string>
     <string name="slot_a_device">插槽 A 设备</string>
     <string name="slot_b_device">插槽 B 设备</string>
     <string name="serial_port_1">串口 1 设备</string>
@@ -163,6 +162,7 @@
     <string name="audio_backend_description">Set backend used for audio output.</string>
     <string name="enable_cheats">启用金手指</string>
     <string name="enable_cheats_description">请将 AR 代码或者 Gecko 代码保存在游戏设置文件中。</string>
+    <string name="override_region_settings">允许区域设置不匹配</string>
     <string name="auto_disc_change">自动更换光盘</string>
 
     <!-- Interface Preference Fragment -->

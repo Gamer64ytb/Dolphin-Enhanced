@@ -53,7 +53,7 @@ public final class SettingsFile
   public static final String KEY_ENABLE_CHEATS = "EnableCheats";
   public static final String KEY_AUTO_DISC_CHANGE = "AutoDiscChange";
   public static final String KEY_GAME_CUBE_LANGUAGE = "SelectedLanguage";
-  public static final String KEY_OVERRIDE_GAME_CUBE_LANGUAGE = "OverrideGCLang";
+  public static final String KEY_OVERRIDE_REGION_SETTINGS = "OverrideRegionSettings";
   public static final String KEY_SLOT_A_DEVICE = "SlotA";
   public static final String KEY_SLOT_B_DEVICE = "SlotB";
   public static final String KEY_SERIAL_PORT_1 = "SerialPort1";
