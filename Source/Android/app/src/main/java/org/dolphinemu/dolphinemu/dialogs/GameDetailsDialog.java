@@ -3,6 +3,8 @@ package org.dolphinemu.dolphinemu.dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -11,6 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.activities.ConvertActivity;
@@ -21,6 +25,7 @@ import org.dolphinemu.dolphinemu.features.settings.ui.SettingsActivity;
 import org.dolphinemu.dolphinemu.model.GameFile;
 import org.dolphinemu.dolphinemu.services.GameFileCacheService;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
+import org.dolphinemu.dolphinemu.utils.GameBannerRequestHandler;
 
 import java.io.File;
 
@@ -120,10 +125,26 @@ public final class GameDetailsDialog extends DialogFragment
     });
 
     ImageView imageGameScreen = contents.findViewById(R.id.image_game_screen);
-    gameFile.loadGameBanner(imageGameScreen);
+    loadGameBanner(imageGameScreen, gameFile);
 
     builder.setView(contents);
     return builder.create();
+  }
+
+  public static void loadGameBanner(ImageView imageView, GameFile gameFile)
+  {
+    Picasso picassoInstance = new Picasso.Builder(imageView.getContext())
+            .addRequestHandler(new GameBannerRequestHandler(gameFile))
+            .build();
+
+    picassoInstance
+            .load(Uri.parse("iso:/" + gameFile.getPath()))
+            .fit()
+            .noFade()
+            .noPlaceholder()
+            .config(Bitmap.Config.RGB_565)
+            .error(R.drawable.no_banner)
+            .into(imageView);
   }
 
   private boolean isGameSetingExist(String gameId)

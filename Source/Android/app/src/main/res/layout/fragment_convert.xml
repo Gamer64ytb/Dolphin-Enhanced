@@ -106,6 +106,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
+        android:buttonTint="@color/dolphin_blue"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@id/label_remove_junk_data"
         app:layout_constraintEnd_toEndOf="parent"
@@ -113,6 +114,9 @@
 
     <Button
         android:id="@+id/convert"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:backgroundTint="@color/dolphin_blue"
+        android:textColor="@android:color/white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/convert_convert"
