@@ -131,7 +131,7 @@ public final class GameDetailsDialog extends DialogFragment
     return builder.create();
   }
 
-  public static void loadGameBanner(ImageView imageView, GameFile gameFile)
+  private static void loadGameBanner(ImageView imageView, GameFile gameFile)
   {
     Picasso picassoInstance = new Picasso.Builder(imageView.getContext())
             .addRequestHandler(new GameBannerRequestHandler(gameFile))
