@@ -66,6 +66,10 @@
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/DolphinBase"/>
 
+        <activity
+            android:name=".activities.ConvertActivity"
+            android:theme="@style/DolphinBase" />
+
         <service android:name=".services.GameFileCacheService"/>
 
         <provider

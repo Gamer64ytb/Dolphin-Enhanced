@@ -47,13 +47,23 @@
 
     <!--  -->
     <Button
+        android:text="@string/convert_file"
+        android:id="@+id/button_convert"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textAllCaps="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_game_screen"
+        android:stateListAnimator="@null"/>
+
+    <Button
         android:text="@string/delete_game_setting"
         android:id="@+id/button_delete_setting"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:textAllCaps="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_game_screen"
+        android:layout_below="@id/button_convert"
         android:layout_toStartOf="@id/dummy_view"
         android:stateListAnimator="@null"/>
 
@@ -64,7 +74,7 @@
         android:textAllCaps="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_game_screen"
+        android:layout_below="@id/button_convert"
         android:layout_toEndOf="@id/dummy_view"
         android:stateListAnimator="@null"/>
 

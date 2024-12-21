@@ -514,6 +514,11 @@ std::string GameFile::GetWiiFSPath() const
   return Common::GetTitleDataPath(m_title_id, Common::FROM_CONFIGURED_ROOT);
 }
 
+bool GameFile::ShouldAllowConversion() const
+{
+  return DiscIO::IsDisc(m_platform) && m_volume_size_is_accurate;
+}
+
 const GameBanner& GameFile::GetBannerImage() const
 {
   return m_custom_banner.empty() ? m_volume_banner : m_custom_banner;

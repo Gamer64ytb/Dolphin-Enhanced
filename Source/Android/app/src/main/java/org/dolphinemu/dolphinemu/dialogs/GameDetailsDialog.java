@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.dolphinemu.dolphinemu.R;
+import org.dolphinemu.dolphinemu.activities.ConvertActivity;
 import org.dolphinemu.dolphinemu.activities.EditorActivity;
 import org.dolphinemu.dolphinemu.activities.EmulationActivity;
 import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag;
@@ -64,6 +65,14 @@ public final class GameDetailsDialog extends DialogFragment
     textGameFilename.setText(gamePath);
 
     //
+    Button buttonConvert = contents.findViewById(R.id.button_convert);
+    buttonConvert.setOnClickListener(view ->
+    {
+      this.dismiss();
+      ConvertActivity.launch(getContext(), gameFile.getPath());
+    });
+    buttonConvert.setEnabled(gameFile.shouldAllowConversion());
+
     Button buttonDeleteSetting = contents.findViewById(R.id.button_delete_setting);
     buttonDeleteSetting.setOnClickListener(view ->
     {

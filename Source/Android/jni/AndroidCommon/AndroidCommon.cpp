@@ -2,6 +2,7 @@
 // Licensed under GPLv2+
 // Refer to the license.txt file included.
 
+#include "jni/AndroidCommon/IDCache.h"
 #include "jni/AndroidCommon/AndroidCommon.h"
 
 #include <string>
@@ -35,4 +36,28 @@ std::vector<std::string> JStringArrayToVector(JNIEnv* env, jobjectArray array)
     result.push_back(GetJString(env, (jstring)env->GetObjectArrayElement(array, i)));
 
   return result;
+}
+
+int OpenAndroidContent(const std::string& uri, const std::string& mode)
+{
+  JNIEnv* env = IDCache::GetEnvForThread();
+  const jint fd = env->CallStaticIntMethod(IDCache::sContentHandler.Clazz,
+                                           IDCache::sContentHandler.OpenFd, ToJString(env, uri),
+                                           ToJString(env, mode));
+
+  // We can get an IllegalArgumentException when passing an invalid mode
+  if (env->ExceptionCheck())
+  {
+    env->ExceptionDescribe();
+    abort();
+  }
+
+  return fd;
+}
+
+bool DeleteAndroidContent(const std::string& uri)
+{
+  JNIEnv* env = IDCache::GetEnvForThread();
+  return env->CallStaticBooleanMethod(IDCache::sContentHandler.Clazz,
+                                      IDCache::sContentHandler.Delete, ToJString(env, uri));
 }

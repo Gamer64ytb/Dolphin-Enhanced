@@ -5,6 +5,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.widget.ImageView;
 
+import androidx.annotation.Keep;
+
 import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.utils.CoverHelper;
@@ -17,10 +19,11 @@ import java.io.FileOutputStream;
 
 public class GameFile
 {
-  // Do not rename or move without editing the native code
+  @Keep
   private long mPointer;
   private String mName;
 
+  @Keep
   private GameFile(long pointer)
   {
     mPointer = pointer;
@@ -58,6 +61,12 @@ public class GameFile
   public native int getDiscNumber();
 
   public native int getRevision();
+
+  public native int getBlobType();
+
+  public native boolean shouldAllowConversion();
+
+  public native boolean isDatelDisc();
 
   public native int[] getBanner();
 

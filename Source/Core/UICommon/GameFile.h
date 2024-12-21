@@ -79,6 +79,7 @@ public:
   DiscIO::Country GetCountry() const { return m_country; }
   DiscIO::Platform GetPlatform() const { return m_platform; }
   DiscIO::BlobType GetBlobType() const { return m_blob_type; }
+  bool ShouldAllowConversion() const;
   const std::string& GetApploaderDate() const { return m_apploader_date; }
   u64 GetFileSize() const { return m_file_size; }
   u64 GetVolumeSize() const { return m_volume_size; }

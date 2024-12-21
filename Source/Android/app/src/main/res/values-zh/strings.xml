@@ -318,6 +318,25 @@
     <string name="emulation_choose_controller">选择手柄</string>
     <string name="emulation_reload_wiimote_config">重载扩展</string>
 
+    <!-- Convert Screen -->
+    <string name="convert_format">格式</string>
+    <string name="convert_block_size">块大小</string>
+    <string name="convert_compression">压缩</string>
+    <string name="convert_compression_level">压缩级别</string>
+    <string name="convert_remove_junk_data">移除垃圾数据（不可逆）</string>
+    <string name="convert_convert">转换</string>
+    <string name="convert_converting">正在转换</string>
+    <string name="convert_warning_iso">在转换为ISO时，移除垃圾数据不会节省任何空间（除非你在转换后将ISO文件打包成如ZIP的压缩文件格式）。你仍然要继续吗？</string>
+    <string name="convert_warning_gcz">在不移除垃圾数据的情况下，将Wii光盘映像转换为GCZ不会节省任何显著的空间，与转换为ISO相比。你仍然要继续吗？</string>
+    <string name="convert_success_message">光盘映像已成功转换。</string>
+    <string name="convert_failure_message">Dolphin未能完成所请求的操作。</string>
+    <string name="convert_format_info">
+ISO：一种简单且可靠的格式，许多程序都支持。它比任何其他格式都占用更多空间。
+\n\nGCZ：一种基本的压缩格式，与大多数版本的Dolphin和其他一些程序兼容。它不能有效地压缩垃圾数据（除非移除）或加密的Wii数据。
+\n\nWIA：一种高级压缩格式，与Dolphin 5.0-12188及以后的版本兼容，及一些其他程序。它能有效地压缩加密的Wii数据，但不能压缩垃圾数据（除非移除）。
+\n\nRVZ：一种高级压缩格式，与Dolphin 5.0-12188及以后的版本兼容。它能有效地压缩垃圾数据和加密的Wii数据。
+</string>
+
     <!-- GC Adapter Menu-->
     <string name="gc_adapter_rumble">振动反馈</string>
     <string name="gc_adapter_rumble_description">启用此NGC手柄的振动反馈。</string>
@@ -355,6 +374,7 @@
     <string name="game_platform_smd">[SMD] %1$s %2$s</string>
     <string name="game_platform_c64">[C64] %1$s %2$s</string>
     <string name="game_platform_snes">[SNES] %1$s %2$s</string>
+    <string name="convert_file">转换文件</string>
     <string name="delete_game_setting">删除设置</string>
     <string name="delete_game_file">Delete Game</string>
     <string name="clear_game_data">清除缓存</string>

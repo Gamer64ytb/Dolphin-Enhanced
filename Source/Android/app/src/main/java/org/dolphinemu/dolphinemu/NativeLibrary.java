@@ -12,7 +12,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.Surface;
 
+import androidx.annotation.Keep;
+
 import org.dolphinemu.dolphinemu.activities.EmulationActivity;
+import org.dolphinemu.dolphinemu.utils.CompressCallback;
 import org.dolphinemu.dolphinemu.utils.Log;
 import org.dolphinemu.dolphinemu.utils.Rumble;
 
@@ -234,6 +237,7 @@ public final class NativeLibrary
    * @param padID Ignored for now. Future use would be to pass rumble to a connected controller
    * @param state Ignored for now since phone rumble can't just be 'turned' on/off
    */
+  @Keep
   public static void rumble(int padID, double state)
   {
     Rumble.checkRumble(padID, state);
@@ -386,8 +390,13 @@ public final class NativeLibrary
 
   public static native void ReloadWiimoteConfig();
 
+  public static native boolean ConvertDiscImage(String inPath, String outPath, int platform,
+          int format, int blockSize, int compression, int compressionLevel, boolean scrub,
+          CompressCallback callback);
+
   private static boolean alertResult = false;
 
+  @Keep
   public static boolean displayAlertMsg(final String caption, final String text,
     final boolean yesNo)
   {
