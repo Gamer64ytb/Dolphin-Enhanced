@@ -1,13 +1,17 @@
 package org.dolphinemu.dolphinemu.ui.main;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -26,12 +30,14 @@ import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag;
 import org.dolphinemu.dolphinemu.features.settings.ui.SettingsActivity;
 import org.dolphinemu.dolphinemu.model.GameFileCache;
 import org.dolphinemu.dolphinemu.services.GameFileCacheService;
+import org.dolphinemu.dolphinemu.utils.ContentHandler;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
 import org.dolphinemu.dolphinemu.utils.FileBrowserHelper;
 import org.dolphinemu.dolphinemu.utils.PermissionsHandler;
 import org.dolphinemu.dolphinemu.utils.StartupHandler;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * The main Activity of the Lollipop style UI. Manages several PlatformGamesFragments, which
@@ -90,7 +96,7 @@ public final class MainActivity extends AppCompatActivity
     super.onResume();
     if (mDirToAdd != null)
     {
-      GameFileCache.addGameFolder(mDirToAdd, this);
+      GameFileCache.addGameFolder(mDirToAdd);
       mDirToAdd = null;
       GameFileCacheService.startRescan(this);
     }
@@ -204,7 +210,8 @@ public final class MainActivity extends AppCompatActivity
 
   public void launchFileListActivity()
   {
-    FileBrowserHelper.openDirectoryPicker(this);
+    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+    startActivityForResult(intent, REQUEST_ADD_DIRECTORY);
   }
 
   private void clearGameData(Context context)
@@ -248,7 +255,35 @@ public final class MainActivity extends AppCompatActivity
 
   public void launchOpenFileActivity()
   {
-    FileBrowserHelper.openFilePicker(this, REQUEST_OPEN_FILE, true);
+    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+    intent.addCategory(Intent.CATEGORY_OPENABLE);
+    intent.setType("*/*");
+    startActivityForResult(intent, REQUEST_OPEN_FILE);
+  }
+
+  public void onDirectorySelected(Intent result)
+  {
+    Uri uri = result.getData();
+
+    String[] childNames = ContentHandler.getChildNames(uri, false);
+    if (Arrays.stream(childNames).noneMatch((name) -> FileBrowserHelper.GAME_EXTENSIONS.contains(
+            FileBrowserHelper.getExtension(name, false))))
+    {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setMessage(getString(R.string.wrong_file_extension_in_directory,
+              FileBrowserHelper.setToSortedDelimitedString(FileBrowserHelper.GAME_EXTENSIONS)));
+      builder.setPositiveButton(android.R.string.ok, null);
+      builder.show();
+    }
+
+    Uri canonicalizedUri = getContentResolver().canonicalize(uri);
+    if (canonicalizedUri != null)
+      uri = canonicalizedUri;
+
+    int takeFlags = result.getFlags() & Intent.FLAG_GRANT_READ_URI_PERMISSION;
+    getContentResolver().takePersistableUriPermission(uri, takeFlags);
+
+    mDirToAdd = uri.toString();
   }
 
   /**
@@ -266,7 +301,7 @@ public final class MainActivity extends AppCompatActivity
         // If the user picked a file, as opposed to just backing out.
         if (resultCode == MainActivity.RESULT_OK)
         {
-          mDirToAdd = FileBrowserHelper.getSelectedDirectory(result);
+          onDirectorySelected(result);
         }
         break;
 
@@ -274,7 +309,10 @@ public final class MainActivity extends AppCompatActivity
         // If the user picked a file, as opposed to just backing out.
         if (resultCode == MainActivity.RESULT_OK)
         {
-          EmulationActivity.launchFile(this, FileBrowserHelper.getSelectedFiles(result));
+          Uri uri = result.getData();
+          FileBrowserHelper.runAfterExtensionCheck(this, uri,
+                  FileBrowserHelper.GAME_LIKE_EXTENSIONS,
+                  () -> EmulationActivity.launch(this, result.getData().toString()));
         }
         break;
     }

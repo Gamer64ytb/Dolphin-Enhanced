@@ -371,6 +371,8 @@ public final class NativeLibrary
 
   public static native void ReloadWiimoteConfig();
 
+  public static native void ReloadConfig();
+
   public static native boolean ConvertDiscImage(String inPath, String outPath, int platform,
           int format, int blockSize, int compression, int compressionLevel, boolean scrub,
           CompressCallback callback);

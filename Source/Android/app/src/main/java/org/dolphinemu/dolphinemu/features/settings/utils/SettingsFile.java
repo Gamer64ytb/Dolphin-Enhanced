@@ -38,6 +38,9 @@ public final class SettingsFile
   public static final String FILE_NAME_GCPAD = "GCPadNew";
   public static final String FILE_NAME_WIIMOTE = "WiimoteNew";
 
+  public static final String KEY_ISO_PATH_BASE = "ISOPath";
+  public static final String KEY_ISO_PATHS = "ISOPaths";
+
   public static final String KEY_CPU_CORE = "CPUCore";
   public static final String KEY_DUAL_CORE = "CPUThread";
   public static final String KEY_OVERCLOCK_ENABLE = "OverclockEnable";

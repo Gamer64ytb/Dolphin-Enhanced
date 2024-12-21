@@ -585,6 +585,11 @@ JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_NativeLibrary_ReloadWiimot
   Wiimote::LoadConfig();
 }
 
+JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_NativeLibrary_ReloadConfig(JNIEnv*, jclass)
+{
+  SConfig::GetInstance().LoadSettings();
+}
+
 JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_NativeLibrary_Run(JNIEnv* env, jclass obj,
                                                                         jobjectArray jPaths,
                                                                         jstring jSavestate)

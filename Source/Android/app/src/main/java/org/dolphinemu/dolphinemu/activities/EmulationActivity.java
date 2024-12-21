@@ -74,6 +74,11 @@ public final class EmulationActivity extends AppCompatActivity
   public static final String EXTRA_PLATFORM = "Platform";
   public static final String EXTRA_SAVED_STATE = "SavedState";
 
+  public static void launch(Context context, String filePath)
+  {
+    launchFile(context, new String[]{filePath});
+  }
+
   public static void launch(Context context, GameFile game, String savedState)
   {
     Intent intent = new Intent(context, EmulationActivity.class);
@@ -254,11 +259,7 @@ public final class EmulationActivity extends AppCompatActivity
       // If the user picked a file, as opposed to just backing out.
       if (resultCode == MainActivity.RESULT_OK)
       {
-        String newDiscPath = FileBrowserHelper.getSelectedDirectory(result);
-        if (!TextUtils.isEmpty(newDiscPath))
-        {
-          NativeLibrary.ChangeDisc(newDiscPath);
-        }
+        NativeLibrary.ChangeDisc(result.getData().toString());
       }
     }
   }
@@ -602,7 +603,10 @@ public final class EmulationActivity extends AppCompatActivity
 
 	public void changeDisc()
 	{
-	  FileBrowserHelper.openFilePicker(this, REQUEST_CHANGE_DISC, false);
+      Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("*/*");
+      startActivityForResult(intent, REQUEST_CHANGE_DISC);
 	}
 
   public void chooseController()
