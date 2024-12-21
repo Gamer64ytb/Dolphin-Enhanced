@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="start"
             android:singleLine="true"
+            android:textColor="@android:color/white"
             android:textAppearance="@style/TextAppearance.Material3.ActionBar.Title"/>
     </androidx.appcompat.widget.Toolbar>
 
