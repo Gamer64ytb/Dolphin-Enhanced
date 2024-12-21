@@ -1,3 +1,6 @@
+// Copyright 2020 Dolphin Emulator Project
+// Licensed under GPLv2+
+// Refer to the license.txt file included.
 
 #include <jni.h>
 
@@ -5,68 +8,112 @@
 #include "jni/AndroidCommon/AndroidCommon.h"
 #include "jni/AndroidCommon/IDCache.h"
 
-static IniFile* GetPointer(JNIEnv* env, jobject obj)
+static IniFile::Section* GetSectionPointer(JNIEnv* env, jobject obj)
+{
+  return reinterpret_cast<IniFile::Section*>(
+      env->GetLongField(obj, IDCache::sIniFile.SectionPointer));
+}
+
+static IniFile* GetIniFilePointer(JNIEnv* env, jobject obj)
 {
   return reinterpret_cast<IniFile*>(env->GetLongField(obj, IDCache::sIniFile.Pointer));
+}
+
+static jobject SectionToJava(JNIEnv* env, jobject ini_file, IniFile::Section* section)
+{
+  if (!section)
+    return nullptr;
+
+  return env->NewObject(IDCache::sIniFile.SectionClazz, IDCache::sIniFile.SectionConstructor,
+                        ini_file, reinterpret_cast<jlong>(section));
+}
+
+template <typename T>
+static T Get(JNIEnv* env, jobject obj, jstring section_name, jstring key, T default_value)
+{
+  T result;
+  GetIniFilePointer(env, obj)
+      ->GetOrCreateSection(GetJString(env, section_name))
+      ->Get(GetJString(env, key), &result, default_value);
+  return result;
+}
+
+template <typename T>
+static void Set(JNIEnv* env, jobject obj, jstring section_name, jstring key, T new_value)
+{
+  GetIniFilePointer(env, obj)
+      ->GetOrCreateSection(GetJString(env, section_name))
+      ->Set(GetJString(env, key), new_value);
 }
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-JNIEXPORT jlong JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_newIniFile(JNIEnv* env,
-                                                                                jobject obj)
+JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_utils_IniFile_load(
+    JNIEnv* env, jobject obj, jstring path, jboolean keep_current_data)
 {
-  return reinterpret_cast<jlong>(new IniFile());
+  return static_cast<jboolean>(
+      GetIniFilePointer(env, obj)->Load(GetJString(env, path), keep_current_data));
 }
 
-JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_finalize(JNIEnv* env,
+JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_utils_IniFile_save(JNIEnv* env,
+                                                                             jobject obj,
+                                                                             jstring path)
+{
+  return static_cast<jboolean>(GetIniFilePointer(env, obj)->Save(GetJString(env, path)));
+}
+
+JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_utils_IniFile_getString(
+    JNIEnv* env, jobject obj, jstring section_name, jstring key, jstring default_value)
+{
+  return ToJString(env, Get(env, obj, section_name, key, GetJString(env, default_value)));
+}
+
+JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_utils_IniFile_getBoolean(
+    JNIEnv* env, jobject obj, jstring section_name, jstring key, jboolean default_value)
+{
+  return static_cast<jboolean>(Get(env, obj, section_name, key, static_cast<bool>(default_value)));
+}
+
+JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_utils_IniFile_getInt(JNIEnv* env, jobject obj,
+                                                                           jstring section_name,
+                                                                           jstring key,
+                                                                           jint default_value)
+{
+  return Get(env, obj, section_name, key, default_value);
+}
+
+JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_utils_IniFile_setString(
+    JNIEnv* env, jobject obj, jstring section_name, jstring key, jstring new_value)
+{
+  Set(env, obj, section_name, key, GetJString(env, new_value));
+}
+
+JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_utils_IniFile_setBoolean(
+    JNIEnv* env, jobject obj, jstring section_name, jstring key, jboolean new_value)
+{
+  Set(env, obj, section_name, key, static_cast<bool>(new_value));
+}
+
+JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_utils_IniFile_setInt(JNIEnv* env, jobject obj,
+                                                                           jstring section_name,
+                                                                           jstring key,
+                                                                           jint new_value)
+{
+  Set(env, obj, section_name, key, new_value);
+}
+
+JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_utils_IniFile_finalize(JNIEnv* env,
                                                                              jobject obj)
 {
-  delete GetPointer(env, obj);
+  delete GetIniFilePointer(env, obj);
 }
 
-JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_loadFile(
-    JNIEnv* env, jobject obj, jstring jPath, jboolean jKeepCurrentData)
+JNIEXPORT jlong JNICALL Java_org_dolphinemu_dolphinemu_utils_IniFile_newIniFile(JNIEnv* env,
+                                                                                jobject obj)
 {
-  std::string path = GetJString(env, jPath);
-  return GetPointer(env, obj)->Load(path, jKeepCurrentData);
-}
-
-JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_saveFile(JNIEnv* env,
-                                                                                 jobject obj,
-                                                                                 jstring jPath)
-{
-  std::string path = GetJString(env, jPath);
-  return GetPointer(env, obj)->Save(path);
-}
-
-JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_setString(
-    JNIEnv* env, jobject obj, jstring jSection, jstring jKey, jstring jValue)
-{
-  std::string section = GetJString(env, jSection);
-  std::string key = GetJString(env, jKey);
-  std::string value = GetJString(env, jValue);
-  GetPointer(env, obj)->GetOrCreateSection(section)->Set(key, value);
-}
-
-JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_getString(
-    JNIEnv* env, jobject obj, jstring jSection, jstring jKey, jstring jDefaultValue)
-{
-  std::string section = GetJString(env, jSection);
-  std::string key = GetJString(env, jKey);
-  std::string value;
-  std::string default_value = GetJString(env, jDefaultValue);
-  GetPointer(env, obj)->GetOrCreateSection(section)->Get(key, &value, default_value);
-  return ToJString(env, value);
-}
-
-JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_delete(
-  JNIEnv* env, jobject obj, jstring jSection, jstring jKey)
-{
-  std::string section = GetJString(env, jSection);
-  std::string key = GetJString(env, jKey);
-  return GetPointer(env, obj)->GetOrCreateSection(section)->Delete(key);
+  return reinterpret_cast<jlong>(new IniFile);
 }
 
 #ifdef __cplusplus

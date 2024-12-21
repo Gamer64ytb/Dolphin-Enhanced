@@ -13,6 +13,7 @@ import org.dolphinemu.dolphinemu.features.settings.model.Settings;
 import org.dolphinemu.dolphinemu.features.settings.model.StringSetting;
 import org.dolphinemu.dolphinemu.utils.BiMap;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
+import org.dolphinemu.dolphinemu.utils.IniFile;
 import org.dolphinemu.dolphinemu.utils.Log;
 
 import java.io.BufferedReader;
@@ -455,7 +456,8 @@ public final class SettingsFile
     final HashMap<String, SettingSection> sections)
   {
     Set<String> sortedSections = new TreeSet<>(sections.keySet());
-    NativeLibrary.LoadGameIniFile(gameId);
+    File file = SettingsFile.getCustomGameSettingsFile(gameId);
+    IniFile ini = new IniFile(file);
     for (String sectionKey : sortedSections)
     {
       SettingSection section = sections.get(sectionKey);
@@ -479,12 +481,12 @@ public final class SettingsFile
         }
         else
         {
-          NativeLibrary.SetUserSetting(gameId, mapSectionNameFromIni(section.getName()),
+          ini.setString((mapSectionNameFromIni(section.getName())),
                   setting.getKey(), setting.getValueAsString());
         }
       }
     }
-    NativeLibrary.SaveGameIniFile(gameId);
+    ini.save(file);
   }
 
   /**
@@ -505,22 +507,32 @@ public final class SettingsFile
                     profile + ".ini";
     File wiiProfile = new File(wiiConfigPath);
     // If it doesn't exist, create it
-    if (!wiiProfile.exists())
+    boolean wiiProfileExists = wiiProfile.exists();
+    if (!wiiProfileExists)
     {
       String defautlWiiProfilePath =
               DirectoryInitialization.getUserDirectory() +
                       "/Config/Profiles/Wiimote/WiimoteProfile.ini";
       DirectoryInitialization.copyFile(defautlWiiProfilePath, wiiConfigPath);
+    }
 
-      NativeLibrary.SetProfileSetting(profile, Settings.SECTION_PROFILE, "Device",
+    IniFile wiiProfileIni = new IniFile(wiiConfigPath);
+
+    if (!wiiProfileExists)
+    {
+      wiiProfileIni.setString(Settings.SECTION_PROFILE, "Device",
               "Android/" + (Integer.valueOf(padId) + 4) + "/Touchscreen");
     }
 
-    NativeLibrary.SetProfileSetting(profile, Settings.SECTION_PROFILE, key, value);
+    wiiProfileIni.setString(Settings.SECTION_PROFILE, key, value);
+    wiiProfileIni.save(wiiConfigPath);
 
     // Enable the profile
-    NativeLibrary.SetUserSetting(gameId, Settings.SECTION_CONTROLS,
+    File gameSettingsFile = SettingsFile.getCustomGameSettingsFile(gameId);
+    IniFile gameSettingsIni = new IniFile(gameSettingsFile);
+    gameSettingsIni.setString(Settings.SECTION_CONTROLS,
             KEY_WIIMOTE_PROFILE + (Integer.valueOf(padId) + 1), profile);
+    gameSettingsIni.save(gameSettingsFile);
   }
 
   private static String mapSectionNameFromIni(String generalSectionName)
@@ -544,7 +556,7 @@ public final class SettingsFile
   }
 
   @NonNull
-  private static File getSettingsFile(String fileName)
+  public static File getSettingsFile(String fileName)
   {
     return new File(DirectoryInitialization.getUserDirectory() + "/Config/" + fileName + ".ini");
   }

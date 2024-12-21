@@ -243,25 +243,6 @@ public final class NativeLibrary
     Rumble.checkRumble(padID, state);
   }
 
-  public static native void LoadGameIniFile(String gameId);
-
-  public static native void SaveGameIniFile(String gameId);
-
-  public static native void SetUserSetting(String gameID, String Section, String Key, String Value);
-
-  public static native void SetProfileSetting(String profile, String Section, String Key,
-          String Value);
-
-  /**
-   * Sets a value to a key in the given ini config file.
-   *
-   * @param configFile The ini-based config file to add the value to.
-   * @param Section    The section key for the ini key
-   * @param Key        The actual ini key to set.
-   * @param Value      The string to set the ini key to.
-   */
-  public static native void SetConfig(String configFile, String Section, String Key, String Value);
-
   /**
    * Saves a screen capture of the game
    */
