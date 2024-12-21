@@ -309,10 +309,6 @@ std::string VolumeWii::GetGameID(const Partition& partition) const
 
 std::string VolumeWii::GetGameTDBID(const Partition& partition) const
 {
-  // Don't return an ID for Datel discs
-  if (m_game_partition == PARTITION_NONE)
-    return "";
-
   return GetGameID(partition);
 }
 
@@ -401,6 +397,11 @@ Platform VolumeWii::GetVolumeType() const
 std::optional<u8> VolumeWii::GetDiscNumber(const Partition& partition) const
 {
   return ReadSwapped<u8>(6, partition);
+}
+
+bool VolumeWii::IsDatelDisc() const
+{
+  return m_game_partition == PARTITION_NONE;
 }
 
 BlobType VolumeWii::GetBlobType() const

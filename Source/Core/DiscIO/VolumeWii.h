@@ -84,6 +84,7 @@ public:
   std::optional<u8> GetDiscNumber(const Partition& partition = PARTITION_NONE) const override;
 
   Platform GetVolumeType() const override;
+  bool IsDatelDisc() const override;
   bool SupportsIntegrityCheck() const override { return m_encrypted; }
   bool CheckH3TableIntegrity(const Partition& partition) const override;
   bool CheckBlockIntegrity(u64 block_index, const std::vector<u8>& encrypted_data,
