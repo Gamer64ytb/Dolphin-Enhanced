@@ -45,10 +45,11 @@ android {
     // Define build types, which are orthogonal to product flavors.
     buildTypes {
         // Signed by release key, allowing for upload to Play Store.
+        // TODO: Figure out why GC Input crashes if minifyEnabled is true
         release {
             signingConfig signingConfigs.release
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         // Signed by debug key disallowing distribution on Play Store.
