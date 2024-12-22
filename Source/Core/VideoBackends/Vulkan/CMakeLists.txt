@@ -51,7 +51,7 @@ PRIVATE
 # Only include the Vulkan headers when building the Vulkan backend
 target_include_directories(videovulkan
 PRIVATE
-  ${CMAKE_SOURCE_DIR}/Externals/Vulkan/Include
+  ${CMAKE_SOURCE_DIR}/Externals/Vulkan-Headers/include
 )
 
 # Silence warnings on glslang by flagging it as a system include
