@@ -737,11 +737,6 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
       BitSet32 fprs_in_use = fpr.GetCallerSavedUsed();
       regs_in_use[DecodeReg(ARM64Reg::W30)] = 0;
 
-      FixupBranch Exception = B();
-      SwitchToFarCode();
-      const u8* done_here = GetCodePtr();
-      FixupBranch exit = B();
-      SetJumpTarget(Exception);
       ABI_PushRegisters(regs_in_use);
       m_float_emit.ABI_PushRegisters(fprs_in_use, ARM64Reg::X30);
       MOVP2R(ARM64Reg::X8, &GPFifo::FastCheckGatherPipe);
@@ -751,7 +746,12 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
 
       // Inline exception check
       LDR(IndexType::Unsigned, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(Exceptions));
-      TBZ(ARM64Reg::W30, 3, done_here);  // EXCEPTION_EXTERNAL_INT
+      FixupBranch no_ext_exception = TBZ(ARM64Reg::W30, 3);  // EXCEPTION_EXTERNAL_INT
+      FixupBranch exception = B();
+      SwitchToFarCode();
+      const u8* done_here = GetCodePtr();
+      FixupBranch exit = B();
+      SetJumpTarget(exception);
       LDR(IndexType::Unsigned, ARM64Reg::W30, PPC_REG, PPCSTATE_OFF(msr));
       TBZ(ARM64Reg::W30, 11, done_here);
       MOVP2R(ARM64Reg::X30, &ProcessorInterface::m_InterruptCause);
@@ -763,6 +763,7 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
       fpr.Flush(FlushMode::MaintainState, ARM64Reg::INVALID_REG);
       WriteExceptionExit(js.compilerPC, true, true);
       SwitchToNearCode();
+      SetJumpTarget(no_ext_exception);
       SetJumpTarget(exit);
       gpr.Unlock(ARM64Reg::W30);
 
@@ -778,12 +779,12 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
       ARM64Reg XA = EncodeRegTo64(WA);
 
       LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(Exceptions));
-      FixupBranch NoExtException = TBZ(WA, 3);  // EXCEPTION_EXTERNAL_INT
-      FixupBranch Exception = B();
+      FixupBranch no_ext_exception = TBZ(WA, 3);  // EXCEPTION_EXTERNAL_INT
+      FixupBranch exception = B();
       SwitchToFarCode();
       const u8* done_here = GetCodePtr();
       FixupBranch exit = B();
-      SetJumpTarget(Exception);
+      SetJumpTarget(exception);
       LDR(IndexType::Unsigned, WA, PPC_REG, PPCSTATE_OFF(msr));
       TBZ(WA, 11, done_here);
       MOVP2R(XA, &ProcessorInterface::m_InterruptCause);
@@ -795,7 +796,7 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
       fpr.Flush(FlushMode::MaintainState, ARM64Reg::INVALID_REG);
       WriteExceptionExit(js.compilerPC, true, true);
       SwitchToNearCode();
-      SetJumpTarget(NoExtException);
+      SetJumpTarget(no_ext_exception);
       SetJumpTarget(exit);
 
       gpr.Unlock(WA);
@@ -855,8 +856,8 @@ void JitArm64::DoJit(u32 em_address, JitBlock* b, u32 nextPC)
         gpr.DiscardRegisters(op.gprDiscardable);
         fpr.DiscardRegisters(op.fprDiscardable);
       }
-      gpr.StoreRegisters(~op.gprInUse);
-      fpr.StoreRegisters(~op.fprInUse);
+      gpr.StoreRegisters(~op.gprInUse & (op.regsIn | op.regsOut));
+      fpr.StoreRegisters(~op.fprInUse & (op.fregsIn | op.GetFregsOut()));
 
       if (opinfo->flags & FL_LOADSTORE)
         ++js.numLoadStoreInst;
