@@ -239,6 +239,8 @@
     <string name="approx_logic_op_with_blending_description">This is a giant hack which was previously removed from dolphin-emu because it causes broken rendering. However, it seems that some devices still do not support logical operations. Therefore, for a handful of cases where the hack actually makes things slightly better. If unsure, leave this unchecked.</string>
     <string name="vi_skip">VBI Skip</string>
     <string name="vi_skip_description">Skips Vertical Blank Interrupts when lag is detected, allowing for smooth audio playback when emulation speed is not 100%. Can cause freezes and compatibility issues.</string>
+    <string name="texture_cache_to_state">Save Texture Cache to State</string>
+    <string name="texture_cache_to_state_description">Includes the contents of the embedded frame buffer (EFB) and upscaled EFB copies in save states. Fixes missing and/or non-upscaled textures/objects when loading states at the cost of additional save/load time.</string>
     <string name="fast_depth_calculation">Fast Depth Calculation</string>
     <string name="fast_depth_calculation_description">Uses a less accurate algorithm to calculate depth values.</string>
     <string name="tmem_cache_emulation">TMEM Cache Emulation</string>

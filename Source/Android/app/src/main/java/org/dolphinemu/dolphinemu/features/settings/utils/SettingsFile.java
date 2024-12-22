@@ -91,6 +91,7 @@ public final class SettingsFile
   public static final String KEY_SKIP_DUPLICATE_XFBS = "SkipDuplicateXFBs";
   public static final String KEY_APPROX_LOGIC_OP_WITH_BLENDING = "ApproximateLogicOpWithBlending";
   public static final String KEY_VI_SKIP = "VISkip";
+  public static final String KEY_SAVE_TEXTURE_CACHE_TO_STATE = "SaveTextureCacheToState";
   public static final String KEY_FAST_DEPTH = "FastDepthCalc";
   public static final String KEY_TMEM_CACHE_EMULATION = "TMEMCacheEmulation";
   public static final String KEY_ASPECT_RATIO = "AspectRatio";

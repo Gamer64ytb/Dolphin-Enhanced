@@ -553,6 +553,7 @@ public final class SettingsFragmentPresenter
     Setting approxLogicOpWithBlending =
             hacksSection.getSetting(SettingsFile.KEY_APPROX_LOGIC_OP_WITH_BLENDING);
     Setting viSkip = hacksSection.getSetting(SettingsFile.KEY_VI_SKIP);
+    Setting saveTexCacheToState = gfxSection.getSetting(SettingsFile.KEY_SAVE_TEXTURE_CACHE_TO_STATE);
     Setting fastDepth = gfxSection.getSetting(SettingsFile.KEY_FAST_DEPTH);
     Setting tmemEmu = hacksSection.getSetting(SettingsFile.KEY_TMEM_CACHE_EMULATION);
 
@@ -593,6 +594,8 @@ public final class SettingsFragmentPresenter
       false, approxLogicOpWithBlending));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_VI_SKIP, Settings.SECTION_GFX_HACKS,
       R.string.vi_skip, R.string.vi_skip_description, false, viSkip));
+    sl.add(new CheckBoxSetting(SettingsFile.KEY_SAVE_TEXTURE_CACHE_TO_STATE, Settings.SECTION_GFX_SETTINGS,
+      R.string.texture_cache_to_state, R.string.texture_cache_to_state_description, true, saveTexCacheToState));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_FAST_DEPTH, Settings.SECTION_GFX_SETTINGS,
       R.string.fast_depth_calculation, R.string.fast_depth_calculation_description, true, fastDepth));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_TMEM_CACHE_EMULATION, Settings.SECTION_GFX_HACKS,

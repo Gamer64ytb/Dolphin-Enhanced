@@ -239,6 +239,8 @@
     <string name="approx_logic_op_with_blending_description">这是一个巨大的 hack，之前已从 dolphin-emu 中删除，因为它会导致渲染中断。 不过，好像有些设备还是不支持逻辑运算。 因此，在少数情况下，黑客实际上让事情稍微好一些。 如果不确定，请不要选中此选项。</string>
     <string name="vi_skip">VBI 跳过</string>
     <string name="vi_skip_description">当检测到延迟时跳过垂直消隐中断，允许在模拟速度未达到100%时平滑播放音频。可能导致卡顿和兼容性问题。</string>
+    <string name="texture_cache_to_state">保存纹理缓存到状态</string>
+    <string name="texture_cache_to_state_description">包括嵌入帧缓冲区 (EFB) 和保存状态中的升级版 EFB 副本的内容。在加载状态时修复缺失的和/或未升级的纹理/对象，代价是额外的保存/加载时间。</string>
     <string name="fast_depth_calculation">快速深度计算</string>
     <string name="fast_depth_calculation_description">使用不太准确的方法来计算深度值。</string>
     <string name="tmem_cache_emulation">复用纹理模拟</string>
