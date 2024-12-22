@@ -23,7 +23,7 @@ jobs:
           name: source
           path: artifacts/
   android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_COMPILERCHECK: content
@@ -46,31 +46,40 @@ jobs:
             ${{ runner.os }}-android-
       - name: Set tag name
         run: |
-          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
-              echo "GIT_TAG_NAME=$GITHUB_REF_NAME" >> $GITHUB_ENV
-          fi
           echo $GIT_TAG_NAME
-      - name: Deps
-        run: |
-          sudo add-apt-repository -y ppa:theofficialgman/gpu-tools
-          sudo apt-get update -y
-          sudo apt-get install ccache apksigner -y
+      - name: Update deb repositories 
+        run: sudo apt-get update 
+      - name: Install New Packages
+        run: sudo apt-get -y install zip unzip python3 ccache apksigner && sudo apt-get clean
+      - name: Get latest CMake and Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: 3.30.6
+          ninjaVersion: latest
+      - name: Install JDK 23
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '23'
+          cache: 'gradle'
+          check-latest: true
       - name: Build
-        run: JAVA_HOME=$JAVA_HOME_17_X64 ./.ci/android.sh
+        run: JAVA_HOME=$JAVA_HOME_23_X64 ./.ci/android.sh
         env:
-          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEYSTORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          DROID_KEYSTORE_B64: ${{ secrets.DROID_KEYSTORE_B64 }}
+          DROID_KEY_ALIAS: ${{ secrets.DROID_KEY_ALIAS }}
+          DROID_KEYSTORE_PASS: ${{ secrets.DROID_KEYSTORE_PASS }}
+          DROID_KEY_PASS: ${{ secrets.DROID_KEY_PASS }}
       - name: Pack
         run: ../../../.ci/pack.sh
-        working-directory: Source/Android/app
+        working-directory: src/android/app
         env:
           UNPACKED: 1
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.OS }}-${{ env.TARGET }}
-          path: Source/Android/app/artifacts/
+          path: src/android/app/artifacts/
   release:
     runs-on: ubuntu-latest
     needs: [android, source]
@@ -91,4 +100,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          asset_paths: '["./**/*.tar.*","./**/*.AppImage","./**/*.zip","./**/*.apk"]'
+          asset_paths: '["./**/*.apk"]'
