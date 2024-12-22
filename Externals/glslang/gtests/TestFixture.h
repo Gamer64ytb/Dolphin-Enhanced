@@ -113,7 +113,7 @@ public:
           forceVersionProfile(false),
           isForwardCompatible(false) {
         // Perform validation by default.
-        validatorOptions.validate = true;
+        spirvOptions.validate = true;
     }
 
     // Tries to load the contents from the file at the given |path|. On success,
@@ -227,7 +227,9 @@ public:
             shader.setAutoMapBindings(true);
         }
         shader.setTextureSamplerTransformMode(texSampTransMode);
+#ifdef ENABLE_HLSL
         shader.setFlattenUniformArrays(flattenUniformArrays);
+#endif
 
         if (controls & EShMsgSpvRules) {
             if (controls & EShMsgVulkanRules) {
@@ -251,10 +253,13 @@ public:
         glslang::TProgram program;
         program.addShader(&shader);
         success &= program.link(controls);
-
-        spv::SpvBuildLogger logger;
+#if !defined(GLSLANG_WEB) && !defined(GLSLANG_ANGLE)
+        if (success)
+            program.mapIO();
+#endif
 
         if (success && (controls & EShMsgSpvRules)) {
+            spv::SpvBuildLogger logger;
             std::vector<uint32_t> spirv_binary;
             options().disableOptimizer = !enableOptimizer;
             options().generateDebugInfo = enableDebug;
@@ -300,7 +305,9 @@ public:
         shader.setShiftSsboBinding(baseSsboBinding);
         shader.setAutoMapBindings(autoMapBindings);
         shader.setAutoMapLocations(true);
+#ifdef ENABLE_HLSL
         shader.setFlattenUniformArrays(flattenUniformArrays);
+#endif
 
         bool success = compile(&shader, code, entryPointName, controls);
 
@@ -308,7 +315,10 @@ public:
         program.addShader(&shader);
         
         success &= program.link(controls);
-        success &= program.mapIO();
+#if !defined(GLSLANG_WEB) && !defined(GLSLANG_ANGLE)
+        if (success)
+            program.mapIO();
+#endif
 
         spv::SpvBuildLogger logger;
 
@@ -350,10 +360,13 @@ public:
         glslang::TProgram program;
         program.addShader(&shader);
         success &= program.link(controls);
-
-        spv::SpvBuildLogger logger;
+#if !defined(GLSLANG_WEB) && !defined(GLSLANG_ANGLE)
+        if (success)
+            program.mapIO();
+#endif
 
         if (success && (controls & EShMsgSpvRules)) {
+        spv::SpvBuildLogger logger;
             std::vector<uint32_t> spirv_binary;
             glslang::GlslangToSpv(*program.getIntermediate(stage),
                                   spirv_binary, &logger, &options());
@@ -687,14 +700,14 @@ public:
                                     expectedOutputFname, result.spirvWarningsErrors);
     }
 
-    glslang::SpvOptions& options() { return validatorOptions; }
+    glslang::SpvOptions& options() { return spirvOptions; }
 
 private:
     const int defaultVersion;
     const EProfile defaultProfile;
     const bool forceVersionProfile;
     const bool isForwardCompatible;
-    glslang::SpvOptions validatorOptions;
+    glslang::SpvOptions spirvOptions;
 };
 
 }  // namespace glslangtest

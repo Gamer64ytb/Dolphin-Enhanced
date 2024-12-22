@@ -41,9 +41,7 @@ namespace {
 
 using CompileToAstTest = GlslangTest<::testing::TestWithParam<std::string>>;
 
-#ifdef NV_EXTENSIONS
 using CompileToAstTestNV = GlslangTest<::testing::TestWithParam<std::string>>;
-#endif
 
 TEST_P(CompileToAstTest, FromFile)
 {
@@ -52,7 +50,6 @@ TEST_P(CompileToAstTest, FromFile)
                             Target::AST);
 }
 
-#ifdef NV_EXTENSIONS
 // Compiling GLSL to SPIR-V under OpenGL semantics (NV extensions enabled).
 TEST_P(CompileToAstTestNV, FromFile)
 {
@@ -60,10 +57,9 @@ TEST_P(CompileToAstTestNV, FromFile)
                             Source::GLSL, Semantics::OpenGL, glslang::EShTargetVulkan_1_0, glslang::EShTargetSpv_1_0,
                             Target::AST);
 }
-#endif
 
 // clang-format off
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     Glsl, CompileToAstTest,
     ::testing::ValuesIn(std::vector<std::string>({
         "sample.frag",
@@ -125,6 +121,7 @@ INSTANTIATE_TEST_CASE_P(
         "310.tesc",
         "310.tese",
         "310implicitSizeArrayError.vert",
+        "310.inheritMemory.frag",
         "310AofA.vert",
         "310runtimeArray.vert",
         "320.comp",
@@ -236,7 +233,12 @@ INSTANTIATE_TEST_CASE_P(
         "precise_struct_block.vert",
         "maxClipDistances.vert",
         "findFunction.frag",
+        "noMatchingFunction.frag",
         "constantUnaryConversion.comp",
+        "xfbUnsizedArray.error.vert",
+        "xfbUnsizedArray.error.tese",
+        "glsl.140.layoutOffset.error.vert",
+        "glsl.430.layoutOffset.error.vert",
         "glsl.450.subgroup.frag",
         "glsl.450.subgroup.geom",
         "glsl.450.subgroup.tesc",
@@ -261,6 +263,7 @@ INSTANTIATE_TEST_CASE_P(
         "glsl.460.subgroup.rgen",
         "glsl.460.subgroup.rint",
         "glsl.460.subgroup.rmiss",
+        "glsl.es300.layoutOffset.error.vert",
         "glsl.es320.subgroup.frag",
         "glsl.es320.subgroup.geom",
         "glsl.es320.subgroup.tesc",
@@ -277,19 +280,34 @@ INSTANTIATE_TEST_CASE_P(
         "glsl.es320.subgroupShuffleRelative.comp",
         "glsl.es320.subgroupQuad.comp",
         "glsl.es320.subgroupVote.comp",
+        "terminate.frag",
+        "terminate.vert",
+        "negativeWorkGroupSize.comp",
+        "textureoffset_sampler2darrayshadow.vert",
+        "atomicAdd.comp",
+        "GL_ARB_gpu_shader5.u2i.vert",
+        "textureQueryLOD.frag",
+        "atomicCounterARBOps.vert",
+        "GL_EXT_shader_integer_mix.vert",
+        "GL_ARB_draw_instanced.vert",
+        "GL_ARB_fragment_coord_conventions.vert",
+        "BestMatchFunction.vert",
+        "EndStreamPrimitive.geom",
+        "floatBitsToInt.vert",
+        "coord_conventions.frag",
+        "gl_FragCoord.frag"
     })),
     FileNameAsCustomTestSuffix
 );
 
-#ifdef NV_EXTENSIONS
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     Glsl, CompileToAstTestNV,
     ::testing::ValuesIn(std::vector<std::string>({
         "nvShaderNoperspectiveInterpolation.frag",
     })),
     FileNameAsCustomTestSuffix
 );
-#endif
+
 // clang-format on
 
 }  // anonymous namespace
