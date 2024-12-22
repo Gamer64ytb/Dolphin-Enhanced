@@ -141,7 +141,7 @@ private:
 
   std::array<FrameResources, NUM_FRAMES_IN_FLIGHT> m_frame_resources;
   std::array<CmdBufferResources, NUM_COMMAND_BUFFERS> m_command_buffers;
-  u32 m_current_frame;
+  u32 m_current_frame = 0;
   u32 m_current_cmd_buffer = 0;
 
   // Threaded command buffer execution
