@@ -25,7 +25,7 @@ bool IsSettingSaveable(const Config::ConfigLocation& config_location)
       return true;
   }
 
-static constexpr std::array<const Config::ConfigLocation*, 87> s_setting_saveable = {
+static constexpr std::array<const Config::ConfigLocation*, 88> s_setting_saveable = {
       // Main.Core
 
       &Config::MAIN_DEFAULT_ISO.location,
@@ -103,6 +103,7 @@ static constexpr std::array<const Config::ConfigLocation*, 87> s_setting_saveabl
       &Config::GFX_SHADER_COMPILATION_MODE.location,
       &Config::GFX_SHADER_COMPILER_THREADS.location,
       &Config::GFX_SHADER_PRECOMPILER_THREADS.location,
+      &Config::GFX_SAVE_TEXTURE_CACHE_TO_STATE.location,
 
       &Config::GFX_SW_ZCOMPLOC.location,
       &Config::GFX_SW_ZFREEZE.location,

@@ -81,9 +81,6 @@ static void BPWritten(const BPCmd& bp)
     }
   }
 
-  // check for invalid state, else unneeded configuration are built
-  g_video_backend->CheckInvalidState();
-
   FlushPipeline();
 
   ((u32*)&bpmem)[bp.address] = bp.newvalue;
