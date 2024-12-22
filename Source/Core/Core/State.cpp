@@ -319,7 +319,7 @@ static void CompressAndDumpState(CompressAndDumpState_args save_args)
 
     if (!File::Rename(filename, File::GetUserPath(D_STATESAVES_IDX) + "lastState.sav"))
       Core::DisplayMessage("Failed to move previous state to state undo backup", 2000);
-    else
+    else if (File::Exists(filename + ".dtm"))
       File::Rename(filename + ".dtm", File::GetUserPath(D_STATESAVES_IDX) + "lastState.sav.dtm");
   }
 
