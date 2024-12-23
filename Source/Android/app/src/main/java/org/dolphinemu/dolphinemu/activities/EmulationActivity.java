@@ -26,7 +26,6 @@ import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.dialogs.RunningSettingDialog;
 import org.dolphinemu.dolphinemu.dialogs.StateSavesDialog;
-import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile;
 import org.dolphinemu.dolphinemu.fragments.EmulationFragment;
 import org.dolphinemu.dolphinemu.model.GameFile;
 import org.dolphinemu.dolphinemu.overlay.InputOverlay;
@@ -35,7 +34,6 @@ import org.dolphinemu.dolphinemu.ui.main.MainActivity;
 import org.dolphinemu.dolphinemu.ui.platform.Platform;
 import org.dolphinemu.dolphinemu.utils.ControllerMappingHelper;
 import org.dolphinemu.dolphinemu.utils.FileBrowserHelper;
-import org.dolphinemu.dolphinemu.utils.IniFile;
 import org.dolphinemu.dolphinemu.utils.Java_GCAdapter;
 import org.dolphinemu.dolphinemu.utils.Java_WiimoteAdapter;
 import org.dolphinemu.dolphinemu.utils.Rumble;
@@ -616,21 +614,15 @@ public final class EmulationActivity extends AppCompatActivity
     builder.setNeutralButton(getString(R.string.emulation_reload_wiimote_config),
       (dialogInterface, i) ->
       {
-        File wiimoteNewFile = SettingsFile.getSettingsFile(SettingsFile.FILE_NAME_WIIMOTE);
-        IniFile wiimoteNewIni = new IniFile(wiimoteNewFile);
-        wiimoteNewIni.setString("Wiimote1", "Extension",
+        NativeLibrary.SetConfig("WiimoteNew.ini", "Wiimote1", "Extension",
           getResources().getStringArray(R.array.controllersValues)[InputOverlay.sControllerType]);
-        wiimoteNewIni.save(wiimoteNewFile);
         mEmulationFragment.refreshInputOverlay();
         NativeLibrary.ReloadWiimoteConfig();
       });
     builder.setOnDismissListener((dialogInterface) ->
     {
-      File wiimoteNewFile = SettingsFile.getSettingsFile(SettingsFile.FILE_NAME_WIIMOTE);
-      IniFile wiimoteNewIni = new IniFile(wiimoteNewFile);
-      wiimoteNewIni.setString("Wiimote1", "Extension",
+      NativeLibrary.SetConfig("WiimoteNew.ini", "Wiimote1", "Extension",
         getResources().getStringArray(R.array.controllersValues)[InputOverlay.sControllerType]);
-      wiimoteNewIni.save(wiimoteNewFile);
       mEmulationFragment.refreshInputOverlay();
     });
 

@@ -40,21 +40,15 @@ void NativeLibrary::OnUnload(JNIEnv* env)
 
 void IniFile::OnLoad(JNIEnv* env)
 {
-  jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/utils/IniFile");
-  jclass sectionClazz = env->FindClass("org/dolphinemu/dolphinemu/utils/IniFile$Section");
+  jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/model/IniFile");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  SectionClazz = reinterpret_cast<jclass>(env->NewGlobalRef(sectionClazz));
   Pointer = env->GetFieldID(Clazz, "mPointer", "J");
-  SectionPointer = env->GetFieldID(SectionClazz, "mPointer", "J");
-  SectionConstructor = env->GetMethodID(SectionClazz, "<init>", "(Lorg/dolphinemu/dolphinemu/utils/IniFile;J)V");
 }
 
 void IniFile::OnUnload(JNIEnv* env)
 {
   env->DeleteGlobalRef(Clazz);
-  env->DeleteGlobalRef(SectionClazz);
   Clazz = nullptr;
-  SectionClazz = nullptr;
 }
 
 void GameFile::OnLoad(JNIEnv* env)

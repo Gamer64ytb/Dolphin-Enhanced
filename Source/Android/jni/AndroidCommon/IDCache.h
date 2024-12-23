@@ -29,9 +29,6 @@ struct IniFile
 
   jclass Clazz;
   jfieldID Pointer;
-  jclass SectionClazz;
-  jfieldID SectionPointer;
-  jmethodID SectionConstructor;
 };
 
 struct GameFile
