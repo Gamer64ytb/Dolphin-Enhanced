@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Request;
+import com.squareup.picasso.RequestHandler;
 
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.activities.ConvertActivity;
@@ -25,14 +27,58 @@ import org.dolphinemu.dolphinemu.features.settings.ui.SettingsActivity;
 import org.dolphinemu.dolphinemu.model.GameFile;
 import org.dolphinemu.dolphinemu.services.GameFileCacheService;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
-import org.dolphinemu.dolphinemu.utils.GameBannerRequestHandler;
 
 import java.io.File;
 
+// GameBannerRequestHandler is only used there, so let's join it into one file
+class GameBannerRequestHandler extends RequestHandler
+{
+  private final GameFile mGameFile;
+
+  public GameBannerRequestHandler(GameFile gameFile)
+  {
+    mGameFile = gameFile;
+  }
+
+  @Override
+  public boolean canHandleRequest(Request data)
+  {
+    return true;
+  }
+
+  @Override
+  public Result load(Request request, int networkPolicy)
+  {
+    int[] vector = mGameFile.getBanner();
+    int width = mGameFile.getBannerWidth();
+    int height = mGameFile.getBannerHeight();
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    bitmap.setPixels(vector, 0, width, 0, 0, width, height);
+    return new Result(bitmap, Picasso.LoadedFrom.DISK);
+  }
+}
 
 public final class GameDetailsDialog extends DialogFragment
 {
   private static final String ARG_GAME_PATH = "game_path";
+
+  private String mGameId;
+
+  private static void loadGameBanner(ImageView imageView, GameFile gameFile)
+  {
+    Picasso picassoInstance = new Picasso.Builder(imageView.getContext())
+            .addRequestHandler(new GameBannerRequestHandler(gameFile))
+            .build();
+
+    picassoInstance
+            .load(Uri.parse("file://" + gameFile.getCoverPath()))
+            .fit()
+            .noFade()
+            .noPlaceholder()
+            .config(Bitmap.Config.RGB_565)
+            .error(R.drawable.no_banner)
+            .into(imageView);
+  }
 
   public static GameDetailsDialog newInstance(String gamePath)
   {
@@ -52,6 +98,8 @@ public final class GameDetailsDialog extends DialogFragment
     final GameFile gameFile =
       GameFileCacheService.addOrGet(getArguments().getString(ARG_GAME_PATH));
 
+    mGameId = gameFile.getGameId();
+
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     ViewGroup contents = (ViewGroup) getActivity().getLayoutInflater()
       .inflate(R.layout.dialog_game_details, null);
@@ -61,13 +109,13 @@ public final class GameDetailsDialog extends DialogFragment
     textGameTitle.setText(gameFile.getTitle());
 
     // game filename
-    String gamePath = gameFile.getGameId();
-    if(gameFile.getPlatform() > 0)
+    String gameId = gameFile.getGameId();
+    if (gameFile.getPlatform() > 0)
     {
-      gamePath += ", " + gameFile.getTitlePath();
+      gameId += ", " + gameFile.getTitlePath();
     }
     TextView textGameFilename = contents.findViewById(R.id.text_game_filename);
-    textGameFilename.setText(gamePath);
+    textGameFilename.setText(gameId);
 
     //
     Button buttonConvert = contents.findViewById(R.id.button_convert);
@@ -82,9 +130,9 @@ public final class GameDetailsDialog extends DialogFragment
     buttonDeleteSetting.setOnClickListener(view ->
     {
       this.dismiss();
-      this.deleteGameSetting(getContext(), gameFile.getGameId());
+      this.deleteGameSetting(getContext());
     });
-    buttonDeleteSetting.setEnabled(isGameSetingExist(gameFile.getGameId()));
+    buttonDeleteSetting.setEnabled(gameSettingExists());
 
     Button buttonCheatCode = contents.findViewById(R.id.button_cheat_code);
     buttonCheatCode.setOnClickListener(view ->
@@ -131,42 +179,26 @@ public final class GameDetailsDialog extends DialogFragment
     return builder.create();
   }
 
-  private static void loadGameBanner(ImageView imageView, GameFile gameFile)
+  private boolean gameSettingExists()
   {
-    Picasso picassoInstance = new Picasso.Builder(imageView.getContext())
-            .addRequestHandler(new GameBannerRequestHandler(gameFile))
-            .build();
-
-    picassoInstance
-            .load(Uri.parse("iso:/" + gameFile.getPath()))
-            .fit()
-            .noFade()
-            .noPlaceholder()
-            .config(Bitmap.Config.RGB_565)
-            .error(R.drawable.no_banner)
-            .into(imageView);
-  }
-
-  private boolean isGameSetingExist(String gameId)
-  {
-    String path = DirectoryInitialization.getUserDirectory() + "/GameSettings/" + gameId + ".ini";
+    String path = DirectoryInitialization.getLocalSettingFile(mGameId);
     File gameSettingsFile = new File(path);
     return gameSettingsFile.exists();
   }
 
-  private void deleteGameSetting(Context context, String gameId)
+  private void deleteGameSetting(Context context)
   {
-    String path = DirectoryInitialization.getUserDirectory() + "/GameSettings/" + gameId + ".ini";
+    String path = DirectoryInitialization.getLocalSettingFile(mGameId);
     File gameSettingsFile = new File(path);
     if (gameSettingsFile.exists())
     {
       if (gameSettingsFile.delete())
       {
-        Toast.makeText(context, "Cleared settings for " + gameId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Cleared settings for " + mGameId, Toast.LENGTH_SHORT).show();
       }
       else
       {
-        Toast.makeText(context, "Unable to clear settings for " + gameId, Toast.LENGTH_SHORT)
+        Toast.makeText(context, "Unable to clear settings for " + mGameId, Toast.LENGTH_SHORT)
           .show();
       }
     }
