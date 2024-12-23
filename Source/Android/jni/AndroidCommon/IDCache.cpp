@@ -93,9 +93,15 @@ void CompressCallback::OnUnload(JNIEnv* env)
 void ContentHandler::OnLoad(JNIEnv* env)
 {
   jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/utils/ContentHandler");
+  jclass stringClazz = env->FindClass("java/lang/String");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
+  StringClazz = reinterpret_cast<jclass>(env->NewGlobalRef(stringClazz));
   OpenFd = env->GetStaticMethodID(Clazz, "openFd", "(Ljava/lang/String;Ljava/lang/String;)I");
   Delete = env->GetStaticMethodID(Clazz, "delete", "(Ljava/lang/String;)Z");
+  GetSizeAndIsDirectory = env->GetStaticMethodID(Clazz, "getSizeAndIsDirectory", "(Ljava/lang/String;)J");
+  GetDisplayName = env->GetStaticMethodID(Clazz, "getDisplayName", "(Ljava/lang/String;)Ljava/lang/String;");
+  GetChildNames = env->GetStaticMethodID(Clazz, "getChildNames", "(Ljava/lang/String;Z)[Ljava/lang/String;");
+  DoFileSearch = env->GetStaticMethodID(Clazz, "doFileSearch", "(Ljava/lang/String;[Ljava/lang/String;Z)[Ljava/lang/String;");
 }
 
 void ContentHandler::OnUnload(JNIEnv* env)

@@ -447,7 +447,8 @@ public class RunningSettingDialog extends DialogFragment
 		mSettings.add(new SettingsItem(SettingsItem.SETTING_CHOOSE_CONTROLLER, R.string.emulation_choose_controller, SettingsItem.TYPE_BUTTON, 0));
         mSettings.add(new SettingsItem(SettingsItem.SETTING_JOYSTICK_EMULATION, R.string.emulation_joystick_settings, SettingsItem.TYPE_BUTTON, 0));
       }
-      mSettings.add(new SettingsItem(SettingsItem.SETTING_CHANGE_DISC, R.string.emulation_change_disc, SettingsItem.TYPE_BUTTON, 0));
+      // TODO: Figure out why crashes after merge Storage Access Framework.
+      // mSettings.add(new SettingsItem(SettingsItem.SETTING_CHANGE_DISC, R.string.emulation_change_disc, SettingsItem.TYPE_BUTTON, 0));
       mSettings.add(new SettingsItem(SettingsItem.SETTING_SENSOR_EMULATION, R.string.emulation_sensor_settings, SettingsItem.TYPE_BUTTON, 0));
       mSettings.add(new SettingsItem(SettingsItem.SETTING_EXIT_GAME, R.string.emulation_exit, SettingsItem.TYPE_BUTTON, 0));
       notifyDataSetChanged();

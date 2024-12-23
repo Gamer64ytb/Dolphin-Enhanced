@@ -23,7 +23,7 @@ public final class GameFileCacheService extends IntentService
   private static final String ACTION_RESCAN = "org.dolphinemu.dolphinemu.RESCAN_GAME_FILE_CACHE";
 
   private static GameFileCache gameFileCache = null;
-  private static AtomicReference<GameFile[]> gameFiles = new AtomicReference<>(new GameFile[]{});
+  private static final AtomicReference<GameFile[]> gameFiles = new AtomicReference<>(new GameFile[]{});
 
   public GameFileCacheService()
   {

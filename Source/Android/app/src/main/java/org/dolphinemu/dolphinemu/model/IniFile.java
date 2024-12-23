@@ -1,10 +1,13 @@
 package org.dolphinemu.dolphinemu.model;
 
+import androidx.annotation.Keep;
+
 public class IniFile
 {
-  // Do not rename or move without editing the native code
+  @Keep
   private long mPointer;
 
+  @Keep
   public IniFile()
   {
     mPointer = newIniFile();

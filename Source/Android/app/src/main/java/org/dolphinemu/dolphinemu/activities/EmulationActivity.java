@@ -10,13 +10,11 @@ import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.appcompat.app.AppCompatActivity;
-import android.text.TextUtils;
+
 import android.util.DisplayMetrics;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
@@ -33,7 +31,6 @@ import org.dolphinemu.dolphinemu.services.GameFileCacheService;
 import org.dolphinemu.dolphinemu.ui.main.MainActivity;
 import org.dolphinemu.dolphinemu.ui.platform.Platform;
 import org.dolphinemu.dolphinemu.utils.ControllerMappingHelper;
-import org.dolphinemu.dolphinemu.utils.FileBrowserHelper;
 import org.dolphinemu.dolphinemu.utils.Java_GCAdapter;
 import org.dolphinemu.dolphinemu.utils.Java_WiimoteAdapter;
 import org.dolphinemu.dolphinemu.utils.Rumble;
@@ -71,6 +68,11 @@ public final class EmulationActivity extends AppCompatActivity
   public static final String EXTRA_SELECTED_GAMEID = "SelectedGameId";
   public static final String EXTRA_PLATFORM = "Platform";
   public static final String EXTRA_SAVED_STATE = "SavedState";
+
+  public static void launch(Context context, String filePath)
+  {
+    launchFile(context, new String[]{filePath});
+  }
 
   public static void launch(Context context, GameFile game, String savedState)
   {
@@ -250,13 +252,9 @@ public final class EmulationActivity extends AppCompatActivity
     if (requestCode == REQUEST_CHANGE_DISC)
     {
       // If the user picked a file, as opposed to just backing out.
-      if (resultCode == MainActivity.RESULT_OK)
+      if (resultCode == RESULT_OK)
       {
-        String newDiscPath = FileBrowserHelper.getSelectedDirectory(result);
-        if (!TextUtils.isEmpty(newDiscPath))
-        {
-          NativeLibrary.ChangeDisc(newDiscPath);
-        }
+        NativeLibrary.ChangeDisc(result.getData().toString());
       }
     }
   }
@@ -600,7 +598,10 @@ public final class EmulationActivity extends AppCompatActivity
 
 	public void changeDisc()
 	{
-	  FileBrowserHelper.openFilePicker(this, REQUEST_CHANGE_DISC, false);
+      Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("*/*");
+      startActivityForResult(intent, REQUEST_CHANGE_DISC);
 	}
 
   public void chooseController()

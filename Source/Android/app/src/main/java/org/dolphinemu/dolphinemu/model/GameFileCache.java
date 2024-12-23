@@ -5,10 +5,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.dolphinemu.dolphinemu.services.GameFileCacheService;
+import org.dolphinemu.dolphinemu.utils.ContentHandler;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -63,18 +63,23 @@ public class GameFileCache
     }
 
     // remove non exists paths
-    Iterator<String> iter = folderPathsSet.iterator();
-    while(iter.hasNext())
+    Set<String> newFolderPaths = new HashSet<>();
+    for (String folderPath : folderPathsSet)
     {
-      File folder = new File(iter.next());
-      if(!folder.exists())
-        iter.remove();
+      if (folderPath.startsWith("content://") ? ContentHandler.exists(folderPath) : new File(folderPath).exists())
+      {
+        newFolderPaths.add(folderPath);
+      }
     }
 
     // apply changes
-    SharedPreferences.Editor editor = preferences.edit();
-    editor.putStringSet(GAME_FOLDER_PATHS_PREFERENCE, folderPathsSet);
-    editor.apply();
+    if (folderPathsSet.size() != newFolderPaths.size())
+    {
+      // One or more folders are being deleted
+      SharedPreferences.Editor editor = preferences.edit();
+      editor.putStringSet(GAME_FOLDER_PATHS_PREFERENCE, newFolderPaths);
+      editor.apply();
+    }
 
     String[] folderPaths = folderPathsSet.toArray(new String[0]);
     boolean cacheChanged = update(folderPaths);

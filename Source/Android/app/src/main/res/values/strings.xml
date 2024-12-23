@@ -421,6 +421,12 @@ It can efficiently compress both junk data and encrypted Wii data.
     <string name="nnf_new_folder_ok">@android:string/ok</string>
     <string name="nnf_new_folder_cancel">@android:string/cancel</string>
 
+    <!-- File Pickers -->
+    <string name="no_file_extension">The selected file does not appear to have a file name extension.\n\nContinue anyway?</string>
+    <string name="wrong_file_extension_single">The selected file has the file name extension \"%1$s\", but \"%2$s\" was expected.\n\nContinue anyway?</string>
+    <string name="wrong_file_extension_multiple">The selected file has the file name extension \"%1$s\", but one of these extensions was expected: %2$s\n\nContinue anyway?</string>
+    <string name="wrong_file_extension_in_directory">No compatible files were found in the selected location.\n\nThe supported formats are: %1$s</string>
+
     <!-- Misc -->
     <string name="pitch">Total Pitch</string>
     <string name="yaw">Total Yaw</string>

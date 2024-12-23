@@ -64,8 +64,13 @@ struct ContentHandler
   void OnUnload(JNIEnv* env);
 
   jclass Clazz;
+  jclass StringClazz;
   jmethodID OpenFd;
   jmethodID Delete;
+  jmethodID GetSizeAndIsDirectory;
+  jmethodID GetDisplayName;
+  jmethodID GetChildNames;
+  jmethodID DoFileSearch;
 };
 
 JNIEnv* GetEnvForThread();
