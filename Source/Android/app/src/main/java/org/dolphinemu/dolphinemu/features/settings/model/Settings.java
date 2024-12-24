@@ -19,6 +19,7 @@ public class Settings
   public static final String SECTION_INI_INTERFACE = "Interface";
 
   public static final String SECTION_GFX_SETTINGS = "Settings";
+  public static final String SECTION_GFX_HARDWARE = "Hardware";
   public static final String SECTION_GFX_ENHANCEMENTS = "Enhancements";
   public static final String SECTION_GFX_HACKS = "Hacks";
 
@@ -39,7 +40,7 @@ public class Settings
     configFileSectionsMap.put(SettingsFile.FILE_NAME_DOLPHIN,
       Arrays.asList(SECTION_INI_CORE, SECTION_INI_DSP, SECTION_INI_INTERFACE, SECTION_BINDINGS, SECTION_DEBUG, SECTION_WII_IPL));
     configFileSectionsMap.put(SettingsFile.FILE_NAME_GFX,
-      Arrays.asList(SECTION_GFX_SETTINGS, SECTION_GFX_ENHANCEMENTS, SECTION_GFX_HACKS));
+      Arrays.asList(SECTION_GFX_SETTINGS, SECTION_GFX_HARDWARE, SECTION_GFX_ENHANCEMENTS, SECTION_GFX_HACKS));
     configFileSectionsMap.put(SettingsFile.FILE_NAME_WIIMOTE,
       Arrays.asList(SECTION_WIIMOTE + 1, SECTION_WIIMOTE + 2, SECTION_WIIMOTE + 3, SECTION_WIIMOTE + 4));
   }

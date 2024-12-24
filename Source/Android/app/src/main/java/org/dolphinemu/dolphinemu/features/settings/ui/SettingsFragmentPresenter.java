@@ -163,6 +163,7 @@ public final class SettingsFragmentPresenter
   private void addGeneralSettings(ArrayList<SettingsItem> sl)
   {
     SettingSection coreSection = mSettings.getSection(Settings.SECTION_INI_CORE);
+    SettingSection hwSection = mSettings.getSection(Settings.SECTION_GFX_HARDWARE);
     Setting cpuCore = coreSection.getSetting(SettingsFile.KEY_CPU_CORE);
     Setting dualCore = coreSection.getSetting(SettingsFile.KEY_DUAL_CORE);
     Setting overclockEnable = coreSection.getSetting(SettingsFile.KEY_OVERCLOCK_ENABLE);
@@ -172,6 +173,7 @@ public final class SettingsFragmentPresenter
     Setting mmu = coreSection.getSetting(SettingsFile.KEY_MMU);
     Setting fastDiscSpeed = coreSection.getSetting(SettingsFile.KEY_FAST_DISC_SPEED);
     Setting followBranch = coreSection.getSetting(SettingsFile.KEY_JIT_FOLLOW_BRANCH);
+    Setting vsync = hwSection.getSetting(SettingsFile.KEY_VSYNC);
     Setting overrideRegionSettings = coreSection.getSetting(SettingsFile.KEY_OVERRIDE_REGION_SETTINGS);
     Setting autoDiscChange = coreSection.getSetting(SettingsFile.KEY_AUTO_DISC_CHANGE);
     Setting audioStretch = coreSection.getSetting(SettingsFile.KEY_AUDIO_STRETCH);
@@ -220,6 +222,8 @@ public final class SettingsFragmentPresenter
       followBranch));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_OVERRIDE_REGION_SETTINGS, Settings.SECTION_INI_CORE,
       R.string.override_region_settings, 0, false, overrideRegionSettings));
+    sl.add(new CheckBoxSetting(SettingsFile.KEY_VSYNC, Settings.SECTION_GFX_HARDWARE,
+      R.string.vsync, R.string.vsync_description, false, vsync));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_ENABLE_CHEATS, Settings.SECTION_INI_CORE,
       R.string.enable_cheats, R.string.enable_cheats_description, false, enableCheats));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_AUTO_DISC_CHANGE, Settings.SECTION_INI_CORE,

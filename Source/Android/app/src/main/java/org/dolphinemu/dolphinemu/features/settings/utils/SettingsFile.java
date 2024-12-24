@@ -50,6 +50,7 @@ public final class SettingsFile
   public static final String KEY_AUDIO_STRETCH = "AudioStretch";
   public static final String KEY_AUDIO_STRETCH_MAX_LATENCY = "AudioStretchMaxLatency";
   public static final String KEY_AUDIO_BACKEND = "Backend";
+  public static final String KEY_VSYNC = "VSync";
   public static final String KEY_ENABLE_CHEATS = "EnableCheats";
   public static final String KEY_AUTO_DISC_CHANGE = "AutoDiscChange";
   public static final String KEY_GAME_CUBE_LANGUAGE = "SelectedLanguage";

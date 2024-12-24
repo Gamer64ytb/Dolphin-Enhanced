@@ -169,6 +169,8 @@
     <string name="jit_follow_branch_description">JIT分支优化可以提升性能，但部分游戏会有问题。</string>
     <string name="audio_backend">音频后端</string>
     <string name="audio_backend_description">Set backend used for audio output.</string>
+    <string name="vsync">垂直同步</string>
+    <string name="vsync_description">在大多数 Android 设备上，此设置是不必要的，因为 Android 总是启用垂直同步。如果不确定，请保持此选项不选中。</string>
     <string name="enable_cheats">启用金手指</string>
     <string name="enable_cheats_description">请将 AR 代码或者 Gecko 代码保存在游戏设置文件中。</string>
     <string name="override_region_settings">允许区域设置不匹配</string>
