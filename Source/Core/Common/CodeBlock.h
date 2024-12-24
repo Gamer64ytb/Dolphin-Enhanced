@@ -83,6 +83,10 @@ public:
   }
 
   bool IsInSpace(const u8* ptr) const { return ptr >= region && ptr < (region + region_size); }
+  bool IsInSpaceOrChildSpace(const u8* ptr) const
+  {
+    return ptr >= region && ptr < (region + total_region_size);
+  }
   // Cannot currently be undone. Will write protect the entire code region.
   // Start over if you need to change the code (call FreeCodeSpace(), AllocCodeSpace()).
   void WriteProtect() { Common::WriteProtectMemory(region, region_size, true); }
@@ -102,7 +106,7 @@ public:
   bool HasChildren() const { return region_size != total_region_size; }
   u8* AllocChildCodeSpace(size_t child_size)
   {
-    ASSERT_MSG(DYNA_REC, child_size < GetSpaceLeft(), "Insufficient space for child allocation.");
+    ASSERT_MSG(DYNA_REC, child_size <= GetSpaceLeft(), "Insufficient space for child allocation.");
     u8* child_region = region + region_size - child_size;
     region_size -= child_size;
     return child_region;
