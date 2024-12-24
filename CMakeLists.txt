@@ -776,6 +776,8 @@ endif()
 
 include_directories(Externals/picojson)
 
+add_subdirectory(Externals/rangeset)
+
 ########################################
 # Pre-build events: Define configuration variables and write SCM info header
 #
