@@ -412,6 +412,8 @@ public final class SettingsFragmentPresenter
     Setting fsaa = gfxSection.getSetting(SettingsFile.KEY_FSAA);
     Setting anisotropic = enhancementSection.getSetting(SettingsFile.KEY_ANISOTROPY);
     Setting shader = enhancementSection.getSetting(SettingsFile.KEY_POST_SHADER);
+    Setting hiresTextures = gfxSection.getSetting(SettingsFile.KEY_HIRES_TEXTURES);
+    Setting cacheHiresTextures = gfxSection.getSetting(SettingsFile.KEY_CACHE_HIRES_TEXTURES);
     Setting efbScaledCopy = hacksSection.getSetting(SettingsFile.KEY_SCALED_EFB);
     Setting perPixel = gfxSection.getSetting(SettingsFile.KEY_PER_PIXEL);
     Setting forceFilter = enhancementSection.getSetting(SettingsFile.KEY_FORCE_FILTERING);
@@ -440,6 +442,10 @@ public final class SettingsFragmentPresenter
       0, shaderListEntries, shaderListValues, "",
       shader));
 
+    sl.add(new CheckBoxSetting(SettingsFile.KEY_HIRES_TEXTURES, Settings.SECTION_GFX_SETTINGS,
+      R.string.load_custom_texture, R.string.load_custom_texture_description, false, hiresTextures));
+    sl.add(new CheckBoxSetting(SettingsFile.KEY_CACHE_HIRES_TEXTURES, Settings.SECTION_GFX_SETTINGS,
+      R.string.cache_custom_texture, R.string.cache_custom_texture_description, false, cacheHiresTextures));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_SCALED_EFB, Settings.SECTION_GFX_HACKS,
       R.string.scaled_efb_copy, R.string.scaled_efb_copy_description, true, efbScaledCopy));
     sl.add(new CheckBoxSetting(SettingsFile.KEY_PER_PIXEL, Settings.SECTION_GFX_SETTINGS,

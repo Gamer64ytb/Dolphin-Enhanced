@@ -192,6 +192,10 @@
     <string name="post_processing_shader_description">完成一帧后应用后后处理效果</string>
     <string name="postprocessing_shader">Post Processing Shader</string>
     <string name="postprocessing_shader_description">Apply a post-processing effect after finishing a frame.</string>
+    <string name="load_custom_texture">加载自定义纹理</string>
+    <string name="load_custom_texture_description">从 User/Load/Textures/&lt;game_id&gt;/ 加载自定义纹理。</string>
+    <string name="cache_custom_texture">预加载自定义纹理</string>
+    <string name="cache_custom_texture_description">在启动时将自定义纹理缓存到系统RAM。这可能需要成倍增加的内存，但可以修复可能的卡顿问题。</string>
     <string name="scaled_efb_copy">缩放EFB纹理</string>
     <string name="scaled_efb_copy_description">可以提升EFB渲染纹理的质量，但是稍微降低性能。</string>
     <string name="per_pixel_lighting">逐像素光照</string>
@@ -415,6 +419,12 @@ ISO：一种简单且可靠的格式，许多程序都支持。它比任何其�
     <string name="nnf_list_cancel">@android:string/cancel</string>
     <string name="nnf_new_folder_ok">@android:string/ok</string>
     <string name="nnf_new_folder_cancel">@android:string/cancel</string>
+
+    <!-- File Pickers -->
+    <string name="no_file_extension">所选文件似乎没有文件扩展名。\n\n仍要继续吗？</string>
+    <string name="wrong_file_extension_single">所选文件的文件扩展名为 \"%1$s\"，但预期为 \"%2$s\"。\n\n仍要继续吗？</string>
+    <string name="wrong_file_extension_multiple">所选文件的文件扩展名为 \"%1$s\"，但预期为以下扩展名之一：%2$s\n\n仍要继续吗？</string>
+    <string name="wrong_file_extension_in_directory">在所选位置未找到兼容的文件。\n\n支持的格式为：%1$s</string>
 
     <!-- Misc -->
     <string name="pitch">上下倾斜</string>

@@ -192,6 +192,10 @@
     <string name="post_processing_shader_description">Apply a post-processing effect after finishing a frame</string>
     <string name="postprocessing_shader">Post Processing Shader</string>
     <string name="postprocessing_shader_description">Apply a post-processing effect after finishing a frame.</string>
+    <string name="load_custom_texture">Load Custom Textures</string>
+    <string name="load_custom_texture_description">Loads custom textures from User/Load/Textures/&lt;game_id&gt;/.</string>
+    <string name="cache_custom_texture">Prefetch Custom Textures</string>
+    <string name="cache_custom_texture_description">Caches custom textures to system RAM on startup. This can require exponentially more RAM but fixes possible stuttering.</string>
     <string name="scaled_efb_copy">Scaled EFB Copy</string>
     <string name="scaled_efb_copy_description">Increases quality of textures generated using render to texture effects. Slightly decreases performance and possibly causes issues (although unlikely).</string>
     <string name="per_pixel_lighting">Per-Pixel Lighting</string>

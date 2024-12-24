@@ -181,14 +181,14 @@ public final class EmulationActivity extends AppCompatActivity
     loadPreferences();
   }
 
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus)
-	{
-	  if (hasFocus)
-      {
-	    enableFullscreenImmersive();
-      }
-	}
+  @Override
+  public void onWindowFocusChanged(boolean hasFocus)
+  {
+    if (hasFocus)
+    {
+      enableFullscreenImmersive();
+    }
+  }
 
   @Override
   protected void onDestroy()

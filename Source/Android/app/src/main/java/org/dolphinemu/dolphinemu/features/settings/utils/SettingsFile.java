@@ -62,12 +62,13 @@ public final class SettingsFile
   public static final String KEY_OSD_MESSAGES = "OnScreenDisplayMessages";
   public static final String KEY_BUILTIN_TITLE_DATABASE = "UseBuiltinTitleDatabase";
 
-
   public static final String KEY_SHOW_FPS = "ShowFPS";
   public static final String KEY_INTERNAL_RES = "InternalResolution";
   public static final String KEY_FSAA = "MSAA";
   public static final String KEY_ANISOTROPY = "MaxAnisotropy";
   public static final String KEY_POST_SHADER = "PostProcessingShader";
+  public static final String KEY_HIRES_TEXTURES = "HiresTextures";
+  public static final String KEY_CACHE_HIRES_TEXTURES = "CacheHiresTextures";
   public static final String KEY_SCALED_EFB = "EFBScaledCopy";
   public static final String KEY_PER_PIXEL = "EnablePixelLighting";
   public static final String KEY_FORCE_FILTERING = "ForceFiltering";
@@ -177,12 +178,14 @@ public final class SettingsFile
   public static final String KEY_WIIBIND_SHAKE_X = "ShakeX_";
   public static final String KEY_WIIBIND_SHAKE_Y = "ShakeY_";
   public static final String KEY_WIIBIND_SHAKE_Z = "ShakeZ_";
+
   // Hotkeys
   public static final String KEY_HOTKEYS_SIDEWAYS_TOGGLE = "Sideways_Toggle_";
   public static final String KEY_HOTKEYS_UPRIGHT_TOGGLE = "Upright_Toggle_";
   public static final String KEY_HOTKEYS_SIDEWAYS_HOLD = "Sideways_Hold_";
   public static final String KEY_HOTKEYS_UPRIGHT_HOLD = "Upright_Hold_";
   public static final String KEY_WIIMOTE_IR_RECENTER = "IR_Recenter_";
+
   // Nunchuk
   public static final String KEY_WIIBIND_DPAD_UP = "WiimoteUp_";
   public static final String KEY_WIIBIND_DPAD_DOWN = "WiimoteDown_";
