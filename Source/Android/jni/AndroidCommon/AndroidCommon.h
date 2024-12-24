@@ -41,3 +41,7 @@ std::vector<std::string> GetAndroidContentChildNames(const std::string& uri);
 std::vector<std::string> DoFileSearchAndroidContent(const std::string& directory,
                                                     const std::vector<std::string>& extensions,
                                                     bool recursive);
+
+int GetNetworkIpAddress();
+int GetNetworkPrefixLength();
+int GetNetworkGateway();

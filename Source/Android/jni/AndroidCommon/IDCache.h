@@ -58,6 +58,17 @@ struct CompressCallback
   jmethodID CompressCbRun;
 };
 
+struct NetworkHelper
+{
+  void OnLoad(JNIEnv* env);
+  void OnUnload(JNIEnv* env);
+
+  jclass Clazz;
+  jmethodID NetworkIpAddress;
+  jmethodID NetworkPrefixLength;
+  jmethodID NetworkGateway;
+};
+
 struct ContentHandler
 {
   void OnLoad(JNIEnv* env);
@@ -80,6 +91,7 @@ extern IniFile sIniFile;
 extern GameFile sGameFile;
 extern WiimoteAdapter sWiimoteAdapter;
 extern CompressCallback sCompressCallback;
+extern NetworkHelper sNetworkHelper;
 extern ContentHandler sContentHandler;
 
 }  // namespace IDCache

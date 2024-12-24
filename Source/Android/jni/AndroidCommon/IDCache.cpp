@@ -18,6 +18,7 @@ IniFile sIniFile;
 GameFile sGameFile;
 WiimoteAdapter sWiimoteAdapter;
 CompressCallback sCompressCallback;
+NetworkHelper sNetworkHelper;
 ContentHandler sContentHandler;
 
 void NativeLibrary::OnLoad(JNIEnv* env)
@@ -90,6 +91,21 @@ void CompressCallback::OnUnload(JNIEnv* env)
   Clazz = nullptr;
 }
 
+void NetworkHelper::OnLoad(JNIEnv* env)
+{
+  jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/utils/NetworkHelper");
+  Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
+  NetworkIpAddress = env->GetStaticMethodID(Clazz, "GetNetworkIpAddress", "()I");
+  NetworkPrefixLength = env->GetStaticMethodID(Clazz, "GetNetworkPrefixLength", "()I");
+  NetworkGateway = env->GetStaticMethodID(Clazz, "GetNetworkGateway", "()I");
+}
+
+void NetworkHelper::OnUnload(JNIEnv* env)
+{
+  env->DeleteGlobalRef(Clazz);
+  Clazz = nullptr;
+}
+
 void ContentHandler::OnLoad(JNIEnv* env)
 {
   jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/utils/ContentHandler");
@@ -152,6 +168,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
   IDCache::sGameFile.OnLoad(env);
   IDCache::sWiimoteAdapter.OnLoad(env);
   IDCache::sCompressCallback.OnLoad(env);
+  IDCache::sNetworkHelper.OnLoad(env);
   IDCache::sContentHandler.OnLoad(env);
 
   return JNI_VERSION;
@@ -170,6 +187,7 @@ void JNI_OnUnload(JavaVM* vm, void* reserved)
   IDCache::sGameFile.OnUnload(env);
   IDCache::sWiimoteAdapter.OnUnload(env);
   IDCache::sCompressCallback.OnUnload(env);
+  IDCache::sNetworkHelper.OnUnload(env);
   IDCache::sContentHandler.OnUnload(env);
 }
 

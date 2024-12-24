@@ -50,6 +50,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef __ANDROID__
+#include "jni/AndroidCommon/AndroidCommon.h"
+#endif
+
 // WSAPoll doesn't support POLLPRI and POLLWRBAND flags
 #ifdef _WIN32
 #define UNSUPPORTED_WSAPOLL POLLPRI | POLLWRBAND
@@ -213,7 +217,14 @@ static std::optional<DefaultInterface> GetSystemDefaultInterface()
         return DefaultInterface{entry.dwAddr, entry.dwMask, entry.dwBCastAddr};
     }
   }
-#elif !defined(__ANDROID__)
+#elif defined(__ANDROID__)
+  const u32 addr = GetNetworkIpAddress();
+  const u32 prefix_length = GetNetworkPrefixLength();
+  const u32 netmask = (1 << prefix_length) - 1;
+  const u32 gateway = GetNetworkGateway();
+  if (addr || netmask || gateway)
+    return DefaultInterface{addr, netmask, gateway};
+#else
   // Assume that the address that is used to access the Internet corresponds
   // to the default interface.
   auto get_default_address = []() -> std::optional<in_addr> {
@@ -255,7 +266,7 @@ static std::optional<DefaultInterface> GetSystemDefaultInterface()
     }
   }
 #endif
-  return {};
+  return std::nullopt;
 }
 
 static DefaultInterface GetSystemDefaultInterfaceOrFallback()

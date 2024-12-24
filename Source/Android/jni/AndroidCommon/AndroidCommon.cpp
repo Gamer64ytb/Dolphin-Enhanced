@@ -146,3 +146,24 @@ std::vector<std::string> DoFileSearchAndroidContent(const std::string& directory
       ToJString(env, directory), JStringArrayFromVector(env, extensions), recursive);
   return JStringArrayToVector(env, reinterpret_cast<jobjectArray>(result));
 }
+
+int GetNetworkIpAddress()
+{
+  JNIEnv* env = IDCache::GetEnvForThread();
+  return env->CallStaticIntMethod(IDCache::sNetworkHelper.Clazz,
+                                  IDCache::sNetworkHelper.NetworkIpAddress);
+}
+
+int GetNetworkPrefixLength()
+{
+  JNIEnv* env = IDCache::GetEnvForThread();
+  return env->CallStaticIntMethod(IDCache::sNetworkHelper.Clazz,
+                                  IDCache::sNetworkHelper.NetworkPrefixLength);
+}
+
+int GetNetworkGateway()
+{
+  JNIEnv* env = IDCache::GetEnvForThread();
+  return env->CallStaticIntMethod(IDCache::sNetworkHelper.Clazz,
+                                  IDCache::sNetworkHelper.NetworkGateway);
+}
