@@ -299,7 +299,7 @@ bool JitArm64::HandleFastmemFault(uintptr_t access_address, SContext* ctx)
   if (pc < fastmem_area_start)
     return false;
 
-  ARM64XEmitter emitter(const_cast<u8*>(fastmem_area_start));
+  ARM64XEmitter emitter(const_cast<u8*>(fastmem_area_start), const_cast<u8*>(fastmem_area_end));
 
   emitter.BL(slow_handler_iter->second.slowmem_code);
 

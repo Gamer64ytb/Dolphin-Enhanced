@@ -311,14 +311,16 @@ bool FPImm8FromFloat(float value, u8* imm_out)
 }
 }  // Anonymous namespace
 
-void ARM64XEmitter::SetCodePtrUnsafe(u8* ptr)
+void ARM64XEmitter::SetCodePtrUnsafe(u8* ptr, u8* end, bool write_failed)
 {
   m_code = ptr;
+  m_code_end = end;
+  m_write_failed = write_failed;
 }
 
 void ARM64XEmitter::SetCodePtr(u8* ptr, u8* end, bool write_failed)
 {
-  SetCodePtrUnsafe(ptr);
+  SetCodePtrUnsafe(ptr, end, write_failed);
   m_lastCacheFlushEnd = ptr;
 }
 
@@ -330,6 +332,16 @@ const u8* ARM64XEmitter::GetCodePtr() const
 u8* ARM64XEmitter::GetWritableCodePtr()
 {
   return m_code;
+}
+
+const u8* ARM64XEmitter::GetCodeEnd() const
+{
+  return m_code_end;
+}
+
+u8* ARM64XEmitter::GetWritableCodeEnd()
+{
+  return m_code_end;
 }
 
 void ARM64XEmitter::ReserveCodeSpace(u32 bytes)
@@ -882,6 +894,9 @@ static constexpr u32 MaskImm26(s64 distance)
 // FixupBranch branching
 void ARM64XEmitter::SetJumpTarget(FixupBranch const& branch)
 {
+  if (!branch.ptr)
+    return;
+
   bool Not = false;
   u32 inst = 0;
   s64 distance = (s64)(m_code - branch.ptr);
@@ -929,67 +944,68 @@ void ARM64XEmitter::SetJumpTarget(FixupBranch const& branch)
   *(u32*)branch.ptr = inst;
 }
 
-FixupBranch ARM64XEmitter::CBZ(ARM64Reg Rt)
+FixupBranch ARM64XEmitter::WriteFixupBranch()
 {
   FixupBranch branch;
   branch.ptr = m_code;
+  BRK(0);
+
+  // If we couldn't write the full jump instruction, indicate that in the returned FixupBranch by
+  // setting the branch's address to null. This will prevent a later SetJumpTarget() from writing to
+  // invalid memory.
+  if (HasWriteFailed())
+    branch.ptr = nullptr;
+
+  return branch;
+}
+
+FixupBranch ARM64XEmitter::CBZ(ARM64Reg Rt)
+{
+  FixupBranch branch = WriteFixupBranch();
   branch.type = 0;
   branch.reg = Rt;
-  HINT(HINT_NOP);
   return branch;
 }
 FixupBranch ARM64XEmitter::CBNZ(ARM64Reg Rt)
 {
-  FixupBranch branch;
-  branch.ptr = m_code;
+  FixupBranch branch = WriteFixupBranch();
   branch.type = 1;
   branch.reg = Rt;
-  HINT(HINT_NOP);
   return branch;
 }
 FixupBranch ARM64XEmitter::B(CCFlags cond)
 {
-  FixupBranch branch;
-  branch.ptr = m_code;
+  FixupBranch branch = WriteFixupBranch();
   branch.type = 2;
   branch.cond = cond;
-  HINT(HINT_NOP);
   return branch;
 }
 FixupBranch ARM64XEmitter::TBZ(ARM64Reg Rt, u8 bit)
 {
-  FixupBranch branch;
-  branch.ptr = m_code;
+  FixupBranch branch = WriteFixupBranch();
   branch.type = 3;
   branch.reg = Rt;
   branch.bit = bit;
-  HINT(HINT_NOP);
   return branch;
 }
 FixupBranch ARM64XEmitter::TBNZ(ARM64Reg Rt, u8 bit)
 {
-  FixupBranch branch;
-  branch.ptr = m_code;
+  FixupBranch branch = WriteFixupBranch();
   branch.type = 4;
   branch.reg = Rt;
   branch.bit = bit;
-  HINT(HINT_NOP);
   return branch;
 }
 FixupBranch ARM64XEmitter::B()
 {
-  FixupBranch branch;
-  branch.ptr = m_code;
+  FixupBranch branch = WriteFixupBranch();
   branch.type = 5;
-  HINT(HINT_NOP);
   return branch;
 }
 FixupBranch ARM64XEmitter::BL()
 {
-  FixupBranch branch;
-  branch.ptr = m_code;
+  FixupBranch branch = WriteFixupBranch();
   branch.type = 6;
-  HINT(HINT_NOP);
   return branch;
 }
 
