@@ -102,9 +102,11 @@ enum class FloatOp
   Invalid = -1,
 };
 
-void XEmitter::SetCodePtr(u8* ptr)
+void XEmitter::SetCodePtr(u8* ptr, u8* end, bool write_failed)
 {
   code = ptr;
+  m_code_end = end;
+  m_write_failed = write_failed;
 }
 
 const u8* XEmitter::GetCodePtr() const
@@ -117,8 +119,25 @@ u8* XEmitter::GetWritableCodePtr()
   return code;
 }
 
+const u8* XEmitter::GetCodeEnd() const
+{
+  return m_code_end;
+}
+
+u8* XEmitter::GetWritableCodeEnd()
+{
+  return m_code_end;
+}
+
 void XEmitter::ReserveCodeSpace(int bytes)
 {
+  if (code + bytes > m_code_end)
+  {
+    code = m_code_end;
+    m_write_failed = true;
+    return;
+  }
+
   for (int i = 0; i < bytes; i++)
     *code++ = 0xCC;
 }
@@ -454,6 +473,13 @@ FixupBranch XEmitter::CALL()
   branch.ptr = code + 5;
   Write8(0xE8);
   Write32(0);
+
+  // If we couldn't write the full call instruction, indicate that in the returned FixupBranch by
+  // setting the branch's address to null. This will prevent a later SetJumpTarget() from writing to
+  // invalid memory.
+  if (HasWriteFailed())
+    branch.ptr = nullptr;
+
   return branch;
 }
 
@@ -473,6 +499,13 @@ FixupBranch XEmitter::J(bool force5bytes)
     Write8(0xE9);
     Write32(0);
   }
+
+  // If we couldn't write the full jump instruction, indicate that in the returned FixupBranch by
+  // setting the branch's address to null. This will prevent a later SetJumpTarget() from writing to
+  // invalid memory.
+  if (HasWriteFailed())
+    branch.ptr = nullptr;
+
   return branch;
 }
 
@@ -493,6 +526,13 @@ FixupBranch XEmitter::J_CC(CCFlags conditionCode, bool force5bytes)
     Write8(0x80 + conditionCode);
     Write32(0);
   }
+
+  // If we couldn't write the full jump instruction, indicate that in the returned FixupBranch by
+  // setting the branch's address to null. This will prevent a later SetJumpTarget() from writing to
+  // invalid memory.
+  if (HasWriteFailed())
+    branch.ptr = nullptr;
+
   return branch;
 }
 
@@ -518,6 +558,9 @@ void XEmitter::J_CC(CCFlags conditionCode, const u8* addr)
 
 void XEmitter::SetJumpTarget(const FixupBranch& branch)
 {
+  if (!branch.ptr)
+    return;
+
   if (branch.type == FixupBranch::Type::Branch8Bit)
   {
     s64 distance = (s64)(code - branch.ptr);
