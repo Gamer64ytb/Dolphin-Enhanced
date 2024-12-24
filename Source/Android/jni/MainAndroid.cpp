@@ -80,7 +80,6 @@ static float s_scaled_density = 1.0f;
 // sequentially for access.
 static std::mutex s_host_identity_lock;
 static Common::Event s_update_main_frame_event;
-static bool s_have_wm_user_stop = false;
 
 static bool MsgAlert(const char* caption, const char* text, bool yes_no, Common::MsgType /*style*/)
 {
@@ -116,7 +115,6 @@ void Host_Message(HostMessageID id)
   }
   else if (id == HostMessageID::WMUserStop)
   {
-    s_have_wm_user_stop = true;
     if (Core::IsRunning())
       Core::QueueHostJob(&Core::Stop);
   }
@@ -181,7 +179,6 @@ void BootGame(const std::vector<std::string>& paths, const std::optional<std::st
   std::unique_lock<std::mutex> guard(s_host_identity_lock);
 
   // No use running the loop when booting fails
-  s_have_wm_user_stop = false;
   std::unique_ptr<BootParameters> boot = BootParameters::GenerateFromFile(paths, savestate);
   boot->delete_savestate = delete_savestate;
   WindowSystemInfo wsi(WindowSystemType::Android, nullptr, s_surf);
@@ -189,15 +186,10 @@ void BootGame(const std::vector<std::string>& paths, const std::optional<std::st
   if (BootManager::BootCore(std::move(boot), wsi))
   {
     ButtonManager::Init(SConfig::GetInstance().GetGameID());
-    static constexpr int TIMEOUT = 10000;
     static constexpr int WAIT_STEP = 25;
-    int time_waited = 0;
-    // A Core::CORE_ERROR state would be helpful here.
-    while (!Core::IsRunning() && time_waited < TIMEOUT && !s_have_wm_user_stop)
-    {
+    while (Core::GetState() == Core::State::Starting)
       std::this_thread::sleep_for(std::chrono::milliseconds(WAIT_STEP));
-      time_waited += WAIT_STEP;
-    }
+
     while (Core::IsRunning())
     {
       guard.unlock();
