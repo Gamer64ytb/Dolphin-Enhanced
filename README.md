@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://github.com/Gamer64ytb/Dolphin-Enhanced/blob/master/Data/dolphin-emu.svg" alt="dolphin" width="188"/>
+  <img src="https://github.com/Gamer64ytb/Dolphin-Enhanced/blob/main/Data/dolphin-emu.svg" alt="dolphin" width="188"/>
 </p>
 <p align="center" style="font-size:144px;">
   <strong>Dolphin Enhanced</strong>
@@ -15,10 +15,6 @@
 </p>
 
 <b>Dolphin Enhanced</b> is a fork based on weihuoya's MMJ, with the goal of improve more it's performance & compatibility.
-
-<p align="center">
-<img src="https://github.com/user-attachments/assets/bf14a1cb-5709-43b9-9cb8-5d953e266d8f" alt="Borked3DS Configure Graphics">
-</p>
 
 # About Dolphin Enhanced
 This is a fork to practice my skills as well, so it's not 100% focused to the public. I mostly release for low end devices getting benefited or people that doesn't want to use android data, or other reasons.
