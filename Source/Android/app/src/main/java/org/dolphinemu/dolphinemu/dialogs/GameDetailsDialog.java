@@ -71,7 +71,7 @@ public final class GameDetailsDialog extends DialogFragment
             .build();
 
     picassoInstance
-            .load(Uri.parse("file://" + gameFile.getCoverPath()))
+            .load(Uri.parse("file://" + gameFile.getCoverPath(imageView.getContext())))
             .fit()
             .noFade()
             .noPlaceholder()

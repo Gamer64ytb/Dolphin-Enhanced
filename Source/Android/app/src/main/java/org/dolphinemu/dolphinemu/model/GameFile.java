@@ -1,5 +1,6 @@
 package org.dolphinemu.dolphinemu.model;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -74,9 +75,9 @@ public class GameFile
 
   public native int getBannerHeight();
 
-  public String getCoverPath()
+  public String getCoverPath(Context context)
   {
-    return DirectoryInitialization.getCoverDirectory() + File.separator + getGameTdbId() + ".png";
+    return DirectoryInitialization.getCacheDirectory(context) + "/GameCovers/" + getGameTdbId() + ".png";
   }
 
   public String getLastSavedState()
@@ -122,7 +123,7 @@ public class GameFile
         @Override public void onSuccess()
         {
           mCoverType = COVER_CACHE;
-          CoverHelper.saveCover(((BitmapDrawable) imageView.getDrawable()).getBitmap(), getCoverPath());
+          CoverHelper.saveCover(((BitmapDrawable) imageView.getDrawable()).getBitmap(), getCoverPath(imageView.getContext()));
         }
         @Override public void onError(Exception e)
         {
@@ -133,7 +134,7 @@ public class GameFile
           else if(NativeLibrary.isNetworkConnected(imageView.getContext()))
           {
             // save placeholder to file
-            CoverHelper.saveCover(((BitmapDrawable) imageView.getDrawable()).getBitmap(), getCoverPath());
+            CoverHelper.saveCover(((BitmapDrawable) imageView.getDrawable()).getBitmap(), getCoverPath(imageView.getContext()));
           }
         }
       });
@@ -150,10 +151,10 @@ public class GameFile
 
   private boolean loadFromCache(ImageView imageView)
   {
-    File file = new File(getCoverPath());
+    File file = new File(getCoverPath(imageView.getContext()));
     if(file.exists())
     {
-      imageView.setImageURI(Uri.parse("file://" + getCoverPath()));
+      imageView.setImageURI(Uri.parse("file://" + getCoverPath(imageView.getContext())));
       return true;
     }
     return false;
@@ -212,7 +213,7 @@ public class GameFile
     int height = getBannerHeight();
     if (vector.length > 0 && width > 0 && height > 0)
     {
-      File file = new File(getCoverPath());
+      File file = new File(getCoverPath(imageView.getContext()));
       Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
       bitmap.setPixels(vector, 0, width, 0, 0, width, height);
       try

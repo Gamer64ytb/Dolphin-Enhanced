@@ -65,12 +65,12 @@ public final class DirectoryInitialization
     {
       if (PermissionsHandler.hasWriteAccess(context))
       {
-        if (setDolphinUserDirectory())
+        if (setDolphinUserDirectory(context))
         {
           initializeInternalStorage(context);
           initializeExternalStorage(context);
           String lan = Locale.getDefault().getLanguage();
-          if(lan.equals("zh"))
+          if (lan.equals("zh"))
             lan = lan + "_" + Locale.getDefault().getCountry();
           NativeLibrary.setSystemLanguage(lan);
           mDirectoryState = DirectoryInitializationState.DIRECTORIES_INITIALIZED;
@@ -90,24 +90,33 @@ public final class DirectoryInitialization
     sendBroadcastState(mDirectoryState, context);
   }
 
-  private static boolean setDolphinUserDirectory()
+  private static boolean setDolphinUserDirectory(Context context)
   {
-    if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
+    if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
+      return false;
+
+    File externalPath = Environment.getExternalStorageDirectory();
+    if (externalPath == null)
+      return false;
+
+    File userPath = new File(externalPath, "dolphin-mmj");
+    if (!userPath.isDirectory() && !userPath.mkdir())
     {
-      File externalPath = Environment.getExternalStorageDirectory();
-      if (externalPath != null)
-      {
-        File userPath = new File(externalPath, "dolphin-mmj");
-        if (!userPath.isDirectory() && !userPath.mkdir())
-        {
-          return false;
-        }
-        mUserPath = userPath.getPath();
-        NativeLibrary.SetUserDirectory(mUserPath);
-        return true;
-      }
+      return false;
     }
-    return false;
+    mUserPath = userPath.getPath();
+    NativeLibrary.SetUserDirectory(mUserPath);
+
+    File cacheDir = context.getExternalCacheDir();
+    if (cacheDir == null)
+      return false;
+
+    if (!cacheDir.isDirectory() && !cacheDir.mkdir())
+    {
+      return false;
+    }
+    NativeLibrary.SetCacheDirectory(cacheDir.getPath());
+    return true;
   }
 
   private static void initializeInternalStorage(Context context)
@@ -199,14 +208,9 @@ public final class DirectoryInitialization
     return mUserPath;
   }
 
-  public static String getCacheDirectory()
+  public static String getCacheDirectory(Context context)
   {
-    return getUserDirectory() + File.separator + "Cache";
-  }
-
-  public static String getCoverDirectory()
-  {
-    return getCacheDirectory() + File.separator + "GameCovers";
+    return context.getExternalCacheDir().getPath();
   }
 
   public static String getLocalSettingFile(String gameId)

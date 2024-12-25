@@ -217,7 +217,7 @@ public final class MainActivity extends AppCompatActivity
   private void clearGameData(Context context)
   {
     int count = 0;
-    String cachePath = DirectoryInitialization.getCacheDirectory();
+    String cachePath = DirectoryInitialization.getCacheDirectory(context);
     File dir = new File(cachePath);
     if (dir.exists())
     {
