@@ -5,13 +5,19 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.dialogs.MotionAlertDialog;
@@ -53,7 +59,8 @@ public final class SettingsAdapter extends RecyclerView.Adapter<SettingViewHolde
   private int mSeekbarProgress;
 
   private AlertDialog mDialog;
-  private TextView mTextSliderValue;
+  private TextInputEditText mTextSliderValue;
+  private TextInputLayout mTextInputLayout;
 
   public SettingsAdapter(SettingsActivity activity)
   {
@@ -202,17 +209,73 @@ public final class SettingsAdapter extends RecyclerView.Adapter<SettingViewHolde
     builder.setPositiveButton(android.R.string.ok, this);
     mDialog = builder.show();
 
+    mTextInputLayout = view.findViewById(R.id.text_input);
     mTextSliderValue = view.findViewById(R.id.text_value);
     mTextSliderValue.setText(String.valueOf(mSeekbarProgress));
-
-    TextView units = view.findViewById(R.id.text_units);
-    units.setText(item.getUnits());
+    mTextInputLayout.setSuffixText(item.getUnits());
 
     SeekBar seekbar = view.findViewById(R.id.seekbar);
     seekbar.setMax(item.getMax());
     seekbar.setProgress(mSeekbarProgress);
     seekbar.setKeyProgressIncrement(5);
-    seekbar.setOnSeekBarChangeListener(this);
+
+    mTextSliderValue.addTextChangedListener(new TextWatcher()
+    {
+      @Override
+      public void afterTextChanged(Editable s)
+      {
+        Integer textValue = null;
+        try
+        {
+          textValue = Integer.valueOf(s.toString());
+        }
+        catch (NumberFormatException ignored)
+        {
+        }
+        // workaround to maintain SDK 24 support
+        // we just use a 0 instead of seekbar.getMin()
+        if (textValue == null || textValue < 0 || textValue > seekbar.getMax()) {
+          mTextInputLayout.setError("Inappropriate value");
+        } else {
+          mTextInputLayout.setError(null);
+          seekbar.setProgress(textValue);
+        }
+      }
+
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after)
+      {
+      }
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count)
+      {
+      }
+    });
+
+    seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+    {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+      {
+        mSeekbarProgress = (progress / 5) * 5;
+        if (!mTextSliderValue.getText().toString().equals(String.valueOf(progress)))
+        {
+          mTextSliderValue.setText(String.valueOf((progress / 5) * 5));
+          mTextSliderValue.setSelection(mTextSliderValue.length());
+        }
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar)
+      {
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar)
+      {
+      }
+    });
   }
 
   public void onSubmenuClick(SubmenuSetting item)
@@ -224,14 +287,7 @@ public final class SettingsAdapter extends RecyclerView.Adapter<SettingViewHolde
   {
     String unspanned = String.format(mActivity.getString(resId), arg);
     Spanned spanned;
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
-    {
-      spanned = Html.fromHtml(unspanned, Html.FROM_HTML_MODE_LEGACY);
-    }
-    else
-    {
-      spanned = Html.fromHtml(unspanned);
-    }
+    spanned = Html.fromHtml(unspanned, Html.FROM_HTML_MODE_LEGACY);
     return spanned;
   }
 
