@@ -8,7 +8,7 @@
         android:id="@+id/toolbar_main"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
         app:popupTheme="@style/Theme.MaterialComponents.DayNight"
-        android:background="@color/dolphin_blue"
+        android:background="@color/dolphin"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true" />

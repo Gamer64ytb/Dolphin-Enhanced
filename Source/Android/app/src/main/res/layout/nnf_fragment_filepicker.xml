@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/dolphin_blue"
+        android:background="@color/dolphin"
         android:minHeight="?attr/actionBarSize"
         android:theme="?nnf_toolbarTheme">
 
@@ -57,7 +57,7 @@
             <Button
                 android:id="@+id/nnf_button_cancel"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:backgroundTint="@color/dolphin_blue"
+                android:backgroundTint="@color/dolphin"
                 android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
@@ -67,7 +67,7 @@
             <Button
                 android:id="@+id/nnf_button_ok"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:backgroundTint="@color/dolphin_blue"
+                android:backgroundTint="@color/dolphin"
                 android:textColor="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_height="48dp"

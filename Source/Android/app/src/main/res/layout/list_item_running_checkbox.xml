@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:buttonTint="@color/dolphin_blue" />
+        android:buttonTint="@color/dolphin_accent" />
 
     <TextView
         android:text="Setting"

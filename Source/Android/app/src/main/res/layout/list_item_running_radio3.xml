@@ -24,19 +24,22 @@
             android:id="@+id/radio0"
             android:text="Radio0"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/dolphin_accent"/>
 
         <RadioButton
             android:id="@+id/radio1"
             android:text="Radio1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/dolphin_accent"/>
 
         <RadioButton
             android:id="@+id/radio2"
             android:text="Radio2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/dolphin_accent"/>
 
     </RadioGroup>
 

@@ -29,10 +29,10 @@
     <style name="DolphinBase" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Main theme colors -->
         <!-- Branding color for the app bar -->
-        <item name="colorSurface">@color/dolphin_blue</item>
-        <item name="colorPrimary">@color/dolphin_blue</item>
-        <item name="colorPrimaryDark">@color/dolphin_blue</item>
-        <item name="colorAccent">@color/dolphin_blue_dark</item>
+        <item name="colorSurface">@color/dolphin</item>
+        <item name="colorPrimary">@color/dolphin</item>
+        <item name="colorPrimaryDark">@color/dolphin</item>
+        <item name="colorAccent">@color/dolphin_accent</item>
 
         <!-- Enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
@@ -42,10 +42,10 @@
 
     <!-- Same as above, but use default action bar, and mandate margins. -->
     <style name="DolphinSettingsBase" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorSurface">@color/dolphin_blue</item>
-        <item name="colorPrimary">@color/dolphin_blue</item>
-        <item name="colorPrimaryDark">@color/dolphin_blue</item>
-        <item name="colorAccent">@color/dolphin_blue_dark</item>
+        <item name="colorSurface">@color/dolphin</item>
+        <item name="colorPrimary">@color/dolphin_accent</item>
+        <item name="colorPrimaryDark">@color/dolphin</item>
+        <item name="colorAccent">@color/dolphin_accent</item>
     </style>
 
     <!-- Themes for Dialogs -->
@@ -53,9 +53,9 @@
     <!-- Inherit from the Base Dolphin Dialog Theme -->
 
     <style name="DolphinEmulationBase" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/dolphin_blue</item>
-        <item name="colorPrimaryDark">@color/dolphin_blue</item>
-        <item name="colorAccent">@color/dolphin_blue_dark</item>
+        <item name="colorPrimary">@color/dolphin_accent</item>
+        <item name="colorPrimaryDark">@color/dolphin</item>
+        <item name="colorAccent">@color/dolphin_accent</item>
         <item name="android:windowTranslucentNavigation">true</item>
 
         <item name="android:windowBackground">@android:color/black</item>
@@ -86,9 +86,9 @@
 
     <!-- Inherit from a base file picker theme that handles day/night -->
     <style name="FilePickerTheme" parent="FilePickerBaseTheme">
-        <item name="colorPrimary">@color/dolphin_blue</item>
-        <item name="colorPrimaryDark">@color/dolphin_blue</item>
-        <item name="colorAccent">@color/dolphin_blue_dark</item>
+        <item name="colorPrimary">@color/dolphin</item>
+        <item name="colorPrimaryDark">@color/dolphin</item>
+        <item name="colorAccent">@color/dolphin</item>
 
         <!--&lt;!&ndash; Setting a divider is entirely optional &ndash;&gt;-->
         <item name="nnf_list_item_divider">?android:attr/listDivider</item>
@@ -102,10 +102,10 @@
     </style>
 
     <style name="FilePickerAlertDialogTheme" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
-        <item name="colorSurface">@color/dolphin_blue</item>
-        <item name="colorPrimary">@color/dolphin_blue</item>
-        <item name="colorPrimaryDark">@color/dolphin_blue</item>
-        <item name="colorAccent">@color/dolphin_blue_dark</item>
+        <item name="colorSurface">@color/dolphin</item>
+        <item name="colorPrimary">@color/dolphin</item>
+        <item name="colorPrimaryDark">@color/dolphin</item>
+        <item name="colorAccent">@color/dolphin</item>
     </style>
 
 </resources>

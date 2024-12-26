@@ -3,10 +3,8 @@
 
     <color name="dolphin_background">#FFFFFF</color>
 
-    <color name="dolphin_blue">#1960a4</color>
-    <!-- dolphin_blue_dark old color: #0f335b -->
-    <color name="dolphin_blue_dark">#1960a4</color>
-    <color name="dolphin_purple">#651fff</color>
+    <color name="dolphin">#000000</color>
+    <color name="dolphin_accent">#000000</color>
 
     <color name="circle_grey">#bdbdbd</color>
     <color name="light_grey">#e6e6e6</color>
