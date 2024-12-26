@@ -124,12 +124,14 @@ public final class GameAdapter extends RecyclerView.Adapter<GameViewHolder> impl
           break;
       }
     }
-    String discInfo = discNumber > 1 ? "DISC-" + discNumber : "";
+    String discInfo = discNumber > 1 ? "Disc-" + discNumber : "";
     if (platform < 0 || platform >= platforms.length)
       platform = 2;
     if (country < 0 || country >= countryNames.length)
       country = countryNames.length - 1;
     holder.textPlatform.setText(context.getString(platforms[platform], countryNames[country], discInfo));
+    holder.textCountry.setText(countryNames[country]);
+    holder.textGameDisc.setText(discInfo);
     holder.gameFile = gameFile;
   }
 

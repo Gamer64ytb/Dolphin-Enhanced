@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:transitionName="card_game"
@@ -30,18 +31,57 @@
             android:visibility="gone"/>
 
         <TextView
+            android:id="@+id/text_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/text_platform"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/text_company"
+            android:id="@+id/text_game_caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"/>
 
     </RelativeLayout>
 
-</com.google.android.material.card.MaterialCardView>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="3dp">
 
+        <TextView
+            android:id="@+id/text_game_disc"
+            style="@android:style/TextAppearance.Material.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/dolphin_accent"
+            android:textStyle="bold"
+            android:paddingVertical="2dp"
+            android:paddingHorizontal="3dp"
+            android:background="@color/dolphin_background"
+            android:visibility="visible"
+            tools:visibility="gone"
+            tools:text="Disc 1" />
+
+        <TextView
+            android:id="@+id/text_game_country"
+            style="@android:style/TextAppearance.Material.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingVertical="2dp"
+            android:paddingHorizontal="3dp"
+            android:textColor="@color/dolphin_accent"
+            android:textStyle="bold"
+            android:background="@color/dolphin_background"
+            tools:text="NTSC" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

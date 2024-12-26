@@ -65,7 +65,23 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/text_game_country"
+            style="@android:style/TextAppearance.Material.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:visibility="gone" />
+
+        <TextView
+            android:id="@+id/text_game_disc"
+            style="@android:style/TextAppearance.Material.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="1px"
+            android:visibility="gone"
+            tools:visibility="gone" />
+
     </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>
-
