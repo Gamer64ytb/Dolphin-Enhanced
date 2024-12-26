@@ -1,30 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="NNF_BaseTheme" parent="Theme.MaterialComponents.DialogWhenLarge">
-        <!-- You can override this in your sub theme -->
-        <item name="nnf_toolbarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
-        <item name="nnf_separator_color">@color/nnf_dark_separator_color</item>
-        <item name="nnf_save_icon_color">?attr/colorAccent</item>
-        <item name="nnf_dir_icon_color">?attr/colorAccent</item>
-
-        <!-- These are important. Handled by toolbar. -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="NNF_BaseTheme.Light" parent="Theme.MaterialComponents.Light.DialogWhenLarge">
-        <!-- You can override this in your sub theme -->
-        <item name="nnf_toolbarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
-        <item name="nnf_separator_color">@color/nnf_light_separator_color</item>
-        <item name="nnf_save_icon_color">?attr/colorAccent</item>
-        <item name="nnf_dir_icon_color">?attr/colorAccent</item>
-
-        <!-- These are important. Handled by toolbar. -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <!-- Inherit from the material theme -->
     <style name="DolphinBase" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Main theme colors -->
@@ -82,30 +58,6 @@
 
     <style name="OverlayInGameMenuOption" parent="InGameMenuOption">
         <item name="android:textColor">@color/button_text_color</item>
-    </style>
-
-    <!-- Inherit from a base file picker theme that handles day/night -->
-    <style name="FilePickerTheme" parent="FilePickerBaseTheme">
-        <item name="colorPrimary">@color/dolphin</item>
-        <item name="colorPrimaryDark">@color/dolphin</item>
-        <item name="colorAccent">@color/dolphin</item>
-
-        <!--&lt;!&ndash; Setting a divider is entirely optional &ndash;&gt;-->
-        <item name="nnf_list_item_divider">?android:attr/listDivider</item>
-
-        <!-- Need to set this also to style create folder dialog -->
-        <item name="alertDialogTheme">@style/FilePickerAlertDialogTheme</item>
-
-        <!-- If you want to set a specific toolbar theme, do it here -->
-
-        <item name="nnf_toolbarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
-    </style>
-
-    <style name="FilePickerAlertDialogTheme" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
-        <item name="colorSurface">@color/dolphin</item>
-        <item name="colorPrimary">@color/dolphin</item>
-        <item name="colorPrimaryDark">@color/dolphin</item>
-        <item name="colorAccent">@color/dolphin</item>
     </style>
 
 </resources>

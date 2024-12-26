@@ -419,18 +419,6 @@ ISO：一种简单且可靠的格式，许多程序都支持。它比任何其�
     <string name="sysconf_speaker_volume">Speaker Volume</string>
     <string name="sysconf_wiimote_motor">Wiimote Motor</string>
 
-    <string name="nnf_new_folder">New folder</string>
-    <string name="nnf_create_folder_error">Failed to create folder</string>
-    <string name="nnf_name">Name</string>
-    <string name="nnf_select_something_first">Please select something first</string>
-    <string name="nnf_need_valid_filename">Please enter or select a valid filename</string>
-    <string name="nnf_permission_external_write_denied">Permisson to access filesystem denied</string>
-    <string name="nnf_filename">Filename</string>
-    <string name="nnf_list_ok">@android:string/ok</string>
-    <string name="nnf_list_cancel">@android:string/cancel</string>
-    <string name="nnf_new_folder_ok">@android:string/ok</string>
-    <string name="nnf_new_folder_cancel">@android:string/cancel</string>
-
     <!-- File Pickers -->
     <string name="no_file_extension">所选文件似乎没有文件扩展名。\n\n仍要继续吗？</string>
     <string name="wrong_file_extension_single">所选文件的文件扩展名为 \"%1$s\"，但预期为 \"%2$s\"。\n\n仍要继续吗？</string>

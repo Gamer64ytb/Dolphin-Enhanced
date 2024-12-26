@@ -9,9 +9,4 @@
     <color name="circle_grey">#bdbdbd</color>
     <color name="light_grey">#e6e6e6</color>
 
-    <!-- 12% black in LIGHT THEME -->
-    <color name="nnf_light_separator_color">#1e000000</color>
-    <!-- 12% white in BLACK THEME -->
-    <color name="nnf_dark_separator_color">#1effffff</color>
-
 </resources>
