@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.R;
-import org.dolphinemu.dolphinemu.features.settings.model.BooleanSetting;
 import org.dolphinemu.dolphinemu.features.settings.model.IntSetting;
 import org.dolphinemu.dolphinemu.features.settings.model.Setting;
 import org.dolphinemu.dolphinemu.features.settings.model.SettingSection;
@@ -246,10 +245,17 @@ public final class SettingsFragmentPresenter
   private void addInterfaceSettings(ArrayList<SettingsItem> sl)
   {
     SettingSection uiSection = mSettings.getSection(Settings.SECTION_INI_INTERFACE);
+    Setting design = uiSection.getSetting(SettingsFile.KEY_DESIGN);
     Setting usePanicHandlers = uiSection.getSetting(SettingsFile.KEY_USE_PANIC_HANDLERS);
     Setting onScreenDisplayMessages = uiSection.getSetting(SettingsFile.KEY_OSD_MESSAGES);
     Setting useBuiltinTitleDatabase = uiSection.getSetting(SettingsFile.KEY_BUILTIN_TITLE_DATABASE);
     Setting systemBack = uiSection.getSetting(SettingsFile.KEY_SYSTEM_BACK);
+
+    if (mGameID.isEmpty())
+    {
+      sl.add(new SingleChoiceSetting(SettingsFile.KEY_DESIGN, Settings.SECTION_INI_INTERFACE,
+        R.string.design, 0, R.array.designNames, R.array.designValues, 2, design));
+    }
 
     sl.add(new CheckBoxSetting(SettingsFile.KEY_USE_PANIC_HANDLERS, Settings.SECTION_INI_INTERFACE,
       R.string.panic_handlers, R.string.panic_handlers_description, true, usePanicHandlers));

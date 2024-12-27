@@ -178,6 +178,7 @@
 
     <!-- Interface Preference Fragment -->
     <string name="interface_submenu">界面设置</string>
+    <string name="design">更改主题（亮色，暗色）</string>
     <string name="panic_handlers">错误弹框提示</string>
     <string name="panic_handlers_description">当发生严重错误时，显示消息框。禁用可以忽略恼人的错误弹框。</string>
     <string name="osd_messages">显示屏幕日志</string>

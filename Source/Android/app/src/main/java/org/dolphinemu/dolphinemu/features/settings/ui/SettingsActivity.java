@@ -15,6 +15,7 @@ import org.dolphinemu.dolphinemu.features.settings.model.Setting;
 import org.dolphinemu.dolphinemu.features.settings.model.Settings;
 
 import org.dolphinemu.dolphinemu.R;
+import org.dolphinemu.dolphinemu.utils.ThemeUtil;
 
 public final class SettingsActivity extends AppCompatActivity implements SettingsActivityView
 {
@@ -135,6 +136,7 @@ public final class SettingsActivity extends AppCompatActivity implements Setting
       {
         showToastMessage(getString(R.string.settings_saved_notice));
         mSettings.saveSettings();
+        ThemeUtil.applyTheme(mSettings);
       }
       else
       {

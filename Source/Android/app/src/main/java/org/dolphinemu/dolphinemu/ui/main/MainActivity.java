@@ -35,6 +35,7 @@ import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
 import org.dolphinemu.dolphinemu.utils.FileBrowserHelper;
 import org.dolphinemu.dolphinemu.utils.PermissionsHandler;
 import org.dolphinemu.dolphinemu.utils.StartupHandler;
+import org.dolphinemu.dolphinemu.utils.ThemeUtil;
 
 import java.io.File;
 import java.util.Arrays;
@@ -60,9 +61,11 @@ public final class MainActivity extends AppCompatActivity
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
-    super.onCreate(savedInstanceState);
+    ThemeUtil.applyTheme();
 
+    super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
     findViews();
     setSupportActionBar(mToolbar);
     setTitle(new String(TITLE_BYTES));
