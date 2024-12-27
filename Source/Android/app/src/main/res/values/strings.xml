@@ -379,9 +379,6 @@ It can efficiently compress both junk data and encrypted Wii data.
 
     <string name="external_storage_not_mounted">The external storage needs to be available in order to use Dolphin</string>
 
-    <!-- Extra Leanback Homescreen Channels-->
-    <string name="homescreen_favorites">Favorites</string>
-
     <string name="state_saves">State Saves</string>
     <string name="save">Save</string>
     <string name="load">Load</string>

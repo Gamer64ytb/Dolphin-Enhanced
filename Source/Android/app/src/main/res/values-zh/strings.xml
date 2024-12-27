@@ -374,9 +374,6 @@ ISO：一种简单且可靠的格式，许多程序都支持。它比任何其�
 
     <string name="external_storage_not_mounted">The external storage needs to be available in order to use Dolphin</string>
 
-    <!-- Extra Leanback Homescreen Channels-->
-    <string name="homescreen_favorites">Favorites</string>
-
     <string name="state_saves">模拟器存档</string>
     <string name="save">保存</string>
     <string name="load">载入</string>
