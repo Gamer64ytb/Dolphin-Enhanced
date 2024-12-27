@@ -872,9 +872,9 @@ void UpdateTitle()
 
   std::string SFPS;
 
-  if(g_ActiveConfig.bShowFPS)
+  if (g_ActiveConfig.bShowFPS)
   {
-    SFPS = StringFromFormat("FPS: %.0f - VPS: %.0f - %.0f%%",
+    SFPS = StringFromFormat("FPS: %.0f - VPS: %.0f - SPD: %.0f%%",
                             s_last_perf_stats.FPS, s_last_perf_stats.VPS, s_last_perf_stats.Speed);
   }
 
