@@ -148,4 +148,6 @@ const ConfigInfo<bool> GFX_HACK_VI_SKIP{{System::GFX, "Hacks", "VISkip"}, false}
 
 const ConfigInfo<bool> GFX_PERF_QUERIES_ENABLE{{System::GFX, "GameSpecific", "PerfQueriesEnable"},
                                                false};
+
+const ConfigInfo<std::string> GFX_DRIVER_LIB_NAME{{System::GFX, "Settings", "DriverLibName"}, ""};
 }  // namespace Config
