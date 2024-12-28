@@ -331,9 +331,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
     }
 
     fun onSensorChanged(rotation: FloatArray?) {
-        if (mOverlaySensor != null && rotation != null) {
-            mOverlaySensor!!.onSensorChanged(rotation)
-        }
+        mOverlaySensor!!.onSensorChanged(rotation!!)
     }
 
     fun onAccuracyChanged(accuracy: Int) {
