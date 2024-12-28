@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         mGameList!!.layoutManager = layoutManager
     }
 
-    fun toggleGameList() {
+    private fun toggleGameList() {
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         val flag = !pref.getBoolean(PREF_GAMELIST, true)
         pref.edit().putBoolean(PREF_GAMELIST, flag).apply()
@@ -177,11 +177,11 @@ class MainActivity : AppCompatActivity() {
         return false
     }
 
-    fun launchSettingsActivity(menuTag: MenuTag?) {
+    private fun launchSettingsActivity(menuTag: MenuTag?) {
         SettingsActivity.launch(this, menuTag, "")
     }
 
-    fun launchFileListActivity() {
+    private fun launchFileListActivity() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
         startActivityForResult(intent, REQUEST_ADD_DIRECTORY)
     }
@@ -218,14 +218,14 @@ class MainActivity : AppCompatActivity() {
         ).show()
     }
 
-    fun launchOpenFileActivity() {
+    private fun launchOpenFileActivity() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.setType("*/*")
         startActivityForResult(intent, REQUEST_OPEN_FILE)
     }
 
-    fun onDirectorySelected(result: Intent) {
+    private fun onDirectorySelected(result: Intent) {
         var uri = result.data
 
         val childNames = ContentHandler.getChildNames(
