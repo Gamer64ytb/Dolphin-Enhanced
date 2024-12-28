@@ -104,19 +104,19 @@ class GameFile
             return savedState
         }
 
-    private var mCoverType = COVER_UNKNOWN
+    private var coverType = COVER_UNKNOWN
 
     fun loadGameBanner(imageView: ImageView) {
-        if (mCoverType == COVER_UNKNOWN) {
+        if (coverType == COVER_UNKNOWN) {
             if (loadFromCache(imageView)) {
-                mCoverType = COVER_CACHE
+                coverType = COVER_CACHE
                 return
             }
 
-            mCoverType = COVER_NONE
+            coverType = COVER_NONE
             loadFromNetwork(imageView, object : Callback {
                 override fun onSuccess() {
-                    mCoverType = COVER_CACHE
+                    coverType = COVER_CACHE
                     CoverHelper.saveCover(
                         (imageView.drawable as BitmapDrawable).bitmap,
                         getCoverPath(imageView.context)
@@ -125,7 +125,7 @@ class GameFile
 
                 override fun onError(e: Exception) {
                     if (loadFromISO(imageView)) {
-                        mCoverType = COVER_CACHE
+                        coverType = COVER_CACHE
                     } else if (NativeLibrary.isNetworkConnected(imageView.context)) {
                         // save placeholder to file
                         CoverHelper.saveCover(
@@ -135,7 +135,7 @@ class GameFile
                     }
                 }
             })
-        } else if (mCoverType == COVER_CACHE) {
+        } else if (coverType == COVER_CACHE) {
             loadFromCache(imageView)
         } else {
             imageView.setImageResource(R.drawable.no_banner)

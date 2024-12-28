@@ -43,7 +43,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback,
         // So this fragment doesn't restart on configuration changes; i.e. rotation.
         retainInstance = true
 
-        val gamePaths = requireArguments().getStringArray(KEY_GAMEPATHS)
+        val gamePaths = requireArguments().getStringArray(KEY_GAME_PATHS)
         emulationState = EmulationState(gamePaths)
     }
 
@@ -198,10 +198,10 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback,
         }
 
         private var state: State
-        private var mSurface: Surface? = null
-        private var mRunWhenSurfaceIsValid = false
+        private var surface: Surface? = null
+        private var runWhenSurfaceIsValid = false
 
-        private var mStatePath: String? = null
+        private var statePath: String? = null
 
         init {
             // Starting state is stopped.
@@ -230,35 +230,35 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback,
 
         @Synchronized
         fun run(statePath: String?) {
-            mStatePath = statePath
+            this.statePath = statePath
 
             if (NativeLibrary.IsRunning()) {
                 state = State.PAUSED
             }
 
             // If the surface is set, run now. Otherwise, wait for it to get set.
-            if (mSurface != null) {
+            if (surface != null) {
                 runWithValidSurface()
             } else {
-                mRunWhenSurfaceIsValid = true
+                runWhenSurfaceIsValid = true
             }
         }
 
         // Surface callbacks
         @Synchronized
         fun newSurface(surface: Surface?) {
-            mSurface = surface
-            if (mRunWhenSurfaceIsValid) {
+            this.surface = surface
+            if (runWhenSurfaceIsValid) {
                 runWithValidSurface()
             }
         }
 
         @Synchronized
         fun clearSurface() {
-            if (mSurface == null) {
+            if (surface == null) {
                 Log.warning("[EmulationFragment] clearSurface called, but surface already null.")
             } else {
-                mSurface = null
+                surface = null
               when (state) {
                   State.RUNNING -> {
                     NativeLibrary.SurfaceDestroyed()
@@ -275,16 +275,16 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback,
         }
 
         fun runWithValidSurface() {
-            mRunWhenSurfaceIsValid = false
+            runWhenSurfaceIsValid = false
           when (state) {
               State.STOPPED -> {
                 Thread({
-                  NativeLibrary.SurfaceChanged(mSurface)
-                  NativeLibrary.Run(mGamePaths, mStatePath)
+                  NativeLibrary.SurfaceChanged(surface)
+                  NativeLibrary.Run(mGamePaths, statePath)
                 }, "NativeEmulation").start()
               }
               State.PAUSED -> {
-                NativeLibrary.SurfaceChanged(mSurface)
+                NativeLibrary.SurfaceChanged(surface)
                 NativeLibrary.UnPauseEmulation()
               }
               else -> {
@@ -296,11 +296,11 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback,
     }
 
     companion object {
-        private const val KEY_GAMEPATHS = "gamepaths"
+        private const val KEY_GAME_PATHS = "game_paths"
 
         fun newInstance(gamePaths: Array<String>?): EmulationFragment {
             val args = Bundle()
-            args.putStringArray(KEY_GAMEPATHS, gamePaths)
+            args.putStringArray(KEY_GAME_PATHS, gamePaths)
 
             val fragment = EmulationFragment()
             fragment.arguments = args

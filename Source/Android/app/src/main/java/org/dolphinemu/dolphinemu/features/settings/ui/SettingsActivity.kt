@@ -93,7 +93,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
             if (TextUtils.isEmpty(gameId)) {
                 showToastMessage(getString(R.string.settings_saved_notice))
                 settings!!.saveSettings()
-                ThemeUtil.applyTheme(settings)
+                ThemeUtil.applyTheme(settings!!)
             } else {
                 // custom game settings
                 showToastMessage(getString(R.string.settings_saved_notice))
