@@ -10,30 +10,30 @@ import org.dolphinemu.dolphinemu.features.settings.ui.SettingsAdapter
 
 class CheckBoxSettingViewHolder(itemView: View, adapter: SettingsAdapter) :
     SettingViewHolder(itemView, adapter) {
-    private var mItem: CheckBoxSetting? = null
+    private var item: CheckBoxSetting? = null
 
-    private var mTextSettingName: TextView? = null
-    private var mTextSettingDescription: TextView? = null
+    private var textSettingName: TextView? = null
+    private var textSettingDescription: TextView? = null
 
-    private var mCheckbox: CheckBox? = null
+    private var checkbox: CheckBox? = null
 
     override fun findViews(root: View) {
-        mTextSettingName = root.findViewById(R.id.text_setting_name)
-        mTextSettingDescription = root.findViewById(R.id.text_setting_description)
-        mCheckbox = root.findViewById(R.id.checkbox)
+        textSettingName = root.findViewById(R.id.text_setting_name)
+        textSettingDescription = root.findViewById(R.id.text_setting_description)
+        checkbox = root.findViewById(R.id.checkbox)
     }
 
     override fun bind(item: SettingsItem) {
-        mItem = item as CheckBoxSetting
-        mTextSettingName!!.setText(item.getNameId())
+        this.item = item as CheckBoxSetting
+        textSettingName!!.setText(item.getNameId())
         if (item.getDescriptionId() > 0) {
-            mTextSettingDescription!!.setText(item.getDescriptionId())
+            textSettingDescription!!.setText(item.getDescriptionId())
         }
-        mCheckbox!!.isChecked = mItem!!.isChecked
+        checkbox!!.isChecked = this.item!!.isChecked
     }
 
     override fun onClick(clicked: View) {
-        mCheckbox!!.toggle()
-        adapter.onBooleanClick(mItem!!, adapterPosition, mCheckbox!!.isChecked)
+        checkbox!!.toggle()
+        adapter.onBooleanClick(item!!, adapterPosition, checkbox!!.isChecked)
     }
 }

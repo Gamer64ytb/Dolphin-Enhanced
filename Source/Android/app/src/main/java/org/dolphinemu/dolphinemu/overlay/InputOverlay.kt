@@ -250,7 +250,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         return true
     }
 
-    fun onTouchWhileEditing(event: MotionEvent): Boolean {
+    private fun onTouchWhileEditing(event: MotionEvent): Boolean {
         val pointerIndex = event.actionIndex
         val pointerX = event.getX(pointerIndex).toInt()
         val pointerY = event.getY(pointerIndex).toInt()

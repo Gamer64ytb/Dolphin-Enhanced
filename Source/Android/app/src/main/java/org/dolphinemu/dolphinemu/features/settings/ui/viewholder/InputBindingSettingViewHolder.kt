@@ -9,23 +9,23 @@ import org.dolphinemu.dolphinemu.features.settings.ui.SettingsAdapter
 
 class InputBindingSettingViewHolder(itemView: View, adapter: SettingsAdapter) :
     SettingViewHolder(itemView, adapter) {
-    private var mItem: InputBindingSetting? = null
+    private var item: InputBindingSetting? = null
 
-    private var mTextSettingName: TextView? = null
-    private var mTextSettingDescription: TextView? = null
+    private var textSettingName: TextView? = null
+    private var textSettingDescription: TextView? = null
 
     override fun findViews(root: View) {
-        mTextSettingName = root.findViewById(R.id.text_setting_name)
-        mTextSettingDescription = root.findViewById(R.id.text_setting_description)
+        textSettingName = root.findViewById(R.id.text_setting_name)
+        textSettingDescription = root.findViewById(R.id.text_setting_description)
     }
 
     override fun bind(item: SettingsItem) {
-        mItem = item as InputBindingSetting
-        mTextSettingName!!.setText(mItem!!.nameId)
-        mTextSettingDescription!!.text = mItem!!.settingText
+        this.item = item as InputBindingSetting
+        textSettingName!!.setText(this.item!!.nameId)
+        textSettingDescription!!.text = this.item!!.settingText
     }
 
     override fun onClick(clicked: View) {
-        adapter.onInputBindingClick(mItem!!, adapterPosition)
+        adapter.onInputBindingClick(item!!, adapterPosition)
     }
 }

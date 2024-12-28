@@ -9,23 +9,23 @@ import org.dolphinemu.dolphinemu.features.settings.ui.SettingsAdapter
 
 class RumbleBindingViewHolder(itemView: View, adapter: SettingsAdapter) :
     SettingViewHolder(itemView, adapter) {
-    private var mItem: RumbleBindingSetting? = null
+    private var item: RumbleBindingSetting? = null
 
-    private var mTextSettingName: TextView? = null
-    private var mTextSettingDescription: TextView? = null
+    private var textSettingName: TextView? = null
+    private var textSettingDescription: TextView? = null
 
     override fun findViews(root: View) {
-        mTextSettingName = root.findViewById(R.id.text_setting_name)
-        mTextSettingDescription = root.findViewById(R.id.text_setting_description)
+        textSettingName = root.findViewById(R.id.text_setting_name)
+        textSettingDescription = root.findViewById(R.id.text_setting_description)
     }
 
     override fun bind(item: SettingsItem) {
-        mItem = item as RumbleBindingSetting
-        mTextSettingName!!.setText(item.getNameId())
-        mTextSettingDescription!!.text = mItem!!.settingText
+        this.item = item as RumbleBindingSetting
+        textSettingName!!.setText(item.getNameId())
+        textSettingDescription!!.text = this.item!!.settingText
     }
 
     override fun onClick(clicked: View) {
-        adapter.onInputBindingClick(mItem!!, adapterPosition)
+        adapter.onInputBindingClick(item!!, adapterPosition)
     }
 }

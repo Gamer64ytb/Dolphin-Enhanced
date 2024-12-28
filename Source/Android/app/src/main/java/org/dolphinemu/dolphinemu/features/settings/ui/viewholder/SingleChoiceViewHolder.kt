@@ -10,47 +10,47 @@ import org.dolphinemu.dolphinemu.features.settings.ui.SettingsAdapter
 
 class SingleChoiceViewHolder(itemView: View, adapter: SettingsAdapter) :
     SettingViewHolder(itemView, adapter) {
-    private var mItem: SettingsItem? = null
+    private var item: SettingsItem? = null
 
-    private var mTextSettingName: TextView? = null
-    private var mTextSettingDescription: TextView? = null
+    private var textSettingName: TextView? = null
+    private var textSettingDescription: TextView? = null
 
     override fun findViews(root: View) {
-        mTextSettingName = root.findViewById(R.id.text_setting_name)
-        mTextSettingDescription = root.findViewById(R.id.text_setting_description)
+        textSettingName = root.findViewById(R.id.text_setting_name)
+        textSettingDescription = root.findViewById(R.id.text_setting_description)
     }
 
     override fun bind(item: SettingsItem) {
-        mItem = item
-        mTextSettingName!!.setText(item.nameId)
+        this.item = item
+        textSettingName!!.setText(item.nameId)
 
         if (item.descriptionId > 0) {
-            mTextSettingDescription!!.setText(item.descriptionId)
+            textSettingDescription!!.setText(item.descriptionId)
         } else if (item is SingleChoiceSetting) {
             val setting = item
             val selected = setting.selectedValue
-            val resMgr = mTextSettingDescription!!.context.resources
+            val resMgr = textSettingDescription!!.context.resources
             val choices = resMgr.getStringArray(setting.choicesId)
             val values = resMgr.getIntArray(setting.valuesId)
             for (i in values.indices) {
                 if (values[i] == selected) {
-                    mTextSettingDescription!!.text = choices[i]
+                    textSettingDescription!!.text = choices[i]
                 }
             }
         } else if (item is StringSingleChoiceSetting) {
             val setting = item
             val choices = setting.choicesId
             val valueIndex = setting.selectValueIndex
-            if (valueIndex != -1) mTextSettingDescription!!.text = choices[valueIndex]
+            if (valueIndex != -1) textSettingDescription!!.text = choices[valueIndex]
         }
     }
 
     override fun onClick(clicked: View) {
         val position = adapterPosition
-        if (mItem is SingleChoiceSetting) {
-            adapter.onSingleChoiceClick((mItem as SingleChoiceSetting?)!!, position)
-        } else if (mItem is StringSingleChoiceSetting) {
-            adapter.onStringSingleChoiceClick((mItem as StringSingleChoiceSetting?)!!, position)
+        if (item is SingleChoiceSetting) {
+            adapter.onSingleChoiceClick((item as SingleChoiceSetting?)!!, position)
+        } else if (item is StringSingleChoiceSetting) {
+            adapter.onStringSingleChoiceClick((item as StringSingleChoiceSetting?)!!, position)
         }
     }
 }

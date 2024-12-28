@@ -11,30 +11,30 @@ import org.dolphinemu.dolphinemu.features.settings.ui.SettingsAdapter
 
 class SeekbarViewHolder(itemView: View, adapter: SettingsAdapter) :
     SettingViewHolder(itemView, adapter) {
-    private var mItem: SliderSetting? = null
+    private var item: SliderSetting? = null
 
-    private var mName: TextView? = null
-    private var mValue: TextView? = null
-    private var mSeekBar: SeekBar? = null
+    private var name: TextView? = null
+    private var value: TextView? = null
+    private var seekBar: SeekBar? = null
 
     override fun findViews(root: View) {
-        mName = root.findViewById(R.id.text_setting_name)
-        mValue = root.findViewById(R.id.text_setting_value)
-        mSeekBar = root.findViewById(R.id.seekbar)
+        name = root.findViewById(R.id.text_setting_name)
+        value = root.findViewById(R.id.text_setting_value)
+        seekBar = root.findViewById(R.id.seekbar)
     }
 
     override fun bind(item: SettingsItem) {
-        mItem = item as SliderSetting
-        mName!!.setText(item.getNameId())
-        mSeekBar!!.max = mItem!!.max
-        mSeekBar!!.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+        this.item = item as SliderSetting
+        name!!.setText(item.getNameId())
+        seekBar!!.max = this.item!!.max
+        seekBar!!.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, b: Boolean) {
                 var progress = progress
-                if (mItem!!.max > 99) progress = (progress / 5) * 5
-                mValue!!.text = progress.toString() + mItem!!.units
-                if (progress != mItem!!.selectedValue) {
-                    mItem!!.setSelectedValue(progress)
-                    adapter.onSeekbarClick(mItem!!, adapterPosition, progress)
+                if (this@SeekbarViewHolder.item!!.max > 99) progress = (progress / 5) * 5
+                value!!.text = progress.toString() + this@SeekbarViewHolder.item!!.units
+                if (progress != this@SeekbarViewHolder.item!!.selectedValue) {
+                    this@SeekbarViewHolder.item!!.setSelectedValue(progress)
+                    adapter.onSeekbarClick(this@SeekbarViewHolder.item!!, adapterPosition, progress)
                 }
             }
 
@@ -44,7 +44,7 @@ class SeekbarViewHolder(itemView: View, adapter: SettingsAdapter) :
             override fun onStopTrackingTouch(seekBar: SeekBar) {
             }
         })
-        mSeekBar!!.progress = mItem!!.selectedValue
+        seekBar!!.progress = this.item!!.selectedValue
     }
 
     override fun onClick(clicked: View) {
