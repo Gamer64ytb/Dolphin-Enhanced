@@ -38,21 +38,21 @@ import java.lang.ref.WeakReference
 import kotlin.math.abs
 
 open class EmulationActivity : AppCompatActivity() {
-    private var mSensorManager: SensorManager? = null
-    private var mEmulationFragment: EmulationFragment? = null
+    private var sensorManager: SensorManager? = null
+    private var emulationFragment: EmulationFragment? = null
 
-    private var mPreferences: SharedPreferences? = null
-    private var mControllerMappingHelper: ControllerMappingHelper? = null
+    private var preferences: SharedPreferences? = null
+    private var controllerMappingHelper: ControllerMappingHelper? = null
 
-    private var mMenuVisible = false
-    private var mBindingDevice: String? = null
-    private var mBindingButton = 0
+    private var menuVisible = false
+    private var bindingDevice: String? = null
+    private var bindingButton = 0
 
-    private var mSelectedTitle: String? = ""
+    private var selectedTitle: String? = ""
     var selectedGameId: String? = ""
         private set
-    private var mPlatform = 0
-    private var mPaths: Array<String>? = null
+    private var platform = 0
+    private var paths: Array<String>? = null
     var savedState: String? = null
         private set
 
@@ -62,16 +62,16 @@ open class EmulationActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             val gameToEmulate = intent
-            mPaths = gameToEmulate.getStringArrayExtra(EXTRA_SELECTED_GAMES)
+            paths = gameToEmulate.getStringArrayExtra(EXTRA_SELECTED_GAMES)
             savedState = gameToEmulate.getStringExtra(EXTRA_SAVED_STATE)
-            if (mPaths != null && mPaths!!.isNotEmpty()) {
-                val game = GameFileCacheService.getGameFileByPath(mPaths!![0])
+            if (paths != null && paths!!.isNotEmpty()) {
+                val game = GameFileCacheService.getGameFileByPath(paths!![0])
                 if (game != null) {
                     selectedGameId = game.gameId
-                    mSelectedTitle = game.title
-                    mPlatform = game.platform
-                    if (mPaths!!.size == 1) {
-                        mPaths = GameFileCacheService.getAllDiscPaths(game)
+                    selectedTitle = game.title
+                    platform = game.platform
+                    if (paths!!.size == 1) {
+                        paths = GameFileCacheService.getAllDiscPaths(game)
                     }
                 }
             }
@@ -79,7 +79,7 @@ open class EmulationActivity : AppCompatActivity() {
             restoreState(savedInstanceState)
         }
 
-        mControllerMappingHelper = ControllerMappingHelper()
+        controllerMappingHelper = ControllerMappingHelper()
 
         // Set these options now so that the SurfaceView the game renders into is the right size.
         enableFullscreenImmersive()
@@ -92,20 +92,20 @@ open class EmulationActivity : AppCompatActivity() {
         windowManager.defaultDisplay.getMetrics(metrics)
         NativeLibrary.SetScaledDensity(metrics.scaledDensity)
 
-        title = mSelectedTitle
+        title = selectedTitle
         setContentView(R.layout.activity_emulation)
 
         // Find or create the EmulationFragment
-        mEmulationFragment = supportFragmentManager
+        emulationFragment = supportFragmentManager
             .findFragmentById(R.id.frame_emulation_fragment) as EmulationFragment?
-        if (mEmulationFragment == null) {
-            mEmulationFragment = EmulationFragment.newInstance(mPaths)
+        if (emulationFragment == null) {
+            emulationFragment = EmulationFragment.newInstance(paths)
             supportFragmentManager.beginTransaction()
-                .add(R.id.frame_emulation_fragment, mEmulationFragment!!)
+                .add(R.id.frame_emulation_fragment, emulationFragment!!)
                 .commit()
         }
 
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        preferences = PreferenceManager.getDefaultSharedPreferences(this)
         loadPreferences()
     }
 
@@ -126,33 +126,33 @@ open class EmulationActivity : AppCompatActivity() {
             savedState = filesDir.toString() + File.separator + "temp.sav"
             NativeLibrary.SaveStateAs(savedState, true)
         }
-        outState.putStringArray(EXTRA_SELECTED_GAMES, mPaths)
-        outState.putString(EXTRA_SELECTED_TITLE, mSelectedTitle)
+        outState.putStringArray(EXTRA_SELECTED_GAMES, paths)
+        outState.putString(EXTRA_SELECTED_TITLE, selectedTitle)
         outState.putString(EXTRA_SELECTED_GAMEID, selectedGameId)
-        outState.putInt(EXTRA_PLATFORM, mPlatform)
+        outState.putInt(EXTRA_PLATFORM, platform)
         outState.putString(EXTRA_SAVED_STATE, savedState)
         super.onSaveInstanceState(outState)
     }
 
     protected fun restoreState(savedInstanceState: Bundle) {
-        mPaths = savedInstanceState.getStringArray(EXTRA_SELECTED_GAMES)
-        mSelectedTitle = savedInstanceState.getString(EXTRA_SELECTED_TITLE)
+        paths = savedInstanceState.getStringArray(EXTRA_SELECTED_GAMES)
+        selectedTitle = savedInstanceState.getString(EXTRA_SELECTED_TITLE)
         selectedGameId = savedInstanceState.getString(EXTRA_SELECTED_GAMEID)
-        mPlatform = savedInstanceState.getInt(EXTRA_PLATFORM)
+        platform = savedInstanceState.getInt(EXTRA_PLATFORM)
         savedState = savedInstanceState.getString(EXTRA_SAVED_STATE)
     }
 
     override fun onBackPressed() {
-        if (mMenuVisible) {
-            mEmulationFragment!!.stopEmulation()
+        if (menuVisible) {
+            emulationFragment!!.stopEmulation()
             finish()
         } else {
-            mMenuVisible = true
-            mEmulationFragment!!.stopConfiguringControls()
+            menuVisible = true
+            emulationFragment!!.stopConfiguringControls()
             val dialog = RunningSettingDialog.newInstance()
             dialog.show(supportFragmentManager, "RunningSettingDialog")
             dialog.setOnDismissListener {
-                mMenuVisible = false
+                menuVisible = false
                 enableFullscreenImmersive()
             }
         }
@@ -194,7 +194,7 @@ open class EmulationActivity : AppCompatActivity() {
         }
         builder.setOnDismissListener {
             if (InputOverlay.sJoyStickSetting != joystick) {
-                mEmulationFragment!!.refreshInputOverlay()
+                emulationFragment!!.refreshInputOverlay()
             }
         }
 
@@ -238,13 +238,13 @@ open class EmulationActivity : AppCompatActivity() {
 
     private fun setSensorState(enabled: Boolean) {
         if (enabled) {
-            if (mSensorManager == null) {
-                mSensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+            if (sensorManager == null) {
+                sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
                 val rotationVector =
-                    mSensorManager!!.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR)
+                    sensorManager!!.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR)
                 if (rotationVector != null) {
-                    mSensorManager!!.registerListener(
-                        mEmulationFragment,
+                    sensorManager!!.registerListener(
+                        emulationFragment,
                         rotationVector,
                         SensorManager.SENSOR_DELAY_NORMAL,
                         SensorManager.SENSOR_DELAY_UI
@@ -252,31 +252,31 @@ open class EmulationActivity : AppCompatActivity() {
                 }
             }
         } else {
-            if (mSensorManager != null) {
-                mSensorManager!!.unregisterListener(mEmulationFragment)
-                mSensorManager = null
+            if (sensorManager != null) {
+                sensorManager!!.unregisterListener(emulationFragment)
+                sensorManager = null
             }
         }
 
-        mEmulationFragment!!.onAccuracyChanged(null, 0)
+        emulationFragment!!.onAccuracyChanged(null, 0)
     }
 
     fun editControlsPlacement() {
-        if (mEmulationFragment!!.isConfiguringControls) {
-            mEmulationFragment!!.stopConfiguringControls()
+        if (emulationFragment!!.isConfiguringControls) {
+            emulationFragment!!.stopConfiguringControls()
         } else {
-            mEmulationFragment!!.startConfiguringControls()
+            emulationFragment!!.startConfiguringControls()
         }
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (mSensorManager != null) {
-            val rotationVector = mSensorManager!!.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR)
+        if (sensorManager != null) {
+            val rotationVector = sensorManager!!.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR)
             if (rotationVector != null) {
-                mSensorManager!!.registerListener(
-                    mEmulationFragment,
+                sensorManager!!.registerListener(
+                    emulationFragment,
                     rotationVector,
                     SensorManager.SENSOR_DELAY_NORMAL,
                     SensorManager.SENSOR_DELAY_UI
@@ -288,8 +288,8 @@ open class EmulationActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
-        if (mSensorManager != null) {
-            mSensorManager!!.unregisterListener(mEmulationFragment)
+        if (sensorManager != null) {
+            sensorManager!!.unregisterListener(emulationFragment)
         }
     }
 
@@ -302,22 +302,22 @@ open class EmulationActivity : AppCompatActivity() {
         val joystickKey = InputOverlay.JOYSTICK_PREF_KEY + "_" + id
         val recenterKey = InputOverlay.RECENTER_PREF_KEY + "_" + id
 
-        InputOverlay.sControllerScale = mPreferences!!.getInt(scaleKey, 50)
-        InputOverlay.sControllerAlpha = mPreferences!!.getInt(alphaKey, 100)
+        InputOverlay.sControllerScale = preferences!!.getInt(scaleKey, 50)
+        InputOverlay.sControllerAlpha = preferences!!.getInt(alphaKey, 100)
         InputOverlay.sControllerType =
-            mPreferences!!.getInt(typeKey, InputOverlay.CONTROLLER_WIINUNCHUK)
+            preferences!!.getInt(typeKey, InputOverlay.CONTROLLER_WIINUNCHUK)
         InputOverlay.sJoyStickSetting =
-            mPreferences!!.getInt(joystickKey, InputOverlay.JOYSTICK_EMULATE_NONE)
+            preferences!!.getInt(joystickKey, InputOverlay.JOYSTICK_EMULATE_NONE)
         InputOverlay.sJoystickRelative =
-            mPreferences!!.getBoolean(InputOverlay.RELATIVE_PREF_KEY, true)
-        InputOverlay.sIRRecenter = mPreferences!!.getBoolean(recenterKey, false)
+            preferences!!.getBoolean(InputOverlay.RELATIVE_PREF_KEY, true)
+        InputOverlay.sIRRecenter = preferences!!.getBoolean(recenterKey, false)
 
         if (isGameCubeGame) InputOverlay.sJoyStickSetting = InputOverlay.JOYSTICK_EMULATE_NONE
 
         InputOverlay.sSensorGCSetting = InputOverlay.SENSOR_GC_NONE
         InputOverlay.sSensorWiiSetting = InputOverlay.SENSOR_WII_NONE
 
-        Rumble.setPhoneRumble(this, mPreferences!!.getBoolean(RUMBLE_PREF_KEY, true))
+        Rumble.setPhoneRumble(this, preferences!!.getBoolean(RUMBLE_PREF_KEY, true))
     }
 
     private fun savePreferences() {
@@ -329,7 +329,7 @@ open class EmulationActivity : AppCompatActivity() {
         val joystickKey = InputOverlay.JOYSTICK_PREF_KEY + "_" + id
         val recenterKey = InputOverlay.RECENTER_PREF_KEY + "_" + id
 
-        val editor = mPreferences!!.edit()
+        val editor = preferences!!.edit()
         editor.putInt(typeKey, InputOverlay.sControllerType)
         editor.putInt(scaleKey, InputOverlay.sControllerScale)
         editor.putInt(alphaKey, InputOverlay.sControllerAlpha)
@@ -343,12 +343,12 @@ open class EmulationActivity : AppCompatActivity() {
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         val input = event.device
         val button = event.keyCode
-        if (button == mBindingButton && input != null && mBindingDevice == input.descriptor) {
+        if (button == bindingButton && input != null && bindingDevice == input.descriptor) {
             if (event.action == KeyEvent.ACTION_DOWN) onBackPressed()
             return true
         }
 
-        if (mMenuVisible) return super.dispatchKeyEvent(event)
+        if (menuVisible) return super.dispatchKeyEvent(event)
 
         val action: Int
         when (event.action) {
@@ -375,7 +375,7 @@ open class EmulationActivity : AppCompatActivity() {
     }
 
     fun toggleControls() {
-        val editor = mPreferences!!.edit()
+        val editor = preferences!!.edit()
         val controller = InputOverlay.sControllerType
         val enabledButtons = BooleanArray(16)
         val builder = AlertDialog.Builder(this)
@@ -396,7 +396,7 @@ open class EmulationActivity : AppCompatActivity() {
         }
 
         for (i in enabledButtons.indices) {
-            enabledButtons[i] = mPreferences!!.getBoolean(keyPrefix + i, true)
+            enabledButtons[i] = preferences!!.getBoolean(keyPrefix + i, true)
         }
         builder.setMultiChoiceItems(
             resId, enabledButtons
@@ -408,14 +408,14 @@ open class EmulationActivity : AppCompatActivity() {
         builder.setNeutralButton(getString(R.string.emulation_toggle_all)) { _: DialogInterface?, _: Int ->
             editor.putBoolean(
                 "showInputOverlay",
-                !mPreferences!!.getBoolean("showInputOverlay", true)
+                !preferences!!.getBoolean("showInputOverlay", true)
             )
             editor.apply()
-            mEmulationFragment!!.refreshInputOverlay()
+            emulationFragment!!.refreshInputOverlay()
         }
         builder.setPositiveButton(getString(android.R.string.ok)) { _: DialogInterface?, _: Int ->
             editor.apply()
-            mEmulationFragment!!.refreshInputOverlay()
+            emulationFragment!!.refreshInputOverlay()
         }
 
         val alertDialog = builder.create()
@@ -472,11 +472,11 @@ open class EmulationActivity : AppCompatActivity() {
         builder.setOnDismissListener {
             InputOverlay.sControllerScale = seekbarScale.progress
             InputOverlay.sControllerAlpha = seekbarAlpha.progress
-            mEmulationFragment!!.refreshInputOverlay()
+            emulationFragment!!.refreshInputOverlay()
         }
         builder.setNeutralButton(
             getString(R.string.emulation_control_reset_layout)
-        ) { _: DialogInterface?, _: Int -> mEmulationFragment!!.resetCurrentLayout() }
+        ) { _: DialogInterface?, _: Int -> emulationFragment!!.resetCurrentLayout() }
 
         val alertDialog = builder.create()
         alertDialog.show()
@@ -505,7 +505,7 @@ open class EmulationActivity : AppCompatActivity() {
                 "WiimoteNew.ini", "Wiimote1", "Extension",
                 resources.getStringArray(R.array.controllersValues)[InputOverlay.sControllerType]
             )
-            mEmulationFragment!!.refreshInputOverlay()
+            emulationFragment!!.refreshInputOverlay()
             NativeLibrary.ReloadWiimoteConfig()
         }
         builder.setOnDismissListener {
@@ -513,7 +513,7 @@ open class EmulationActivity : AppCompatActivity() {
                 "WiimoteNew.ini", "Wiimote1", "Extension",
                 resources.getStringArray(R.array.controllersValues)[InputOverlay.sControllerType]
             )
-            mEmulationFragment!!.refreshInputOverlay()
+            emulationFragment!!.refreshInputOverlay()
         }
 
         val alertDialog = builder.create()
@@ -521,7 +521,7 @@ open class EmulationActivity : AppCompatActivity() {
     }
 
     override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
-        if (mMenuVisible) {
+        if (menuVisible) {
             return false
         }
 
@@ -552,24 +552,24 @@ open class EmulationActivity : AppCompatActivity() {
     }
 
     val isGameCubeGame: Boolean
-        get() = Platform.fromNativeInt(mPlatform) == Platform.GAMECUBE
+        get() = Platform.fromNativeInt(platform) == Platform.GAMECUBE
 
     fun setTouchPointer(type: Int) {
-        mEmulationFragment!!.setTouchPointer(type)
+        emulationFragment!!.setTouchPointer(type)
     }
 
     fun updateTouchPointer() {
-        mEmulationFragment!!.updateTouchPointer()
+        emulationFragment!!.updateTouchPointer()
     }
 
     fun exitEmulation() {
-        mEmulationFragment!!.stopEmulation()
+        emulationFragment!!.stopEmulation()
         finish()
     }
 
     fun bindSystemBack(binding: String) {
-        mBindingDevice = ""
-        mBindingButton = -1
+        bindingDevice = ""
+        bindingButton = -1
 
         val descPos = binding.indexOf("Device ")
         if (descPos == -1) return
@@ -579,8 +579,8 @@ open class EmulationActivity : AppCompatActivity() {
 
         val descriptor = binding.substring(descPos + 8, codePos - 1)
         val code = binding.substring(codePos + 8)
-        mBindingDevice = descriptor
-        mBindingButton = code.toInt()
+        bindingDevice = descriptor
+        bindingButton = code.toInt()
     }
 
     companion object {

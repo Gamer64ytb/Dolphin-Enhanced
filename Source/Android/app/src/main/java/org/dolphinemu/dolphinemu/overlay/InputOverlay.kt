@@ -31,9 +31,9 @@ import kotlin.math.min
  */
 class InputOverlay(context: Context?, attrs: AttributeSet?) :
     SurfaceView(context, attrs), OnTouchListener {
-    private val drawableButtons = ArrayList<InputOverlayDrawableButton>()
-    private val drawableDpads = ArrayList<InputOverlayDrawableDpad>()
-    private val drawableJoysticks = ArrayList<InputOverlayDrawableJoystick>()
+    private val buttons = ArrayList<InputOverlayDrawableButton>()
+    private val dpads = ArrayList<InputOverlayDrawableDpad>()
+    private val joysticks = ArrayList<InputOverlayDrawableJoystick>()
     private var overlayPointer: InputOverlayPointer? = null
     private var overlaySensor: InputOverlaySensor? = null
 
@@ -86,15 +86,15 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
 
-        for (button in drawableButtons) {
+        for (button in buttons) {
             button.onDraw(canvas)
         }
 
-        for (dpad in drawableDpads) {
+        for (dpad in dpads) {
             dpad.onDraw(canvas)
         }
 
-        for (joystick in drawableJoysticks) {
+        for (joystick in joysticks) {
             joystick.onDraw(canvas)
         }
     }
@@ -112,7 +112,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                 val pointerX = event.getX(pointerIndex)
                 val pointerY = event.getY(pointerIndex)
 
-                for (joystick in drawableJoysticks) {
+                for (joystick in joysticks) {
                     if (joystick.bounds.contains(pointerX.toInt(), pointerY.toInt())) {
                         joystick.onPointerDown(pointerId, pointerX, pointerY)
                         isProcessed = true
@@ -120,14 +120,14 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                     }
                 }
 
-                for (button in drawableButtons) {
+                for (button in buttons) {
                     if (button.bounds.contains(pointerX.toInt(), pointerY.toInt())) {
                         button.onPointerDown(pointerId, pointerX, pointerY)
                         isProcessed = true
                     }
                 }
 
-                for (dpad in drawableDpads) {
+                for (dpad in dpads) {
                     if (dpad.bounds.contains(pointerX.toInt(), pointerY.toInt())) {
                         dpad.onPointerDown(pointerId, pointerX, pointerY)
                         isProcessed = true
@@ -150,7 +150,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                     val pointerX = event.getX(i)
                     val pointerY = event.getY(i)
 
-                    for (joystick in drawableJoysticks) {
+                    for (joystick in joysticks) {
                         if (joystick.pointerId == pointerId) {
                             joystick.onPointerMove(pointerId, pointerX, pointerY)
                             isCaptured = true
@@ -163,7 +163,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                         continue
                     }
 
-                    for (button in drawableButtons) {
+                    for (button in buttons) {
                         if (button.bounds.contains(pointerX.toInt(), pointerY.toInt())) {
                             if (button.pointerId == -1) {
                                 button.onPointerDown(pointerId, pointerX, pointerY)
@@ -175,7 +175,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                         }
                     }
 
-                    for (dpad in drawableDpads) {
+                    for (dpad in dpads) {
                         if (dpad.pointerId == pointerId) {
                             dpad.onPointerMove(pointerId, pointerX, pointerY)
                             isProcessed = true
@@ -199,7 +199,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                     overlayPointer!!.onPointerUp(pointerId, pointerX, pointerY)
                 }
 
-                for (joystick in drawableJoysticks) {
+                for (joystick in joysticks) {
                     if (joystick.pointerId == pointerId) {
                         joystick.onPointerUp(pointerId, pointerX, pointerY)
                         isProcessed = true
@@ -207,7 +207,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                     }
                 }
 
-                for (button in drawableButtons) {
+                for (button in buttons) {
                     if (button.pointerId == pointerId) {
                         button.onPointerUp(pointerId, pointerX, pointerY)
                         if (overlayPointer != null && button.buttonId == ButtonType.HOTKEYS_UPRIGHT_TOGGLE) {
@@ -217,7 +217,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                     }
                 }
 
-                for (dpad in drawableDpads) {
+                for (dpad in dpads) {
                     if (dpad.pointerId == pointerId) {
                         dpad.onPointerUp(pointerId, pointerX, pointerY)
                         isProcessed = true
@@ -231,15 +231,15 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                     overlayPointer!!.onPointerUp(0, 0f, 0f)
                 }
 
-                for (joystick in drawableJoysticks) {
+                for (joystick in joysticks) {
                     joystick.onPointerUp(0, 0f, 0f)
                 }
 
-                for (button in drawableButtons) {
+                for (button in buttons) {
                     button.onPointerUp(0, 0f, 0f)
                 }
 
-                for (dpad in drawableDpads) {
+                for (dpad in dpads) {
                     dpad.onPointerUp(0, 0f, 0f)
                 }
             }
@@ -258,21 +258,21 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         when (event.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 if (buttonBeingConfigured != null || dpadBeingConfigured != null || joystickBeingConfigured != null) return false
-                for (button in drawableButtons) {
+                for (button in buttons) {
                     if (button.bounds.contains(pointerX, pointerY)) {
                         buttonBeingConfigured = button
                         buttonBeingConfigured!!.onConfigureBegin(pointerX, pointerY)
                         return true
                     }
                 }
-                for (dpad in drawableDpads) {
+                for (dpad in dpads) {
                     if (dpad.bounds.contains(pointerX, pointerY)) {
                         dpadBeingConfigured = dpad
                         dpadBeingConfigured!!.onConfigureBegin(pointerX, pointerY)
                         return true
                     }
                 }
-                for (joystick in drawableJoysticks) {
+                for (joystick in joysticks) {
                     if (joystick.bounds.contains(pointerX, pointerY)) {
                         joystickBeingConfigured = joystick
                         joystickBeingConfigured!!.onConfigureBegin(pointerX, pointerY)
@@ -373,13 +373,13 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             val normal = buttons[i][1]
             val pressed = buttons[i][2]
             if (preferences.getBoolean(prefId + i, true)) {
-                drawableButtons.add(initializeOverlayButton(normal, pressed, id))
+                this.buttons.add(initializeOverlayButton(normal, pressed, id))
             }
             ++i
         }
 
         if (preferences.getBoolean(prefId + (i++), true)) {
-            drawableDpads.add(
+            dpads.add(
                 initializeOverlayDpad(
                     ButtonType.BUTTON_UP, ButtonType.BUTTON_DOWN,
                     ButtonType.BUTTON_LEFT, ButtonType.BUTTON_RIGHT
@@ -387,7 +387,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             )
         }
         if (preferences.getBoolean(prefId + (i++), true)) {
-            drawableJoysticks.add(
+            joysticks.add(
                 initializeOverlayJoystick(
                     R.drawable.gcwii_joystick,
                     R.drawable.gcwii_joystick_pressed, ButtonType.STICK_MAIN
@@ -395,7 +395,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             )
         }
         if (preferences.getBoolean(prefId + (i++), true)) {
-            drawableJoysticks.add(
+            joysticks.add(
                 initializeOverlayJoystick(
                     R.drawable.gcpad_c,
                     R.drawable.gcpad_c_pressed, ButtonType.STICK_C
@@ -460,14 +460,14 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             val normal = buttons[i][1]
             val pressed = buttons[i][2]
             if (preferences.getBoolean(prefId + i, true)) {
-                drawableButtons.add(initializeOverlayButton(normal, pressed, id))
+                this.buttons.add(initializeOverlayButton(normal, pressed, id))
             }
             ++i
         }
 
         if (preferences.getBoolean(prefId + (i++), true)) {
             if (sControllerType == CONTROLLER_WIINUNCHUK) {
-                drawableDpads.add(
+                dpads.add(
                     initializeOverlayDpad(
                         ButtonType.WIIMOTE_UP, ButtonType.WIIMOTE_DOWN,
                         ButtonType.WIIMOTE_LEFT, ButtonType.WIIMOTE_RIGHT
@@ -475,7 +475,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                 )
             } else {
                 // Horizontal Wii Remote
-                drawableDpads.add(
+                dpads.add(
                     initializeOverlayDpad(
                         ButtonType.WIIMOTE_RIGHT, ButtonType.WIIMOTE_LEFT,
                         ButtonType.WIIMOTE_UP, ButtonType.WIIMOTE_DOWN
@@ -486,7 +486,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
 
         if (sControllerType == CONTROLLER_WIINUNCHUK) {
             if (preferences.getBoolean(prefId + (i++), true)) {
-                drawableButtons.add(
+                this.buttons.add(
                     initializeOverlayButton(
                         R.drawable.nunchuk_c, R.drawable.nunchuk_c_pressed,
                         ButtonType.NUNCHUK_BUTTON_C
@@ -494,7 +494,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                 )
             }
             if (preferences.getBoolean(prefId + (i++), true)) {
-                drawableButtons.add(
+                this.buttons.add(
                     initializeOverlayButton(
                         R.drawable.nunchuk_z, R.drawable.nunchuk_z_pressed,
                         ButtonType.NUNCHUK_BUTTON_Z
@@ -502,7 +502,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                 )
             }
             if (preferences.getBoolean(prefId + (i++), true)) {
-                drawableJoysticks.add(
+                joysticks.add(
                     initializeOverlayJoystick(
                         R.drawable.gcwii_joystick,
                         R.drawable.gcwii_joystick_pressed, ButtonType.NUNCHUK_STICK
@@ -513,7 +513,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
 
         // joystick emulate
         if (sJoyStickSetting != JOYSTICK_EMULATE_NONE) {
-            drawableJoysticks.add(
+            joysticks.add(
                 initializeOverlayJoystick(
                     R.drawable.gcwii_joystick,
                     R.drawable.gcwii_joystick_pressed, 0
@@ -597,13 +597,13 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             val normal = buttons[i][1]
             val pressed = buttons[i][2]
             if (preferences.getBoolean(prefId + i, true)) {
-                drawableButtons.add(initializeOverlayButton(normal, pressed, id))
+                this.buttons.add(initializeOverlayButton(normal, pressed, id))
             }
             ++i
         }
 
         if (preferences.getBoolean(prefId + (i++), true)) {
-            drawableDpads.add(
+            dpads.add(
                 initializeOverlayDpad(
                     ButtonType.CLASSIC_DPAD_UP, ButtonType.CLASSIC_DPAD_DOWN,
                     ButtonType.CLASSIC_DPAD_LEFT, ButtonType.CLASSIC_DPAD_RIGHT
@@ -611,7 +611,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             )
         }
         if (preferences.getBoolean(prefId + (i++), true)) {
-            drawableJoysticks.add(
+            joysticks.add(
                 initializeOverlayJoystick(
                     R.drawable.gcwii_joystick,
                     R.drawable.gcwii_joystick_pressed, ButtonType.CLASSIC_STICK_LEFT
@@ -619,7 +619,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             )
         }
         if (preferences.getBoolean(prefId + (i++), true)) {
-            drawableJoysticks.add(
+            joysticks.add(
                 initializeOverlayJoystick(
                     R.drawable.gcwii_joystick,
                     R.drawable.gcwii_joystick_pressed, ButtonType.CLASSIC_STICK_RIGHT
@@ -629,7 +629,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
 
         // joystick emulate
         if (sJoyStickSetting != JOYSTICK_EMULATE_NONE) {
-            drawableJoysticks.add(
+            joysticks.add(
                 initializeOverlayJoystick(
                     R.drawable.gcwii_joystick,
                     R.drawable.gcwii_joystick_pressed, 0
@@ -640,9 +640,9 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
 
     fun refreshControls() {
         // Remove all the overlay buttons
-        drawableButtons.clear()
-        drawableDpads.clear()
-        drawableJoysticks.clear()
+        buttons.clear()
+        dpads.clear()
+        joysticks.clear()
 
         if (preferences.getBoolean("showInputOverlay", true)) {
             if (get()!!.isGameCubeGame || sControllerType == CONTROLLER_GAMECUBE) {

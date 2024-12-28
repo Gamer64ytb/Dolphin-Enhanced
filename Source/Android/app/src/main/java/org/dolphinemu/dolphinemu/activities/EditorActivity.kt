@@ -140,15 +140,15 @@ class EditorActivity : AppCompatActivity() {
 
     private class DownloaderTask(editor: EditorActivity?) :
         AsyncTask<String?, String?, String?>() {
-        private var mSelection = 0
-        private var mContent: String? = null
-        private val mActivity =
+        private var selection = 0
+        private var content: String? = null
+        private val activity =
             WeakReference(editor)
 
         override fun onPreExecute() {
-            mContent = mActivity.get()!!.mEditor!!.text.toString()
-            mActivity.get()!!.mProgressBar!!.visibility = View.VISIBLE
-            mSelection = mActivity.get()!!.mEditor!!.selectionStart
+            content = activity.get()!!.editor!!.text.toString()
+            activity.get()!!.progressBar!!.visibility = View.VISIBLE
+            selection = activity.get()!!.editor!!.selectionStart
         }
 
         override fun doInBackground(vararg gametdbId: String?): String? {
@@ -172,16 +172,16 @@ class EditorActivity : AppCompatActivity() {
         }
 
         override fun onPostExecute(param: String?) {
-            if (mActivity.get() != null) {
-                mActivity.get()!!.mEditor!!.setText(param)
-                mActivity.get()!!.mEditor!!.setSelection(mSelection)
-                mActivity.get()!!.mProgressBar!!.visibility = View.INVISIBLE
-                mActivity.get()!!.loadCheatList()
+            if (activity.get() != null) {
+                activity.get()!!.editor!!.setText(param)
+                activity.get()!!.editor!!.setSelection(selection)
+                activity.get()!!.progressBar!!.visibility = View.INVISIBLE
+                activity.get()!!.loadCheatList()
             }
         }
 
         fun processGeckoCodes(codes: String): String? {
-            if (codes.isEmpty() || codes[0] == '<') return mContent
+            if (codes.isEmpty() || codes[0] == '<') return content
 
             var state = 0
             val codeSB = StringBuilder()
@@ -245,14 +245,14 @@ class EditorActivity : AppCompatActivity() {
 
             var isInsert = false
             val configSB = StringBuilder()
-            reader = BufferedReader(StringReader(mContent))
+            reader = BufferedReader(StringReader(content))
             try {
                 var line = reader.readLine()
                 while (line != null) {
                     configSB.append(line)
                     configSB.append('\n')
                     if (!isInsert && line.contains("[Gecko]")) {
-                        mSelection = configSB.length
+                        selection = configSB.length
                         configSB.append(codeSB.toString())
                         isInsert = true
                     }
@@ -264,7 +264,7 @@ class EditorActivity : AppCompatActivity() {
 
             if (!isInsert) {
                 configSB.append("\n[Gecko]\n")
-                mSelection = configSB.length
+                selection = configSB.length
                 configSB.append(codeSB.toString())
             }
 
@@ -274,31 +274,31 @@ class EditorActivity : AppCompatActivity() {
 
     internal inner class CheatEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-        private var mModel: CheatEntry? = null
-        private val mTextName: TextView = itemView.findViewById(R.id.text_setting_name)
-        private val mTextDescription: TextView =
+        private var model: CheatEntry? = null
+        private val textName: TextView = itemView.findViewById(R.id.text_setting_name)
+        private val textDescription: TextView =
             itemView.findViewById(R.id.text_setting_description)
-        private val mCheckbox: CheckBox = itemView.findViewById(R.id.checkbox)
+        private val checkbox: CheckBox = itemView.findViewById(R.id.checkbox)
 
         init {
             itemView.setOnClickListener(this)
         }
 
         fun bind(entry: CheatEntry) {
-            mModel = entry
-            mTextName.text = entry.name
-            mTextDescription.text = entry.info
-            mCheckbox.isChecked = entry.active
+            model = entry
+            textName.text = entry.name
+            textDescription.text = entry.info
+            checkbox.isChecked = entry.active
         }
 
         override fun onClick(v: View) {
-            toggleCheatEntry(mModel!!)
-            mCheckbox.isChecked = mModel!!.active
+            toggleCheatEntry(model!!)
+            checkbox.isChecked = model!!.active
         }
     }
 
     internal inner class CheatEntryAdapter : RecyclerView.Adapter<CheatEntryViewHolder>() {
-        private var mDataset: List<CheatEntry>? = null
+        private var dataset: List<CheatEntry>? = null
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheatEntryViewHolder {
             val inflater = LayoutInflater.from(parent.context)
@@ -307,15 +307,15 @@ class EditorActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int {
-            return if (mDataset != null) mDataset!!.size else 0
+            return if (dataset != null) dataset!!.size else 0
         }
 
         override fun onBindViewHolder(holder: CheatEntryViewHolder, position: Int) {
-            holder.bind(mDataset!![position])
+            holder.bind(dataset!![position])
         }
 
         fun loadCodes(list: List<CheatEntry>?) {
-            mDataset = list
+            dataset = list
             notifyDataSetChanged()
         }
     }
@@ -328,14 +328,14 @@ class EditorActivity : AppCompatActivity() {
     private val SECTIONS =
         arrayOf("[ActionReplay]", "[ActionReplay_Enabled]", "[Gecko]", "[Gecko_Enabled]")
 
-    private var mGameId: String? = null
-    private var mGameFile: GameFile? = null
-    private var mCancelSave = false
-    private var mEditor: EditText? = null
-    private var mBtnConfirm: Button? = null
-    private var mListView: RecyclerView? = null
-    private var mAdapter: CheatEntryAdapter? = null
-    private var mProgressBar: ProgressBar? = null
+    private var gameId: String? = null
+    private var gameFile: GameFile? = null
+    private var cancelSave = false
+    private var editor: EditText? = null
+    private var btnConfirm: Button? = null
+    private var listView: RecyclerView? = null
+    private var adapter: CheatEntryAdapter? = null
+    private var progressBar: ProgressBar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -346,52 +346,52 @@ class EditorActivity : AppCompatActivity() {
         val gamePath = intent.getStringExtra(ARG_GAME_PATH)
         val gameFile = GameFileCacheService.addOrGet(gamePath)
 
-        mGameId = gameFile.gameId
+        gameId = gameFile.gameId
 
-        title = mGameId
+        title = gameId
 
         // code list
-        mListView = findViewById(R.id.code_list)
-        mAdapter = CheatEntryAdapter()
-        mListView!!.setAdapter(mAdapter)
-        mListView!!.addItemDecoration(
+        listView = findViewById(R.id.code_list)
+        adapter = CheatEntryAdapter()
+        listView!!.setAdapter(adapter)
+        listView!!.addItemDecoration(
             DividerItemDecoration(
                 this,
                 DividerItemDecoration.VERTICAL
             )
         )
-        mListView!!.setLayoutManager(LinearLayoutManager(this))
+        listView!!.setLayoutManager(LinearLayoutManager(this))
 
         // code editor
-        mEditor = findViewById(R.id.code_content)
+        editor = findViewById(R.id.code_content)
 
-        mGameFile = gameFile
-        mProgressBar = findViewById(R.id.progress_bar)
-        mProgressBar!!.visibility = View.INVISIBLE
+        this.gameFile = gameFile
+        progressBar = findViewById(R.id.progress_bar)
+        progressBar!!.visibility = View.INVISIBLE
 
-        mEditor!!.addTextChangedListener(IniTextWatcher())
-        mEditor!!.setHorizontallyScrolling(true)
+        editor!!.addTextChangedListener(IniTextWatcher())
+        editor!!.setHorizontallyScrolling(true)
 
-        mCancelSave = false
+        cancelSave = false
         val buttonCancel = findViewById<Button>(R.id.button_cancel)
         buttonCancel.setOnClickListener {
-            mCancelSave = true
+            cancelSave = true
             finish()
         }
 
-        mBtnConfirm = findViewById(R.id.button_confirm)
-        mBtnConfirm!!.setOnClickListener { toggleListView(mEditor!!.visibility == View.VISIBLE) }
+        btnConfirm = findViewById(R.id.button_confirm)
+        btnConfirm!!.setOnClickListener { toggleListView(editor!!.visibility == View.VISIBLE) }
 
         // show
-        setGameSettings(mEditor!!)
+        setGameSettings(editor!!)
         loadCheatList()
         toggleListView(true)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (!mCancelSave) {
-            acceptCheatCode(mEditor!!)
+        if (!cancelSave) {
+            acceptCheatCode(editor!!)
         }
     }
 
@@ -403,7 +403,7 @@ class EditorActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_download_gecko) {
-            downloadGeckoCodes(mGameFile!!.gameTdbId, mEditor)
+            downloadGeckoCodes(gameFile!!.gameTdbId, editor)
             return true
         }
         return false
@@ -413,14 +413,14 @@ class EditorActivity : AppCompatActivity() {
         if (isShowList) {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
-            mListView!!.visibility = View.VISIBLE
-            mEditor!!.visibility = View.INVISIBLE
+            listView!!.visibility = View.VISIBLE
+            editor!!.visibility = View.INVISIBLE
             loadCheatList()
-            mBtnConfirm!!.setText(R.string.edit_cheat)
+            btnConfirm!!.setText(R.string.edit_cheat)
         } else {
-            mListView!!.visibility = View.INVISIBLE
-            mEditor!!.visibility = View.VISIBLE
-            mBtnConfirm!!.setText(R.string.cheat_list)
+            listView!!.visibility = View.INVISIBLE
+            editor!!.visibility = View.VISIBLE
+            btnConfirm!!.setText(R.string.cheat_list)
         }
     }
 
@@ -428,7 +428,7 @@ class EditorActivity : AppCompatActivity() {
         val section =
             if (entry.type == CheatEntry.TYPE_AR) "[ActionReplay_Enabled]" else "[Gecko_Enabled]"
         var k = -1
-        val content = mEditor!!.text
+        val content = editor!!.text
 
         if (entry.active) {
             // remove enabled cheat code
@@ -509,7 +509,7 @@ class EditorActivity : AppCompatActivity() {
     private fun loadCheatList() {
         var section = SECTION_NONE
         var entry = CheatEntry()
-        val lines = mEditor!!.text.toString().split("\n".toRegex()).dropLastWhile { it.isEmpty() }
+        val lines = editor!!.text.toString().split("\n".toRegex()).dropLastWhile { it.isEmpty() }
             .toTypedArray()
         val list: MutableList<CheatEntry> = ArrayList()
         for (line in lines) {
@@ -582,7 +582,7 @@ class EditorActivity : AppCompatActivity() {
             addCheatEntry(list, entry)
         }
 
-        mAdapter!!.loadCodes(list)
+        adapter!!.loadCodes(list)
     }
 
     private fun addCheatEntry(list: MutableList<CheatEntry>, entry: CheatEntry) {
@@ -605,7 +605,7 @@ class EditorActivity : AppCompatActivity() {
 
     private val configReader: BufferedReader?
         get() {
-            val filename = DirectoryInitialization.getLocalSettingFile(mGameId)
+            val filename = DirectoryInitialization.getLocalSettingFile(gameId)
             val configFile = File(filename)
             var reader: BufferedReader? = null
 
@@ -615,9 +615,9 @@ class EditorActivity : AppCompatActivity() {
                 } catch (e: IOException) {
                     null
                 }
-            } else if (mGameId!!.length > 3) {
+            } else if (gameId!!.length > 3) {
                 try {
-                    val path = "Sys/GameSettings/$mGameId.ini"
+                    val path = "Sys/GameSettings/$gameId.ini"
                     reader =
                         BufferedReader(InputStreamReader(assets.open(path)))
                 } catch (e: IOException) {
@@ -627,7 +627,7 @@ class EditorActivity : AppCompatActivity() {
                 if (reader == null) {
                     try {
                         val path =
-                            "Sys/GameSettings/" + mGameId!!.substring(0, 3) + ".ini"
+                            "Sys/GameSettings/" + gameId!!.substring(0, 3) + ".ini"
                         reader =
                             BufferedReader(InputStreamReader(assets.open(path)))
                     } catch (e: IOException) {
@@ -747,7 +747,7 @@ class EditorActivity : AppCompatActivity() {
             configSB.append(content)
         }
 
-        val filename = DirectoryInitialization.getLocalSettingFile(mGameId)
+        val filename = DirectoryInitialization.getLocalSettingFile(gameId)
         var saved = false
         try {
             val writer = BufferedWriter(FileWriter(filename))

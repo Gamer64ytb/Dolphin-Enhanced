@@ -112,7 +112,7 @@ class MotionAlertDialog
             // If only one axis moved, that's the winner.
             if (numMovedAxis == 1) {
                 waitingForEvent = false
-                setting.onMotionInput(input, lastMovedRange, lastMovedDir)
+                setting.onMotionInput(input, lastMovedRange!!, lastMovedDir)
                 dismiss()
             }
         }

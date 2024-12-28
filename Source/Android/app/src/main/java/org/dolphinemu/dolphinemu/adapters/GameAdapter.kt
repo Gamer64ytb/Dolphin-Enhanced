@@ -150,7 +150,7 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
      */
     override fun onClick(view: View) {
         val holder = view.tag as GameViewHolder
-        launch(view.context, holder.gameFile, null)
+        launch(view.context, holder.gameFile!!, null)
     }
 
     /**
@@ -162,7 +162,7 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
     override fun onLongClick(view: View): Boolean {
         val activity = view.context as FragmentActivity
         val holder = view.tag as GameViewHolder
-        newInstance(holder.gameFile.path).show(
+        newInstance(holder.gameFile!!.path).show(
             activity.supportFragmentManager, "GameDetailsDialog"
         )
         return true
