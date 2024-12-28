@@ -12,107 +12,107 @@ import org.dolphinemu.dolphinemu.NativeLibrary
 
 class InputOverlayDrawableDpad
     (
-    private val mDefaultStateBitmap: BitmapDrawable,
-    private val mPressedOneDirectionStateBitmap: BitmapDrawable,
-    private val mPressedTwoDirectionsStateBitmap: BitmapDrawable,
+    private val defaultStateBitmap: BitmapDrawable,
+    private val pressedOneDirectionStateBitmap: BitmapDrawable,
+    private val pressedTwoDirectionsStateBitmap: BitmapDrawable,
     buttonUp: Int,
     buttonDown: Int,
     buttonLeft: Int,
     buttonRight: Int
 ) {
     // The ID identifying what type of button this Drawable represents.
-    private val mButtonIds = IntArray(4)
-    private val mPressStates = BooleanArray(4)
+    private val buttonIds = IntArray(4)
+    private val pressStates = BooleanArray(4)
     var pointerId: Int
         private set
-    private var mPreviousTouchX = 0
-    private var mPreviousTouchY = 0
-    private var mControlPositionX = 0
-    private var mControlPositionY = 0
+    private var previousTouchX = 0
+    private var previousTouchY = 0
+    private var controlPositionX = 0
+    private var controlPositionY = 0
 
     init {
         pointerId = -1
 
-        mButtonIds[0] = buttonUp
-        mButtonIds[1] = buttonDown
-        mButtonIds[2] = buttonLeft
-        mButtonIds[3] = buttonRight
+        buttonIds[0] = buttonUp
+        buttonIds[1] = buttonDown
+        buttonIds[2] = buttonLeft
+        buttonIds[3] = buttonRight
 
-        mPressStates[0] = false
-        mPressStates[1] = false
-        mPressStates[2] = false
-        mPressStates[3] = false
+        pressStates[0] = false
+        pressStates[1] = false
+        pressStates[2] = false
+        pressStates[3] = false
     }
 
     fun onDraw(canvas: Canvas) {
         val bounds = bounds
-        val px = mControlPositionX + (bounds.width() / 2)
-        val py = mControlPositionY + (bounds.height() / 2)
+        val px = controlPositionX + (bounds.width() / 2)
+        val py = controlPositionY + (bounds.height() / 2)
 
-        val up = mPressStates[0]
-        val down = mPressStates[1]
-        val left = mPressStates[2]
-        val right = mPressStates[3]
+        val up = pressStates[0]
+        val down = pressStates[1]
+        val left = pressStates[2]
+        val right = pressStates[3]
 
         if (up) {
-            if (left) mPressedTwoDirectionsStateBitmap.draw(canvas)
+            if (left) pressedTwoDirectionsStateBitmap.draw(canvas)
             else if (right) {
                 canvas.save()
                 canvas.rotate(90f, px.toFloat(), py.toFloat())
-                mPressedTwoDirectionsStateBitmap.draw(canvas)
+                pressedTwoDirectionsStateBitmap.draw(canvas)
                 canvas.restore()
-            } else mPressedOneDirectionStateBitmap.draw(canvas)
+            } else pressedOneDirectionStateBitmap.draw(canvas)
         } else if (down) {
             if (left) {
                 canvas.save()
                 canvas.rotate(270f, px.toFloat(), py.toFloat())
-                mPressedTwoDirectionsStateBitmap.draw(canvas)
+                pressedTwoDirectionsStateBitmap.draw(canvas)
                 canvas.restore()
             } else if (right) {
                 canvas.save()
                 canvas.rotate(180f, px.toFloat(), py.toFloat())
-                mPressedTwoDirectionsStateBitmap.draw(canvas)
+                pressedTwoDirectionsStateBitmap.draw(canvas)
                 canvas.restore()
             } else {
                 canvas.save()
                 canvas.rotate(180f, px.toFloat(), py.toFloat())
-                mPressedOneDirectionStateBitmap.draw(canvas)
+                pressedOneDirectionStateBitmap.draw(canvas)
                 canvas.restore()
             }
         } else if (left) {
             canvas.save()
             canvas.rotate(270f, px.toFloat(), py.toFloat())
-            mPressedOneDirectionStateBitmap.draw(canvas)
+            pressedOneDirectionStateBitmap.draw(canvas)
             canvas.restore()
         } else if (right) {
             canvas.save()
             canvas.rotate(90f, px.toFloat(), py.toFloat())
-            mPressedOneDirectionStateBitmap.draw(canvas)
+            pressedOneDirectionStateBitmap.draw(canvas)
             canvas.restore()
         } else {
-            mDefaultStateBitmap.draw(canvas)
+            defaultStateBitmap.draw(canvas)
         }
     }
 
     fun getButtonId(direction: Int): Int {
-        return mButtonIds[direction]
+        return buttonIds[direction]
     }
 
     fun onConfigureBegin(x: Int, y: Int) {
-        mPreviousTouchX = x
-        mPreviousTouchY = y
+        previousTouchX = x
+        previousTouchY = y
     }
 
     fun onConfigureMove(x: Int, y: Int) {
         val bounds = bounds
-        mControlPositionX += x - mPreviousTouchX
-        mControlPositionY += y - mPreviousTouchY
+        controlPositionX += x - previousTouchX
+        controlPositionY += y - previousTouchY
         this.bounds = Rect(
-            mControlPositionX, mControlPositionY,
-            mControlPositionX + bounds.width(), mControlPositionY + bounds.height()
+            controlPositionX, controlPositionY,
+            controlPositionX + bounds.width(), controlPositionY + bounds.height()
         )
-        mPreviousTouchX = x
-        mPreviousTouchY = y
+        previousTouchX = x
+        previousTouchY = y
     }
 
     fun onPointerDown(id: Int, x: Float, y: Float) {
@@ -130,22 +130,22 @@ class InputOverlayDrawableDpad
     }
 
     fun setPosition(x: Int, y: Int) {
-        mControlPositionX = x
-        mControlPositionY = y
+        controlPositionX = x
+        controlPositionY = y
     }
 
     var bounds: Rect
-        get() = mDefaultStateBitmap.bounds
+        get() = defaultStateBitmap.bounds
         set(bounds) {
-            mDefaultStateBitmap.bounds = bounds
-            mPressedOneDirectionStateBitmap.bounds = bounds
-            mPressedTwoDirectionsStateBitmap.bounds = bounds
+            defaultStateBitmap.bounds = bounds
+            pressedOneDirectionStateBitmap.bounds = bounds
+            pressedTwoDirectionsStateBitmap.bounds = bounds
         }
 
     fun setAlpha(value: Int) {
-        mDefaultStateBitmap.alpha = value
-        mPressedOneDirectionStateBitmap.alpha = value
-        mPressedTwoDirectionsStateBitmap.alpha = value
+        defaultStateBitmap.alpha = value
+        pressedOneDirectionStateBitmap.alpha = value
+        pressedTwoDirectionsStateBitmap.alpha = value
     }
 
     private fun setDpadState(pointerX: Int, pointerY: Int) {
@@ -162,19 +162,19 @@ class InputOverlayDrawableDpad
         }
 
         for (i in pressed.indices) {
-            if (pressed[i] != mPressStates[i]) {
+            if (pressed[i] != pressStates[i]) {
                 NativeLibrary
                     .onGamePadEvent(
                         NativeLibrary.TouchScreenDevice,
-                        mButtonIds[i],
+                        buttonIds[i],
                         if (pressed[i]) NativeLibrary.ButtonState.PRESSED else NativeLibrary.ButtonState.RELEASED
                     )
             }
         }
 
-        mPressStates[0] = pressed[0]
-        mPressStates[1] = pressed[1]
-        mPressStates[2] = pressed[2]
-        mPressStates[3] = pressed[3]
+        pressStates[0] = pressed[0]
+        pressStates[1] = pressed[1]
+        pressStates[2] = pressed[2]
+        pressStates[3] = pressed[3]
     }
 }

@@ -14,10 +14,10 @@ import org.dolphinemu.dolphinemu.features.settings.model.Settings
 import org.dolphinemu.dolphinemu.utils.ThemeUtil
 
 class SettingsActivity : AppCompatActivity(), SettingsActivityView {
-    private var mSettings: Settings? = Settings()
-    private var mStackCount = 0
-    private var mShouldSave = false
-    private var mMenuTag: MenuTag? = null
+    private var settings: Settings? = Settings()
+    private var stackCount = 0
+    private var shouldSave = false
+    private var menuTag: MenuTag? = null
     var gameId: String? = null
         private set
 
@@ -31,12 +31,12 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
         val menuTag = launcher.getSerializableExtra(ARG_MENU_TAG) as MenuTag?
 
         if (savedInstanceState == null) {
-            mMenuTag = menuTag
+            this.menuTag = menuTag
             this.gameId = gameId
         } else {
             val menuTagStr = savedInstanceState.getString(KEY_MENU_TAG)
-            mShouldSave = savedInstanceState.getBoolean(KEY_SHOULD_SAVE)
-            mMenuTag = MenuTag.getMenuTag(menuTagStr)
+            shouldSave = savedInstanceState.getBoolean(KEY_SHOULD_SAVE)
+            this.menuTag = MenuTag.getMenuTag(menuTagStr)
             this.gameId = savedInstanceState.getString(KEY_GAME_ID)
         }
 
@@ -63,8 +63,8 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
         // Critical: If super method is not called, rotations will be busted.
         super.onSaveInstanceState(outState)
 
-        outState.putBoolean(KEY_SHOULD_SAVE, mShouldSave)
-        outState.putString(KEY_MENU_TAG, mMenuTag.toString())
+        outState.putBoolean(KEY_SHOULD_SAVE, shouldSave)
+        outState.putString(KEY_MENU_TAG, menuTag.toString())
         outState.putString(KEY_GAME_ID, gameId)
     }
 
@@ -74,11 +74,11 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
     }
 
     private fun loadSettingsUI() {
-        if (mSettings!!.isEmpty) {
-            mSettings!!.loadSettings(gameId)
+        if (settings!!.isEmpty) {
+            settings!!.loadSettings(gameId)
         }
 
-        showSettingsFragment(mMenuTag!!, null, false, gameId!!)
+        showSettingsFragment(menuTag!!, null, false, gameId!!)
     }
 
     /**
@@ -89,27 +89,27 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
     override fun onStop() {
         super.onStop()
 
-        if (mSettings != null && isFinishing && mShouldSave) {
+        if (settings != null && isFinishing && shouldSave) {
             if (TextUtils.isEmpty(gameId)) {
                 showToastMessage(getString(R.string.settings_saved_notice))
-                mSettings!!.saveSettings()
-                ThemeUtil.applyTheme(mSettings)
+                settings!!.saveSettings()
+                ThemeUtil.applyTheme(settings)
             } else {
                 // custom game settings
                 showToastMessage(getString(R.string.settings_saved_notice))
-                mSettings!!.saveCustomGameSettings(gameId)
+                settings!!.saveCustomGameSettings(gameId)
             }
-            mShouldSave = false
+            shouldSave = false
         }
 
         fragment!!.closeDialog()
-        mStackCount = 0
+        stackCount = 0
     }
 
     override fun onBackPressed() {
-        if (mStackCount > 0) {
+        if (stackCount > 0) {
             supportFragmentManager.popBackStackImmediate()
-            mStackCount--
+            stackCount--
         } else {
             finish()
         }
@@ -134,7 +134,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
             }
 
             transaction.addToBackStack(null)
-            mStackCount++
+            stackCount++
         }
         transaction.replace(
             R.id.frame_content,
@@ -145,7 +145,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
 
         // show settings
         val fragment: SettingsFragmentView? = fragment
-        fragment?.showSettingsList(mSettings)
+        fragment?.showSettingsList(settings)
     }
 
     private fun areSystemAnimationsEnabled(): Boolean {
@@ -173,19 +173,19 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
     }
 
     fun getSettings(): Settings? {
-        return mSettings
+        return settings
     }
 
     override fun setSettings(settings: Settings) {
-        mSettings = settings
+        this.settings = settings
     }
 
     fun putSetting(setting: Setting) {
-        mSettings!!.getSection(setting.section).putSetting(setting)
+        settings!!.getSection(setting.section).putSetting(setting)
     }
 
     fun setSettingChanged() {
-        mShouldSave = true
+        shouldSave = true
     }
 
     fun loadSubMenu(menuKey: MenuTag) {

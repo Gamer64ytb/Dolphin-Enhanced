@@ -151,7 +151,7 @@ open class EmulationActivity : AppCompatActivity() {
             mEmulationFragment!!.stopConfiguringControls()
             val dialog = RunningSettingDialog.newInstance()
             dialog.show(supportFragmentManager, "RunningSettingDialog")
-            dialog.setOnDismissListener { v: DialogInterface? ->
+            dialog.setOnDismissListener {
                 mMenuVisible = false
                 enableFullscreenImmersive()
             }
@@ -413,7 +413,7 @@ open class EmulationActivity : AppCompatActivity() {
             editor.apply()
             mEmulationFragment!!.refreshInputOverlay()
         }
-        builder.setPositiveButton(getString(android.R.string.ok)) { dialogInterface: DialogInterface?, i: Int ->
+        builder.setPositiveButton(getString(android.R.string.ok)) { _: DialogInterface?, _: Int ->
             editor.apply()
             mEmulationFragment!!.refreshInputOverlay()
         }
@@ -500,7 +500,7 @@ open class EmulationActivity : AppCompatActivity() {
         }
         builder.setNeutralButton(
             getString(R.string.emulation_reload_wiimote_config)
-        ) { _: DialogInterface?, i: Int ->
+        ) { _: DialogInterface?, _: Int ->
             NativeLibrary.SetConfig(
                 "WiimoteNew.ini", "Wiimote1", "Extension",
                 resources.getStringArray(R.array.controllersValues)[InputOverlay.sControllerType]

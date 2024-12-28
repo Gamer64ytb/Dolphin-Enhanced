@@ -16,15 +16,15 @@ import org.dolphinemu.dolphinemu.features.settings.model.view.SettingsItem
 import java.util.EnumMap
 
 class SettingsFragment : Fragment(), SettingsFragmentView {
-    private lateinit var mPresenter: SettingsFragmentPresenter
-    private var mSettingsList: ArrayList<SettingsItem>? = null
-    private var mActivity: SettingsActivity? = null
-    private var mAdapter: SettingsAdapter? = null
+    private lateinit var presenter: SettingsFragmentPresenter
+    private var settingsList: ArrayList<SettingsItem>? = null
+    private var settingsActivity: SettingsActivity? = null
+    private var adapter: SettingsAdapter? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        mActivity = context as SettingsActivity
+        settingsActivity = context as SettingsActivity
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,10 +35,10 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
         val menuTag = args!!.getSerializable(ARGUMENT_MENU_TAG) as MenuTag?
         val gameId = requireArguments().getString(ARGUMENT_GAME_ID)
 
-        mPresenter = SettingsFragmentPresenter(mActivity!!)
-        mAdapter = SettingsAdapter(mActivity!!)
+        presenter = SettingsFragmentPresenter(settingsActivity!!)
+        adapter = SettingsAdapter(settingsActivity!!)
 
-        mPresenter.onCreate(menuTag!!, gameId, args)
+        presenter.onCreate(menuTag!!, gameId, args)
     }
 
     override fun onCreateView(
@@ -59,12 +59,12 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
         //LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         val recyclerView = view.findViewById<RecyclerView>(R.id.list_settings)
 
-        val mgr = GridLayoutManager(mActivity, 2)
+        val mgr = GridLayoutManager(settingsActivity, 2)
         mgr.spanSizeLookup = object : SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                val viewType = mAdapter!!.getItemViewType(position)
+                val viewType = adapter!!.getItemViewType(position)
                 if (SettingsItem.TYPE_INPUT_BINDING == viewType &&
-                    Settings.SECTION_BINDINGS == mAdapter!!.getSettingSection(
+                    Settings.SECTION_BINDINGS == adapter!!.getSettingSection(
                         position
                     )
                 ) return 1
@@ -72,7 +72,7 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
             }
         }
 
-        recyclerView.adapter = mAdapter
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = mgr
         recyclerView.addItemDecoration(
             DividerItemDecoration(
@@ -81,30 +81,30 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
             )
         )
 
-        showSettingsList(mActivity!!.getSettings())
+        showSettingsList(settingsActivity!!.getSettings())
     }
 
     override fun onDetach() {
         super.onDetach()
-        mActivity = null
+        settingsActivity = null
 
-        if (mAdapter != null) {
-            mAdapter!!.closeDialog()
+        if (adapter != null) {
+            adapter!!.closeDialog()
         }
     }
 
     override fun showSettingsList(settings: Settings?) {
-        if (mSettingsList == null && settings != null) {
-            mSettingsList = mPresenter.loadSettingsList(settings)
+        if (settingsList == null && settings != null) {
+            settingsList = presenter.loadSettingsList(settings)
         }
 
-        if (mSettingsList != null) {
-            mAdapter!!.setSettings(mSettingsList)
+        if (settingsList != null) {
+            adapter!!.setSettings(settingsList)
         }
     }
 
     fun closeDialog() {
-        mAdapter!!.closeDialog()
+        adapter!!.closeDialog()
     }
 
     companion object {

@@ -25,23 +25,23 @@ import java.io.File
 import java.util.Locale
 
 class SettingsFragmentPresenter
-    (private val mActivity: SettingsActivity) {
-    private var mMenuTag: MenuTag? = null
-    private var mGameID: String? = null
-    private var mSettings: Settings? = null
+    (private val activity: SettingsActivity) {
+    private var menuTag: MenuTag? = null
+    private var gameId: String? = null
+    private var settings: Settings? = null
 
-    private var mControllerNumber = 0
-    private var mControllerType = 0
+    private var controllerNumber = 0
+    private var controllerType = 0
 
     fun onCreate(menuTag: MenuTag, gameId: String?, extras: Bundle) {
-        mGameID = gameId
-        mMenuTag = menuTag
+        this.gameId = gameId
+        this.menuTag = menuTag
 
         if (menuTag.isGCPadMenu || menuTag.isWiimoteExtensionMenu) {
-            mControllerNumber = menuTag.subType
-            mControllerType = extras.getInt(SettingsActivity.ARG_CONTROLLER_TYPE)
+            controllerNumber = menuTag.subType
+            controllerType = extras.getInt(SettingsActivity.ARG_CONTROLLER_TYPE)
         } else if (menuTag.isWiimoteMenu) {
-            mControllerNumber = menuTag.subType
+            controllerNumber = menuTag.subType
         }
     }
 
@@ -51,15 +51,15 @@ class SettingsFragmentPresenter
      * the settings map back to the Activity.
      */
     fun onAttach() {
-        if (mSettings != null) {
-            mActivity.setSettings(mSettings!!)
+        if (settings != null) {
+            activity.setSettings(settings!!)
         }
     }
 
     fun loadSettingsList(settings: Settings?): ArrayList<SettingsItem>? {
         val sl = ArrayList<SettingsItem>()
-        mSettings = settings
-        when (mMenuTag) {
+        this.settings = settings
+        when (menuTag) {
             MenuTag.CONFIG -> addConfigSettings(sl)
             MenuTag.CONFIG_GENERAL -> addGeneralSettings(sl)
             MenuTag.CONFIG_INTERFACE -> addInterfaceSettings(sl)
@@ -73,19 +73,19 @@ class SettingsFragmentPresenter
             MenuTag.DEBUG -> addDebugSettings(sl)
             MenuTag.GCPAD_1, MenuTag.GCPAD_2, MenuTag.GCPAD_3, MenuTag.GCPAD_4 -> addGcPadSubSettings(
                 sl,
-                mControllerNumber,
-                mControllerType
+                controllerNumber,
+                controllerType
             )
 
             MenuTag.WIIMOTE_1, MenuTag.WIIMOTE_2, MenuTag.WIIMOTE_3, MenuTag.WIIMOTE_4 -> addWiimoteSubSettings(
                 sl,
-                mControllerNumber
+                controllerNumber
             )
 
             MenuTag.WIIMOTE_EXTENSION_1, MenuTag.WIIMOTE_EXTENSION_2, MenuTag.WIIMOTE_EXTENSION_3, MenuTag.WIIMOTE_EXTENSION_4 -> addExtensionTypeSettings(
                 sl,
-                mControllerNumber,
-                mControllerType
+                controllerNumber,
+                controllerType
             )
 
             else -> return null
@@ -113,8 +113,8 @@ class SettingsFragmentPresenter
     }
 
     private fun addGeneralSettings(sl: ArrayList<SettingsItem>) {
-        val coreSection = mSettings!!.getSection(Settings.SECTION_INI_CORE)
-        val hwSection = mSettings!!.getSection(Settings.SECTION_GFX_HARDWARE)
+        val coreSection = settings!!.getSection(Settings.SECTION_INI_CORE)
+        val hwSection = settings!!.getSection(Settings.SECTION_GFX_HARDWARE)
         val cpuCore = coreSection.getSetting(SettingsFile.KEY_CPU_CORE)
         val dualCore = coreSection.getSetting(SettingsFile.KEY_DUAL_CORE)
         val overclockEnable = coreSection.getSetting(SettingsFile.KEY_OVERCLOCK_ENABLE)
@@ -130,7 +130,7 @@ class SettingsFragmentPresenter
         val autoDiscChange = coreSection.getSetting(SettingsFile.KEY_AUTO_DISC_CHANGE)
         val audioStretch = coreSection.getSetting(SettingsFile.KEY_AUDIO_STRETCH)
         val stretchLatency = coreSection.getSetting(SettingsFile.KEY_AUDIO_STRETCH_MAX_LATENCY)
-        val audioBackend = mSettings!!.getSection(Settings.SECTION_INI_DSP)
+        val audioBackend = settings!!.getSection(Settings.SECTION_INI_DSP)
             .getSetting(SettingsFile.KEY_AUDIO_BACKEND)
         val enableCheats = coreSection.getSetting(SettingsFile.KEY_ENABLE_CHEATS)
 
@@ -263,14 +263,14 @@ class SettingsFragmentPresenter
     }
 
     private fun addInterfaceSettings(sl: ArrayList<SettingsItem>) {
-        val uiSection = mSettings!!.getSection(Settings.SECTION_INI_INTERFACE)
+        val uiSection = settings!!.getSection(Settings.SECTION_INI_INTERFACE)
         val design = uiSection.getSetting(SettingsFile.KEY_DESIGN)
         val usePanicHandlers = uiSection.getSetting(SettingsFile.KEY_USE_PANIC_HANDLERS)
         val onScreenDisplayMessages = uiSection.getSetting(SettingsFile.KEY_OSD_MESSAGES)
         val useBuiltinTitleDatabase = uiSection.getSetting(SettingsFile.KEY_BUILTIN_TITLE_DATABASE)
         val systemBack = uiSection.getSetting(SettingsFile.KEY_SYSTEM_BACK)
 
-        if (mGameID!!.isEmpty()) {
+        if (gameId!!.isEmpty()) {
             sl.add(
                 SingleChoiceSetting(
                     SettingsFile.KEY_DESIGN, Settings.SECTION_INI_INTERFACE,
@@ -307,7 +307,7 @@ class SettingsFragmentPresenter
     }
 
     private fun addGameCubeSettings(sl: ArrayList<SettingsItem>) {
-        val coreSection = mSettings!!.getSection(Settings.SECTION_INI_CORE)
+        val coreSection = settings!!.getSection(Settings.SECTION_INI_CORE)
         val systemLanguage = coreSection.getSetting(SettingsFile.KEY_GAME_CUBE_LANGUAGE)
         val slotADevice = coreSection.getSetting(SettingsFile.KEY_SLOT_A_DEVICE)
         val slotBDevice = coreSection.getSetting(SettingsFile.KEY_SLOT_B_DEVICE)
@@ -349,7 +349,7 @@ class SettingsFragmentPresenter
     }
 
     private fun addWiiSettings(sl: ArrayList<SettingsItem>) {
-        val coreSection = mSettings!!.getSection(Settings.SECTION_INI_CORE)
+        val coreSection = settings!!.getSection(Settings.SECTION_INI_CORE)
         val continuousScan = coreSection.getSetting(SettingsFile.KEY_WIIMOTE_SCAN)
         val wiimoteSpeaker = coreSection.getSetting(SettingsFile.KEY_WIIMOTE_SPEAKER)
         val wiiSDCard = coreSection.getSetting(SettingsFile.KEY_WII_SD_CARD)
@@ -375,7 +375,7 @@ class SettingsFragmentPresenter
         )
 
         // SYSCONF_SETTINGS
-        val sysconfSection = mSettings!!.getSection(Settings.SECTION_WII_IPL)
+        val sysconfSection = settings!!.getSection(Settings.SECTION_WII_IPL)
         val screensaver = sysconfSection.getSetting(SettingsFile.KEY_SYSCONF_SCREENSAVER)
         val language = sysconfSection.getSetting(SettingsFile.KEY_SYSCONF_LANGUAGE)
         val widescreen = sysconfSection.getSetting(SettingsFile.KEY_SYSCONF_WIDESCREEN)
@@ -417,9 +417,9 @@ class SettingsFragmentPresenter
 
     private fun addGcPadSettings(sl: ArrayList<SettingsItem>) {
         for (i in 0..3) {
-            if (TextUtils.isEmpty(mGameID)) {
+            if (TextUtils.isEmpty(gameId)) {
                 // TODO This controller_0 + i business is quite the hack. It should work, but only if the definitions are kept together and in order.
-                val gcPadSetting = mSettings!!.getSection(Settings.SECTION_INI_CORE)
+                val gcPadSetting = settings!!.getSection(Settings.SECTION_INI_CORE)
                     .getSetting(SettingsFile.KEY_GCPAD_TYPE + i)
                 sl.add(
                     SingleChoiceSetting(
@@ -435,7 +435,7 @@ class SettingsFragmentPresenter
                     )
                 )
             } else {
-                val gcPadSetting = mSettings!!.getSection(Settings.SECTION_CONTROLS)
+                val gcPadSetting = settings!!.getSection(Settings.SECTION_CONTROLS)
                     .getSetting(SettingsFile.KEY_GCPAD_G_TYPE + i)
                 sl.add(
                     SingleChoiceSetting(
@@ -457,8 +457,8 @@ class SettingsFragmentPresenter
     private fun addWiimoteSettings(sl: ArrayList<SettingsItem>) {
         for (i in 0..3) {
             // TODO This wiimote_0 + i business is quite the hack. It should work, but only if the definitions are kept together and in order.
-            if (TextUtils.isEmpty(mGameID)) {
-                val wiimoteSetting = mSettings!!.getSection(Settings.SECTION_WIIMOTE + (i + 1))
+            if (TextUtils.isEmpty(gameId)) {
+                val wiimoteSetting = settings!!.getSection(Settings.SECTION_WIIMOTE + (i + 1))
                     .getSetting(SettingsFile.KEY_WIIMOTE_TYPE)
                 sl.add(
                     SingleChoiceSetting(
@@ -469,7 +469,7 @@ class SettingsFragmentPresenter
                     )
                 )
             } else {
-                val wiimoteSetting = mSettings!!.getSection(Settings.SECTION_CONTROLS)
+                val wiimoteSetting = settings!!.getSection(Settings.SECTION_CONTROLS)
                     .getSetting(SettingsFile.KEY_WIIMOTE_G_TYPE + i)
                 sl.add(
                     SingleChoiceSetting(
@@ -495,7 +495,7 @@ class SettingsFragmentPresenter
                 videoBackendValue
             )
 
-        val gfxSection = mSettings!!.getSection(Settings.SECTION_GFX_SETTINGS)
+        val gfxSection = settings!!.getSection(Settings.SECTION_GFX_SETTINGS)
         val showFps = gfxSection.getSetting(SettingsFile.KEY_SHOW_FPS)
         val shaderCompilationMode = gfxSection.getSetting(SettingsFile.KEY_SHADER_COMPILATION_MODE)
         val waitForShaders = gfxSection.getSetting(SettingsFile.KEY_WAIT_FOR_SHADERS)
@@ -555,9 +555,9 @@ class SettingsFragmentPresenter
     }
 
     private fun addEnhanceSettings(sl: ArrayList<SettingsItem>) {
-        val gfxSection = mSettings!!.getSection(Settings.SECTION_GFX_SETTINGS)
-        val enhancementSection = mSettings!!.getSection(Settings.SECTION_GFX_ENHANCEMENTS)
-        val hacksSection = mSettings!!.getSection(Settings.SECTION_GFX_HACKS)
+        val gfxSection = settings!!.getSection(Settings.SECTION_GFX_SETTINGS)
+        val enhancementSection = settings!!.getSection(Settings.SECTION_GFX_ENHANCEMENTS)
+        val hacksSection = settings!!.getSection(Settings.SECTION_GFX_HACKS)
 
         val resolution = gfxSection.getSetting(SettingsFile.KEY_INTERNAL_RES)
         val fsaa = gfxSection.getSetting(SettingsFile.KEY_FSAA)
@@ -716,7 +716,7 @@ class SettingsFragmentPresenter
 
     private fun getShaderEntries(values: Array<String>): Array<String?> {
         val entries = arrayOfNulls<String>(values.size)
-        entries[0] = mActivity.getString(R.string.off)
+        entries[0] = activity.getString(R.string.off)
         for (i in 1 until values.size) {
             entries[i] = capitalize(values[i])
         }
@@ -760,8 +760,8 @@ class SettingsFragmentPresenter
         }
 
     private fun addHackSettings(sl: ArrayList<SettingsItem>) {
-        val gfxSection = mSettings!!.getSection(Settings.SECTION_GFX_SETTINGS)
-        val hacksSection = mSettings!!.getSection(Settings.SECTION_GFX_HACKS)
+        val gfxSection = settings!!.getSection(Settings.SECTION_GFX_SETTINGS)
+        val hacksSection = settings!!.getSection(Settings.SECTION_GFX_HACKS)
 
         val skipEFB = hacksSection.getSetting(SettingsFile.KEY_SKIP_EFB)
         val ignoreFormat = hacksSection.getSetting(SettingsFile.KEY_IGNORE_FORMAT)
@@ -914,7 +914,7 @@ class SettingsFragmentPresenter
     }
 
     private fun addDebugSettings(sl: ArrayList<SettingsItem>) {
-        val debugSection = mSettings!!.getSection(Settings.SECTION_DEBUG)
+        val debugSection = settings!!.getSection(Settings.SECTION_DEBUG)
 
         val jitOff = debugSection.getSetting(SettingsFile.KEY_DEBUG_JITOFF)
         val jitLoadStoreOff = debugSection.getSetting(SettingsFile.KEY_DEBUG_JITLOADSTOREOFF)
@@ -1008,8 +1008,8 @@ class SettingsFragmentPresenter
     }
 
     private fun addGcPadSubSettings(sl: ArrayList<SettingsItem>, gcPadNumber: Int, gcPadType: Int) {
-        val bindingsSection = mSettings!!.getSection(Settings.SECTION_BINDINGS)
-        val coreSection = mSettings!!.getSection(Settings.SECTION_INI_CORE)
+        val bindingsSection = settings!!.getSection(Settings.SECTION_BINDINGS)
+        val coreSection = settings!!.getSection(Settings.SECTION_INI_CORE)
 
         if (gcPadType == 1)  // Emulated
         {
@@ -1224,7 +1224,7 @@ class SettingsFragmentPresenter
     }
 
     private fun addWiimoteSubSettings(sl: ArrayList<SettingsItem>, wiimoteNumber: Int) {
-        val bindingsSection = mSettings!!.getSection(Settings.SECTION_BINDINGS)
+        val bindingsSection = settings!!.getSection(Settings.SECTION_BINDINGS)
 
         val bindA = bindingsSection.getSetting(SettingsFile.KEY_WIIBIND_A + wiimoteNumber)
         val bindB = bindingsSection.getSetting(SettingsFile.KEY_WIIBIND_B + wiimoteNumber)
@@ -1290,7 +1290,7 @@ class SettingsFragmentPresenter
         // do not have any way to specify the controller that is loaded outside of knowing the filename
         // of the profile that was loaded.
         val extension: IntSetting
-        if (TextUtils.isEmpty(mGameID)) {
+        if (TextUtils.isEmpty(gameId)) {
             extension = IntSetting(
                 SettingsFile.KEY_WIIMOTE_EXTENSION,
                 Settings.SECTION_WIIMOTE + wiimoteNumber, getExtensionValue(wiimoteNumber - 3)
@@ -1304,7 +1304,7 @@ class SettingsFragmentPresenter
                 )
             )
         } else {
-            mSettings!!.loadWiimoteProfile(mGameID, (wiimoteNumber - 4).toString())
+            settings!!.loadWiimoteProfile(gameId, (wiimoteNumber - 4).toString())
             extension = IntSetting(
                 SettingsFile.KEY_WIIMOTE_EXTENSION + (wiimoteNumber - 4),
                 Settings.SECTION_CONTROLS, getExtensionValue(wiimoteNumber - 4)
@@ -1538,7 +1538,7 @@ class SettingsFragmentPresenter
         sl: ArrayList<SettingsItem>, wiimoteNumber: Int,
         extentionType: Int
     ) {
-        val bindingsSection = mSettings!!.getSection(Settings.SECTION_BINDINGS)
+        val bindingsSection = settings!!.getSection(Settings.SECTION_BINDINGS)
 
         when (extentionType) {
             1 -> {
@@ -2327,7 +2327,7 @@ class SettingsFragmentPresenter
     private val videoBackendValue: Int
         get() {
             val coreSection =
-                mSettings!!.getSection(Settings.SECTION_INI_CORE)
+                settings!!.getSection(Settings.SECTION_INI_CORE)
 
             var videoBackendValue: Int
 
@@ -2362,13 +2362,13 @@ class SettingsFragmentPresenter
         var extensionValue: Int
 
         try {
-            val extension = if (TextUtils.isEmpty(mGameID))  // Main settings
+            val extension = if (TextUtils.isEmpty(gameId))  // Main settings
             {
-                (mSettings!!.getSection(Settings.SECTION_WIIMOTE + wiimoteNumber)
+                (settings!!.getSection(Settings.SECTION_WIIMOTE + wiimoteNumber)
                     .getSetting(SettingsFile.KEY_WIIMOTE_EXTENSION) as StringSetting).value
             } else  // Game settings
             {
-                (mSettings!!.getSection(Settings.SECTION_PROFILE)
+                (settings!!.getSection(Settings.SECTION_PROFILE)
                     .getSetting(SettingsFile.KEY_WIIMOTE_EXTENSION) as StringSetting).value
             }
 

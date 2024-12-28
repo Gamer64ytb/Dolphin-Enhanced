@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
@@ -28,15 +27,15 @@ import org.dolphinemu.dolphinemu.utils.DirectoryInitialization
 import java.io.File
 
 // GameBannerRequestHandler is only used there, so let's join it into one file
-internal class GameBannerRequestHandler(private val mGameFile: GameFile) : RequestHandler() {
+internal class GameBannerRequestHandler(private val gameFile: GameFile) : RequestHandler() {
     override fun canHandleRequest(data: Request): Boolean {
         return true
     }
 
     override fun load(request: Request, networkPolicy: Int): Result? {
-        val vector = mGameFile.banner
-        val width = mGameFile.bannerWidth
-        val height = mGameFile.bannerHeight
+        val vector = gameFile.banner
+        val width = gameFile.bannerWidth
+        val height = gameFile.bannerHeight
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         bitmap.setPixels(vector, 0, width, 0, 0, width, height)
         return Result(bitmap, Picasso.LoadedFrom.DISK)
@@ -44,13 +43,13 @@ internal class GameBannerRequestHandler(private val mGameFile: GameFile) : Reque
 }
 
 class GameDetailsDialog : DialogFragment() {
-    private var mGameId: String? = null
+    private var gameId: String? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val gameFile =
             GameFileCacheService.addOrGet(requireArguments().getString(ARG_GAME_PATH))
 
-        mGameId = gameFile.gameId
+        gameId = gameFile.gameId
 
         val builder = AlertDialog.Builder(activity)
         val contents = requireActivity().layoutInflater
@@ -124,19 +123,19 @@ class GameDetailsDialog : DialogFragment() {
     }
 
     private fun gameSettingExists(): Boolean {
-        val path = DirectoryInitialization.getLocalSettingFile(mGameId)
+        val path = DirectoryInitialization.getLocalSettingFile(gameId)
         val gameSettingsFile = File(path)
         return gameSettingsFile.exists()
     }
 
     private fun deleteGameSetting(context: Context?) {
-        val path = DirectoryInitialization.getLocalSettingFile(mGameId)
+        val path = DirectoryInitialization.getLocalSettingFile(gameId)
         val gameSettingsFile = File(path)
         if (gameSettingsFile.exists()) {
             if (gameSettingsFile.delete()) {
-                Toast.makeText(context, "Cleared settings for $mGameId", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Cleared settings for $gameId", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "Unable to clear settings for $mGameId", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "Unable to clear settings for $gameId", Toast.LENGTH_SHORT)
                     .show()
             }
         } else {

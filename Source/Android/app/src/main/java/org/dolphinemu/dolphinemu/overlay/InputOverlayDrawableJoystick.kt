@@ -17,66 +17,66 @@ class InputOverlayDrawableJoystick
     InnerDefault: BitmapDrawable, InnerPressed: BitmapDrawable,
     rectOuter: Rect, rectInner: Rect, joystick: Int
 ) {
-    private val mAxisIDs: IntArray = intArrayOf(0, 0, 0, 0)
-    private val mAxises: FloatArray = floatArrayOf(0f, 0f)
-    private val mFactors: FloatArray = floatArrayOf(1f, 1f, 1f, 1f)
+    private val axisIDs: IntArray = intArrayOf(0, 0, 0, 0)
+    private val axises: FloatArray = floatArrayOf(0f, 0f)
+    private val factors: FloatArray = floatArrayOf(1f, 1f, 1f, 1f)
 
     var pointerId: Int = -1
         private set
     var buttonId: Int = 0
         private set
-    private var mControlPositionX: Int = 0
-    private var mControlPositionY: Int = 0
-    private var mPreviousTouchX: Int = 0
-    private var mPreviousTouchY: Int = 0
-    private var mAlpha: Int = 0
-    private val mVirtBounds: Rect
-    private val mOrigBounds: Rect
-    private val mOuterBitmap: BitmapDrawable
-    private val mDefaultInnerBitmap: BitmapDrawable
-    private val mPressedInnerBitmap: BitmapDrawable
-    private val mBoundsBoxBitmap: BitmapDrawable
+    private var controlPositionX: Int = 0
+    private var controlPositionY: Int = 0
+    private var previousTouchX: Int = 0
+    private var previousTouchY: Int = 0
+    private var alpha: Int = 0
+    private val virtBounds: Rect
+    private val origBounds: Rect
+    private val outerBitmap: BitmapDrawable
+    private val defaultInnerBitmap: BitmapDrawable
+    private val pressedInnerBitmap: BitmapDrawable
+    private val boundsBoxBitmap: BitmapDrawable
 
     var bounds: Rect
         get() {
-            return mOuterBitmap.bounds
+            return outerBitmap.bounds
         }
         set(bounds) {
-            mOuterBitmap.bounds = bounds
+            outerBitmap.bounds = bounds
         }
 
     init {
         setAxisIDs(joystick)
 
-        mOuterBitmap = bitmapOuter
-        mDefaultInnerBitmap = InnerDefault
-        mPressedInnerBitmap = InnerPressed
-        mBoundsBoxBitmap = bitmapBounds
+        outerBitmap = bitmapOuter
+        defaultInnerBitmap = InnerDefault
+        pressedInnerBitmap = InnerPressed
+        boundsBoxBitmap = bitmapBounds
 
         bounds = rectOuter
-        mDefaultInnerBitmap.bounds = rectInner
-        mPressedInnerBitmap.bounds = rectInner
-        mVirtBounds = mOuterBitmap.copyBounds()
-        mOrigBounds = mOuterBitmap.copyBounds()
-        mBoundsBoxBitmap.alpha = 0
-        mBoundsBoxBitmap.bounds = mVirtBounds
+        defaultInnerBitmap.bounds = rectInner
+        pressedInnerBitmap.bounds = rectInner
+        virtBounds = outerBitmap.copyBounds()
+        origBounds = outerBitmap.copyBounds()
+        boundsBoxBitmap.alpha = 0
+        boundsBoxBitmap.bounds = virtBounds
         updateInnerBounds()
     }
 
     fun onDraw(canvas: Canvas?) {
-        mOuterBitmap.draw(canvas!!)
+        outerBitmap.draw(canvas!!)
         currentBitmapDrawable.draw(canvas)
-        mBoundsBoxBitmap.draw(canvas)
+        boundsBoxBitmap.draw(canvas)
     }
 
     fun onPointerDown(id: Int, x: Float, y: Float) {
         val reCenter: Boolean = InputOverlay.sJoystickRelative
-        mOuterBitmap.alpha = 0
-        mBoundsBoxBitmap.alpha = mAlpha
+        outerBitmap.alpha = 0
+        boundsBoxBitmap.alpha = alpha
         if (reCenter) {
-            mVirtBounds.offset(x.toInt() - mVirtBounds.centerX(), y.toInt() - mVirtBounds.centerY())
+            virtBounds.offset(x.toInt() - virtBounds.centerX(), y.toInt() - virtBounds.centerY())
         }
-        mBoundsBoxBitmap.bounds = mVirtBounds
+        boundsBoxBitmap.bounds = virtBounds
         pointerId = id
 
         setJoystickState(x, y)
@@ -87,10 +87,10 @@ class InputOverlayDrawableJoystick
     }
 
     fun onPointerUp(id: Int, x: Float, y: Float) {
-        mOuterBitmap.alpha = mAlpha
-        mBoundsBoxBitmap.alpha = 0
-        mVirtBounds.set(mOrigBounds)
-        bounds = mOrigBounds
+        outerBitmap.alpha = alpha
+        boundsBoxBitmap.alpha = 0
+        virtBounds.set(origBounds)
+        bounds = origBounds
         pointerId = -1
 
         setJoystickState(x, y)
@@ -100,15 +100,15 @@ class InputOverlayDrawableJoystick
         if (joystick != 0) {
             buttonId = joystick
 
-            mFactors[0] = 1f
-            mFactors[1] = 1f
-            mFactors[2] = 1f
-            mFactors[3] = 1f
+            factors[0] = 1f
+            factors[1] = 1f
+            factors[2] = 1f
+            factors[3] = 1f
 
-            mAxisIDs[0] = joystick + 1
-            mAxisIDs[1] = joystick + 2
-            mAxisIDs[2] = joystick + 3
-            mAxisIDs[3] = joystick + 4
+            axisIDs[0] = joystick + 1
+            axisIDs[1] = joystick + 2
+            axisIDs[2] = joystick + 3
+            axisIDs[3] = joystick + 4
             return
         }
 
@@ -116,98 +116,98 @@ class InputOverlayDrawableJoystick
             InputOverlay.JOYSTICK_EMULATE_IR -> {
                 buttonId = 0
 
-                mFactors[0] = 0.8f
-                mFactors[1] = 0.8f
-                mFactors[2] = 0.4f
-                mFactors[3] = 0.4f
+                factors[0] = 0.8f
+                factors[1] = 0.8f
+                factors[2] = 0.4f
+                factors[3] = 0.4f
 
-                mAxisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_IR + 1
-                mAxisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_IR + 2
-                mAxisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_IR + 3
-                mAxisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_IR + 4
+                axisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_IR + 1
+                axisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_IR + 2
+                axisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_IR + 3
+                axisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_IR + 4
             }
 
             InputOverlay.JOYSTICK_EMULATE_WII_SWING -> {
                 buttonId = 0
 
-                mFactors[0] = -0.8f
-                mFactors[1] = -0.8f
-                mFactors[2] = -0.8f
-                mFactors[3] = -0.8f
+                factors[0] = -0.8f
+                factors[1] = -0.8f
+                factors[2] = -0.8f
+                factors[3] = -0.8f
 
-                mAxisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_SWING + 1
-                mAxisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_SWING + 2
-                mAxisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_SWING + 3
-                mAxisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_SWING + 4
+                axisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_SWING + 1
+                axisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_SWING + 2
+                axisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_SWING + 3
+                axisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_SWING + 4
             }
 
             InputOverlay.JOYSTICK_EMULATE_WII_TILT -> {
                 buttonId = 0
                 if (InputOverlay.sControllerType == InputOverlay.CONTROLLER_WIINUNCHUK) {
-                    mFactors[0] = 0.8f
-                    mFactors[1] = 0.8f
-                    mFactors[2] = 0.8f
-                    mFactors[3] = 0.8f
+                    factors[0] = 0.8f
+                    factors[1] = 0.8f
+                    factors[2] = 0.8f
+                    factors[3] = 0.8f
 
-                    mAxisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_TILT + 1
-                    mAxisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_TILT + 2
-                    mAxisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_TILT + 3
-                    mAxisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_TILT + 4
+                    axisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_TILT + 1
+                    axisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_TILT + 2
+                    axisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_TILT + 3
+                    axisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_TILT + 4
                 } else {
-                    mFactors[0] = -0.8f
-                    mFactors[1] = -0.8f
-                    mFactors[2] = 0.8f
-                    mFactors[3] = 0.8f
+                    factors[0] = -0.8f
+                    factors[1] = -0.8f
+                    factors[2] = 0.8f
+                    factors[3] = 0.8f
 
-                    mAxisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_TILT + 4 // right
-                    mAxisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_TILT + 3 // left
-                    mAxisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_TILT + 1 // up
-                    mAxisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_TILT + 2 // down
+                    axisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_TILT + 4 // right
+                    axisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_TILT + 3 // left
+                    axisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_TILT + 1 // up
+                    axisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_TILT + 2 // down
                 }
             }
 
             InputOverlay.JOYSTICK_EMULATE_WII_SHAKE -> {
                 buttonId = 0
-                mAxisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_SHAKE_X
-                mAxisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_SHAKE_X
-                mAxisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_SHAKE_Y
-                mAxisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_SHAKE_Z
+                axisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_SHAKE_X
+                axisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_SHAKE_X
+                axisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_SHAKE_Y
+                axisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_SHAKE_Z
             }
 
             InputOverlay.JOYSTICK_EMULATE_NUNCHUK_SWING -> {
                 buttonId = 0
 
-                mFactors[0] = -0.8f
-                mFactors[1] = -0.8f
-                mFactors[2] = -0.8f
-                mFactors[3] = -0.8f
+                factors[0] = -0.8f
+                factors[1] = -0.8f
+                factors[2] = -0.8f
+                factors[3] = -0.8f
 
-                mAxisIDs[0] = NativeLibrary.ButtonType.NUNCHUK_SWING + 1
-                mAxisIDs[1] = NativeLibrary.ButtonType.NUNCHUK_SWING + 2
-                mAxisIDs[2] = NativeLibrary.ButtonType.NUNCHUK_SWING + 3
-                mAxisIDs[3] = NativeLibrary.ButtonType.NUNCHUK_SWING + 4
+                axisIDs[0] = NativeLibrary.ButtonType.NUNCHUK_SWING + 1
+                axisIDs[1] = NativeLibrary.ButtonType.NUNCHUK_SWING + 2
+                axisIDs[2] = NativeLibrary.ButtonType.NUNCHUK_SWING + 3
+                axisIDs[3] = NativeLibrary.ButtonType.NUNCHUK_SWING + 4
             }
 
             InputOverlay.JOYSTICK_EMULATE_NUNCHUK_TILT -> {
                 buttonId = 0
 
-                mFactors[0] = 0.8f
-                mFactors[1] = 0.8f
-                mFactors[2] = 0.8f
-                mFactors[3] = 0.8f
+                factors[0] = 0.8f
+                factors[1] = 0.8f
+                factors[2] = 0.8f
+                factors[3] = 0.8f
 
-                mAxisIDs[0] = NativeLibrary.ButtonType.NUNCHUK_TILT + 1
-                mAxisIDs[1] = NativeLibrary.ButtonType.NUNCHUK_TILT + 2
-                mAxisIDs[2] = NativeLibrary.ButtonType.NUNCHUK_TILT + 3
-                mAxisIDs[3] = NativeLibrary.ButtonType.NUNCHUK_TILT + 4
+                axisIDs[0] = NativeLibrary.ButtonType.NUNCHUK_TILT + 1
+                axisIDs[1] = NativeLibrary.ButtonType.NUNCHUK_TILT + 2
+                axisIDs[2] = NativeLibrary.ButtonType.NUNCHUK_TILT + 3
+                axisIDs[3] = NativeLibrary.ButtonType.NUNCHUK_TILT + 4
             }
 
             InputOverlay.JOYSTICK_EMULATE_NUNCHUK_SHAKE -> {
                 buttonId = 0
-                mAxisIDs[0] = NativeLibrary.ButtonType.NUNCHUK_SHAKE_X
-                mAxisIDs[1] = NativeLibrary.ButtonType.NUNCHUK_SHAKE_X
-                mAxisIDs[2] = NativeLibrary.ButtonType.NUNCHUK_SHAKE_Y
-                mAxisIDs[3] = NativeLibrary.ButtonType.NUNCHUK_SHAKE_Z
+                axisIDs[0] = NativeLibrary.ButtonType.NUNCHUK_SHAKE_X
+                axisIDs[1] = NativeLibrary.ButtonType.NUNCHUK_SHAKE_X
+                axisIDs[2] = NativeLibrary.ButtonType.NUNCHUK_SHAKE_Y
+                axisIDs[3] = NativeLibrary.ButtonType.NUNCHUK_SHAKE_Z
             }
         }
     }
@@ -216,19 +216,19 @@ class InputOverlayDrawableJoystick
         var touchX: Float = touchX
         var touchY: Float = touchY
         if (pointerId != -1) {
-            var maxY: Float = mVirtBounds.bottom.toFloat()
-            var maxX: Float = mVirtBounds.right.toFloat()
-            touchX -= mVirtBounds.centerX().toFloat()
-            maxX -= mVirtBounds.centerX().toFloat()
-            touchY -= mVirtBounds.centerY().toFloat()
-            maxY -= mVirtBounds.centerY().toFloat()
+            var maxY: Float = virtBounds.bottom.toFloat()
+            var maxX: Float = virtBounds.right.toFloat()
+            touchX -= virtBounds.centerX().toFloat()
+            maxX -= virtBounds.centerX().toFloat()
+            touchY -= virtBounds.centerY().toFloat()
+            maxY -= virtBounds.centerY().toFloat()
             val AxisX: Float = touchX / maxX
             val AxisY: Float = touchY / maxY
-            mAxises[0] = AxisY
-            mAxises[1] = AxisX
+            axises[0] = AxisY
+            axises[1] = AxisX
         } else {
-            mAxises[1] = 0.0f
-            mAxises[0] = mAxises[1]
+            axises[1] = 0.0f
+            axises[0] = axises[1]
         }
 
         updateInnerBounds()
@@ -254,7 +254,7 @@ class InputOverlayDrawableJoystick
 
         for (i in 0..3) {
             NativeLibrary.onGamePadMoveEvent(
-                NativeLibrary.TouchScreenDevice, mAxisIDs[i], mFactors[i] * axises[i]
+                NativeLibrary.TouchScreenDevice, axisIDs[i], factors[i] * axises[i]
             )
         }
     }
@@ -266,14 +266,14 @@ class InputOverlayDrawableJoystick
                 if (InputOverlay.sShakeStates[i] != NativeLibrary.ButtonState.PRESSED) {
                     InputOverlay.sShakeStates[i] = NativeLibrary.ButtonState.PRESSED
                     NativeLibrary.onGamePadEvent(
-                        NativeLibrary.TouchScreenDevice, mAxisIDs[i],
+                        NativeLibrary.TouchScreenDevice, axisIDs[i],
                         NativeLibrary.ButtonState.PRESSED
                     )
                 }
             } else if (InputOverlay.sShakeStates[i] != NativeLibrary.ButtonState.RELEASED) {
                 InputOverlay.sShakeStates[i] = NativeLibrary.ButtonState.RELEASED
                 NativeLibrary.onGamePadEvent(
-                    NativeLibrary.TouchScreenDevice, mAxisIDs[i],
+                    NativeLibrary.TouchScreenDevice, axisIDs[i],
                     NativeLibrary.ButtonState.RELEASED
                 )
             }
@@ -281,85 +281,85 @@ class InputOverlayDrawableJoystick
     }
 
     fun onConfigureBegin(x: Int, y: Int) {
-        mPreviousTouchX = x
-        mPreviousTouchY = y
+        previousTouchX = x
+        previousTouchY = y
     }
 
     fun onConfigureMove(x: Int, y: Int) {
-        val deltaX: Int = x - mPreviousTouchX
-        val deltaY: Int = y - mPreviousTouchY
+        val deltaX: Int = x - previousTouchX
+        val deltaY: Int = y - previousTouchY
         val bounds: Rect = bounds
-        mControlPositionX += deltaX
-        mControlPositionY += deltaY
+        controlPositionX += deltaX
+        controlPositionY += deltaY
         this.bounds = Rect(
-            mControlPositionX, mControlPositionY,
-            mControlPositionX + bounds.width(),
-            mControlPositionY + bounds.height()
+            controlPositionX, controlPositionY,
+            controlPositionX + bounds.width(),
+            controlPositionY + bounds.height()
         )
-        mVirtBounds.set(
-            mControlPositionX, mControlPositionY,
-            mControlPositionX + mVirtBounds.width(),
-            mControlPositionY + mVirtBounds.height()
+        virtBounds.set(
+            controlPositionX, controlPositionY,
+            controlPositionX + virtBounds.width(),
+            controlPositionY + virtBounds.height()
         )
         updateInnerBounds()
-        mOrigBounds.set(
-            mControlPositionX, mControlPositionY,
-            mControlPositionX + mOrigBounds.width(),
-            mControlPositionY + mOrigBounds.height()
+        origBounds.set(
+            controlPositionX, controlPositionY,
+            controlPositionX + origBounds.width(),
+            controlPositionY + origBounds.height()
         )
-        mPreviousTouchX = x
-        mPreviousTouchY = y
+        previousTouchX = x
+        previousTouchY = y
     }
 
     val axisValues: FloatArray
         get() = floatArrayOf(
-            mAxises[0],
-            mAxises[0],
-            mAxises[1],
-            mAxises[1]
+            axises[0],
+            axises[0],
+            axises[1],
+            axises[1]
         )
 
     private fun updateInnerBounds() {
-        var X: Int = mVirtBounds.centerX() + ((mAxises[1]) * (mVirtBounds.width() / 2)).toInt()
-        var Y: Int = mVirtBounds.centerY() + ((mAxises[0]) * (mVirtBounds.height() / 2)).toInt()
+        var X: Int = virtBounds.centerX() + ((axises[1]) * (virtBounds.width() / 2)).toInt()
+        var Y: Int = virtBounds.centerY() + ((axises[0]) * (virtBounds.height() / 2)).toInt()
 
-        if (X > mVirtBounds.centerX() + (mVirtBounds.width() / 2)) X =
-            mVirtBounds.centerX() + (mVirtBounds.width() / 2)
-        if (X < mVirtBounds.centerX() - (mVirtBounds.width() / 2)) X =
-            mVirtBounds.centerX() - (mVirtBounds.width() / 2)
-        if (Y > mVirtBounds.centerY() + (mVirtBounds.height() / 2)) Y =
-            mVirtBounds.centerY() + (mVirtBounds.height() / 2)
-        if (Y < mVirtBounds.centerY() - (mVirtBounds.height() / 2)) Y =
-            mVirtBounds.centerY() - (mVirtBounds.height() / 2)
+        if (X > virtBounds.centerX() + (virtBounds.width() / 2)) X =
+            virtBounds.centerX() + (virtBounds.width() / 2)
+        if (X < virtBounds.centerX() - (virtBounds.width() / 2)) X =
+            virtBounds.centerX() - (virtBounds.width() / 2)
+        if (Y > virtBounds.centerY() + (virtBounds.height() / 2)) Y =
+            virtBounds.centerY() + (virtBounds.height() / 2)
+        if (Y < virtBounds.centerY() - (virtBounds.height() / 2)) Y =
+            virtBounds.centerY() - (virtBounds.height() / 2)
 
-        val width: Int = mPressedInnerBitmap.bounds.width() / 2
-        val height: Int = mPressedInnerBitmap.bounds.height() / 2
-        mDefaultInnerBitmap.setBounds(X - width, Y - height, X + width, Y + height)
-        mPressedInnerBitmap.bounds = mDefaultInnerBitmap.bounds
+        val width: Int = pressedInnerBitmap.bounds.width() / 2
+        val height: Int = pressedInnerBitmap.bounds.height() / 2
+        defaultInnerBitmap.setBounds(X - width, Y - height, X + width, Y + height)
+        pressedInnerBitmap.bounds = defaultInnerBitmap.bounds
     }
 
     fun setPosition(x: Int, y: Int) {
-        mControlPositionX = x
-        mControlPositionY = y
+        controlPositionX = x
+        controlPositionY = y
     }
 
     private val currentBitmapDrawable: BitmapDrawable
         get() {
-            return if (pointerId != -1) mPressedInnerBitmap else mDefaultInnerBitmap
+            return if (pointerId != -1) pressedInnerBitmap else defaultInnerBitmap
         }
 
     fun setAlpha(value: Int) {
-        mAlpha = value
+        alpha = value
 
-        mDefaultInnerBitmap.alpha = value
-        mPressedInnerBitmap.alpha = value
+        defaultInnerBitmap.alpha = value
+        pressedInnerBitmap.alpha = value
 
         if (pointerId == -1) {
-            mOuterBitmap.alpha = value
-            mBoundsBoxBitmap.alpha = 0
+            outerBitmap.alpha = value
+            boundsBoxBitmap.alpha = 0
         } else {
-            mOuterBitmap.alpha = 0
-            mBoundsBoxBitmap.alpha = value
+            outerBitmap.alpha = 0
+            boundsBoxBitmap.alpha = value
         }
     }
 }

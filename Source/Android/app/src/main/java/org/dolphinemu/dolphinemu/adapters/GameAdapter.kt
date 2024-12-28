@@ -14,15 +14,15 @@ import org.dolphinemu.dolphinemu.viewholders.GameViewHolder
 
 class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener,
     OnLongClickListener {
-    private var mResourceId = 0
-    private var mGameFiles: List<GameFile>
+    private var resourceId = 0
+    private var gameFileList: List<GameFile>
 
     /**
      * Initializes the adapter's observer, which watches for changes to the dataset. The adapter will
      * display no data until swapDataSet is called.
      */
     init {
-        mGameFiles = ArrayList()
+        gameFileList = ArrayList()
     }
 
     /**
@@ -45,7 +45,7 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
     }
 
     override fun getItemViewType(position: Int): Int {
-        return mResourceId
+        return resourceId
     }
 
     /**
@@ -57,7 +57,7 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
      * @param position The position of the 'new' view in the dataset.
      */
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        val gameFile = mGameFiles[position]
+        val gameFile = gameFileList[position]
         gameFile.loadGameBanner(holder.imageScreenshot)
 
         holder.textGameTitle.text = gameFile.title
@@ -118,7 +118,7 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
      * @return Size of the dataset.
      */
     override fun getItemCount(): Int {
-        return mGameFiles.size
+        return gameFileList.size
     }
 
     /**
@@ -135,12 +135,12 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
      * with the newly-loaded data.
      */
     fun swapDataSet(gameFiles: List<GameFile>) {
-        mGameFiles = gameFiles
+        gameFileList = gameFiles
         notifyDataSetChanged()
     }
 
     fun setResourceId(resId: Int) {
-        mResourceId = resId
+        resourceId = resId
     }
 
     /**

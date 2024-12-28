@@ -38,12 +38,12 @@ import java.util.Arrays
  * individually display a grid of available games for each Fragment, in a tabbed layout.
  */
 class MainActivity : AppCompatActivity() {
-    private var mDivider: DividerItemDecoration? = null
-    private var mGameList: RecyclerView? = null
-    private var mAdapter: GameAdapter? = null
-    private var mToolbar: Toolbar? = null
-    private var mBroadcastReceiver: BroadcastReceiver? = null
-    private var mDirToAdd: String? = null
+    private var divider: DividerItemDecoration? = null
+    private var gameList: RecyclerView? = null
+    private var adapter: GameAdapter? = null
+    private var toolbar: Toolbar? = null
+    private var broadcastReceiver: BroadcastReceiver? = null
+    private var dirToAdd: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeUtil.applyTheme()
@@ -52,17 +52,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         findViews()
-        setSupportActionBar(mToolbar)
+        setSupportActionBar(toolbar)
         title = String(TITLE_BYTES)
 
         val filter = IntentFilter()
         filter.addAction(GameFileCacheService.BROADCAST_ACTION)
-        mBroadcastReceiver = object : BroadcastReceiver() {
+        broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 showGames()
             }
         }
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver!!, filter)
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver!!, filter)
 
         // Stuff in this block only happens when this activity is newly created (i.e. not a rotation)
         if (savedInstanceState == null) StartupHandler.HandleInit(this)
@@ -75,9 +75,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (mDirToAdd != null) {
-            GameFileCache.addGameFolder(mDirToAdd!!, this)
-            mDirToAdd = null
+        if (dirToAdd != null) {
+            GameFileCache.addGameFolder(dirToAdd!!, this)
+            dirToAdd = null
             GameFileCacheService.startRescan(this)
         }
     }
@@ -85,18 +85,18 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
-            mBroadcastReceiver!!
+            broadcastReceiver!!
         )
     }
 
     // TODO: Replace with a ButterKnife injection.
     private fun findViews() {
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        mDivider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        mToolbar = findViewById(R.id.toolbar_main)
-        mGameList = findViewById(R.id.grid_games)
-        mAdapter = GameAdapter()
-        mGameList!!.setAdapter(mAdapter)
+        divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        toolbar = findViewById(R.id.toolbar_main)
+        gameList = findViewById(R.id.grid_games)
+        adapter = GameAdapter()
+        gameList!!.setAdapter(adapter)
         refreshGameList(pref.getBoolean(PREF_GAMELIST, true))
     }
 
@@ -107,15 +107,15 @@ class MainActivity : AppCompatActivity() {
         if (flag) {
             resourceId = R.layout.card_game
             layoutManager = GridLayoutManager(this, columns)
-            mGameList!!.addItemDecoration(mDivider!!)
+            gameList!!.addItemDecoration(divider!!)
         } else {
             columns = columns * 2 + 1
             resourceId = R.layout.card_game2
             layoutManager = GridLayoutManager(this, columns)
-            mGameList!!.removeItemDecoration(mDivider!!)
+            gameList!!.removeItemDecoration(divider!!)
         }
-        mAdapter!!.setResourceId(resourceId)
-        mGameList!!.layoutManager = layoutManager
+        adapter!!.setResourceId(resourceId)
+        gameList!!.layoutManager = layoutManager
     }
 
     private fun toggleGameList() {
@@ -254,7 +254,7 @@ class MainActivity : AppCompatActivity() {
         val takeFlags = result.flags and Intent.FLAG_GRANT_READ_URI_PERMISSION
         getContentResolver().takePersistableUriPermission(uri, takeFlags)
 
-        mDirToAdd = uri.toString()
+        dirToAdd = uri.toString()
     }
 
     /**
@@ -300,7 +300,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showGames() {
-        mAdapter!!.swapDataSet(GameFileCacheService.getAllGameFiles())
+        adapter!!.swapDataSet(GameFileCacheService.getAllGameFiles())
     }
 
     companion object {

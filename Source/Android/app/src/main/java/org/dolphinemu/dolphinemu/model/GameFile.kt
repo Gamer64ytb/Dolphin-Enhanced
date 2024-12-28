@@ -84,13 +84,13 @@ class GameFile
 
     val lastSavedState: String?
         get() {
-            val NUM_STATES = 10
+            val numStates = 10
             val statePath =
                 DirectoryInitialization.getUserDirectory() + "/StateSaves/"
             val gameId = gameId
             var lastModified: Long = 0
             var savedState: String? = null
-            for (i in 0 until NUM_STATES) {
+            for (i in 0 until numStates) {
                 val filename =
                     String.format("%s%s.s%02d", statePath, gameId, i)
                 val stateFile = File(filename)

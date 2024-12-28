@@ -8,7 +8,7 @@ import android.widget.FrameLayout
  * FrameLayout subclass with few Properties added to simplify animations.
  */
 class SettingsFrameLayout : FrameLayout {
-    private val mVisibleness = 1.0f
+    private val visiblenessFlt = 1.0f
 
     constructor(context: Context) : super(context)
 
@@ -35,7 +35,7 @@ class SettingsFrameLayout : FrameLayout {
         }
 
     var visibleness: Float
-        get() = mVisibleness
+        get() = visiblenessFlt
         set(visibleness) {
             scaleX = visibleness
             scaleY = visibleness

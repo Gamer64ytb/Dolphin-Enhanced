@@ -8,48 +8,48 @@ class InputOverlayPointer
     var pointerId: Int
         private set
 
-    private var mDisplayScale: Float
-    private val mScaledDensity: Float
-    private val mMaxWidth: Int
-    private val mMaxHeight: Int
-    private var mGameWidthHalf: Float
-    private var mGameHeightHalf: Float
-    private var mAdjustX: Float
-    private var mAdjustY: Float
+    private var displayScale: Float
+    private val scaledDensity: Float
+    private val maxWidth: Int
+    private val maxHeight: Int
+    private var gameWidthHalf: Float
+    private var gameHeightHalf: Float
+    private var adjustX: Float
+    private var adjustY: Float
 
-    private val mAxisIDs = IntArray(4)
+    private val axisIDs = IntArray(4)
 
     // used for stick
-    private val mAxises = FloatArray(4)
-    private var mCenterX = 0f
-    private var mCenterY = 0f
+    private val axises = FloatArray(4)
+    private var centerX = 0f
+    private var centerY = 0f
 
     // used for click
-    private var mLastClickTime: Long
-    private val mClickButtonId: Int
-    private var mIsDoubleClick: Boolean
+    private var lastClickTime: Long
+    private val clickButtonId: Int
+    private var isDoubleClick: Boolean
 
     init {
         mType = TYPE_OFF
-        mAxisIDs[0] = 0
-        mAxisIDs[1] = 0
-        mAxisIDs[2] = 0
-        mAxisIDs[3] = 0
+        axisIDs[0] = 0
+        axisIDs[1] = 0
+        axisIDs[2] = 0
+        axisIDs[3] = 0
 
-        mDisplayScale = 1.0f
-        mScaledDensity = scaledDensity
-        mMaxWidth = width
-        mMaxHeight = height
-        mGameWidthHalf = width / 2.0f
-        mGameHeightHalf = height / 2.0f
-        mAdjustX = 1.0f
-        mAdjustY = 1.0f
+        displayScale = 1.0f
+        this.scaledDensity = scaledDensity
+        maxWidth = width
+        maxHeight = height
+        gameWidthHalf = width / 2.0f
+        gameHeightHalf = height / 2.0f
+        adjustX = 1.0f
+        adjustY = 1.0f
 
         pointerId = -1
 
-        mLastClickTime = 0
-        mIsDoubleClick = false
-        mClickButtonId = NativeLibrary.ButtonType.WIIMOTE_BUTTON_A
+        lastClickTime = 0
+        isDoubleClick = false
+        clickButtonId = NativeLibrary.ButtonType.WIIMOTE_BUTTON_A
 
         if (NativeLibrary.IsRunning()) {
             updateTouchPointer()
@@ -57,21 +57,21 @@ class InputOverlayPointer
     }
 
     fun updateTouchPointer() {
-        val deviceAR = mMaxWidth.toFloat() / mMaxHeight.toFloat()
+        val deviceAR = maxWidth.toFloat() / maxHeight.toFloat()
         val gameAR = NativeLibrary.GetGameAspectRatio()
         // same scale ratio in renderbase.cpp
-        mDisplayScale = (NativeLibrary.GetGameDisplayScale() - 1.0f) / 2.0f + 1.0f
+        displayScale = (NativeLibrary.GetGameDisplayScale() - 1.0f) / 2.0f + 1.0f
 
         if (gameAR <= deviceAR) {
-            mAdjustX = gameAR / deviceAR
-            mAdjustY = 1.0f
-            mGameWidthHalf = Math.round(mMaxHeight * gameAR) / 2.0f
-            mGameHeightHalf = mMaxHeight / 2.0f
+            adjustX = gameAR / deviceAR
+            adjustY = 1.0f
+            gameWidthHalf = Math.round(maxHeight * gameAR) / 2.0f
+            gameHeightHalf = maxHeight / 2.0f
         } else {
-            mAdjustX = 1.0f
-            mAdjustY = gameAR / deviceAR
-            mGameWidthHalf = mMaxWidth / 2.0f
-            mGameHeightHalf = Math.round(mMaxWidth / gameAR) / 2.0f
+            adjustX = 1.0f
+            adjustY = gameAR / deviceAR
+            gameWidthHalf = maxWidth / 2.0f
+            gameHeightHalf = Math.round(maxWidth / gameAR) / 2.0f
         }
     }
 
@@ -81,23 +81,23 @@ class InputOverlayPointer
 
         if (type == TYPE_CLICK) {
             // click
-            mAxisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_IR + 1
-            mAxisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_IR + 2
-            mAxisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_IR + 3
-            mAxisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_IR + 4
+            axisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_IR + 1
+            axisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_IR + 2
+            axisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_IR + 3
+            axisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_IR + 4
         } else if (type == TYPE_STICK) {
             // stick
-            mAxisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_IR + 1
-            mAxisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_IR + 2
-            mAxisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_IR + 3
-            mAxisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_IR + 4
+            axisIDs[0] = NativeLibrary.ButtonType.WIIMOTE_IR + 1
+            axisIDs[1] = NativeLibrary.ButtonType.WIIMOTE_IR + 2
+            axisIDs[2] = NativeLibrary.ButtonType.WIIMOTE_IR + 3
+            axisIDs[3] = NativeLibrary.ButtonType.WIIMOTE_IR + 4
         }
     }
 
     fun reset() {
         pointerId = -1
         for (i in 0..3) {
-            mAxises[i] = 0.0f
+            axises[i] = 0.0f
             NativeLibrary.onGamePadMoveEvent(
                 NativeLibrary.TouchScreenDevice,
                 NativeLibrary.ButtonType.WIIMOTE_IR + i + 1, 0.0f
@@ -107,21 +107,21 @@ class InputOverlayPointer
 
     fun onPointerDown(id: Int, x: Float, y: Float) {
         pointerId = id
-        mCenterX = x
-        mCenterY = y
+        centerX = x
+        centerY = y
         setPointerState(x, y)
 
         if (mType == TYPE_CLICK) {
             val currentTime = System.currentTimeMillis()
-            if (currentTime - mLastClickTime < 300) {
-                mIsDoubleClick = true
+            if (currentTime - lastClickTime < 300) {
+                isDoubleClick = true
                 NativeLibrary.onGamePadEvent(
                     NativeLibrary.TouchScreenDevice,
-                    mClickButtonId,
+                    clickButtonId,
                     NativeLibrary.ButtonState.PRESSED
                 )
             }
-            mLastClickTime = currentTime
+            lastClickTime = currentTime
         }
     }
 
@@ -133,36 +133,36 @@ class InputOverlayPointer
         pointerId = -1
         setPointerState(x, y)
 
-        if (mIsDoubleClick) {
+        if (isDoubleClick) {
             NativeLibrary.onGamePadEvent(
                 NativeLibrary.TouchScreenDevice,
-                mClickButtonId,
+                clickButtonId,
                 NativeLibrary.ButtonState.RELEASED
             )
-            mIsDoubleClick = false
+            isDoubleClick = false
         }
     }
 
     private fun setPointerState(x: Float, y: Float) {
         val axises = FloatArray(4)
-        val scale = mDisplayScale
+        val scale = displayScale
 
         if (mType == TYPE_CLICK) {
             // click
-            axises[1] = ((y * mAdjustY) - mGameHeightHalf) / mGameHeightHalf / scale
+            axises[1] = ((y * adjustY) - gameHeightHalf) / gameHeightHalf / scale
             axises[0] = axises[1]
-            axises[3] = ((x * mAdjustX) - mGameWidthHalf) / mGameWidthHalf / scale
+            axises[3] = ((x * adjustX) - gameWidthHalf) / gameWidthHalf / scale
             axises[2] = axises[3]
         } else if (mType == TYPE_STICK) {
             // stick
-            axises[1] = (y - mCenterY) / mGameHeightHalf * mScaledDensity / scale / 2.0f
+            axises[1] = (y - centerY) / gameHeightHalf * scaledDensity / scale / 2.0f
             axises[0] = axises[1]
-            axises[3] = (x - mCenterX) / mGameWidthHalf * mScaledDensity / scale / 2.0f
+            axises[3] = (x - centerX) / gameWidthHalf * scaledDensity / scale / 2.0f
             axises[2] = axises[3]
         }
 
-        for (i in mAxisIDs.indices) {
-            var value = mAxises[i] + axises[i]
+        for (i in axisIDs.indices) {
+            var value = this.axises[i] + axises[i]
             if (pointerId == -1) {
                 if (InputOverlay.sIRRecenter) {
                     // recenter
@@ -170,12 +170,12 @@ class InputOverlayPointer
                 }
                 if (mType == TYPE_STICK) {
                     // stick, save current value
-                    mAxises[i] = value
+                    this.axises[i] = value
                 }
             }
             NativeLibrary.onGamePadMoveEvent(
                 NativeLibrary.TouchScreenDevice,
-                mAxisIDs[i], value
+                axisIDs[i], value
             )
         }
     }

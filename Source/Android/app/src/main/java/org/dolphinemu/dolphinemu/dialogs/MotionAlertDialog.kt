@@ -25,9 +25,9 @@ class MotionAlertDialog
     context: Context?, // The selected input preference
     private val setting: InputBindingSetting
 ) : AlertDialog(context) {
-    private val mPreviousValues = ArrayList<Float>()
-    private var mPrevDeviceId = 0
-    private var mWaitingForEvent = true
+    private val previousValues = ArrayList<Float>()
+    private var prevDeviceId = 0
+    private var waitingForEvent = true
 
     private fun onKeyEvent(keyCode: Int, event: KeyEvent): Boolean {
         Log.debug("[MotionAlertDialog] Received key event: " + event.action)
@@ -63,26 +63,26 @@ class MotionAlertDialog
 
         val motionRanges = input.motionRanges
 
-        if (input.id != mPrevDeviceId) {
-            mPreviousValues.clear()
+        if (input.id != prevDeviceId) {
+            previousValues.clear()
         }
-        mPrevDeviceId = input.id
-        val firstEvent = mPreviousValues.isEmpty()
+        prevDeviceId = input.id
+        val firstEvent = previousValues.isEmpty()
 
         var numMovedAxis = 0
         var axisMoveValue = 0.0f
         var lastMovedRange: MotionRange? = null
         var lastMovedDir = '?'
-        if (mWaitingForEvent) {
+        if (waitingForEvent) {
             for (i in motionRanges.indices) {
                 val range = motionRanges[i]
                 val axis = range.axis
                 val origValue = event.getAxisValue(axis)
                 val value = ControllerMappingHelper.scaleAxis(input, axis, origValue)
                 if (firstEvent) {
-                    mPreviousValues.add(value)
+                    previousValues.add(value)
                 } else {
-                    val previousValue = mPreviousValues[i]
+                    val previousValue = previousValues[i]
 
                     // Only handle the axes that are not neutral (more than 0.5)
                     // but ignore any axis that has a constant value (e.g. always 1)
@@ -106,12 +106,12 @@ class MotionAlertDialog
                     }
                 }
 
-                mPreviousValues[i] = value
+                previousValues[i] = value
             }
 
             // If only one axis moved, that's the winner.
             if (numMovedAxis == 1) {
-                mWaitingForEvent = false
+                waitingForEvent = false
                 setting.onMotionInput(input, lastMovedRange, lastMovedDir)
                 dismiss()
             }

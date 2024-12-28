@@ -30,45 +30,45 @@ class StateSavesDialog : DialogFragment() {
             }
     }
 
-    inner class StateSaveViewHolder(private val mDialog: DialogFragment, itemView: View) :
+    inner class StateSaveViewHolder(private val dialog: DialogFragment, itemView: View) :
         RecyclerView.ViewHolder(itemView) {
-        private val mName: TextView = itemView.findViewById(R.id.state_name)
-        private val mDate: TextView = itemView.findViewById(R.id.state_time)
-        private val mBtnLoad: Button =
+        private val name: TextView = itemView.findViewById(R.id.state_name)
+        private val date: TextView = itemView.findViewById(R.id.state_time)
+        private val btnLoad: Button =
             itemView.findViewById(R.id.button_load_state)
-        private val mBtnSave: Button =
+        private val btnSave: Button =
             itemView.findViewById(R.id.button_save_state)
-        private val mBtnDelete: Button =
+        private val btnDelete: Button =
             itemView.findViewById(R.id.button_delete)
 
         fun bind(item: StateSaveModel) {
             val lastModified = item.lastModified
             if (lastModified > 0) {
-                mName.text = item.name
-                mDate.text =
+                name.text = item.name
+                date.text =
                     SimpleDateFormat.getDateTimeInstance()
                         .format(Date(lastModified))
-                mBtnDelete.visibility = View.VISIBLE
+                btnDelete.visibility = View.VISIBLE
             } else {
-                mName.text = ""
-                mDate.text = ""
-                mBtnDelete.visibility = View.INVISIBLE
+                name.text = ""
+                date.text = ""
+                btnDelete.visibility = View.INVISIBLE
             }
-            mBtnLoad.isEnabled = item.name.isNotEmpty()
-            mBtnLoad.setOnClickListener {
+            btnLoad.isEnabled = item.name.isNotEmpty()
+            btnLoad.setOnClickListener {
                 NativeLibrary.LoadState(item.index)
-                mDialog.dismiss()
+                dialog.dismiss()
             }
-            mBtnSave.setOnClickListener {
+            btnSave.setOnClickListener {
                 NativeLibrary.SaveState(item.index, false)
-                mDialog.dismiss()
+                dialog.dismiss()
             }
-            mBtnDelete.setOnClickListener {
+            btnDelete.setOnClickListener {
                 val file = File(item.filename)
                 if (file.delete()) {
-                    mName.text = ""
-                    mDate.text = ""
-                    mBtnDelete.visibility = View.INVISIBLE
+                    name.text = ""
+                    date.text = ""
+                    btnDelete.visibility = View.INVISIBLE
                 }
             }
         }
@@ -76,37 +76,37 @@ class StateSavesDialog : DialogFragment() {
 
     inner class StateSavesAdapter(dialog: DialogFragment, gameId: String?) :
         RecyclerView.Adapter<StateSaveViewHolder>() {
-        private val mDialog: DialogFragment
-        private val mStateSaves: ArrayList<StateSaveModel>
+        private val dialog: DialogFragment
+        private val stateSaves: ArrayList<StateSaveModel>
 
         init {
             val statePath = DirectoryInitialization.getUserDirectory() + "/StateSaves/"
             val indices = ArrayList<Int>()
-            mDialog = dialog
-            mStateSaves = ArrayList()
+            this.dialog = dialog
+            stateSaves = ArrayList()
             for (i in 0 until Companion.NUM_STATES) {
                 val filename = String.format("%s%s.s%02d", statePath, gameId, i)
                 val stateFile = File(filename)
                 if (stateFile.exists()) {
-                    mStateSaves.add(StateSaveModel(i, filename, stateFile.lastModified()))
+                    stateSaves.add(StateSaveModel(i, filename, stateFile.lastModified()))
                 } else {
                     indices.add(i)
                 }
             }
 
             for (idx in indices) {
-                mStateSaves.add(StateSaveModel(idx, "", 0))
+                stateSaves.add(StateSaveModel(idx, "", 0))
             }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StateSaveViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val itemView = inflater.inflate(R.layout.list_item_statesave, parent, false)
-            return StateSaveViewHolder(mDialog, itemView)
+            return StateSaveViewHolder(dialog, itemView)
         }
 
         override fun getItemCount(): Int {
-            return mStateSaves.size
+            return stateSaves.size
         }
 
         override fun getItemViewType(position: Int): Int {
@@ -114,11 +114,11 @@ class StateSavesDialog : DialogFragment() {
         }
 
         override fun onBindViewHolder(holder: StateSaveViewHolder, position: Int) {
-            holder.bind(mStateSaves[position])
+            holder.bind(stateSaves[position])
         }
     }
 
-    private var mAdapter: StateSavesAdapter? = null
+    private var adapter: StateSavesAdapter? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
@@ -132,8 +132,8 @@ class StateSavesDialog : DialogFragment() {
         val recyclerView = contents.findViewById<RecyclerView>(R.id.list_settings)
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(context, columns)
         recyclerView.layoutManager = layoutManager
-        mAdapter = StateSavesAdapter(this, requireArguments().getString(ARG_GAME_ID))
-        recyclerView.adapter = mAdapter
+        adapter = StateSavesAdapter(this, requireArguments().getString(ARG_GAME_ID))
+        recyclerView.adapter = adapter
         recyclerView.addItemDecoration(
             DividerItemDecoration(
                 requireContext(),

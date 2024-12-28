@@ -39,21 +39,21 @@ import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.SubmenuViewHold
 import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile
 import org.dolphinemu.dolphinemu.utils.Log
 
-class SettingsAdapter(private val mActivity: SettingsActivity) :
+class SettingsAdapter(private val activity: SettingsActivity) :
     RecyclerView.Adapter<SettingViewHolder?>(),
     DialogInterface.OnClickListener, OnSeekBarChangeListener {
-    private var mSettings: ArrayList<SettingsItem>? = null
+    private var settings: ArrayList<SettingsItem>? = null
 
-    private var mClickedItem: SettingsItem? = null
-    private var mClickedPosition: Int
-    private var mSeekbarProgress = 0
+    private var clickedItem: SettingsItem? = null
+    private var clickedPosition: Int
+    private var seekbarProgress = 0
 
-    private var mDialog: AlertDialog? = null
-    private var mTextSliderValue: TextInputEditText? = null
-    private var mTextInputLayout: TextInputLayout? = null
+    private var dialog: AlertDialog? = null
+    private var textSliderValue: TextInputEditText? = null
+    private var textInputLayout: TextInputLayout? = null
 
     init {
-        mClickedPosition = -1
+        clickedPosition = -1
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingViewHolder {
@@ -115,92 +115,92 @@ class SettingsAdapter(private val mActivity: SettingsActivity) :
     }
 
     override fun onBindViewHolder(holder: SettingViewHolder, position: Int) {
-        holder.bind(mSettings!![position])
+        holder.bind(settings!![position])
     }
 
     override fun getItemCount(): Int {
-        return if (mSettings != null) {
-            mSettings!!.size
+        return if (settings != null) {
+            settings!!.size
         } else {
             0
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return mSettings!![position].type
+        return settings!![position].type
     }
 
     fun getSettingSection(position: Int): String {
-        return mSettings!![position].section
+        return settings!![position].section
     }
 
     fun setSettings(settings: ArrayList<SettingsItem>?) {
-        mSettings = settings
+        this.settings = settings
         notifyDataSetChanged()
     }
 
     fun onBooleanClick(item: CheckBoxSetting, position: Int, checked: Boolean) {
         val setting = item.setChecked(checked)
         if (setting != null) {
-            mActivity.putSetting(setting)
+            activity.putSetting(setting)
         }
-        mActivity.setSettingChanged()
+        activity.setSettingChanged()
     }
 
     fun onSingleChoiceClick(item: SingleChoiceSetting, position: Int) {
-        mClickedItem = item
-        mClickedPosition = position
+        clickedItem = item
+        clickedPosition = position
 
         val value = getSelectionForSingleChoiceValue(item)
-        val builder = AlertDialog.Builder(mActivity)
+        val builder = AlertDialog.Builder(activity)
         builder.setTitle(item.nameId)
         builder.setSingleChoiceItems(item.choicesId, value, this)
-        mDialog = builder.show()
+        dialog = builder.show()
     }
 
     fun onStringSingleChoiceClick(item: StringSingleChoiceSetting, position: Int) {
-        mClickedItem = item
-        mClickedPosition = position
+        clickedItem = item
+        clickedPosition = position
 
-        val builder = AlertDialog.Builder(mActivity)
+        val builder = AlertDialog.Builder(activity)
         builder.setTitle(item.nameId)
         builder.setSingleChoiceItems(item.choicesId, item.selectValueIndex, this)
-        mDialog = builder.show()
+        dialog = builder.show()
     }
 
     fun onSeekbarClick(item: SliderSetting, position: Int, progress: Int) {
         val setting = item.setSelectedValue(progress)
         if (setting != null) {
-            mActivity.putSetting(setting)
+            activity.putSetting(setting)
         }
-        mActivity.setSettingChanged()
+        activity.setSettingChanged()
     }
 
     fun onSliderClick(item: SliderSetting, position: Int) {
-        mClickedItem = item
-        mClickedPosition = position
-        mSeekbarProgress = item.selectedValue
-        val builder = AlertDialog.Builder(mActivity)
+        clickedItem = item
+        clickedPosition = position
+        seekbarProgress = item.selectedValue
+        val builder = AlertDialog.Builder(activity)
 
-        val inflater = LayoutInflater.from(mActivity)
+        val inflater = LayoutInflater.from(activity)
         val view = inflater.inflate(R.layout.dialog_seekbar, null)
 
         builder.setTitle(item.nameId)
         builder.setView(view)
         builder.setPositiveButton(android.R.string.ok, this)
-        mDialog = builder.show()
+        dialog = builder.show()
 
-        mTextInputLayout = view.findViewById(R.id.text_input)
-        mTextSliderValue = view.findViewById(R.id.text_value)
-        mTextSliderValue!!.setText(mSeekbarProgress.toString())
-        mTextInputLayout!!.suffixText = item.units
+        textInputLayout = view.findViewById(R.id.text_input)
+        textSliderValue = view.findViewById(R.id.text_value)
+        textSliderValue!!.setText(seekbarProgress.toString())
+        textInputLayout!!.suffixText = item.units
 
         val seekbar = view.findViewById<SeekBar>(R.id.seekbar)
         seekbar.max = item.max
-        seekbar.progress = mSeekbarProgress
+        seekbar.progress = seekbarProgress
         seekbar.keyProgressIncrement = 5
 
-        mTextSliderValue!!.addTextChangedListener(object : TextWatcher {
+        textSliderValue!!.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 var textValue: Int? = null
                 try {
@@ -210,9 +210,9 @@ class SettingsAdapter(private val mActivity: SettingsActivity) :
                 // workaround to maintain SDK 24 support
                 // we just use a 0 instead of seekbar.getMin()
                 if (textValue == null || textValue < 0 || textValue > seekbar.max) {
-                    mTextInputLayout!!.setError("Inappropriate value")
+                    textInputLayout!!.setError("Inappropriate value")
                 } else {
-                    mTextInputLayout!!.setError(null)
+                    textInputLayout!!.setError(null)
                     seekbar.progress = textValue
                 }
             }
@@ -226,10 +226,10 @@ class SettingsAdapter(private val mActivity: SettingsActivity) :
 
         seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                mSeekbarProgress = progress
-                if (mTextSliderValue!!.getText().toString() != progress.toString()) {
-                    mTextSliderValue!!.setText(((progress / 5) * 5).toString())
-                    mTextSliderValue!!.setSelection(mTextSliderValue!!.length())
+                seekbarProgress = progress
+                if (textSliderValue!!.getText().toString() != progress.toString()) {
+                    textSliderValue!!.setText(((progress / 5) * 5).toString())
+                    textSliderValue!!.setSelection(textSliderValue!!.length())
                 }
             }
 
@@ -242,74 +242,74 @@ class SettingsAdapter(private val mActivity: SettingsActivity) :
     }
 
     fun onSubmenuClick(item: SubmenuSetting) {
-        mActivity.loadSubMenu(item.menuKey)
+        activity.loadSubMenu(item.menuKey)
     }
 
     private fun getFormatString(resId: Int, arg: String): Spanned {
-        val unspanned = String.format(mActivity.getString(resId), arg)
+        val unspanned = String.format(activity.getString(resId), arg)
         val spanned = Html.fromHtml(unspanned, Html.FROM_HTML_MODE_LEGACY)
         return spanned
     }
 
     fun onInputBindingClick(item: InputBindingSetting, position: Int) {
-        mClickedItem = item
-        mClickedPosition = position
+        clickedItem = item
+        clickedPosition = position
 
-        val dialog = MotionAlertDialog(mActivity, item)
+        val dialog = MotionAlertDialog(activity, item)
         dialog.setTitle(R.string.input_binding)
         dialog.setMessage(
             getFormatString(
                 if (item is RumbleBindingSetting) R.string.input_rumble_description else R.string.input_binding_description,
-                mActivity.getString(item.nameId)
+                activity.getString(item.nameId)
             )
         )
         dialog.setButton(
-            AlertDialog.BUTTON_NEGATIVE, mActivity.getString(android.R.string.cancel),
+            AlertDialog.BUTTON_NEGATIVE, activity.getString(android.R.string.cancel),
             this
         )
         dialog.setButton(
-            AlertDialog.BUTTON_NEUTRAL, mActivity.getString(R.string.clear)
+            AlertDialog.BUTTON_NEUTRAL, activity.getString(R.string.clear)
         ) { _: DialogInterface?, _: Int ->
             val preferences =
-                PreferenceManager.getDefaultSharedPreferences(mActivity)
+                PreferenceManager.getDefaultSharedPreferences(activity)
             item.clearValue()
         }
         dialog.setOnDismissListener {
             val setting = StringSetting(item.key, item.section, item.value)
             notifyItemChanged(position)
-            mActivity.putSetting(setting)
-            mActivity.setSettingChanged()
+            activity.putSetting(setting)
+            activity.setSettingChanged()
         }
         dialog.setCanceledOnTouchOutside(false)
         dialog.show()
     }
 
     override fun onClick(dialog: DialogInterface, which: Int) {
-        if (mClickedItem is SingleChoiceSetting) {
-            val scSetting = mClickedItem as SingleChoiceSetting
+        if (clickedItem is SingleChoiceSetting) {
+            val scSetting = clickedItem as SingleChoiceSetting
 
             val value = getValueForSingleChoiceSelection(scSetting, which)
-            if (scSetting.selectedValue != value) mActivity.setSettingChanged()
+            if (scSetting.selectedValue != value) activity.setSettingChanged()
 
             val menuTag = scSetting.menuTag
             if (menuTag != null) {
                 if (menuTag.isGCPadMenu) {
-                    mActivity.onGcPadSettingChanged(menuTag, value)
+                    activity.onGcPadSettingChanged(menuTag, value)
                 }
 
                 if (menuTag.isWiimoteMenu) {
-                    mActivity.onWiimoteSettingChanged(menuTag, value)
+                    activity.onWiimoteSettingChanged(menuTag, value)
                 }
 
                 if (menuTag.isWiimoteExtensionMenu) {
-                    mActivity.onExtensionSettingChanged(menuTag, value)
+                    activity.onExtensionSettingChanged(menuTag, value)
                 }
             }
 
             // Get the backing Setting, which may be null (if for example it was missing from the file)
             val setting = scSetting.setSelectedValue(value)
             if (setting != null) {
-                mActivity.putSetting(setting)
+                activity.putSetting(setting)
             } else {
                 if (scSetting.key == SettingsFile.KEY_VIDEO_BACKEND_INDEX) {
                     putVideoBackendSetting(which)
@@ -331,47 +331,47 @@ class SettingsAdapter(private val mActivity: SettingsActivity) :
             }
 
             closeDialog()
-        } else if (mClickedItem is StringSingleChoiceSetting) {
-            val scSetting = mClickedItem as StringSingleChoiceSetting
+        } else if (clickedItem is StringSingleChoiceSetting) {
+            val scSetting = clickedItem as StringSingleChoiceSetting
             val value = scSetting.getValueAt(which)
-            if (scSetting.selectedValue != value) mActivity.setSettingChanged()
+            if (scSetting.selectedValue != value) activity.setSettingChanged()
 
             val setting = scSetting.setSelectedValue(value)
             if (setting != null) {
-                mActivity.putSetting(setting)
+                activity.putSetting(setting)
             }
 
             closeDialog()
-        } else if (mClickedItem is SliderSetting) {
-            val sliderSetting = mClickedItem as SliderSetting
-            if (sliderSetting.selectedValue != mSeekbarProgress) mActivity.setSettingChanged()
+        } else if (clickedItem is SliderSetting) {
+            val sliderSetting = clickedItem as SliderSetting
+            if (sliderSetting.selectedValue != seekbarProgress) activity.setSettingChanged()
 
-            val setting = sliderSetting.setSelectedValue(mSeekbarProgress)
+            val setting = sliderSetting.setSelectedValue(seekbarProgress)
             if (setting != null) {
-                mActivity.putSetting(setting)
+                activity.putSetting(setting)
             }
 
             closeDialog()
         }
 
-        mClickedItem = null
-        mSeekbarProgress = -1
+        clickedItem = null
+        seekbarProgress = -1
     }
 
     fun closeDialog() {
-        if (mDialog != null) {
-            if (mClickedPosition != -1) {
-                notifyItemChanged(mClickedPosition)
-                mClickedPosition = -1
+        if (dialog != null) {
+            if (clickedPosition != -1) {
+                notifyItemChanged(clickedPosition)
+                clickedPosition = -1
             }
-            mDialog!!.dismiss()
-            mDialog = null
+            dialog!!.dismiss()
+            dialog = null
         }
     }
 
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-        mSeekbarProgress = if (seekBar.max > 99) (progress / 5) * 5 else progress
-        mTextSliderValue!!.setText(mSeekbarProgress.toString())
+        seekbarProgress = if (seekBar.max > 99) (progress / 5) * 5 else progress
+        textSliderValue!!.setText(seekbarProgress.toString())
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -384,7 +384,7 @@ class SettingsAdapter(private val mActivity: SettingsActivity) :
         val valuesId = item.valuesId
 
         if (valuesId > 0) {
-            val valuesArray = mActivity.resources.getIntArray(valuesId)
+            val valuesArray = activity.resources.getIntArray(valuesId)
             return valuesArray[which]
         } else {
             return which
@@ -396,7 +396,7 @@ class SettingsAdapter(private val mActivity: SettingsActivity) :
         val valuesId = item.valuesId
 
         if (valuesId > 0) {
-            val valuesArray = mActivity.resources.getIntArray(valuesId)
+            val valuesArray = activity.resources.getIntArray(valuesId)
             for (index in valuesArray.indices) {
                 val current = valuesArray[index]
                 if (current == value) {
@@ -432,7 +432,7 @@ class SettingsAdapter(private val mActivity: SettingsActivity) :
             )
         }
 
-        mActivity.putSetting(gfxBackend!!)
+        activity.putSetting(gfxBackend!!)
     }
 
     private fun putExtensionSetting(which: Int, wiimoteNumber: Int, isGame: Boolean) {
@@ -440,17 +440,17 @@ class SettingsAdapter(private val mActivity: SettingsActivity) :
             val extension = StringSetting(
                 SettingsFile.KEY_WIIMOTE_EXTENSION,
                 Settings.SECTION_WIIMOTE + wiimoteNumber,
-                mActivity.resources.getStringArray(R.array.wiimoteExtensionsEntries)[which]
+                activity.resources.getStringArray(R.array.wiimoteExtensionsEntries)[which]
             )
-            mActivity.putSetting(extension)
+            activity.putSetting(extension)
         } else {
             val extension =
                 StringSetting(
                     SettingsFile.KEY_WIIMOTE_EXTENSION + wiimoteNumber,
-                    Settings.SECTION_CONTROLS, mActivity.resources
+                    Settings.SECTION_CONTROLS, activity.resources
                         .getStringArray(R.array.wiimoteExtensionsEntries)[which]
                 )
-            mActivity.putSetting(extension)
+            activity.putSetting(extension)
         }
     }
 }

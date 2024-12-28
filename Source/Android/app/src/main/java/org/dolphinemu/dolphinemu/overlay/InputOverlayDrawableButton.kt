@@ -13,43 +13,43 @@ import org.dolphinemu.dolphinemu.NativeLibrary
 
 class InputOverlayDrawableButton
     (
-    private val mDefaultStateBitmap: BitmapDrawable,
-    private val mPressedStateBitmap: BitmapDrawable, // The ID identifying what type of button this Drawable represents.
+    private val defaultStateBitmap: BitmapDrawable,
+    private val pressedStateBitmap: BitmapDrawable, // The ID identifying what type of button this Drawable represents.
     val buttonId: Int
 ) {
     var pointerId: Int
         private set
-    private var mTiltStatus = 0
-    private var mPreviousTouchX = 0
-    private var mPreviousTouchY = 0
-    private var mControlPositionX = 0
-    private var mControlPositionY = 0
-    private var mHandler: Handler? = null
+    private var tiltStatus = 0
+    private var previousTouchX = 0
+    private var previousTouchY = 0
+    private var controlPositionX = 0
+    private var controlPositionY = 0
+    private var handler: Handler? = null
 
     init {
         pointerId = -1
 
         // input hack
         if (buttonId == InputOverlay.sInputHackForRK4) {
-            mHandler = Handler()
+            handler = Handler()
         }
     }
 
     fun onConfigureBegin(x: Int, y: Int) {
-        mPreviousTouchX = x
-        mPreviousTouchY = y
+        previousTouchX = x
+        previousTouchY = y
     }
 
     fun onConfigureMove(x: Int, y: Int) {
         val bounds = bounds
-        mControlPositionX += x - mPreviousTouchX
-        mControlPositionY += y - mPreviousTouchY
+        controlPositionX += x - previousTouchX
+        controlPositionY += y - previousTouchY
         this.bounds = Rect(
-            mControlPositionX, mControlPositionY,
-            mControlPositionX + bounds.width(), mControlPositionY + bounds.height()
+            controlPositionX, controlPositionY,
+            controlPositionX + bounds.width(), controlPositionY + bounds.height()
         )
-        mPreviousTouchX = x
-        mPreviousTouchY = y
+        previousTouchX = x
+        previousTouchY = y
     }
 
     fun onDraw(canvas: Canvas?) {
@@ -60,8 +60,8 @@ class InputOverlayDrawableButton
         pointerId = id
         if (buttonId == NativeLibrary.ButtonType.WIIMOTE_TILT_TOGGLE) {
             val valueList = floatArrayOf(0.5f, 1.0f, 0.0f)
-            val value = valueList[mTiltStatus]
-            mTiltStatus = (mTiltStatus + 1) % valueList.size
+            val value = valueList[tiltStatus]
+            tiltStatus = (tiltStatus + 1) % valueList.size
             NativeLibrary.onGamePadMoveEvent(
                 NativeLibrary.TouchScreenDevice,
                 NativeLibrary.ButtonType.WIIMOTE_TILT + 1,
@@ -101,13 +101,13 @@ class InputOverlayDrawableButton
                 buttonId, NativeLibrary.ButtonState.RELEASED
             )
             if (buttonId == InputOverlay.sInputHackForRK4) {
-                mHandler!!.postDelayed({
+                handler!!.postDelayed({
                     NativeLibrary.onGamePadMoveEvent(
                         NativeLibrary.TouchScreenDevice,
                         NativeLibrary.ButtonType.WIIMOTE_SHAKE_X + 2,
                         1f
                     )
-                    mHandler!!.postDelayed({
+                    handler!!.postDelayed({
                         NativeLibrary.onGamePadMoveEvent(
                             NativeLibrary.TouchScreenDevice,
                             NativeLibrary.ButtonType.WIIMOTE_SHAKE_X + 2,
@@ -120,22 +120,22 @@ class InputOverlayDrawableButton
     }
 
     fun setPosition(x: Int, y: Int) {
-        mControlPositionX = x
-        mControlPositionY = y
+        controlPositionX = x
+        controlPositionY = y
     }
 
     private val currentStateBitmapDrawable: BitmapDrawable
-        get() = if (pointerId != -1) mPressedStateBitmap else mDefaultStateBitmap
+        get() = if (pointerId != -1) pressedStateBitmap else defaultStateBitmap
 
     fun setAlpha(value: Int) {
-        mDefaultStateBitmap.alpha = value
-        mPressedStateBitmap.alpha = value
+        defaultStateBitmap.alpha = value
+        pressedStateBitmap.alpha = value
     }
 
     var bounds: Rect
-        get() = mDefaultStateBitmap.bounds
+        get() = defaultStateBitmap.bounds
         set(bounds) {
-            mDefaultStateBitmap.bounds = bounds
-            mPressedStateBitmap.bounds = bounds
+            defaultStateBitmap.bounds = bounds
+            pressedStateBitmap.bounds = bounds
         }
 }
