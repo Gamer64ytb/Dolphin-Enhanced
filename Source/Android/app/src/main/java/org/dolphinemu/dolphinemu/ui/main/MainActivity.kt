@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (mDirToAdd != null) {
-            GameFileCache.addGameFolder(mDirToAdd, this)
+            GameFileCache.addGameFolder(mDirToAdd!!, this)
             mDirToAdd = null
             GameFileCacheService.startRescan(this)
         }
