@@ -98,5 +98,3 @@ public class StringSingleChoiceSetting extends SettingsItem
     return TYPE_STRING_SINGLE_CHOICE;
   }
 }
-
-

@@ -43,7 +43,7 @@ void IniFile::OnLoad(JNIEnv* env)
 {
   jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/model/IniFile");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  Pointer = env->GetFieldID(Clazz, "mPointer", "J");
+  Pointer = env->GetFieldID(Clazz, "pointer", "J");
 }
 
 void IniFile::OnUnload(JNIEnv* env)
@@ -56,7 +56,7 @@ void GameFile::OnLoad(JNIEnv* env)
 {
   jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/model/GameFile");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  Pointer = env->GetFieldID(Clazz, "mPointer", "J");
+  Pointer = env->GetFieldID(Clazz, "pointer", "J");
   Constructor = env->GetMethodID(Clazz, "<init>", "(J)V");
 }
 
