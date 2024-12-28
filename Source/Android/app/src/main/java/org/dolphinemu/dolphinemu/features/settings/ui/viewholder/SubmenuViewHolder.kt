@@ -9,27 +9,27 @@ import org.dolphinemu.dolphinemu.features.settings.ui.SettingsAdapter
 
 class SubmenuViewHolder(itemView: View, adapter: SettingsAdapter) :
     SettingViewHolder(itemView, adapter) {
-    private var mItem: SubmenuSetting? = null
+    private var item: SubmenuSetting? = null
 
-    private var mTextSettingName: TextView? = null
-    private var mTextSettingDescription: TextView? = null
+    private var textSettingName: TextView? = null
+    private var textSettingDescription: TextView? = null
 
     override fun findViews(root: View) {
-        mTextSettingName = root.findViewById(R.id.text_setting_name)
-        mTextSettingDescription = root.findViewById(R.id.text_setting_description)
+        textSettingName = root.findViewById(R.id.text_setting_name)
+        textSettingDescription = root.findViewById(R.id.text_setting_description)
     }
 
     override fun bind(item: SettingsItem) {
-        mItem = item as SubmenuSetting
+        this.item = item as SubmenuSetting
 
-        mTextSettingName!!.setText(item.getNameId())
+        textSettingName!!.setText(item.getNameId())
 
         if (item.getDescriptionId() > 0) {
-            mTextSettingDescription!!.setText(item.getDescriptionId())
+            textSettingDescription!!.setText(item.getDescriptionId())
         }
     }
 
     override fun onClick(clicked: View) {
-        adapter.onSubmenuClick(mItem!!)
+        adapter.onSubmenuClick(item!!)
     }
 }

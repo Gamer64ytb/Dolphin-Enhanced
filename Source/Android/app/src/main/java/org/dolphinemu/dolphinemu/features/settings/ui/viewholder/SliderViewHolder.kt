@@ -9,28 +9,28 @@ import org.dolphinemu.dolphinemu.features.settings.ui.SettingsAdapter
 
 class SliderViewHolder(itemView: View, adapter: SettingsAdapter) :
     SettingViewHolder(itemView, adapter) {
-    private var mItem: SliderSetting? = null
+    private var item: SliderSetting? = null
 
-    private var mTextSettingName: TextView? = null
-    private var mTextSettingDescription: TextView? = null
+    private var textSettingName: TextView? = null
+    private var textSettingDescription: TextView? = null
 
     override fun findViews(root: View) {
-        mTextSettingName = root.findViewById(R.id.text_setting_name)
-        mTextSettingDescription = root.findViewById(R.id.text_setting_description)
+        textSettingName = root.findViewById(R.id.text_setting_name)
+        textSettingDescription = root.findViewById(R.id.text_setting_description)
     }
 
     override fun bind(item: SettingsItem) {
-        mItem = item as SliderSetting
-        mTextSettingName!!.setText(item.getNameId())
+        this.item = item as SliderSetting
+        textSettingName!!.setText(item.getNameId())
         if (item.getDescriptionId() > 0) {
-            mTextSettingDescription!!.setText(item.getDescriptionId())
+            textSettingDescription!!.setText(item.getDescriptionId())
         } else {
-            mTextSettingDescription!!.text = mItem!!.selectedValue.toString() + mItem!!.units
+            textSettingDescription!!.text = this.item!!.selectedValue.toString() + this.item!!.units
         }
     }
 
     override fun onClick(clicked: View) {
-        adapter.onSliderClick(mItem!!, adapterPosition)
+        adapter.onSliderClick(item!!, adapterPosition)
     }
 }
 

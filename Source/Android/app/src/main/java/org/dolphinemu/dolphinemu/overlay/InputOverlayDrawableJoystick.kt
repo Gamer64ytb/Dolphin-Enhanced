@@ -14,7 +14,7 @@ import kotlin.math.min
 class InputOverlayDrawableJoystick
     (
     bitmapBounds: BitmapDrawable, bitmapOuter: BitmapDrawable,
-    InnerDefault: BitmapDrawable, InnerPressed: BitmapDrawable,
+    innerDefault: BitmapDrawable, innerPressed: BitmapDrawable,
     rectOuter: Rect, rectInner: Rect, joystick: Int
 ) {
     private val axisIDs: IntArray = intArrayOf(0, 0, 0, 0)
@@ -49,8 +49,8 @@ class InputOverlayDrawableJoystick
         setAxisIDs(joystick)
 
         outerBitmap = bitmapOuter
-        defaultInnerBitmap = InnerDefault
-        pressedInnerBitmap = InnerPressed
+        defaultInnerBitmap = innerDefault
+        pressedInnerBitmap = innerPressed
         boundsBoxBitmap = bitmapBounds
 
         bounds = rectOuter
@@ -96,7 +96,7 @@ class InputOverlayDrawableJoystick
         setJoystickState(x, y)
     }
 
-    fun setAxisIDs(joystick: Int) {
+    private fun setAxisIDs(joystick: Int) {
         if (joystick != 0) {
             buttonId = joystick
 
@@ -222,10 +222,10 @@ class InputOverlayDrawableJoystick
             maxX -= virtBounds.centerX().toFloat()
             touchY -= virtBounds.centerY().toFloat()
             maxY -= virtBounds.centerY().toFloat()
-            val AxisX: Float = touchX / maxX
-            val AxisY: Float = touchY / maxY
-            axises[0] = AxisY
-            axises[1] = AxisX
+            val axisX: Float = touchX / maxX
+            val axisY: Float = touchY / maxY
+            axises[0] = axisY
+            axises[1] = axisX
         } else {
             axises[1] = 0.0f
             axises[0] = axises[1]
@@ -311,7 +311,7 @@ class InputOverlayDrawableJoystick
         previousTouchY = y
     }
 
-    val axisValues: FloatArray
+    private val axisValues: FloatArray
         get() = floatArrayOf(
             axises[0],
             axises[0],
@@ -320,21 +320,21 @@ class InputOverlayDrawableJoystick
         )
 
     private fun updateInnerBounds() {
-        var X: Int = virtBounds.centerX() + ((axises[1]) * (virtBounds.width() / 2)).toInt()
-        var Y: Int = virtBounds.centerY() + ((axises[0]) * (virtBounds.height() / 2)).toInt()
+        var x: Int = virtBounds.centerX() + ((axises[1]) * (virtBounds.width() / 2)).toInt()
+        var y: Int = virtBounds.centerY() + ((axises[0]) * (virtBounds.height() / 2)).toInt()
 
-        if (X > virtBounds.centerX() + (virtBounds.width() / 2)) X =
+        if (x > virtBounds.centerX() + (virtBounds.width() / 2)) x =
             virtBounds.centerX() + (virtBounds.width() / 2)
-        if (X < virtBounds.centerX() - (virtBounds.width() / 2)) X =
+        if (x < virtBounds.centerX() - (virtBounds.width() / 2)) x =
             virtBounds.centerX() - (virtBounds.width() / 2)
-        if (Y > virtBounds.centerY() + (virtBounds.height() / 2)) Y =
+        if (y > virtBounds.centerY() + (virtBounds.height() / 2)) y =
             virtBounds.centerY() + (virtBounds.height() / 2)
-        if (Y < virtBounds.centerY() - (virtBounds.height() / 2)) Y =
+        if (y < virtBounds.centerY() - (virtBounds.height() / 2)) y =
             virtBounds.centerY() - (virtBounds.height() / 2)
 
         val width: Int = pressedInnerBitmap.bounds.width() / 2
         val height: Int = pressedInnerBitmap.bounds.height() / 2
-        defaultInnerBitmap.setBounds(X - width, Y - height, X + width, Y + height)
+        defaultInnerBitmap.setBounds(x - width, y - height, x + width, y + height)
         pressedInnerBitmap.bounds = defaultInnerBitmap.bounds
     }
 
