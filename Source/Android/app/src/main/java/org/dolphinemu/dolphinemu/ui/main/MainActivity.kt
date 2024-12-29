@@ -304,8 +304,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val REQUEST_ADD_DIRECTORY: Int = 1
-        const val REQUEST_OPEN_FILE: Int = 2
+        const val REQUEST_ADD_DIRECTORY = 1
+        const val REQUEST_OPEN_FILE = 2
+        const val REQUEST_GPU_DRIVER = 3
         private const val PREF_GAMELIST = "GAME_LIST_TYPE"
         private val TITLE_BYTES = byteArrayOf(
             0x44,

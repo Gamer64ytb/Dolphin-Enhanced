@@ -26,7 +26,7 @@ public:
 
   // Helper method to create a Vulkan instance.
   static VkInstance CreateVulkanInstance(WindowSystemType wstype, bool enable_debug_report,
-                                         bool enable_validation_layer);
+                                         bool enable_validation_layer, u32* out_vk_api_version);
 
   // Returns a list of Vulkan-compatible GPUs.
   using GPUList = std::vector<VkPhysicalDevice>;

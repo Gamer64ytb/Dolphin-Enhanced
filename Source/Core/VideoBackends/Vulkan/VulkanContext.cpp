@@ -86,7 +86,7 @@ bool VulkanContext::CheckValidationLayerAvailablility()
 }
 
 VkInstance VulkanContext::CreateVulkanInstance(WindowSystemType wstype, bool enable_debug_report,
-                                               bool enable_validation_layer)
+                                               bool enable_validation_layer, u32* out_vk_api_version)
 {
   ExtensionList enabled_extensions;
   if (!SelectInstanceExtensions(&enabled_extensions, wstype, enable_debug_report))
@@ -122,8 +122,10 @@ VkInstance VulkanContext::CreateVulkanInstance(WindowSystemType wstype, bool ena
   }
   else
   {
-      WARN_LOG(HOST_GPU, "Using Vulkan 1.0");
+    WARN_LOG(HOST_GPU, "Using Vulkan 1.0");
   }
+
+  *out_vk_api_version = app_info.apiVersion;
 
   VkInstanceCreateInfo instance_create_info = {};
   instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;

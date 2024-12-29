@@ -18,7 +18,8 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="false"
         android:supportsRtl="true"
-        android:isGame="true">
+        android:isGame="true"
+        android:extractNativeLibs="true">
         <meta-data android:name="android.max_aspect" android:value="2.1" />
 
         <activity

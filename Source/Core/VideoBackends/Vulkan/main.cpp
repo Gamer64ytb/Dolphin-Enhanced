@@ -35,8 +35,9 @@ void VideoBackend::InitBackendInfo()
 
   if (LoadVulkanLibrary())
   {
+    u32 vk_api_version = 0;
     VkInstance temp_instance =
-        VulkanContext::CreateVulkanInstance(WindowSystemType::Headless, false, false);
+        VulkanContext::CreateVulkanInstance(WindowSystemType::Headless, false, false, &vk_api_version);
     if (temp_instance)
     {
       if (LoadVulkanInstanceFunctions(temp_instance))
@@ -113,8 +114,9 @@ bool VideoBackend::Initialize(const WindowSystemInfo& wsi)
   // We use this instance to fill in backend info, then re-use it for the actual device.
   bool enable_surface = wsi.type != WindowSystemType::Headless;
   bool enable_debug_reports = ShouldEnableDebugReports(enable_validation_layer);
+  u32 vk_api_version = 0;
   VkInstance instance =
-      VulkanContext::CreateVulkanInstance(wsi.type, enable_debug_reports, enable_validation_layer);
+      VulkanContext::CreateVulkanInstance(wsi.type, enable_debug_reports, enable_validation_layer, &vk_api_version);
   if (instance == VK_NULL_HANDLE)
   {
     PanicAlert("Failed to create Vulkan instance.");

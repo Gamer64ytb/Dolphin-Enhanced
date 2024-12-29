@@ -39,6 +39,7 @@ public final class DirectoryInitialization
   private static volatile DirectoryInitializationState mDirectoryState;
   private static String mUserPath;
   private static String mInternalPath;
+  private static String mDriverPath;
   private static AtomicBoolean mIsRunning = new AtomicBoolean(false);
 
   public enum DirectoryInitializationState
@@ -136,6 +137,19 @@ public final class DirectoryInitialization
 
     // Let the native code know where the Sys directory is.
     NativeLibrary.SetSysDirectory(sysDirectory.getPath());
+
+    File driverDirectory = new File(context.getFilesDir(), "GPUDrivers");
+    driverDirectory.mkdirs();
+    File driverExtractedDir = new File(driverDirectory, "Extracted");
+    driverExtractedDir.mkdirs();
+    File driverTmpDir = new File(driverDirectory, "Tmp");
+    driverTmpDir.mkdirs();
+    File driverFileRedirectDir = new File(driverDirectory, "FileRedirect");
+    driverFileRedirectDir.mkdirs();
+
+    SetGpuDriverDirectories(driverDirectory.getPath(),
+            context.getApplicationInfo().nativeLibraryDir);
+    mDriverPath = driverExtractedDir.getAbsolutePath();
   }
 
   private static void initializeExternalStorage(Context context)
@@ -202,6 +216,19 @@ public final class DirectoryInitialization
       throw new IllegalStateException("DirectoryInitialization has to finish running first!");
     }
     return mUserPath;
+  }
+
+  public static String getExtractedDriverDirectory()
+  {
+    if (mDirectoryState == null)
+    {
+      throw new IllegalStateException("DirectoryInitialization has to run at least once!");
+    }
+    else if (mIsRunning.get())
+    {
+      throw new IllegalStateException("DirectoryInitialization has to finish running first!");
+    }
+    return mDriverPath;
   }
 
   public static String getCacheDirectory(Context context)
@@ -317,4 +344,6 @@ public final class DirectoryInitialization
       wiiPath.mkdirs();
     }
   }
+
+  private static native void SetGpuDriverDirectories(String path, String libPath);
 }
