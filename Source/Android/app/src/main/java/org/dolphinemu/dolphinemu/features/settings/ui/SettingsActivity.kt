@@ -319,7 +319,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
                 with(this) {
                     gpuDriver = GpuDriverHelper.getInstalledDriverMetadata()
                         ?: GpuDriverHelper.getSystemDriverMetadata(context) ?: return@withContext
-                    NativeLibrary.SetConfig(SettingsFile.FILE_NAME_DOLPHIN + ".ini",
+                    NativeLibrary.SetConfig(SettingsFile.FILE_NAME_GFX + ".ini",
                         SettingsFile.KEY_GPU_DRIVERS, Settings.SECTION_GFX_SETTINGS, gpuDriver!!.libraryName)
                 }
                 onDriverInstallDone(result)
@@ -335,7 +335,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
                     gpuDriver =
                         GpuDriverHelper.getInstalledDriverMetadata()
                             ?: GpuDriverHelper.getSystemDriverMetadata(applicationContext)
-                    NativeLibrary.SetConfig(SettingsFile.FILE_NAME_DOLPHIN + ".ini",
+                    NativeLibrary.SetConfig(SettingsFile.FILE_NAME_GFX + ".ini",
                         SettingsFile.KEY_GPU_DRIVERS, Settings.SECTION_GFX_SETTINGS, "")
                 }
                 onDriverUninstallDone()
