@@ -21,6 +21,8 @@ import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag.Companion.getWiimo
 import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag.Companion.getWiimoteMenuTag
 import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization
+import org.dolphinemu.dolphinemu.utils.GpuDriverHelper
+
 import java.io.File
 import java.util.Locale
 
@@ -42,6 +44,11 @@ class SettingsFragmentPresenter
             controllerType = extras.getInt(SettingsActivity.ARG_CONTROLLER_TYPE)
         } else if (menuTag.isWiimoteMenu) {
             controllerNumber = menuTag.subType
+        } else if (menuTag == MenuTag.GRAPHICS) {
+        activity.gpuDriver =
+            GpuDriverHelper.getInstalledDriverMetadata() ?: GpuDriverHelper.getSystemDriverMetadata(
+                activity.applicationContext
+            )
         }
     }
 
@@ -539,6 +546,9 @@ class SettingsFragmentPresenter
                 backendMultithreading
             )
         )
+        if (GpuDriverHelper.supportsCustomDriverLoading() && activity.gpuDriver != null) {
+            sl.add(SubmenuSetting(null, null, R.string.gpu_driver_submenu, 0, MenuTag.GPU_DRIVERS))
+        }
         sl.add(
             SingleChoiceSetting(
                 SettingsFile.KEY_ASPECT_RATIO, Settings.SECTION_GFX_SETTINGS,
