@@ -243,7 +243,6 @@ std::optional<DI::DIResult> DI::StartIOCtl(const IOCtlRequest& request)
   case DIIoctl::DVDLowMaskCoverInterrupt:
     INFO_LOG(IOS_DI, "DVDLowMaskCoverInterrupt");
     DVDInterface::SetInterruptEnabled(DVDInterface::DIInterruptType::CVRINT, false);
-    DolphinAnalytics::Instance().ReportGameQuirk(GameQuirk::USES_DI_INTERRUPT_MASK_COMMAND);
     return DIResult::Success;
   case DIIoctl::DVDLowClearCoverInterrupt:
     DEBUG_LOG(IOS_DI, "DVDLowClearCoverInterrupt");
@@ -251,7 +250,6 @@ std::optional<DI::DIResult> DI::StartIOCtl(const IOCtlRequest& request)
     return DIResult::Success;
   case DIIoctl::DVDLowUnmaskStatusInterrupts:
     INFO_LOG(IOS_DI, "DVDLowUnmaskStatusInterrupts");
-    DolphinAnalytics::Instance().ReportGameQuirk(GameQuirk::USES_DI_INTERRUPT_MASK_COMMAND);
     // Dummied out
     return DIResult::Success;
   case DIIoctl::DVDLowGetCoverStatus:
@@ -262,7 +260,6 @@ std::optional<DI::DIResult> DI::StartIOCtl(const IOCtlRequest& request)
   case DIIoctl::DVDLowUnmaskCoverInterrupt:
     INFO_LOG(IOS_DI, "DVDLowUnmaskCoverInterrupt");
     DVDInterface::SetInterruptEnabled(DVDInterface::DIInterruptType::CVRINT, true);
-    DolphinAnalytics::Instance().ReportGameQuirk(GameQuirk::USES_DI_INTERRUPT_MASK_COMMAND);
     return DIResult::Success;
   case DIIoctl::DVDLowReset:
   {
