@@ -24,6 +24,10 @@
 
 #include "vulkan/vulkan.h"
 
+#ifdef ANDROID
+#include <unistd.h>
+#endif
+
 // We abuse the preprocessor here to only need to specify function names once.
 #define VULKAN_MODULE_ENTRY_POINT(name, required) extern PFN_##name name;
 #define VULKAN_INSTANCE_ENTRY_POINT(name, required) extern PFN_##name name;
@@ -35,10 +39,14 @@
 
 namespace Vulkan
 {
-bool LoadVulkanLibrary();
+bool LoadVulkanLibrary(bool force_system_library = false);
 bool LoadVulkanInstanceFunctions(VkInstance instance);
 bool LoadVulkanDeviceFunctions(VkDevice device);
 void UnloadVulkanLibrary();
+
+#ifdef ANDROID
+bool SupportsCustomDriver();
+#endif
 
 const char* VkResultToString(VkResult res);
 void LogVulkanResult(int level, const char* func_name, VkResult res, const char* msg, ...);

@@ -1,16 +1,30 @@
 package org.dolphinemu.dolphinemu.features.settings.ui
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.dolphinemu.dolphinemu.NativeLibrary
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.features.settings.model.Setting
 import org.dolphinemu.dolphinemu.features.settings.model.Settings
+import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile
+import org.dolphinemu.dolphinemu.model.GpuDriverMetadata
+import org.dolphinemu.dolphinemu.ui.main.MainActivity
+import org.dolphinemu.dolphinemu.utils.GpuDriverHelper
+import org.dolphinemu.dolphinemu.utils.GpuDriverInstallResult
 import org.dolphinemu.dolphinemu.utils.ThemeUtil
 
 class SettingsActivity : AppCompatActivity(), SettingsActivityView {
@@ -20,6 +34,8 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
     private var menuTag: MenuTag? = null
     var gameId: String? = null
         private set
+
+    var gpuDriver: GpuDriverMetadata? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,6 +205,11 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
     }
 
     fun loadSubMenu(menuKey: MenuTag) {
+        if (menuKey == MenuTag.GPU_DRIVERS) {
+            showGpuDriverDialog()
+            return
+        }
+
         showSettingsFragment(menuKey, null, true, gameId!!)
     }
 
@@ -223,6 +244,114 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
 
     private val fragment: SettingsFragment?
         get() = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SettingsFragment?
+
+    private fun showGpuDriverDialog() {
+        if (gpuDriver == null) {
+            return
+        }
+        val msg = "${gpuDriver!!.name} ${gpuDriver!!.driverVersion}"
+
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.gpu_driver_dialog_title))
+            .setMessage(msg)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setNeutralButton(R.string.gpu_driver_dialog_system) { _: DialogInterface?, _: Int ->
+                useSystemDriver()
+            }
+            .setPositiveButton(R.string.gpu_driver_dialog_install) { _: DialogInterface?, _: Int ->
+                askForDriverFile()
+            }
+            .show()
+    }
+
+    private fun askForDriverFile() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            type = "application/zip"
+        }
+        startActivityForResult(intent, MainActivity.REQUEST_GPU_DRIVER)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // If the user picked a file, as opposed to just backing out.
+        if (resultCode != RESULT_OK) {
+            return
+        }
+
+        if (requestCode != MainActivity.REQUEST_GPU_DRIVER) {
+            return
+        }
+
+        val uri = data?.data ?: return
+        installDriver(uri)
+    }
+
+    private fun onDriverInstallDone(result: GpuDriverInstallResult) {
+        Snackbar
+            .make(fragment!!.requireView(), resolveInstallResultString(result), Snackbar.LENGTH_LONG)
+            .show()
+    }
+
+    private fun onDriverUninstallDone() {
+        Toast.makeText(
+            this,
+            R.string.gpu_driver_dialog_uninstall_done,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun installDriver(uri: Uri) {
+        val context = this
+        CoroutineScope(Dispatchers.IO).launch {
+            val stream = context.contentResolver.openInputStream(uri)
+            if (stream == null) {
+                GpuDriverHelper.uninstallDriver()
+                withContext(Dispatchers.Main) {
+                    onDriverInstallDone(GpuDriverInstallResult.FileNotFound)
+                }
+                return@launch
+            }
+
+            val result = GpuDriverHelper.installDriver(stream)
+            withContext(Dispatchers.Main) {
+                with(this) {
+                    gpuDriver = GpuDriverHelper.getInstalledDriverMetadata()
+                        ?: GpuDriverHelper.getSystemDriverMetadata(context) ?: return@withContext
+                    NativeLibrary.SetConfig(SettingsFile.FILE_NAME_DOLPHIN + ".ini",
+                        SettingsFile.KEY_GPU_DRIVERS, Settings.SECTION_GFX_SETTINGS, gpuDriver!!.libraryName)
+                }
+                onDriverInstallDone(result)
+            }
+        }
+    }
+
+    private fun useSystemDriver() {
+        CoroutineScope(Dispatchers.IO).launch {
+            GpuDriverHelper.uninstallDriver()
+            withContext(Dispatchers.Main) {
+                with(this) {
+                    gpuDriver =
+                        GpuDriverHelper.getInstalledDriverMetadata()
+                            ?: GpuDriverHelper.getSystemDriverMetadata(applicationContext)
+                    NativeLibrary.SetConfig(SettingsFile.FILE_NAME_DOLPHIN + ".ini",
+                        SettingsFile.KEY_GPU_DRIVERS, Settings.SECTION_GFX_SETTINGS, "")
+                }
+                onDriverUninstallDone()
+            }
+        }
+    }
+
+    private fun resolveInstallResultString(result: GpuDriverInstallResult) = when (result) {
+        GpuDriverInstallResult.Success -> getString(R.string.gpu_driver_install_success)
+        GpuDriverInstallResult.InvalidArchive -> getString(R.string.gpu_driver_install_invalid_archive)
+        GpuDriverInstallResult.MissingMetadata -> getString(R.string.gpu_driver_install_missing_metadata)
+        GpuDriverInstallResult.InvalidMetadata -> getString(R.string.gpu_driver_install_invalid_metadata)
+        GpuDriverInstallResult.UnsupportedAndroidVersion -> getString(R.string.gpu_driver_install_unsupported_android_version)
+        GpuDriverInstallResult.AlreadyInstalled -> getString(R.string.gpu_driver_install_already_installed)
+        GpuDriverInstallResult.FileNotFound -> getString(R.string.gpu_driver_install_file_not_found)
+    }
 
     companion object {
         const val ARG_CONTROLLER_TYPE: String = "controller_type"

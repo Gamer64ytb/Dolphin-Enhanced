@@ -24,7 +24,8 @@ enum class MenuTag {
     WIIMOTE_EXTENSION_1("wiimote_extension", 4),
     WIIMOTE_EXTENSION_2("wiimote_extension", 5),
     WIIMOTE_EXTENSION_3("wiimote_extension", 6),
-    WIIMOTE_EXTENSION_4("wiimote_extension", 7);
+    WIIMOTE_EXTENSION_4("wiimote_extension", 7),
+    GPU_DRIVERS("gpu_drivers");
 
     var tag: String
         private set

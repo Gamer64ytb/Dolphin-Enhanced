@@ -127,3 +127,10 @@
 // Subdirs in Sys
 #define GC_SYS_DIR "GC"
 #define WII_SYS_DIR "Wii"
+
+// GPU drivers
+#define GPU_DRIVERS "GpuDrivers"
+#define GPU_DRIVERS_EXTRACTED "Extracted"
+#define GPU_DRIVERS_TMP "Tmp"
+#define GPU_DRIVERS_HOOK "Hook"
+#define GPU_DRIVERS_FILE_REDIRECT "FileRedirect"

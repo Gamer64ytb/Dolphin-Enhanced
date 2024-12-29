@@ -59,6 +59,10 @@ enum
   D_WFSROOT_IDX,
   D_BACKUP_IDX,
   D_RESOURCEPACK_IDX,
+  D_GPU_DRIVERS_EXTRACTED,
+  D_GPU_DRIVERS_TMP,
+  D_GPU_DRIVERS_HOOKS,
+  D_GPU_DRIVERS_FILE_REDIRECT,
   F_DOLPHINCONFIG_IDX,
   F_GCPADCONFIG_IDX,
   F_WIIPADCONFIG_IDX,
@@ -200,6 +204,8 @@ std::string GetSysDirectory();
 
 #ifdef ANDROID
 void SetSysDirectory(const std::string& path);
+void SetGpuDriverDirectories(const std::string& path, const std::string& lib_path);
+const std::string GetGpuDriverDirectory(unsigned int dir_index);
 #endif
 
 #ifdef __APPLE__

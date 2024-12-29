@@ -114,4 +114,7 @@ extern const ConfigInfo<bool> GFX_HACK_VI_SKIP;
 
 extern const ConfigInfo<bool> GFX_PERF_QUERIES_ENABLE;
 
+// Android custom GPU drivers
+extern const ConfigInfo<std::string> GFX_DRIVER_LIB_NAME;
+
 }  // namespace Config

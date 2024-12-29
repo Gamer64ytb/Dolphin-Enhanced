@@ -728,6 +728,10 @@ else()
 endif()
 endif()
 
+if (ANDROID)
+  add_subdirectory(Externals/libadrenotools)
+endif()
+
 # pugixml
 find_package(pugixml)
 if(NOT pugixml_FOUND)

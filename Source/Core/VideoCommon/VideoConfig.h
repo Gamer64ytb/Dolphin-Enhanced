@@ -165,6 +165,9 @@ struct VideoConfig final
   int iShaderCompilerThreads;
   int iShaderPrecompilerThreads;
 
+  // Loading custom drivers on Android
+  std::string customDriverLibraryName;
+
   // Static config per API
   // TODO: Move this out of VideoConfig
   struct

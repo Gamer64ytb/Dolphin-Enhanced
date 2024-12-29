@@ -48,10 +48,18 @@ PRIVATE
   xxhash
 )
 
+if (ANDROID)
+  target_link_libraries(videovulkan
+  PRIVATE
+      adrenotools
+  )
+endif()
+
 # Only include the Vulkan headers when building the Vulkan backend
 target_include_directories(videovulkan
 PRIVATE
   ${CMAKE_SOURCE_DIR}/Externals/Vulkan-Headers/include
+  ${CMAKE_SOURCE_DIR}/Externals/libadrenotools/include
 )
 
 # Silence warnings on glslang by flagging it as a system include

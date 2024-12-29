@@ -148,6 +148,8 @@ void VideoConfig::Refresh()
 
   bPerfQueriesEnable = Config::Get(Config::GFX_PERF_QUERIES_ENABLE);
 
+  customDriverLibraryName = Config::Get(Config::GFX_DRIVER_LIB_NAME);
+
   if (!backend_info.bSupportsDualSourceBlend)
   {
     bAlphaPassShadowHack = SConfig::GetInstance().m_AlphaPassShadowHack;
