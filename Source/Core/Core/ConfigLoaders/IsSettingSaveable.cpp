@@ -25,7 +25,7 @@ bool IsSettingSaveable(const Config::ConfigLocation& config_location)
       return true;
   }
 
-static constexpr std::array<const Config::ConfigLocation*, 88> s_setting_saveable = {
+static constexpr std::array<const Config::ConfigLocation*, 91> s_setting_saveable = {
       // Main.Core
 
       &Config::MAIN_DEFAULT_ISO.location,
@@ -36,6 +36,9 @@ static constexpr std::array<const Config::ConfigLocation*, 88> s_setting_saveabl
       &Config::MAIN_OVERCLOCK_ENABLE.location,
       &Config::MAIN_OVERCLOCK.location,
       &Config::MAIN_JIT_FOLLOW_BRANCH.location,
+      &Config::MAIN_RAM_OVERRIDE_ENABLE.location,
+      &Config::MAIN_MEM1_SIZE.location,
+      &Config::MAIN_MEM2_SIZE.location,
 
       // Main.Controls
 
@@ -44,6 +47,7 @@ static constexpr std::array<const Config::ConfigLocation*, 88> s_setting_saveabl
       &Config::MAIN_IR_VERTICAL_OFFSET.location,
 
       // Main.Display
+
 #ifndef ANDROID
       Config::MAIN_FULLSCREEN_DISPLAY_RES.location,
       Config::MAIN_FULLSCREEN.location,
