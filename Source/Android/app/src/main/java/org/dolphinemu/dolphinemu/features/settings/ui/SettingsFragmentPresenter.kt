@@ -620,10 +620,10 @@ class SettingsFragmentPresenter
         val force24BitColor = enhancementSection.getSetting(SettingsFile.KEY_FORCE_24_BIT_COLOR)
 
         sl.add(
-            SingleChoiceSetting(
+            SliderSetting(
                 SettingsFile.KEY_INTERNAL_RES, Settings.SECTION_GFX_SETTINGS,
-                R.string.internal_resolution, R.string.internal_resolution_description,
-                R.array.internalResolutionEntries, R.array.internalResolutionValues, 100, resolution
+                R.string.internal_resolution, R.string.internal_resolution_description, 400, "x", 100,
+                resolution
             )
         )
         sl.add(
