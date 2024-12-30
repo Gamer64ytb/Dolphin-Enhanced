@@ -135,6 +135,8 @@ GameFile::GameFile(std::string path) : m_file_path(std::move(path))
       m_region = volume->GetRegion();
       m_country = volume->GetCountry();
       m_blob_type = volume->GetBlobType();
+      m_block_size = volume->GetBlobReader().GetBlockSize();
+      m_compression_method = volume->GetBlobReader().GetCompressionMethod();
       m_file_size = volume->GetRawSize();
       m_volume_size = volume->GetSize();
       m_volume_size_is_accurate = volume->IsSizeAccurate();
@@ -341,6 +343,8 @@ void GameFile::DoState(PointerWrap& p)
   p.Do(m_country);
   p.Do(m_platform);
   p.Do(m_blob_type);
+  p.Do(m_block_size);
+  p.Do(m_compression_method);
   p.Do(m_revision);
   p.Do(m_disc_number);
   p.Do(m_apploader_date);
@@ -517,6 +521,29 @@ std::string GameFile::GetWiiFSPath() const
 bool GameFile::ShouldAllowConversion() const
 {
   return DiscIO::IsDisc(m_platform) && m_volume_size_is_accurate;
+}
+
+bool GameFile::ShouldShowFileFormatDetails() const
+{
+  switch (m_blob_type)
+  {
+    case DiscIO::BlobType::PLAIN:
+      break;
+    case DiscIO::BlobType::DRIVE:
+      return false;
+    default:
+      return true;
+  }
+
+  switch (m_platform)
+  {
+    case DiscIO::Platform::WiiWAD:
+      return false;
+    case DiscIO::Platform::ELFOrDOL:
+      return false;
+    default:
+      return true;
+  }
 }
 
 const GameBanner& GameFile::GetBannerImage() const
