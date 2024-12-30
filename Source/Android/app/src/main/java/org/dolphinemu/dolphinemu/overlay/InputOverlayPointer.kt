@@ -181,8 +181,8 @@ class InputOverlayPointer
     }
 
     companion object {
-        const val TYPE_OFF: Int = 0
-        const val TYPE_CLICK: Int = 1
-        const val TYPE_STICK: Int = 2
+        const val TYPE_OFF = 0
+        const val TYPE_CLICK = 1
+        const val TYPE_STICK = 2
     }
 }

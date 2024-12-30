@@ -28,7 +28,7 @@ import org.dolphinemu.dolphinemu.utils.GpuDriverInstallResult
 import org.dolphinemu.dolphinemu.utils.ThemeUtil
 
 class SettingsActivity : AppCompatActivity(), SettingsActivityView {
-    private var settings: Settings? = Settings()
+    private var settings: Settings = Settings()
     private var stackCount = 0
     private var shouldSave = false
     private var menuTag: MenuTag? = null
@@ -90,8 +90,8 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
     }
 
     private fun loadSettingsUI() {
-        if (settings!!.isEmpty) {
-            settings!!.loadSettings(gameId)
+        if (settings.isEmpty) {
+            settings.loadSettings(gameId)
         }
 
         showSettingsFragment(menuTag!!, null, false, gameId!!)
@@ -105,15 +105,15 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
     override fun onStop() {
         super.onStop()
 
-        if (settings != null && isFinishing && shouldSave) {
+        if (isFinishing && shouldSave) {
             if (TextUtils.isEmpty(gameId)) {
                 showToastMessage(getString(R.string.settings_saved_notice))
-                settings!!.saveSettings()
-                ThemeUtil.applyTheme(settings!!)
+                settings.saveSettings()
+                ThemeUtil.applyTheme(settings)
             } else {
                 // custom game settings
                 showToastMessage(getString(R.string.settings_saved_notice))
-                settings!!.saveCustomGameSettings(gameId)
+                settings.saveCustomGameSettings(gameId)
             }
             shouldSave = false
         }
@@ -135,7 +135,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
         menuTag: MenuTag,
         extras: Bundle?,
         addToStack: Boolean,
-        gameID: String
+        gameId: String
     ) {
         val transaction = supportFragmentManager.beginTransaction()
 
@@ -154,7 +154,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
         }
         transaction.replace(
             R.id.frame_content,
-            SettingsFragment.newInstance(menuTag, gameID, extras),
+            SettingsFragment.newInstance(menuTag, gameId, extras),
             FRAGMENT_TAG
         )
         transaction.commit()
@@ -188,7 +188,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
             .show()
     }
 
-    fun getSettings(): Settings? {
+    fun getSettings(): Settings {
         return settings
     }
 
@@ -197,7 +197,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
     }
 
     fun putSetting(setting: Setting) {
-        settings!!.getSection(setting.section).putSetting(setting)
+        settings.getSection(setting.section).putSetting(setting)
     }
 
     fun setSettingChanged() {
@@ -354,7 +354,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
     }
 
     companion object {
-        const val ARG_CONTROLLER_TYPE: String = "controller_type"
+        const val ARG_CONTROLLER_TYPE = "controller_type"
 
         private const val ARG_MENU_TAG = "menu_tag"
         private const val ARG_GAME_ID = "game_id"

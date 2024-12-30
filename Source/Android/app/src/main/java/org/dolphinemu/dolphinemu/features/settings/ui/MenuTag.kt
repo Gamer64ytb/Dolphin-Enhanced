@@ -29,7 +29,7 @@ enum class MenuTag {
 
     var tag: String
         private set
-    var subType: Int = -1
+    var subType = -1
         private set
 
     constructor(tag: String) {
@@ -78,7 +78,7 @@ enum class MenuTag {
             if (menuTagStr.isNullOrEmpty()) {
                 return null
             }
-            var tag: String = menuTagStr
+            var tag = menuTagStr
             var subtype = -1
             val sep = menuTagStr.indexOf('|')
             if (sep != -1) {

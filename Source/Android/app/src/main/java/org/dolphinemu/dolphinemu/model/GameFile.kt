@@ -28,13 +28,13 @@ class GameFile
     val platform: Int
         external get
 
-    val name: String?
+    val name: String
         external get
 
-    val description: String?
+    val description: String
         external get
 
-    val company: String?
+    val company: String
         external get
 
     val country: Int
@@ -43,10 +43,10 @@ class GameFile
     val region: Int
         external get
 
-    val path: String?
+    val path: String
         external get
 
-    val titlePath: String?
+    val titlePath: String
         external get
 
     val gameId: String
@@ -162,7 +162,7 @@ class GameFile
                 }
 
                 override fun onError(e: Exception) {
-                    val id: String = gameTdbId
+                    val id = gameTdbId
                     var region: String? = null
                     region = if (id.length < 3) {
                         callback.onError(e)

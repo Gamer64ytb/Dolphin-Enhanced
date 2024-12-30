@@ -739,54 +739,54 @@ class RunningSettingDialog : DialogFragment() {
     }
 
     companion object {
-        const val MENU_MAIN: Int = 0
-        const val MENU_SETTINGS: Int = 1
+        const val MENU_MAIN = 0
+        const val MENU_SETTINGS = 1
 
         // gfx
-        const val SETTING_SHOW_FPS: Int = 10
-        const val SETTING_SKIP_EFB: Int = 11
-        const val SETTING_EFB_TEXTURE: Int = 12
-        const val SETTING_VI_SKIP: Int = 13
-        const val SETTING_IGNORE_FORMAT: Int = 14
-        const val SETTING_ARBITRARY_MIPMAP_DETECTION: Int = 15
-        const val SETTING_IMMEDIATE_XFB: Int = 16
-        const val SETTING_DISPLAY_SCALE: Int = 17
+        const val SETTING_SHOW_FPS = 10
+        const val SETTING_SKIP_EFB = 11
+        const val SETTING_EFB_TEXTURE = 12
+        const val SETTING_VI_SKIP = 13
+        const val SETTING_IGNORE_FORMAT = 14
+        const val SETTING_ARBITRARY_MIPMAP_DETECTION = 15
+        const val SETTING_IMMEDIATE_XFB = 16
+        const val SETTING_DISPLAY_SCALE = 17
 
         // core
-        const val SETTING_SYNC_ON_SKIP_IDLE: Int = 18
-        const val SETTING_OVERCLOCK_ENABLE: Int = 19
-        const val SETTING_OVERCLOCK_PERCENT: Int = 20
-        const val SETTING_JIT_FOLLOW_BRANCH: Int = 21
-        const val SETTING_IR_PITCH: Int = 22
-        const val SETTING_IR_YAW: Int = 23
-        const val SETTING_IR_VERTICAL_OFFSET: Int = 24
+        const val SETTING_SYNC_ON_SKIP_IDLE = 18
+        const val SETTING_OVERCLOCK_ENABLE = 19
+        const val SETTING_OVERCLOCK_PERCENT = 20
+        const val SETTING_JIT_FOLLOW_BRANCH = 21
+        const val SETTING_IR_PITCH = 22
+        const val SETTING_IR_YAW = 23
+        const val SETTING_IR_VERTICAL_OFFSET = 24
 
         // pref
-        const val SETTING_PHONE_RUMBLE: Int = 100
-        const val SETTING_TOUCH_POINTER: Int = 101
-        const val SETTING_TOUCH_POINTER_RECENTER: Int = 102
-        const val SETTING_JOYSTICK_RELATIVE: Int = 103
+        const val SETTING_PHONE_RUMBLE = 100
+        const val SETTING_TOUCH_POINTER = 101
+        const val SETTING_TOUCH_POINTER_RECENTER = 102
+        const val SETTING_JOYSTICK_RELATIVE = 103
 
         // func
-        const val SETTING_LOAD_SUBMENU: Int = 200
-        const val SETTING_TAKE_SCREENSHOT: Int = 201
-        const val SETTING_EDIT_BUTTONS: Int = 202
-        const val SETTING_TOGGLE_BUTTONS: Int = 203
-        const val SETTING_QUICK_SAVE: Int = 204
-        const val SETTING_QUICK_LOAD: Int = 205
-        const val SETTING_STATE_SAVES: Int = 206
-        const val SETTING_ADJUST_CONTROLS: Int = 207
-        const val SETTING_CHOOSE_CONTROLLER: Int = 208
-        const val SETTING_JOYSTICK_EMULATION: Int = 209
-        const val SETTING_CHANGE_DISC: Int = 210
-        const val SETTING_SENSOR_EMULATION: Int = 211
-        const val SETTING_EXIT_GAME: Int = 212
+        const val SETTING_LOAD_SUBMENU = 200
+        const val SETTING_TAKE_SCREENSHOT = 201
+        const val SETTING_EDIT_BUTTONS = 202
+        const val SETTING_TOGGLE_BUTTONS = 203
+        const val SETTING_QUICK_SAVE = 204
+        const val SETTING_QUICK_LOAD = 205
+        const val SETTING_STATE_SAVES = 206
+        const val SETTING_ADJUST_CONTROLS = 207
+        const val SETTING_CHOOSE_CONTROLLER = 208
+        const val SETTING_JOYSTICK_EMULATION = 209
+        const val SETTING_CHANGE_DISC = 210
+        const val SETTING_SENSOR_EMULATION = 211
+        const val SETTING_EXIT_GAME = 212
 
         // view type
-        const val TYPE_CHECKBOX: Int = 0
-        const val TYPE_RADIO_GROUP: Int = 1
-        const val TYPE_SEEK_BAR: Int = 2
-        const val TYPE_BUTTON: Int = 3
+        const val TYPE_CHECKBOX = 0
+        const val TYPE_RADIO_GROUP = 1
+        const val TYPE_SEEK_BAR = 2
+        const val TYPE_BUTTON = 3
 
         fun newInstance(): RunningSettingDialog {
             return RunningSettingDialog()

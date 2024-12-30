@@ -46,15 +46,15 @@ import java.lang.ref.WeakReference
 
 class EditorActivity : AppCompatActivity() {
     class CheatEntry {
-        var name: String = ""
-        var info: String = ""
-        var type: Int = TYPE_NONE
-        var active: Boolean = false
+        var name = ""
+        var info = ""
+        var type = TYPE_NONE
+        var active = false
 
         companion object {
-            const val TYPE_NONE: Int = -1
-            const val TYPE_AR: Int = 0
-            const val TYPE_GECKO: Int = 1
+            const val TYPE_NONE = -1
+            const val TYPE_AR = 0
+            const val TYPE_GECKO = 1
         }
     }
 

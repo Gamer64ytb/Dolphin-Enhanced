@@ -25,7 +25,7 @@ class GameFileCache {
         val gameFiles = GameFileCacheService.getAllGameFiles()
         for (f in gameFiles) {
             val filename = f.path
-            val lastSep = filename!!.lastIndexOf(File.separator)
+            val lastSep = filename.lastIndexOf(File.separator)
             if (lastSep > 0) {
                 val path = filename.substring(0, lastSep)
                 if (!folderPathsSet.contains(path)) {
@@ -62,10 +62,10 @@ class GameFileCache {
         return cacheChanged
     }
 
-    val allGames: Array<GameFile?>?
+    val allGames: Array<GameFile>
         external get
 
-    external fun addOrGet(gamePath: String?): GameFile?
+    external fun addOrGet(gamePath: String): GameFile?
 
     private external fun update(folderPaths: Array<String>): Boolean
 

@@ -26,7 +26,6 @@ import org.dolphinemu.dolphinemu.utils.GpuDriverHelper
 
 import java.util.Locale
 
-
 class SettingsFragmentPresenter
     (private val activity: SettingsActivity) {
     private var menuTag: MenuTag? = null

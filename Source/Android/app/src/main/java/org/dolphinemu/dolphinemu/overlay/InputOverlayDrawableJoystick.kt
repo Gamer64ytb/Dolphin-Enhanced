@@ -21,15 +21,15 @@ class InputOverlayDrawableJoystick
     private val axises: FloatArray = floatArrayOf(0f, 0f)
     private val factors: FloatArray = floatArrayOf(1f, 1f, 1f, 1f)
 
-    var pointerId: Int = -1
+    var pointerId = -1
         private set
-    var buttonId: Int = 0
+    var buttonId = 0
         private set
-    private var controlPositionX: Int = 0
-    private var controlPositionY: Int = 0
-    private var previousTouchX: Int = 0
-    private var previousTouchY: Int = 0
-    private var alpha: Int = 0
+    private var controlPositionX = 0
+    private var controlPositionY = 0
+    private var previousTouchX = 0
+    private var previousTouchY = 0
+    private var alpha = 0
     private val virtBounds: Rect
     private val origBounds: Rect
     private val outerBitmap: BitmapDrawable
@@ -70,7 +70,7 @@ class InputOverlayDrawableJoystick
     }
 
     fun onPointerDown(id: Int, x: Float, y: Float) {
-        val reCenter: Boolean = InputOverlay.sJoystickRelative
+        val reCenter = InputOverlay.sJoystickRelative
         outerBitmap.alpha = 0
         boundsBoxBitmap.alpha = alpha
         if (reCenter) {
@@ -286,8 +286,8 @@ class InputOverlayDrawableJoystick
     }
 
     fun onConfigureMove(x: Int, y: Int) {
-        val deltaX: Int = x - previousTouchX
-        val deltaY: Int = y - previousTouchY
+        val deltaX = x - previousTouchX
+        val deltaY = y - previousTouchY
         val bounds: Rect = bounds
         controlPositionX += deltaX
         controlPositionY += deltaY
@@ -320,8 +320,8 @@ class InputOverlayDrawableJoystick
         )
 
     private fun updateInnerBounds() {
-        var x: Int = virtBounds.centerX() + ((axises[1]) * (virtBounds.width() / 2)).toInt()
-        var y: Int = virtBounds.centerY() + ((axises[0]) * (virtBounds.height() / 2)).toInt()
+        var x = virtBounds.centerX() + ((axises[1]) * (virtBounds.width() / 2)).toInt()
+        var y = virtBounds.centerY() + ((axises[0]) * (virtBounds.height() / 2)).toInt()
 
         if (x > virtBounds.centerX() + (virtBounds.width() / 2)) x =
             virtBounds.centerX() + (virtBounds.width() / 2)
@@ -332,8 +332,8 @@ class InputOverlayDrawableJoystick
         if (y < virtBounds.centerY() - (virtBounds.height() / 2)) y =
             virtBounds.centerY() - (virtBounds.height() / 2)
 
-        val width: Int = pressedInnerBitmap.bounds.width() / 2
-        val height: Int = pressedInnerBitmap.bounds.height() / 2
+        val width = pressedInnerBitmap.bounds.width() / 2
+        val height = pressedInnerBitmap.bounds.height() / 2
         defaultInnerBitmap.setBounds(x - width, y - height, x + width, y + height)
         pressedInnerBitmap.bounds = defaultInnerBitmap.bounds
     }

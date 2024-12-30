@@ -1202,65 +1202,65 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
     }
 
     companion object {
-        const val CONTROL_INIT_PREF_KEY: String = "InitOverlay"
-        const val CONTROL_SCALE_PREF_KEY: String = "ControlScale"
-        var sControllerScale: Int = 0
-        const val CONTROL_ALPHA_PREF_KEY: String = "ControlAlpha"
-        var sControllerAlpha: Int = 0
+        const val CONTROL_INIT_PREF_KEY = "InitOverlay"
+        const val CONTROL_SCALE_PREF_KEY = "ControlScale"
+        var sControllerScale = 0
+        const val CONTROL_ALPHA_PREF_KEY = "ControlAlpha"
+        var sControllerAlpha = 0
 
-        const val POINTER_PREF_KEY: String = "TouchPointer1"
-        const val RECENTER_PREF_KEY: String = "IRRecenter"
+        const val POINTER_PREF_KEY = "TouchPointer1"
+        const val RECENTER_PREF_KEY = "IRRecenter"
         @JvmField
-        var sIRRecenter: Boolean = false
-        const val RELATIVE_PREF_KEY: String = "JoystickRelative"
+        var sIRRecenter = false
+        const val RELATIVE_PREF_KEY = "JoystickRelative"
         @JvmField
-        var sJoystickRelative: Boolean = false
+        var sJoystickRelative = false
 
-        const val CONTROL_TYPE_PREF_KEY: String = "WiiController"
-        const val CONTROLLER_GAMECUBE: Int = 0
-        const val CONTROLLER_CLASSIC: Int = 1
-        const val CONTROLLER_WIINUNCHUK: Int = 2
-        const val CONTROLLER_WIIREMOTE: Int = 3
+        const val CONTROL_TYPE_PREF_KEY = "WiiController"
+        const val CONTROLLER_GAMECUBE = 0
+        const val CONTROLLER_CLASSIC = 1
+        const val CONTROLLER_WIINUNCHUK = 2
+        const val CONTROLLER_WIIREMOTE = 3
         @JvmField
-        var sControllerType: Int = 0
+        var sControllerType = 0
 
-        const val JOYSTICK_PREF_KEY: String = "JoystickEmulate"
-        const val JOYSTICK_EMULATE_NONE: Int = 0
-        const val JOYSTICK_EMULATE_IR: Int = 1
-        const val JOYSTICK_EMULATE_WII_SWING: Int = 2
-        const val JOYSTICK_EMULATE_WII_TILT: Int = 3
-        const val JOYSTICK_EMULATE_WII_SHAKE: Int = 4
-        const val JOYSTICK_EMULATE_NUNCHUK_SWING: Int = 5
-        const val JOYSTICK_EMULATE_NUNCHUK_TILT: Int = 6
-        const val JOYSTICK_EMULATE_NUNCHUK_SHAKE: Int = 7
+        const val JOYSTICK_PREF_KEY = "JoystickEmulate"
+        const val JOYSTICK_EMULATE_NONE = 0
+        const val JOYSTICK_EMULATE_IR = 1
+        const val JOYSTICK_EMULATE_WII_SWING = 2
+        const val JOYSTICK_EMULATE_WII_TILT = 3
+        const val JOYSTICK_EMULATE_WII_SHAKE = 4
+        const val JOYSTICK_EMULATE_NUNCHUK_SWING = 5
+        const val JOYSTICK_EMULATE_NUNCHUK_TILT = 6
+        const val JOYSTICK_EMULATE_NUNCHUK_SHAKE = 7
         @JvmField
-        var sJoyStickSetting: Int = 0
+        var sJoyStickSetting = 0
 
-        const val SENSOR_GC_NONE: Int = 0
-        const val SENSOR_GC_JOYSTICK: Int = 1
-        const val SENSOR_GC_CSTICK: Int = 2
-        const val SENSOR_GC_DPAD: Int = 3
+        const val SENSOR_GC_NONE = 0
+        const val SENSOR_GC_JOYSTICK = 1
+        const val SENSOR_GC_CSTICK = 2
+        const val SENSOR_GC_DPAD = 3
         @JvmField
-        var sSensorGCSetting: Int = 0
+        var sSensorGCSetting = 0
 
-        const val SENSOR_WII_NONE: Int = 0
-        const val SENSOR_WII_DPAD: Int = 1
-        const val SENSOR_WII_STICK: Int = 2
-        const val SENSOR_WII_IR: Int = 3
-        const val SENSOR_WII_SWING: Int = 4
-        const val SENSOR_WII_TILT: Int = 5
-        const val SENSOR_WII_SHAKE: Int = 6
-        const val SENSOR_NUNCHUK_SWING: Int = 7
-        const val SENSOR_NUNCHUK_TILT: Int = 8
-        const val SENSOR_NUNCHUK_SHAKE: Int = 9
+        const val SENSOR_WII_NONE = 0
+        const val SENSOR_WII_DPAD = 1
+        const val SENSOR_WII_STICK = 2
+        const val SENSOR_WII_IR = 3
+        const val SENSOR_WII_SWING = 4
+        const val SENSOR_WII_TILT = 5
+        const val SENSOR_WII_SHAKE = 6
+        const val SENSOR_NUNCHUK_SWING = 7
+        const val SENSOR_NUNCHUK_TILT = 8
+        const val SENSOR_NUNCHUK_SHAKE = 9
         @JvmField
-        var sSensorWiiSetting: Int = 0
+        var sSensorWiiSetting = 0
 
         @JvmField
         var sShakeStates: IntArray = IntArray(4)
 
         // input hack for RK4JAF
         @JvmField
-        var sInputHackForRK4: Int = -1
+        var sInputHackForRK4 = -1
     }
 }

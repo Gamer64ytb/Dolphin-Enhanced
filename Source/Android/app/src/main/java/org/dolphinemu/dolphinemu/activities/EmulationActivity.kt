@@ -586,15 +586,15 @@ open class EmulationActivity : AppCompatActivity() {
     companion object {
         private var sActivity = WeakReference<EmulationActivity?>(null)
 
-        const val REQUEST_CHANGE_DISC: Int = 1
+        const val REQUEST_CHANGE_DISC = 1
 
-        const val RUMBLE_PREF_KEY: String = "PhoneRumble"
+        const val RUMBLE_PREF_KEY = "PhoneRumble"
 
-        const val EXTRA_SELECTED_GAMES: String = "SelectedGames"
-        const val EXTRA_SELECTED_TITLE: String = "SelectedTitle"
-        const val EXTRA_SELECTED_GAMEID: String = "SelectedGameId"
-        const val EXTRA_PLATFORM: String = "Platform"
-        const val EXTRA_SAVED_STATE: String = "SavedState"
+        const val EXTRA_SELECTED_GAMES = "SelectedGames"
+        const val EXTRA_SELECTED_TITLE = "SelectedTitle"
+        const val EXTRA_SELECTED_GAMEID = "SelectedGameId"
+        const val EXTRA_PLATFORM = "Platform"
+        const val EXTRA_SAVED_STATE = "SavedState"
 
         @JvmStatic
         fun launch(context: Context, filePath: String) {
