@@ -372,7 +372,14 @@ class RunningSettingDialog : DialogFragment() {
                 )
             }
             // TODO: Seems like Change Disc is broken even from original MMJ build, so keep it hidden for now
-            // settings.add(new SettingsItem(SettingsItem.SETTING_CHANGE_DISC, R.string.emulation_change_disc, SettingsItem.TYPE_BUTTON, 0));
+            /* settings!!.add(
+                SettingsItem(
+                    SETTING_CHANGE_DISC,
+                    R.string.emulation_change_disc,
+                    TYPE_BUTTON,
+                    0
+                )
+            ) */
             settings!!.add(
                 SettingsItem(
                     SETTING_SENSOR_EMULATION,

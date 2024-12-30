@@ -2,9 +2,11 @@ package org.dolphinemu.dolphinemu.features.settings.ui
 
 import android.os.Bundle
 import android.text.TextUtils
+
 import org.dolphinemu.dolphinemu.NativeLibrary
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.features.settings.model.IntSetting
+import org.dolphinemu.dolphinemu.features.settings.model.PostProcessing
 import org.dolphinemu.dolphinemu.features.settings.model.Settings
 import org.dolphinemu.dolphinemu.features.settings.model.StringSetting
 import org.dolphinemu.dolphinemu.features.settings.model.view.CheckBoxSetting
@@ -20,11 +22,10 @@ import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag.Companion.getGCPad
 import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag.Companion.getWiimoteExtensionMenuTag
 import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag.Companion.getWiimoteMenuTag
 import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile
-import org.dolphinemu.dolphinemu.utils.DirectoryInitialization
 import org.dolphinemu.dolphinemu.utils.GpuDriverHelper
 
-import java.io.File
 import java.util.Locale
+
 
 class SettingsFragmentPresenter
     (private val activity: SettingsActivity) {
@@ -613,8 +614,9 @@ class SettingsFragmentPresenter
             )
         )
 
-        val shaderListValues = shadersValues
-        val shaderListEntries = getShaderEntries(shaderListValues)
+        val shaderList = PostProcessing.shaderList
+        val shaderListEntries = arrayOf(activity.getString(R.string.off), *shaderList)
+        val shaderListValues = arrayOf("", *shaderList)
         sl.add(
             StringSingleChoiceSetting(
                 SettingsFile.KEY_POST_SHADER,
@@ -723,51 +725,6 @@ class SettingsFragmentPresenter
 
         return text.substring(0, 1).uppercase(Locale.getDefault()) + text.substring(1)
     }
-
-    private fun getShaderEntries(values: Array<String>): Array<String?> {
-        val entries = arrayOfNulls<String>(values.size)
-        entries[0] = activity.getString(R.string.off)
-        for (i in 1 until values.size) {
-            entries[i] = capitalize(values[i])
-        }
-        return entries
-    }
-
-    private val shadersValues: Array<String>
-        get() {
-            val values: MutableList<String> =
-                ArrayList()
-            values.add("")
-
-            var shadersPath =
-                DirectoryInitialization.getInternalDirectory() + "/Shaders"
-            var file = File(shadersPath)
-            var shaderFiles = file.listFiles()
-            if (shaderFiles != null) {
-                for (i in shaderFiles.indices) {
-                    val name = shaderFiles[i].name
-                    val extensionIndex = name.indexOf(".glsl")
-                    if (extensionIndex > 0) {
-                        values.add(name.substring(0, extensionIndex))
-                    }
-                }
-            }
-
-            shadersPath = DirectoryInitialization.getUserDirectory() + "/Shaders"
-            file = File(shadersPath)
-            shaderFiles = file.listFiles()
-            if (shaderFiles != null) {
-                for (i in shaderFiles.indices) {
-                    val name = shaderFiles[i].name
-                    val extensionIndex = name.indexOf(".glsl")
-                    if (extensionIndex > 0) {
-                        values.add(name.substring(0, extensionIndex))
-                    }
-                }
-            }
-
-            return values.toTypedArray<String>()
-        }
 
     private fun addHackSettings(sl: ArrayList<SettingsItem>) {
         val gfxSection = settings!!.getSection(Settings.SECTION_GFX_SETTINGS)

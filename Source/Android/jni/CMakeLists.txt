@@ -1,4 +1,5 @@
 add_library(main SHARED
+  Config/PostProcessing.cpp
   GameList/GameFile.cpp
   GameList/GameFile.h
   GameList/GameFileCache.cpp
