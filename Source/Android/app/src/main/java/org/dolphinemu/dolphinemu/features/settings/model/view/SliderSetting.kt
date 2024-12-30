@@ -31,6 +31,10 @@ class SliderSetting(
     private val isPercentSetting: Boolean
         get() = "%" == units
 
+    fun getDefaultValue(): Int {
+        return defaultValue
+    }
+
     fun setSelectedValue(selection: Int): Setting? {
         if (setting == null) {
             if (isPercentSetting) {

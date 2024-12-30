@@ -184,10 +184,15 @@ class SettingsAdapter(private val activity: SettingsActivity) :
 
         val inflater = LayoutInflater.from(activity)
         val view = inflater.inflate(R.layout.dialog_seekbar, null)
+        val seekbar = view.findViewById<SeekBar>(R.id.seekbar)
 
         builder.setTitle(item.nameId)
         builder.setView(view)
         builder.setPositiveButton(android.R.string.ok, this)
+        builder.setNeutralButton(R.string.slider_default) { dialog: DialogInterface?, which: Int ->
+            seekbar.progress = item.getDefaultValue()
+            onClick(dialog!!, which)
+        }
         dialog = builder.show()
 
         textInputLayout = view.findViewById(R.id.text_input)
@@ -195,7 +200,6 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         textSliderValue!!.setText(seekbarProgress.toString())
         textInputLayout!!.suffixText = item.units
 
-        val seekbar = view.findViewById<SeekBar>(R.id.seekbar)
         seekbar.max = item.max
         seekbar.progress = seekbarProgress
         seekbar.keyProgressIncrement = 5

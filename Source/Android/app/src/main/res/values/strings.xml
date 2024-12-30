@@ -290,6 +290,7 @@
     <string name="off">Off</string>
     <string name="clear">Clear</string>
     <string name="other">Other</string>
+    <string name="slider_default">Default</string>
 
     <!-- Game Grid Screen-->
     <string name="grid_menu_config">Config</string>

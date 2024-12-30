@@ -290,6 +290,7 @@
     <string name="off">Apagar</string>
     <string name="clear">Borrar</string>
     <string name="other">Otro</string>
+    <string name="slider_default">Predeterminado</string>
 
     <!-- Game Grid Screen-->
     <string name="grid_menu_config">Configuración</string>
