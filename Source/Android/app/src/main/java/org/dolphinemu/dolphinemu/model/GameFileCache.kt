@@ -21,7 +21,7 @@ class GameFileCache {
         val folderPathsSet =
             preferences.getStringSet(GAME_FOLDER_PATHS_PREFERENCE, HashSet())!!
 
-        // get paths from gamefiles
+        // get paths from game files
         val gameFiles = GameFileCacheService.getAllGameFiles()
         for (f in gameFiles) {
             val filename = f.path

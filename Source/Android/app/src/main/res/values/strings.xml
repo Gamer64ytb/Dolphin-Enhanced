@@ -173,6 +173,10 @@
     <string name="vsync_description">This setting is unnecessary on most Android devices, because Android always enables V-Sync. If unsure, leave this unchecked.</string>
     <string name="enable_cheats">Enable Cheats</string>
     <string name="enable_cheats_description">Put AR &amp; Gecko Codes in game setting file.</string>
+    <string name="enable_memory_size_override">Enable Emulated Memory Size Override</string>
+    <string name="enable_memory_size_override_description">Adjusts the amount of RAM in the emulated console.\n\nWARNING: Enabling this will completely break many games. Only a small number of games can benefit from this.</string>
+    <string name="main_mem1_size">MEM1 Size</string>
+    <string name="main_mem2_size">MEM2 Size</string>
     <string name="override_region_settings">Allow Mismatched Region Settings</string>
     <string name="auto_disc_change">Change Discs Automatically</string>
 

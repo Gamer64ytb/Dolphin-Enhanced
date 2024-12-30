@@ -52,6 +52,9 @@ public final class SettingsFile
   public static final String KEY_AUDIO_BACKEND = "Backend";
   public static final String KEY_VSYNC = "VSync";
   public static final String KEY_ENABLE_CHEATS = "EnableCheats";
+  public static final String KEY_RAM_OVERRIDE_ENABLE = "RAMOverrideEnable";
+  public static final String KEY_MEM1_SIZE = "MEM1Size";
+  public static final String KEY_MEM2_SIZE = "MEM2Size";
   public static final String KEY_AUTO_DISC_CHANGE = "AutoDiscChange";
   public static final String KEY_GAME_CUBE_LANGUAGE = "SelectedLanguage";
   public static final String KEY_OVERRIDE_REGION_SETTINGS = "OverrideRegionSettings";

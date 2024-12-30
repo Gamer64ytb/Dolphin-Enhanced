@@ -140,6 +140,9 @@ class SettingsFragmentPresenter
         val audioBackend = settings!!.getSection(Settings.SECTION_INI_DSP)
             .getSetting(SettingsFile.KEY_AUDIO_BACKEND)
         val enableCheats = coreSection.getSetting(SettingsFile.KEY_ENABLE_CHEATS)
+        val ramOverrideEnable = coreSection.getSetting(SettingsFile.KEY_RAM_OVERRIDE_ENABLE)
+        val mem1Size = coreSection.getSetting(SettingsFile.KEY_MEM1_SIZE)
+        val mem2Size = coreSection.getSetting(SettingsFile.KEY_MEM2_SIZE)
 
         // TODO: Having different emuCoresEntries/emuCoresValues for each architecture is annoying.
         // The proper solution would be to have one emuCoresEntries and one emuCoresValues
@@ -229,6 +232,37 @@ class SettingsFragmentPresenter
             CheckBoxSetting(
                 SettingsFile.KEY_ENABLE_CHEATS, Settings.SECTION_INI_CORE,
                 R.string.enable_cheats, R.string.enable_cheats_description, false, enableCheats
+            )
+        )
+        sl.add(
+            CheckBoxSetting(
+                SettingsFile.KEY_RAM_OVERRIDE_ENABLE, Settings.SECTION_INI_CORE,
+                R.string.enable_memory_size_override, R.string.enable_memory_size_override_description,
+                false, ramOverrideEnable
+            )
+        )
+        sl.add(
+            SliderSetting(
+                SettingsFile.KEY_MEM1_SIZE,
+                Settings.SECTION_INI_CORE,
+                R.string.main_mem1_size,
+                0,
+                64,
+                "MB",
+                24,
+                mem1Size
+            )
+        )
+        sl.add(
+            SliderSetting(
+                SettingsFile.KEY_MEM2_SIZE,
+                Settings.SECTION_INI_CORE,
+                R.string.main_mem2_size,
+                0,
+                128,
+                "MB",
+                64,
+                mem2Size
             )
         )
         sl.add(
