@@ -222,7 +222,8 @@ class SettingsAdapter(private val activity: SettingsActivity) :
 
         seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                seekbarProgress = if (seekBar.max > 99) ((progress / 5) * 5) else progress
+                // seekBar.max > 128 avoids 5 step skipping for MEM1 & MEM2 Size settings
+                seekbarProgress = if (seekBar.max > 128) ((progress / 5) * 5) else progress
 
                 if (textSliderValue!!.text.toString() != seekBar.toString()) {
                     textSliderValue!!.setText(seekbarProgress.toString())
