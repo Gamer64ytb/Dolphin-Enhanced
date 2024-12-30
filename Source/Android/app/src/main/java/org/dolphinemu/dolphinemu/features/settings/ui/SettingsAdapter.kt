@@ -204,35 +204,27 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         seekbar.progress = seekbarProgress
         seekbar.keyProgressIncrement = 5
 
-        textSliderValue!!.addTextChangedListener(object : TextWatcher {
+        textSliderValue!!.addTextChangedListener( object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                var textValue: Int? = null
-                try {
-                    textValue = s.toString().toInt()
-                } catch (ignored: NumberFormatException) {
-                }
+                val textValue = s.toString().toIntOrNull();
                 // workaround to maintain SDK 24 support
                 // we just use a 0 instead of seekbar.getMin()
-                if (textValue == null || textValue < 0 || textValue > seekbar.max) {
-                    textInputLayout!!.setError("Inappropriate value")
+                if (textValue == null || textValue < 0 || textValue > item.max) {
+                    textInputLayout!!.error = "Inappropriate value"
                 } else {
-                    textInputLayout!!.setError(null)
-                    seekbar.progress = textValue
+                    textInputLayout!!.error = null
+                    seekbarProgress = textValue
                 }
             }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         })
 
         seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 seekbarProgress = progress
-                if (textSliderValue!!.getText().toString() != progress.toString()) {
-                    textSliderValue!!.setText(((progress / 5) * 5).toString())
+                if (textSliderValue!!.text.toString() != seekBar.toString()) {
+                    textSliderValue!!.setText(progress.toString())
                     textSliderValue!!.setSelection(textSliderValue!!.length())
                 }
             }
