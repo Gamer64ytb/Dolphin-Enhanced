@@ -101,7 +101,7 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
             loadGameBanner(imageView, gameFile)
         }
 
-        // Load  bottom sheet dialog with custom background colors and rounded corners
+        // Load bottom sheet dialog with custom background colors and rounded corners
         setOnShowListener { dialog ->
             (dialog as BottomSheetDialog).findViewById<View>(
                 com.google.android.material.R.id.design_bottom_sheet
@@ -120,7 +120,7 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
             Configuration.ORIENTATION_LANDSCAPE
 
         // Set max height based on orientation
-        // Without this, the bottom sheet will not show up on landscap due to overflow
+        // Without this, the bottom sheet will not show up on landscape due to overflow
         if (isLandscape) {
             bottomSheet.layoutParams.height = (displayMetrics.heightPixels * 0.9).toInt()
         }
