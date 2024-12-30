@@ -222,11 +222,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
 
         seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                if (seekBar.max > 99) {
-                    seekbarProgress = ((progress / 5) * 5)
-                } else {
-                    seekbarProgress = progress
-                }
+                seekbarProgress = if (seekBar.max > 99) ((progress / 5) * 5) else progress
 
                 if (textSliderValue!!.text.toString() != seekBar.toString()) {
                     textSliderValue!!.setText(seekbarProgress.toString())
