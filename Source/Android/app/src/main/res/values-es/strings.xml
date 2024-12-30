@@ -418,7 +418,6 @@ Puede comprimir eficientemente tanto datos basura como datos encriptados de Wii.
     <string name="game_platform_smd">[SMD] %1$s %2$s</string>
     <string name="game_platform_c64">[C64] %1$s %2$s</string>
     <string name="game_platform_snes">[SNES] %1$s %2$s</string>
-    <string name="convert_file">Convertir archivo</string>
     <string name="delete_game_setting">Eliminar configuración</string>
     <string name="delete_game_file">Eliminar juego</string>
     <string name="clear_game_data">Borrar caché</string>
@@ -456,5 +455,15 @@ Puede comprimir eficientemente tanto datos basura como datos encriptados de Wii.
     <string name="pitch">Inclinación total</string>
     <string name="yaw">Guiñada total</string>
     <string name="vertical_offset">Desplazamiento vertical</string>
+
+    <!-- Game Details -->
+    <string name="game_id">ID del Juego</string>
+    <string name="game_actions">Juego</string>
+    <string name="input_settings">Controlador</string>
+    <string name="game_filename">Detalles:</string>
+    <string name="other_buttons_section">Otro</string>
+    <string name="play">Jugar</string>
+    <string name="convert">Convertir</string>
+    <string name="cheats">Trucos</string>
 
 </resources>

@@ -418,7 +418,6 @@ It can efficiently compress both junk data and encrypted Wii data.
     <string name="game_platform_smd">[SMD] %1$s %2$s</string>
     <string name="game_platform_c64">[C64] %1$s %2$s</string>
     <string name="game_platform_snes">[SNES] %1$s %2$s</string>
-    <string name="convert_file">Convert File</string>
     <string name="delete_game_setting">Delete Settings</string>
     <string name="delete_game_file">Delete Game</string>
     <string name="clear_game_data">Clear Cache</string>
@@ -456,5 +455,15 @@ It can efficiently compress both junk data and encrypted Wii data.
     <string name="pitch">Total Pitch</string>
     <string name="yaw">Total Yaw</string>
     <string name="vertical_offset">Vertical Offset</string>
+
+    <!-- Game Details -->
+    <string name="game_id">Game ID</string>
+    <string name="game_actions">Game</string>
+    <string name="input_settings">Controller</string>
+    <string name="game_filename">Details:</string>
+    <string name="other_buttons_section">Other</string>
+    <string name="play">Play</string>
+    <string name="convert">Convert</string>
+    <string name="cheats">Cheats</string>
 
 </resources>

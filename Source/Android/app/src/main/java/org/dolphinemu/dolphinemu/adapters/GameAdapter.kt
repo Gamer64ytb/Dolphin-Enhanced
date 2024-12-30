@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.activities.EmulationActivity.Companion.launch
-import org.dolphinemu.dolphinemu.dialogs.GameDetailsDialog.Companion.newInstance
+import org.dolphinemu.dolphinemu.dialogs.GameDetailsDialog
 import org.dolphinemu.dolphinemu.model.GameFile
 import org.dolphinemu.dolphinemu.viewholders.GameViewHolder
 
@@ -160,11 +160,9 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
      * @param view The Card button that was long-clicked.
      */
     override fun onLongClick(view: View): Boolean {
-        val activity = view.context as FragmentActivity
+        val context = view.context
         val holder = view.tag as GameViewHolder
-        newInstance(holder.gameFile!!.path).show(
-            activity.supportFragmentManager, "GameDetailsDialog"
-        )
+        GameDetailsDialog(context, holder.gameFile!!.path).show()
         return true
     }
 }

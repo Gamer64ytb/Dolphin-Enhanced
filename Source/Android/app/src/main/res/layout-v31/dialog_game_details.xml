@@ -35,7 +35,8 @@
             android:contentDescription="@string/game_platform_wii"
             android:scaleType="fitCenter"
             android:src="@drawable/no_banner"
-            android:background="@android:color/transparent" />
+            android:background="@drawable/rounded_corners_cover"
+            android:clipToOutline="true" />
 
         <LinearLayout
             android:layout_width="match_parent"
