@@ -44,6 +44,13 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
         }
 
         // Set up buttons
+        findViewById<Button>(R.id.button_play)?.apply {
+            setOnClickListener {
+                dismiss()
+                EmulationActivity.launch(context, gameFile.path)
+            }
+        }
+
         findViewById<Button>(R.id.button_convert)?.apply {
             setOnClickListener {
                 dismiss()
