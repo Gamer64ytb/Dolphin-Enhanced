@@ -127,7 +127,7 @@
             android:layout_marginTop="1dp"
             android:fontFamily="sans-serif-light"
             android:padding="8dp"
-            android:text="@string/game_settings_section"
+            android:text="@string/input_settings"
             android:textColor="@color/dolphin_accent"
             android:textSize="12sp" />
 
