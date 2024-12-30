@@ -180,7 +180,7 @@ class SettingsFragmentPresenter
         sl.add(
             SliderSetting(
                 SettingsFile.KEY_OVERCLOCK_PERCENT, Settings.SECTION_INI_CORE,
-                R.string.overclock_title, R.string.overclock_title_description, 300, "%", 100,
+                R.string.overclock_title, R.string.overclock_title_description, 400, "%", 100,
                 overclock
             )
         )

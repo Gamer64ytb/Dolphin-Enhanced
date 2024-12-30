@@ -242,7 +242,7 @@ class RunningSettingDialog : DialogFragment() {
             textSettingName!!.text = item.name
             when (item.setting) {
                 SETTING_OVERCLOCK_PERCENT -> seekBar!!.max =
-                    300
+                    400
 
                 SETTING_DISPLAY_SCALE -> seekBar!!.max =
                     200
