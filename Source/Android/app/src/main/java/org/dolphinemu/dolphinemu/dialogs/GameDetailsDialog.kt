@@ -1,8 +1,14 @@
 package org.dolphinemu.dolphinemu.dialogs
 
 import android.content.Context
+import android.content.Intent
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Icon
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -103,6 +109,14 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
             }
         }
 
+        findViewById<Button>(R.id.button_shortcut)?.apply {
+            setOnClickListener {
+            dismiss()
+            createHomeScreenShortcut(context, gameFile)
+            }
+            isEnabled = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+        }
+
         // Load game banner
         findViewById<ImageView>(R.id.image_game_screen)?.let { imageView ->
             loadGameBanner(imageView, gameFile)
@@ -167,6 +181,39 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
             }
         } else {
             Toast.makeText(context, "No game settings to delete", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun createHomeScreenShortcut(context: Context, gameFile: GameFile) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val shortcutIntent =
+             Intent(context, EmulationActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                putExtra(EmulationActivity.EXTRA_SELECTED_GAMES, arrayOf(gameFile.path))
+                putExtra("launched_from_shortcut", true)
+            }
+
+            val shortcutManager = context.getSystemService(ShortcutManager::class.java)
+            val bitmap = BitmapFactory.decodeFile(gameFile.getCoverPath(context))
+            val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 108, 108, true)
+            val icon = Icon.createWithBitmap(scaledBitmap)
+
+            try {
+                val shortcut = gameFile.title?.let {
+                    ShortcutInfo.Builder(context, gameFile.gameId)
+                        .setShortLabel(gameFile.title!!)
+                        .setLongLabel(it)
+                        .setIcon(icon)
+                        .setIntent(shortcutIntent)
+                        .build()
+                }
+
+                if (shortcut != null) {
+                    shortcutManager?.requestPinShortcut(shortcut, null)
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, R.string.shortcut_failed, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

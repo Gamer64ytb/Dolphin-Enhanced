@@ -118,6 +118,21 @@
                 app:iconGravity="textStart"
                 app:iconTint="@color/dolphin_accent" />
 
+            <Button
+                android:id="@+id/button_shortcut"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="@color/buttons"
+                android:gravity="center"
+                android:stateListAnimator="@null"
+                app:cornerRadius="24dp"
+                app:icon="@drawable/ic_shortcut"
+                app:iconGravity="textStart"
+                app:iconTint="@color/dolphin_accent" />
+
+
         </LinearLayout>
 
         <TextView

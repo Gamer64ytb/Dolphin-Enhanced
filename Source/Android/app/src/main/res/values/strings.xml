@@ -465,5 +465,7 @@ It can efficiently compress both junk data and encrypted Wii data.
     <string name="play">Play</string>
     <string name="convert">Convert</string>
     <string name="cheats">Cheats</string>
+    <string name="create_shortcut">Shortcut</string>
+    <string name="shortcut_failed">Failed to ceate shortcut</string>
 
 </resources>

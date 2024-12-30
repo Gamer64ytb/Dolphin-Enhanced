@@ -564,7 +564,11 @@ open class EmulationActivity : AppCompatActivity() {
 
     fun exitEmulation() {
         emulationFragment!!.stopEmulation()
-        finish()
+        if (intent.getBooleanExtra("launched_from_shortcut", false)) {
+            finishAffinity()
+        } else {
+            finish()
+        }
     }
 
     fun bindSystemBack(binding: String) {
