@@ -57,7 +57,7 @@
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
                 android:textAlignment="gravity"
-                android:textColor="@color/text"
+                android:textColor="@color/dolphin_accent"
                 android:textSize="20sp" />
 
             <TextView
@@ -70,7 +70,7 @@
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
                 android:paddingBottom="2dp"
-                android:textColor="@color/text"
+                android:textColor="@color/dolphin_accent"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -118,7 +118,7 @@
                 app:icon="@drawable/ic_settings"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
-                app:iconTint="@color/text" />
+                app:iconTint="@color/dolphin_accent" />
 
         </LinearLayout>
 
@@ -131,7 +131,7 @@
             android:fontFamily="sans-serif-light"
             android:padding="8dp"
             android:text="@string/game_settings_section"
-            android:textColor="@color/text"
+            android:textColor="@color/dolphin_accent"
             android:textSize="12sp" />
 
         <LinearLayout
@@ -157,7 +157,7 @@
                 app:icon="@drawable/ic_gamecube"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
-                app:iconTint="@color/text" />
+                app:iconTint="@color/dolphin_accent" />
 
             <Button
                 android:id="@+id/button_wiimote_settings"
@@ -171,7 +171,7 @@
                 app:icon="@drawable/ic_wiimote"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
-                app:iconTint="@color/text" />
+                app:iconTint="@color/dolphin_accent" />
 
         </LinearLayout>
 
@@ -182,7 +182,7 @@
             android:fontFamily="sans-serif-light"
             android:padding="8dp"
             android:text="@string/other_buttons_section"
-            android:textColor="@color/text"
+            android:textColor="@color/dolphin_accent"
             android:textSize="12sp" />
 
         <LinearLayout
@@ -208,13 +208,13 @@
                 android:text="@string/convert"
                 android:textAlignment="center"
                 android:textAppearance="@style/MyCustomTextAppearance"
-                android:textColor="@color/text"
+                android:textColor="@color/dolphin_accent"
                 android:textSize="12sp"
                 app:cornerRadius="24dp"
                 app:icon="@drawable/ic_convert_file"
                 app:iconGravity="textStart"
                 app:iconPadding="14dp"
-                app:iconTint="@color/text" />
+                app:iconTint="@color/dolphin_accent" />
 
             <Button
                 android:id="@+id/button_quick_load"
@@ -229,13 +229,13 @@
                 android:text="@string/emulation_quickload"
                 android:textAlignment="center"
                 android:textAppearance="@style/MyCustomTextAppearance"
-                android:textColor="@color/text"
+                android:textColor="@color/dolphin_accent"
                 android:textSize="12sp"
                 app:cornerRadius="24dp"
                 app:icon="@drawable/ic_quickload"
                 app:iconGravity="textStart"
                 app:iconPadding="14dp"
-                app:iconTint="@color/text" />
+                app:iconTint="@color/dolphin_accent" />
 
         </LinearLayout>
 
@@ -261,13 +261,13 @@
                 android:text="@string/cheats"
                 android:textAlignment="center"
                 android:textAppearance="@style/MyCustomTextAppearance"
-                android:textColor="@color/text"
+                android:textColor="@color/dolphin_accent"
                 android:textSize="12sp"
                 app:cornerRadius="24dp"
                 app:icon="@drawable/ic_cheat_code"
                 app:iconGravity="textStart"
                 app:iconPadding="14dp"
-                app:iconTint="@color/text" />
+                app:iconTint="@color/dolphin_accent" />
 
             <Button
                 android:id="@+id/button_delete_setting"
@@ -282,13 +282,13 @@
                 android:text="@string/delete_game_setting"
                 android:textAlignment="center"
                 android:textAppearance="@style/MyCustomTextAppearance"
-                android:textColor="@color/text"
+                android:textColor="@color/dolphin_accent"
                 android:textSize="12sp"
                 app:cornerRadius="24dp"
                 app:icon="@drawable/ic_settings_delete"
                 app:iconGravity="textStart"
                 app:iconPadding="14dp"
-                app:iconTint="@color/text" />
+                app:iconTint="@color/dolphin_accent" />
 
         </LinearLayout>
 
