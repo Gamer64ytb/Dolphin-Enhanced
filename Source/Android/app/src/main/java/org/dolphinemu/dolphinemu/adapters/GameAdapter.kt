@@ -61,7 +61,7 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
         gameFile.loadGameBanner(holder.imageScreenshot)
 
         holder.textGameTitle.text = gameFile.title
-        holder.textCompany.text = gameFile.company
+        holder.textCompany.text = gameFile.getCompany()
 
         val platforms = intArrayOf(
             R.string.game_platform_ngc,
@@ -76,12 +76,12 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
         )
         val context = holder.textPlatform.context
         val countryNames = context.resources.getStringArray(R.array.countryNames)
-        var platform = gameFile.platform
-        var country = gameFile.country
-        val discNumber = gameFile.discNumber + 1
+        var platform = gameFile.getPlatform()
+        var country = gameFile.getCountry()
+        val discNumber = gameFile.getDiscNumber() + 1
         if (platform == 2) {
             // WiiWAD, Virtual Console
-            val gameId = gameFile.gameId
+            val gameId = gameFile.getGameId()
             when (gameId[0]) {
                 'N' ->           // N64
                     platform = 3
@@ -162,7 +162,7 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
     override fun onLongClick(view: View): Boolean {
         val context = view.context
         val holder = view.tag as GameViewHolder
-        GameDetailsDialog(context, holder.gameFile!!.path).show()
+        GameDetailsDialog(context, holder.gameFile!!.getPath()).show()
         return true
     }
 }

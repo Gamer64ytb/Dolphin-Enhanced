@@ -118,6 +118,36 @@ JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getRevision
   return static_cast<jint>(GetPointer(env, obj)->GetRevision());
 }
 
+JNIEXPORT jstring JNICALL
+Java_org_dolphinemu_dolphinemu_model_GameFile_getBlobTypeString(JNIEnv* env, jobject obj)
+{
+  return ToJString(env, DiscIO::GetName(GetPointer(env, obj)->GetBlobType(), true));
+}
+
+JNIEXPORT jlong JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBlockSize(JNIEnv* env,
+                                                                                   jobject obj)
+{
+  return static_cast<jlong>(GetPointer(env, obj)->GetBlockSize());
+}
+
+JNIEXPORT jstring JNICALL
+Java_org_dolphinemu_dolphinemu_model_GameFile_getCompressionMethod(JNIEnv* env, jobject obj)
+{
+    return ToJString(env, GetPointer(env, obj)->GetCompressionMethod());
+}
+
+JNIEXPORT jboolean JNICALL
+Java_org_dolphinemu_dolphinemu_model_GameFile_shouldShowFileFormatDetails(JNIEnv* env, jobject obj)
+{
+  return static_cast<jboolean>(GetPointer(env, obj)->ShouldShowFileFormatDetails());
+}
+
+JNIEXPORT jlong JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getFileSize(JNIEnv* env,
+                                                                                  jobject obj)
+{
+  return static_cast<jlong>(GetPointer(env, obj)->GetFileSize());
+}
+
 JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBlobType(JNIEnv* env,
                                                                                  jobject obj)
 {
@@ -127,7 +157,7 @@ JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBlobType
 JNIEXPORT jboolean JNICALL
 Java_org_dolphinemu_dolphinemu_model_GameFile_shouldAllowConversion(JNIEnv* env, jobject obj)
 {
-    return static_cast<jboolean>(GetPointer(env, obj)->ShouldAllowConversion());
+  return static_cast<jboolean>(GetPointer(env, obj)->ShouldAllowConversion());
 }
 
 JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_isDatelDisc(JNIEnv* env,

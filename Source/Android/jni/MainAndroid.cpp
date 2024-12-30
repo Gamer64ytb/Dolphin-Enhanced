@@ -708,6 +708,14 @@ JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_NativeLibrary_ChangeDisc(J
   Core::RunAsCPUThread([&path] { DVDInterface::ChangeDisc(path); });
 }
 
+JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_NativeLibrary_FormatSize(JNIEnv* env,
+                                                                                  jobject obj,
+                                                                                  jlong bytes,
+                                                                                  jint decimals)
+{
+  return ToJString(env, UICommon::FormatSize(bytes, decimals));
+}
+
 JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_NativeLibrary_ConvertDiscImage(
     JNIEnv* env, jobject obj, jstring jInPath, jstring jOutPath, jint jPlatform, jint jFormat,
     jint jBlockSize, jint jCompression, jint jCompressionLevel, jboolean jScrub, jobject jCallback)

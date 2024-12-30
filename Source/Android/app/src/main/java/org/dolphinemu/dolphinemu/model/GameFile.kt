@@ -21,65 +21,58 @@ class GameFile
 
     val title: String?
         get() {
-            if (sName == null) sName = name
+            if (sName == null) sName = getName()
             return sName
         }
 
-    val platform: Int
-        external get
+    external fun getPlatform(): Int
 
-    val name: String
-        external get
+    external fun getName(): String
 
-    val description: String
-        external get
+    external fun getDescription(): String
 
-    val company: String
-        external get
+    external fun getCompany(): String
 
-    val country: Int
-        external get
+    external fun getCountry(): Int
 
-    val region: Int
-        external get
+    external fun getRegion(): Int
 
-    val path: String
-        external get
+    external fun getPath(): String
 
-    val titlePath: String
-        external get
+    external fun getTitlePath(): String
 
-    val gameId: String
-        external get
+    external fun getGameId(): String
 
-    val gameTdbId: String
-        external get
+    external fun getGameTdbId(): String
 
-    val discNumber: Int
-        external get
+    external fun getDiscNumber(): Int
 
-    val revision: Int
-        external get
+    external fun getRevision(): Int
 
-    val blobType: Int
-        external get
+    external fun getBlobTypeString(): String
+
+    external fun getBlockSize(): Long
+
+    external fun getCompressionMethod(): String
+
+    external fun shouldShowFileFormatDetails(): Boolean
+
+    external fun getFileSize(): Long
+
+    external fun getBlobType(): Int
 
     external fun shouldAllowConversion(): Boolean
 
-    val isDatelDisc: Boolean
-        external get
+    external fun isDatelDisc(): Boolean
 
-    val banner: IntArray
-        external get
+    external fun getBanner(): IntArray
 
-    val bannerWidth: Int
-        external get
+    external fun getBannerWidth(): Int
 
-    val bannerHeight: Int
-        external get
+    external fun getBannerHeight(): Int
 
     fun getCoverPath(context: Context): String {
-        return DirectoryInitialization.getCacheDirectory(context) + "/GameCovers/" + gameTdbId + ".png"
+        return DirectoryInitialization.getCacheDirectory(context) + "/GameCovers/" + getGameTdbId() + ".png"
     }
 
     val lastSavedState: String?
@@ -87,7 +80,7 @@ class GameFile
             val numStates = 10
             val statePath =
                 DirectoryInitialization.getUserDirectory() + "/StateSaves/"
-            val gameId = gameId
+            val gameId = getGameId()
             var lastModified: Long = 0
             var savedState: String? = null
             for (i in 0 until numStates) {
@@ -162,7 +155,7 @@ class GameFile
                 }
 
                 override fun onError(e: Exception) {
-                    val id = gameTdbId
+                    val id = getGameTdbId()
                     var region: String? = null
                     region = if (id.length < 3) {
                         callback.onError(e)
@@ -185,9 +178,9 @@ class GameFile
     }
 
     private fun loadFromISO(imageView: ImageView): Boolean {
-        val vector = banner
-        val width = bannerWidth
-        val height = bannerHeight
+        val vector = getBanner()
+        val width = getBannerWidth()
+        val height = getBannerHeight()
         if (vector.isNotEmpty() && width > 0 && height > 0) {
             val file = File(getCoverPath(imageView.context))
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)

@@ -67,9 +67,9 @@ open class EmulationActivity : AppCompatActivity() {
             if (paths != null && paths!!.isNotEmpty()) {
                 val game = GameFileCacheService.getGameFileByPath(paths!![0])
                 if (game != null) {
-                    selectedGameId = game.gameId
+                    selectedGameId = game.getGameId()
                     selectedTitle = game.title
-                    platform = game.platform
+                    platform = game.getPlatform()
                     if (paths!!.size == 1) {
                         paths = GameFileCacheService.getAllDiscPaths(game)
                     }
@@ -604,7 +604,7 @@ open class EmulationActivity : AppCompatActivity() {
         @JvmStatic
         fun launch(context: Context, game: GameFile, savedState: String?) {
             val intent = Intent(context, EmulationActivity::class.java)
-            intent.putExtra(EXTRA_SELECTED_GAMES, arrayOf(game.path))
+            intent.putExtra(EXTRA_SELECTED_GAMES, arrayOf(game.getPath()))
             intent.putExtra(EXTRA_SAVED_STATE, savedState)
             context.startActivity(intent)
         }
@@ -624,8 +624,8 @@ open class EmulationActivity : AppCompatActivity() {
                 // We don't want to pollute the game file cache with this new file,
                 // so we can't just call launch() and let it handle the setup.
                 launcher.putExtra(EXTRA_SELECTED_TITLE, gameFile.title)
-                launcher.putExtra(EXTRA_SELECTED_GAMEID, gameFile.gameId)
-                launcher.putExtra(EXTRA_PLATFORM, gameFile.platform)
+                launcher.putExtra(EXTRA_SELECTED_GAMEID, gameFile.getGameId())
+                launcher.putExtra(EXTRA_PLATFORM, gameFile.getPlatform())
             } else {
                 // Display the path to the file as the game title in the menu.
                 launcher.putExtra(EXTRA_SELECTED_TITLE, filePaths[0])

@@ -29,17 +29,17 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
     init {
         setContentView(R.layout.dialog_game_details)
         val gameFile = GameFileCacheService.addOrGet(gamePath)
-        gameId = gameFile.gameId
+        gameId = gameFile.getGameId()
 
         // Game title
         findViewById<TextView>(R.id.text_game_title)?.text = gameFile.title
 
         // Game filename with platform info
         findViewById<TextView>(R.id.text_game_filename)?.text = buildString {
-            append(gameFile.gameId)
-            if (gameFile.platform > 0) {
+            append(gameFile.getGameId())
+            if (gameFile.getPlatform() > 0) {
                 append(", ")
-                append(gameFile.titlePath)
+                append(gameFile.getTitlePath())
             }
         }
 
@@ -47,14 +47,14 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
         findViewById<Button>(R.id.button_play)?.apply {
             setOnClickListener {
                 dismiss()
-                EmulationActivity.launch(context, gameFile.path)
+                EmulationActivity.launch(context, gameFile.getPath())
             }
         }
 
         findViewById<Button>(R.id.button_convert)?.apply {
             setOnClickListener {
                 dismiss()
-                ConvertActivity.launch(context, gameFile.path)
+                ConvertActivity.launch(context, gameFile.getPath())
             }
             isEnabled = gameFile.shouldAllowConversion()
         }
@@ -70,29 +70,29 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
         findViewById<Button>(R.id.button_cheat_code)?.apply {
             setOnClickListener {
                 dismiss()
-                EditorActivity.launch(context, gameFile.path)
+                EditorActivity.launch(context, gameFile.getPath())
             }
         }
 
         findViewById<Button>(R.id.button_wiimote_settings)?.apply {
             setOnClickListener {
                 dismiss()
-                launch(context, MenuTag.WIIMOTE, gameFile.gameId)
+                launch(context, MenuTag.WIIMOTE, gameFile.getGameId())
             }
-            isEnabled = gameFile.platform > 0
+            isEnabled = gameFile.getPlatform() > 0
         }
 
         findViewById<Button>(R.id.button_gcpad_settings)?.apply {
             setOnClickListener {
                 dismiss()
-                launch(context, MenuTag.GCPAD_TYPE, gameFile.gameId)
+                launch(context, MenuTag.GCPAD_TYPE, gameFile.getGameId())
             }
         }
 
         findViewById<Button>(R.id.button_game_setting)?.apply {
             setOnClickListener {
                 dismiss()
-                launch(context, MenuTag.CONFIG, gameFile.gameId)
+                launch(context, MenuTag.CONFIG, gameFile.getGameId())
             }
         }
 

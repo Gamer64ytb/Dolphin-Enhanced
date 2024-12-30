@@ -346,7 +346,7 @@ class EditorActivity : AppCompatActivity() {
         val gamePath = intent.getStringExtra(ARG_GAME_PATH)
         val gameFile = GameFileCacheService.addOrGet(gamePath)
 
-        gameId = gameFile.gameId
+        gameId = gameFile.getGameId()
 
         title = gameId
 
@@ -403,7 +403,7 @@ class EditorActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_download_gecko) {
-            downloadGeckoCodes(gameFile!!.gameTdbId, editor)
+            downloadGeckoCodes(gameFile!!.getGameTdbId(), editor)
             return true
         }
         return false

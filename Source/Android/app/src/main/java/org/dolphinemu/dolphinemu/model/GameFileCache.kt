@@ -24,7 +24,7 @@ class GameFileCache {
         // get paths from game files
         val gameFiles = GameFileCacheService.getAllGameFiles()
         for (f in gameFiles) {
-            val filename = f.path
+            val filename = f.getPath()
             val lastSep = filename.lastIndexOf(File.separator)
             if (lastSep > 0) {
                 val path = filename.substring(0, lastSep)

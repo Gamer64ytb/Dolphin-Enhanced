@@ -8,7 +8,7 @@ object CoverHelper {
     fun buildGameTDBUrl(game: GameFile, region: String?): String {
         var region = region
         val baseUrl = "https://art.gametdb.com/wii/cover/%s/%s.png"
-        var id: String? = game.gameTdbId
+        var id: String? = game.getGameTdbId()
         if (region == null) {
             region = getRegion(game)
         } else {
@@ -33,11 +33,11 @@ object CoverHelper {
     }
 
     private fun getRegion(game: GameFile): String {
-        val region = when (game.region) {
+        val region = when (game.getRegion()) {
             0 -> "JA"
             1 -> "US"
             4 -> "KO"
-            2 -> when (game.country) {
+            2 -> when (game.getCountry()) {
                 2 -> "DE"
                 3 -> "FR"
                 4 -> "ES"
