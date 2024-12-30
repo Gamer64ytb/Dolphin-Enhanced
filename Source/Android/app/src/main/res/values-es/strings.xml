@@ -173,12 +173,13 @@
     <string name="vsync_description">Esta configuración es innecesaria en la mayoría de los dispositivos Android, porque Android siempre habilita V-Sync. Si no estás seguro, deja esto sin marcar.</string>
     <string name="enable_cheats">Habilitar trucos</string>
     <string name="enable_cheats_description">Poner los códigos AR &amp; Gecko en el archivo de configuración del juego.</string>
+    <string name="override_region_settings">Permitir configuraciones de región no coincidentes</string>
+    <string name="auto_disc_change">Cambiar discos automáticamente</string>
+    <string name="memory_override">Anulación de Memoria</string>
     <string name="enable_memory_size_override">Habilitar Sobrescritura del Tamaño de Memoria Emulada</string>
     <string name="enable_memory_size_override_description">Ajusta la cantidad de RAM en la consola emulada.\n\nADVERTENCIA: Habilitar esto romperá completamente muchos juegos. Solo un pequeño número de juegos puede beneficiarse de esto.</string>
     <string name="main_mem1_size">Tamaño MEM1</string>
     <string name="main_mem2_size">Tamaño MEM2</string>
-    <string name="override_region_settings">Permitir configuraciones de región no coincidentes</string>
-    <string name="auto_disc_change">Cambiar discos automáticamente</string>
 
     <!-- Interface Preference Fragment -->
     <string name="interface_submenu">Interfaz</string>

@@ -236,37 +236,6 @@ class SettingsFragmentPresenter
         )
         sl.add(
             CheckBoxSetting(
-                SettingsFile.KEY_RAM_OVERRIDE_ENABLE, Settings.SECTION_INI_CORE,
-                R.string.enable_memory_size_override, R.string.enable_memory_size_override_description,
-                false, ramOverrideEnable
-            )
-        )
-        sl.add(
-            SliderSetting(
-                SettingsFile.KEY_MEM1_SIZE,
-                Settings.SECTION_INI_CORE,
-                R.string.main_mem1_size,
-                0,
-                64,
-                "MB",
-                24,
-                mem1Size
-            )
-        )
-        sl.add(
-            SliderSetting(
-                SettingsFile.KEY_MEM2_SIZE,
-                Settings.SECTION_INI_CORE,
-                R.string.main_mem2_size,
-                0,
-                128,
-                "MB",
-                64,
-                mem2Size
-            )
-        )
-        sl.add(
-            CheckBoxSetting(
                 SettingsFile.KEY_AUTO_DISC_CHANGE, Settings.SECTION_INI_CORE,
                 R.string.auto_disc_change, 0, false, autoDiscChange
             )
@@ -299,6 +268,38 @@ class SettingsFragmentPresenter
                 SettingsFile.KEY_AUDIO_BACKEND, Settings.SECTION_INI_DSP,
                 R.string.audio_backend, 0, audioListEntries,
                 audioListValues, defaultAudioBackend, audioBackend
+            )
+        )
+        sl.add(HeaderSetting(null, null, R.string.memory_override, 0))
+        sl.add(
+            CheckBoxSetting(
+                SettingsFile.KEY_RAM_OVERRIDE_ENABLE, Settings.SECTION_INI_CORE,
+                R.string.enable_memory_size_override, R.string.enable_memory_size_override_description,
+                false, ramOverrideEnable
+            )
+        )
+        sl.add(
+            SliderSetting(
+                SettingsFile.KEY_MEM1_SIZE,
+                Settings.SECTION_INI_CORE,
+                R.string.main_mem1_size,
+                0,
+                64,
+                "MB",
+                24,
+                mem1Size
+            )
+        )
+        sl.add(
+            SliderSetting(
+                SettingsFile.KEY_MEM2_SIZE,
+                Settings.SECTION_INI_CORE,
+                R.string.main_mem2_size,
+                0,
+                128,
+                "MB",
+                64,
+                mem2Size
             )
         )
     }
