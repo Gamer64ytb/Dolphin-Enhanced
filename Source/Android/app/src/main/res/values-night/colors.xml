@@ -5,4 +5,8 @@
 
     <color name="dolphin_background">#000000</color>
 
+    <color name="dialog_color">#141414</color>
+    <color name="text">#FFFFFF</color>
+    <color name="buttons">#000000</color>
+
 </resources>

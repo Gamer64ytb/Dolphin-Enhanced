@@ -456,4 +456,15 @@ It can efficiently compress both junk data and encrypted Wii data.
     <string name="yaw">Total Yaw</string>
     <string name="vertical_offset">Vertical Offset</string>
 
+    <!-- Game Details -->
+    <string name="game_id">Game ID</string>
+    <string name="game_actions">Game</string>
+    <string name="input_settings">Controller</string>
+    <string name="game_filename">Details::</string>
+    <string name="game_settings_section">Controller</string>
+    <string name="other_buttons_section">Management</string>
+    <string name="play">Play</string>
+    <string name="convert">Convert</string>
+    <string name="cheats">Cheats</string>
+
 </resources>
