@@ -56,64 +56,54 @@ JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getName(
     return ToJString(env, GetPointer(env, obj)->GetName());
 }
 
-JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getDescription(JNIEnv* env,
-                                                                                       jobject obj)
+JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getDescription(JNIEnv* env, jobject obj)
 {
   return ToJString(env, GetPointer(env, obj)->GetDescription());
 }
 
-JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getCompany(JNIEnv* env,
-                                                                                   jobject obj)
+JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getCompany(JNIEnv* env, jobject obj)
 {
   return ToJString(env, DiscIO::GetCompanyFromID(GetPointer(env, obj)->GetMakerID()));
 }
 
-JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getCountry(JNIEnv* env,
-                                                                                jobject obj)
+JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getCountry(JNIEnv* env, jobject obj)
 {
   return static_cast<jint>(GetPointer(env, obj)->GetCountry());
 }
 
-JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getRegion(JNIEnv* env,
-                                                                               jobject obj)
+JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getRegion(JNIEnv* env, jobject obj)
 {
   return static_cast<jint>(GetPointer(env, obj)->GetRegion());
 }
 
-JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getPath(JNIEnv* env,
-                                                                                jobject obj)
+JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getPath(JNIEnv* env, jobject obj)
 {
   return ToJString(env, GetPointer(env, obj)->GetFilePath());
 }
 
-JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getTitlePath(JNIEnv* env,
-                                                                                     jobject obj)
+JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getTitlePath(JNIEnv* env, jobject obj)
 {
   u64 titleID = GetPointer(env, obj)->GetTitleID();
   std::string path = StringFromFormat("Wii/title/%08x/%08x", (u32)(titleID >> 32), (u32)titleID);
   return ToJString(env, path);
 }
 
-JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getGameId(JNIEnv* env,
-                                                                                  jobject obj)
+JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getGameId(JNIEnv* env, jobject obj)
 {
   return ToJString(env, GetPointer(env, obj)->GetGameID());
 }
 
-JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getGameTdbId(JNIEnv* env,
-                                                                                     jobject obj)
+JNIEXPORT jstring JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getGameTdbId(JNIEnv* env, jobject obj)
 {
   return ToJString(env, GetPointer(env, obj)->GetGameTDBID());
 }
 
-JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getDiscNumber(JNIEnv* env,
-                                                                                   jobject obj)
+JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getDiscNumber(JNIEnv* env,  jobject obj)
 {
   return static_cast<jint>(GetPointer(env, obj)->GetDiscNumber());
 }
 
-JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getRevision(JNIEnv* env,
-                                                                                 jobject obj)
+JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getRevision(JNIEnv* env, jobject obj)
 {
   return static_cast<jint>(GetPointer(env, obj)->GetRevision());
 }
@@ -166,20 +156,18 @@ JNIEXPORT jintArray JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBan
   return out_array;
 }
 
-JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBannerWidth(JNIEnv* env,
-                                                                                    jobject obj)
+JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBannerWidth(JNIEnv* env, jobject obj)
 {
   return static_cast<jint>(GetPointer(env, obj)->GetBannerImage().width);
 }
 
-JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBannerHeight(JNIEnv* env,
-                                                                                     jobject obj)
+JNIEXPORT jint JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBannerHeight(JNIEnv* env, jobject obj)
 {
   return static_cast<jint>(GetPointer(env, obj)->GetBannerImage().height);
 }
 
 JNIEXPORT jobject JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_parse(JNIEnv* env,
-                                                                              jobject obj,
+                                                                              jclass,
                                                                               jstring path)
 {
   static std::map<std::string, std::shared_ptr<UICommon::GameFile>> file_dict;

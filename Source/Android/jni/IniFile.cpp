@@ -14,14 +14,12 @@ static IniFile* GetPointer(JNIEnv* env, jobject obj)
 extern "C" {
 #endif
 
-JNIEXPORT jlong JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_newIniFile(JNIEnv* env,
-                                                                                jobject obj)
+JNIEXPORT jlong JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_newIniFile(JNIEnv*, jobject)
 {
   return reinterpret_cast<jlong>(new IniFile());
 }
 
-JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_finalize(JNIEnv* env,
-                                                                             jobject obj)
+JNIEXPORT void JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_finalize(JNIEnv* env, jobject obj)
 {
   delete GetPointer(env, obj);
 }
@@ -33,9 +31,7 @@ JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_loadFile
   return GetPointer(env, obj)->Load(path, jKeepCurrentData);
 }
 
-JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_saveFile(JNIEnv* env,
-                                                                                 jobject obj,
-                                                                                 jstring jPath)
+JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_model_IniFile_saveFile(JNIEnv* env, jobject obj, jstring jPath)
 {
   std::string path = GetJString(env, jPath);
   return GetPointer(env, obj)->Save(path);
