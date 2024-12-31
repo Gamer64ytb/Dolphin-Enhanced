@@ -27,8 +27,7 @@ extern "C" {
 #if defined(_M_ARM_64)
 
 JNIEXPORT jobjectArray JNICALL
-Java_org_dolphinemu_dolphinemu_utils_GpuDriverHelper_00024Companion_getSystemDriverInfo(JNIEnv* env,
-                                                                                        jobject)
+Java_org_dolphinemu_dolphinemu_utils_GpuDriverHelper_00024Companion_getSystemDriverInfo(JNIEnv* env, jobject)
 {
   if (!Vulkan::LoadVulkanLibrary(true))
   {
@@ -94,7 +93,7 @@ Java_org_dolphinemu_dolphinemu_utils_GpuDriverHelper_00024Companion_getSystemDri
 
 JNIEXPORT jboolean JNICALL
 Java_org_dolphinemu_dolphinemu_utils_GpuDriverHelper_00024Companion_supportsCustomDriverLoading(
-    JNIEnv* env, jobject instance)
+    JNIEnv*, jobject)
 {
   // If the KGSL device exists custom drivers can be loaded using adrenotools
   return Vulkan::SupportsCustomDriver();
@@ -102,7 +101,7 @@ Java_org_dolphinemu_dolphinemu_utils_GpuDriverHelper_00024Companion_supportsCust
 
 JNIEXPORT jboolean JNICALL
 Java_org_dolphinemu_dolphinemu_utils_GpuDriverHelper_00024Companion_supportsForceMaxGpuClocks(
-    JNIEnv* env, jobject instance)
+    JNIEnv*, jobject)
 {
   // If the KGSL device exists adrenotools can be used to set GPU turbo mode
   return Vulkan::SupportsCustomDriver();
@@ -110,7 +109,7 @@ Java_org_dolphinemu_dolphinemu_utils_GpuDriverHelper_00024Companion_supportsForc
 
 JNIEXPORT void JNICALL
 Java_org_dolphinemu_dolphinemu_utils_GpuDriverHelper_00024Companion_forceMaxGpuClocks(
-    JNIEnv* env, jobject instance, jboolean enable)
+    JNIEnv*, jobject, jboolean enable)
 {
   adrenotools_set_turbo(enable);
 }

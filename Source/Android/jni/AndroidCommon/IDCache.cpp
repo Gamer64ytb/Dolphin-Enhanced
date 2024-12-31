@@ -25,12 +25,12 @@ void NativeLibrary::OnLoad(JNIEnv* env)
 {
   jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/NativeLibrary");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  DisplayAlertMsg = env->GetStaticMethodID(Clazz, "displayAlertMsg",
+  DisplayAlertMsg = env->GetStaticMethodID(clazz, "displayAlertMsg",
                                            "(Ljava/lang/String;Ljava/lang/String;Z)Z");
-  RumbleOutputMethod = env->GetStaticMethodID(Clazz, "rumble", "(ID)V");
-  UpdateWindowSize = env->GetStaticMethodID(Clazz, "updateWindowSize", "(II)V");
-  BindSystemBack = env->GetStaticMethodID(Clazz, "bindSystemBack", "(Ljava/lang/String;)V");
-  GetEmulationContext = env->GetStaticMethodID(Clazz, "getEmulationContext", "()Landroid/content/Context;");
+  RumbleOutputMethod = env->GetStaticMethodID(clazz, "rumble", "(ID)V");
+  UpdateWindowSize = env->GetStaticMethodID(clazz, "updateWindowSize", "(II)V");
+  BindSystemBack = env->GetStaticMethodID(clazz, "bindSystemBack", "(Ljava/lang/String;)V");
+  GetEmulationContext = env->GetStaticMethodID(clazz, "getEmulationContext", "()Landroid/content/Context;");
 }
 
 void NativeLibrary::OnUnload(JNIEnv* env)
@@ -43,7 +43,7 @@ void IniFile::OnLoad(JNIEnv* env)
 {
   jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/model/IniFile");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  Pointer = env->GetFieldID(Clazz, "pointer", "J");
+  Pointer = env->GetFieldID(clazz, "pointer", "J");
 }
 
 void IniFile::OnUnload(JNIEnv* env)
@@ -56,8 +56,8 @@ void GameFile::OnLoad(JNIEnv* env)
 {
   jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/model/GameFile");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  Pointer = env->GetFieldID(Clazz, "pointer", "J");
-  Constructor = env->GetMethodID(Clazz, "<init>", "(J)V");
+  Pointer = env->GetFieldID(clazz, "pointer", "J");
+  Constructor = env->GetMethodID(clazz, "<init>", "(J)V");
 }
 
 void GameFile::OnUnload(JNIEnv* env)
@@ -82,7 +82,7 @@ void CompressCallback::OnLoad(JNIEnv* env)
 {
   jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/utils/CompressCallback");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  CompressCbRun = env->GetMethodID(Clazz, "run", "(Ljava/lang/String;F)Z");
+  CompressCbRun = env->GetMethodID(clazz, "run", "(Ljava/lang/String;F)Z");
 }
 
 void CompressCallback::OnUnload(JNIEnv* env)
@@ -95,9 +95,9 @@ void NetworkHelper::OnLoad(JNIEnv* env)
 {
   jclass clazz = env->FindClass("org/dolphinemu/dolphinemu/utils/NetworkHelper");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
-  NetworkIpAddress = env->GetStaticMethodID(Clazz, "GetNetworkIpAddress", "()I");
-  NetworkPrefixLength = env->GetStaticMethodID(Clazz, "GetNetworkPrefixLength", "()I");
-  NetworkGateway = env->GetStaticMethodID(Clazz, "GetNetworkGateway", "()I");
+  NetworkIpAddress = env->GetStaticMethodID(clazz, "GetNetworkIpAddress", "()I");
+  NetworkPrefixLength = env->GetStaticMethodID(clazz, "GetNetworkPrefixLength", "()I");
+  NetworkGateway = env->GetStaticMethodID(clazz, "GetNetworkGateway", "()I");
 }
 
 void NetworkHelper::OnUnload(JNIEnv* env)
@@ -112,12 +112,12 @@ void ContentHandler::OnLoad(JNIEnv* env)
   jclass stringClazz = env->FindClass("java/lang/String");
   Clazz = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
   StringClazz = reinterpret_cast<jclass>(env->NewGlobalRef(stringClazz));
-  OpenFd = env->GetStaticMethodID(Clazz, "openFd", "(Ljava/lang/String;Ljava/lang/String;)I");
-  Delete = env->GetStaticMethodID(Clazz, "delete", "(Ljava/lang/String;)Z");
-  GetSizeAndIsDirectory = env->GetStaticMethodID(Clazz, "getSizeAndIsDirectory", "(Ljava/lang/String;)J");
-  GetDisplayName = env->GetStaticMethodID(Clazz, "getDisplayName", "(Ljava/lang/String;)Ljava/lang/String;");
-  GetChildNames = env->GetStaticMethodID(Clazz, "getChildNames", "(Ljava/lang/String;Z)[Ljava/lang/String;");
-  DoFileSearch = env->GetStaticMethodID(Clazz, "doFileSearch", "(Ljava/lang/String;[Ljava/lang/String;Z)[Ljava/lang/String;");
+  OpenFd = env->GetStaticMethodID(clazz, "openFd", "(Ljava/lang/String;Ljava/lang/String;)I");
+  Delete = env->GetStaticMethodID(clazz, "delete", "(Ljava/lang/String;)Z");
+  GetSizeAndIsDirectory = env->GetStaticMethodID(clazz, "getSizeAndIsDirectory", "(Ljava/lang/String;)J");
+  GetDisplayName = env->GetStaticMethodID(clazz, "getDisplayName", "(Ljava/lang/String;)Ljava/lang/String;");
+  GetChildNames = env->GetStaticMethodID(clazz, "getChildNames", "(Ljava/lang/String;Z)[Ljava/lang/String;");
+  DoFileSearch = env->GetStaticMethodID(clazz, "doFileSearch", "(Ljava/lang/String;[Ljava/lang/String;Z)[Ljava/lang/String;");
 }
 
 void ContentHandler::OnUnload(JNIEnv* env)
@@ -155,7 +155,7 @@ JNIEnv* GetEnvForThread()
 extern "C" {
 #endif
 
-jint JNI_OnLoad(JavaVM* vm, void* reserved)
+jint JNI_OnLoad(JavaVM* vm, void*)
 {
   s_java_vm = vm;
 
@@ -174,7 +174,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
   return JNI_VERSION;
 }
 
-void JNI_OnUnload(JavaVM* vm, void* reserved)
+void JNI_OnUnload(JavaVM* vm, void*)
 {
   JNIEnv* env;
   if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION) != JNI_OK)
