@@ -73,6 +73,19 @@
                 android:textColor="@color/dolphin_accent"
                 android:textSize="12sp" />
 
+            <TextView
+                android:id="@+id/text_game_file_format"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:fontFamily="sans-serif-medium"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="2dp"
+                android:textColor="@color/dolphin_accent"
+                android:textSize="12sp" />
+
         </LinearLayout>
 
         <LinearLayout

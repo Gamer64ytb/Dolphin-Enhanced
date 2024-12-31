@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import org.dolphinemu.dolphinemu.NativeLibrary
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.activities.ConvertActivity
 import org.dolphinemu.dolphinemu.activities.EditorActivity
@@ -40,6 +41,18 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
             if (gameFile.getPlatform() > 0) {
                 append(", ")
                 append(gameFile.getTitlePath())
+            }
+        }
+
+        // Game file format and size
+        val gameFileFormatId = findViewById<TextView>(R.id.text_game_file_format)
+        val fileSize = NativeLibrary.FormatSize(gameFile.getFileSize(), 2)
+        if (!gameFile.shouldShowFileFormatDetails()) {
+            gameFileFormatId?.text = fileSize
+        } else {
+            gameFileFormatId?.text = buildString {
+                append(context.resources.getString(R.string.game_details_size_and_format,
+                    gameFile.getBlobTypeString(), fileSize))
             }
         }
 

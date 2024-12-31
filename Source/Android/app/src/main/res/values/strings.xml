@@ -457,8 +457,7 @@ It can efficiently compress both junk data and encrypted Wii data.
     <string name="vertical_offset">Vertical Offset</string>
 
     <!-- Game Details -->
-    <string name="game_id">Game ID</string>
-    <string name="game_actions">Game</string>
+    <string name="game_details_size_and_format" translatable="false">%1$s (%2$s)</string>
     <string name="input_settings">Controller</string>
     <string name="game_filename">Details:</string>
     <string name="other_buttons_section">Other</string>

@@ -457,8 +457,6 @@ Puede comprimir eficientemente tanto datos basura como datos encriptados de Wii.
     <string name="vertical_offset">Desplazamiento vertical</string>
 
     <!-- Game Details -->
-    <string name="game_id">ID del Juego</string>
-    <string name="game_actions">Juego</string>
     <string name="input_settings">Controlador</string>
     <string name="game_filename">Detalles:</string>
     <string name="other_buttons_section">Otro</string>
