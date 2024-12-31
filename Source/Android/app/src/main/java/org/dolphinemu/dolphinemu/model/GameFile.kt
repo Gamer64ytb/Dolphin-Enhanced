@@ -15,8 +15,8 @@ import org.dolphinemu.dolphinemu.utils.DirectoryInitialization
 import java.io.File
 import java.io.FileOutputStream
 
-class GameFile
-@Keep private constructor(@field:Keep private val pointer: Long) {
+@Keep
+class GameFile private constructor(private val pointer: Long) {
     private var sName: String? = null
 
     val title: String?
@@ -51,10 +51,6 @@ class GameFile
 
     external fun getBlobTypeString(): String
 
-    external fun getBlockSize(): Long
-
-    external fun getCompressionMethod(): String
-
     external fun shouldShowFileFormatDetails(): Boolean
 
     external fun getFileSize(): Long
@@ -65,11 +61,11 @@ class GameFile
 
     external fun isDatelDisc(): Boolean
 
-    external fun getBanner(): IntArray
+    private external fun getBanner(): IntArray
 
-    external fun getBannerWidth(): Int
+    private external fun getBannerWidth(): Int
 
-    external fun getBannerHeight(): Int
+    private external fun getBannerHeight(): Int
 
     fun getCoverPath(context: Context): String {
         return DirectoryInitialization.getCacheDirectory(context) + "/GameCovers/" + getGameTdbId() + ".png"

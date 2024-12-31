@@ -62,17 +62,22 @@ class GameFileCache {
         return cacheChanged
     }
 
-    val allGames: Array<GameFile>
-        external get
+    @Synchronized
+    external fun getAllGames(): Array<GameFile>
 
+    @Synchronized
     external fun addOrGet(gamePath: String): GameFile?
 
+    @Synchronized
     private external fun update(folderPaths: Array<String>): Boolean
 
+    @Synchronized
     private external fun updateAdditionalMetadata(): Boolean
 
+    @Synchronized
     external fun load(): Boolean
 
+    @Synchronized
     private external fun save(): Boolean
 
     companion object {

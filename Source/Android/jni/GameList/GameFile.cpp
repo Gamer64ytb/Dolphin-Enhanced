@@ -124,18 +124,6 @@ Java_org_dolphinemu_dolphinemu_model_GameFile_getBlobTypeString(JNIEnv* env, job
   return ToJString(env, DiscIO::GetName(GetPointer(env, obj)->GetBlobType(), true));
 }
 
-JNIEXPORT jlong JNICALL Java_org_dolphinemu_dolphinemu_model_GameFile_getBlockSize(JNIEnv* env,
-                                                                                   jobject obj)
-{
-  return static_cast<jlong>(GetPointer(env, obj)->GetBlockSize());
-}
-
-JNIEXPORT jstring JNICALL
-Java_org_dolphinemu_dolphinemu_model_GameFile_getCompressionMethod(JNIEnv* env, jobject obj)
-{
-    return ToJString(env, GetPointer(env, obj)->GetCompressionMethod());
-}
-
 JNIEXPORT jboolean JNICALL
 Java_org_dolphinemu_dolphinemu_model_GameFile_shouldShowFileFormatDetails(JNIEnv* env, jobject obj)
 {
