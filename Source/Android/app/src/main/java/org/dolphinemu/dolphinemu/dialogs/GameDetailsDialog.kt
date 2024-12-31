@@ -208,9 +208,7 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
                         .build()
                 }
 
-                if (shortcut != null) {
-                    shortcutManager?.requestPinShortcut(shortcut, null)
-                }
+                shortcutManager?.requestPinShortcut(shortcut!!, null)
             } catch (e: Exception) {
                 Toast.makeText(context, R.string.shortcut_failed, Toast.LENGTH_SHORT).show()
             }

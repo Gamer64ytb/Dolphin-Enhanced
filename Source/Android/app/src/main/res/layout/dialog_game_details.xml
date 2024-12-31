@@ -131,8 +131,6 @@
                 app:iconGravity="textStart"
                 app:iconTint="@color/dolphin_accent" />
 
-
-
         </LinearLayout>
 
         <TextView
