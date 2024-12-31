@@ -190,7 +190,7 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
              Intent(context, EmulationActivity::class.java).apply {
                 action = Intent.ACTION_VIEW
                 putExtra(EmulationActivity.EXTRA_SELECTED_GAMES, arrayOf(gameFile.path))
-                putExtra("launched_from_shortcut", true)
+                putExtra("launchedFromShortcut", true)
             }
 
             val shortcutManager = context.getSystemService(ShortcutManager::class.java)
