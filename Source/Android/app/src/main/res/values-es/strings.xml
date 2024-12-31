@@ -463,5 +463,7 @@ Puede comprimir eficientemente tanto datos basura como datos encriptados de Wii.
     <string name="play">Jugar</string>
     <string name="convert">Convertir</string>
     <string name="cheats">Trucos</string>
+    <string name="create_shortcut">Acceso directo</string>
+    <string name="shortcut_failed">Error al crear acceso directo</string>
 
 </resources>
