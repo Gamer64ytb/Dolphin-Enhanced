@@ -44,7 +44,11 @@ class SettingsFragmentPresenter
             controllerType = extras.getInt(SettingsActivity.ARG_CONTROLLER_TYPE)
         } else if (menuTag.isWiimoteMenu) {
             controllerNumber = menuTag.subType
-        } else if (menuTag == MenuTag.GRAPHICS) {
+        } else if (
+            menuTag == MenuTag.GRAPHICS
+            && this.gameId.isNullOrEmpty()
+            && GpuDriverHelper.supportsCustomDriverLoading()
+        ) {
         activity.gpuDriver =
             GpuDriverHelper.getInstalledDriverMetadata() ?: GpuDriverHelper.getSystemDriverMetadata(
                 activity.applicationContext
@@ -581,7 +585,10 @@ class SettingsFragmentPresenter
                 backendMultithreading
             )
         )
-        if (GpuDriverHelper.supportsCustomDriverLoading() && activity.gpuDriver != null) {
+        if (
+            activity.gpuDriver != null && gameId.isNullOrEmpty()
+            && GpuDriverHelper.supportsCustomDriverLoading()
+        ) {
             sl.add(SubmenuSetting(null, null, R.string.gpu_driver_submenu, 0, MenuTag.GPU_DRIVERS))
         }
         sl.add(
