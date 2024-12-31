@@ -6,7 +6,7 @@
         <!-- Main theme colors -->
         <!-- Branding color for the app bar -->
         <item name="colorSurface">@color/dolphin</item>
-        <item name="colorPrimary">@color/dolphin</item>
+        <item name="colorPrimary">@color/dolphin_accent</item>
         <item name="colorPrimaryDark">@color/dolphin</item>
         <item name="colorAccent">@color/dolphin_accent</item>
 
