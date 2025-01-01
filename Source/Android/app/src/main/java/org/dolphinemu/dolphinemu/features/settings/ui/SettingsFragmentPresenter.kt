@@ -1,5 +1,6 @@
 package org.dolphinemu.dolphinemu.features.settings.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 
@@ -310,11 +311,27 @@ class SettingsFragmentPresenter
 
     private fun addInterfaceSettings(sl: ArrayList<SettingsItem>) {
         val uiSection = settings!!.getSection(Settings.SECTION_INI_INTERFACE)
+        val expandToCutoutArea = uiSection.getSetting(SettingsFile.KEY_EXPAND_TO_CUTOUT_AREA)
         val design = uiSection.getSetting(SettingsFile.KEY_DESIGN)
         val usePanicHandlers = uiSection.getSetting(SettingsFile.KEY_USE_PANIC_HANDLERS)
         val onScreenDisplayMessages = uiSection.getSetting(SettingsFile.KEY_OSD_MESSAGES)
         val useBuiltinTitleDatabase = uiSection.getSetting(SettingsFile.KEY_BUILTIN_TITLE_DATABASE)
         val systemBack = uiSection.getSetting(SettingsFile.KEY_SYSTEM_BACK)
+
+
+        // Only android 9+ supports this feature.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            sl.add(
+                CheckBoxSetting(
+                    SettingsFile.KEY_EXPAND_TO_CUTOUT_AREA,
+                    Settings.SECTION_INI_INTERFACE,
+                    R.string.expand_to_cutout_area,
+                    R.string.expand_to_cutout_area_description,
+                    false,
+                    expandToCutoutArea
+                )
+            )
+        }
 
         if (gameId!!.isEmpty()) {
             sl.add(

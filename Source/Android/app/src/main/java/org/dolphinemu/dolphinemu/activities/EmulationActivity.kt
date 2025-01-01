@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.hardware.usb.UsbManager
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.DisplayMetrics
@@ -16,6 +17,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
@@ -24,6 +26,9 @@ import org.dolphinemu.dolphinemu.NativeLibrary
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.dialogs.RunningSettingDialog
 import org.dolphinemu.dolphinemu.dialogs.StateSavesDialog
+import org.dolphinemu.dolphinemu.features.settings.model.BooleanSetting
+import org.dolphinemu.dolphinemu.features.settings.model.Settings
+import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile
 import org.dolphinemu.dolphinemu.fragments.EmulationFragment
 import org.dolphinemu.dolphinemu.model.GameFile
 import org.dolphinemu.dolphinemu.overlay.InputOverlay
@@ -47,6 +52,8 @@ open class EmulationActivity : AppCompatActivity() {
     private var menuVisible = false
     private var bindingDevice: String? = null
     private var bindingButton = 0
+
+    private var settings: Settings? = null
 
     private var selectedTitle: String? = ""
     var selectedGameId: String? = ""
@@ -78,6 +85,9 @@ open class EmulationActivity : AppCompatActivity() {
         } else {
             restoreState(savedInstanceState)
         }
+
+        settings = Settings()
+        settings!!.loadSettings(null)
 
         controllerMappingHelper = ControllerMappingHelper()
 
@@ -271,6 +281,23 @@ open class EmulationActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        val expandToCutoutAreaSetting = settings!!.getSection(Settings.SECTION_INI_INTERFACE)
+            .getSetting(SettingsFile.KEY_EXPAND_TO_CUTOUT_AREA) as BooleanSetting
+        val expandToCutoutArea = expandToCutoutAreaSetting == null || expandToCutoutAreaSetting.value
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val attributes = window.attributes
+
+            attributes.layoutInDisplayCutoutMode =
+                if (expandToCutoutArea) {
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                } else {
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
+                }
+
+            window.attributes = attributes
+        }
 
         if (sensorManager != null) {
             val rotationVector = sensorManager!!.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR)

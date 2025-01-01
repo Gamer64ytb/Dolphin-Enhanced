@@ -183,6 +183,8 @@
 
     <!-- Interface Preference Fragment -->
     <string name="interface_submenu">Interface</string>
+    <string name="expand_to_cutout_area">Expand to Cutout Area</string>
+    <string name="expand_to_cutout_area_description">Expands the display area to include the cutout (or notch) area.</string>
     <string name="design">Change Theme (Light, Dark)</string>
     <string name="panic_handlers">Use Panic Handlers</string>
     <string name="panic_handlers_description">Show a message box when a potentially serious error has occurred. Disabling this may avoid annoying and non-fatal messages.</string>

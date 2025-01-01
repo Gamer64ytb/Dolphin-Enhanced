@@ -183,6 +183,8 @@
 
     <!-- Interface Preference Fragment -->
     <string name="interface_submenu">Interfaz</string>
+    <string name="expand_to_cutout_area">Expandir al área de corte</string>
+    <string name="expand_to_cutout_area_description">Expande el área de visualización para incluir el área de corte (o muesca).</string>
     <string name="design">Cambiar tema (Claro, Oscuro)</string>
     <string name="panic_handlers">Usar manejadores de pánico</string>
     <string name="panic_handlers_description">Mostrar un cuadro de mensaje cuando ocurra un error potencialmente serio. Deshabilitar esto puede evitar mensajes molestos y no fatales.</string>

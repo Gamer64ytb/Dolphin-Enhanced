@@ -62,6 +62,7 @@ public final class SettingsFile
   public static final String KEY_SLOT_B_DEVICE = "SlotB";
   public static final String KEY_SERIAL_PORT_1 = "SerialPort1";
 
+  public static final String KEY_EXPAND_TO_CUTOUT_AREA = "ExpandToCutoutArea";
   public static final String KEY_DESIGN = "Design";
   public static final String KEY_USE_PANIC_HANDLERS = "UsePanicHandlers";
   public static final String KEY_OSD_MESSAGES = "OnScreenDisplayMessages";
