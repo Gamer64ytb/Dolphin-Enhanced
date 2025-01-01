@@ -28,14 +28,13 @@
 
     <!-- Inherit from the Base Dolphin Dialog Theme -->
 
-    <style name="DolphinEmulationBase" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="DolphinEmulationBase" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/dolphin_accent</item>
         <item name="colorPrimaryDark">@color/dolphin</item>
         <item name="colorAccent">@color/dolphin_accent</item>
         <item name="android:windowTranslucentNavigation">true</item>
 
         <item name="android:windowBackground">@android:color/black</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
     <!-- Hax to make Tablayout render icons -->
