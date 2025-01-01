@@ -131,9 +131,7 @@ class GameDetailsDialog(context: Context, gamePath: String?) : BottomSheetDialog
         }
 
         // Load game banner
-        findViewById<ImageView>(R.id.image_game_screen)?.let { imageView ->
-            loadGameBanner(imageView, gameFile)
-        }
+        loadGameBanner(findViewById(R.id.image_game_screen)!!, gameFile)
 
         // Load bottom sheet dialog with custom background colors and rounded corners
         setOnShowListener { dialog ->
