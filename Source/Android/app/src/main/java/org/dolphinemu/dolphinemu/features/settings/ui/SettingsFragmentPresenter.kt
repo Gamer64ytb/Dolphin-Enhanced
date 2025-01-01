@@ -656,8 +656,14 @@ class SettingsFragmentPresenter
         )
 
         val shaderList = PostProcessing.shaderList
-        val shaderListEntries = arrayOf(activity.getString(R.string.off), *shaderList)
-        val shaderListValues = arrayOf("", *shaderList)
+        val shaderListEntries = arrayOfNulls<String>(shaderList.size + 1)
+        shaderListEntries[0] = activity.getString(R.string.off)
+        System.arraycopy(shaderList, 0, shaderListEntries, 1, shaderList.size)
+
+        val shaderListValues = arrayOfNulls<String>(shaderList.size + 1)
+        shaderListValues[0] = ""
+        System.arraycopy(shaderList, 0, shaderListValues, 1, shaderList.size)
+
         sl.add(
             StringSingleChoiceSetting(
                 SettingsFile.KEY_POST_SHADER,
