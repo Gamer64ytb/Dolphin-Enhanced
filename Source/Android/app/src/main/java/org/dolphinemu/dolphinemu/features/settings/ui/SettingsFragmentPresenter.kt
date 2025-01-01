@@ -25,8 +25,6 @@ import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag.Companion.getWiimo
 import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile
 import org.dolphinemu.dolphinemu.utils.GpuDriverHelper
 
-import java.util.Locale
-
 class SettingsFragmentPresenter
     (private val activity: SettingsActivity) {
     private var menuTag: MenuTag? = null
@@ -317,7 +315,6 @@ class SettingsFragmentPresenter
         val onScreenDisplayMessages = uiSection.getSetting(SettingsFile.KEY_OSD_MESSAGES)
         val useBuiltinTitleDatabase = uiSection.getSetting(SettingsFile.KEY_BUILTIN_TITLE_DATABASE)
         val systemBack = uiSection.getSetting(SettingsFile.KEY_SYSTEM_BACK)
-
 
         // Only android 9+ supports this feature.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -770,24 +767,6 @@ class SettingsFragmentPresenter
                 wideScreenHack
             )
         )
-    }
-
-    private fun capitalize(text: String): String {
-        var text = text
-        if (text.contains("_")) {
-            text = text.replace("_", " ")
-        }
-
-        if (text.length > 1 && text.contains(" ")) {
-            val ss = text.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            text = capitalize(ss[0])
-            for (i in 1 until ss.size) {
-                text += " " + capitalize(ss[i])
-            }
-            return text
-        }
-
-        return text.substring(0, 1).uppercase(Locale.getDefault()) + text.substring(1)
     }
 
     private fun addHackSettings(sl: ArrayList<SettingsItem>) {
