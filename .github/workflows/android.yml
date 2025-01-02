@@ -23,7 +23,10 @@ jobs:
           java-version: '17'
 
       - name: Build
-        run: ./gradlew assembleRelease
+        run: |
+          cd ./Source/Android
+          chmod +x ./gradlew
+          ./gradlew assembleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
