@@ -320,7 +320,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
                     gpuDriver = GpuDriverHelper.getInstalledDriverMetadata()
                         ?: GpuDriverHelper.getSystemDriverMetadata(context) ?: return@withContext
                     NativeLibrary.SetConfig(SettingsFile.FILE_NAME_GFX + ".ini",
-                        SettingsFile.KEY_GPU_DRIVERS, Settings.SECTION_GFX_SETTINGS, gpuDriver!!.libraryName)
+                        Settings.SECTION_GFX_SETTINGS, SettingsFile.KEY_DRIVER_LIB_NAME, gpuDriver!!.libraryName)
                 }
                 onDriverInstallDone(result)
             }
@@ -336,7 +336,7 @@ class SettingsActivity : AppCompatActivity(), SettingsActivityView {
                         GpuDriverHelper.getInstalledDriverMetadata()
                             ?: GpuDriverHelper.getSystemDriverMetadata(applicationContext)
                     NativeLibrary.SetConfig(SettingsFile.FILE_NAME_GFX + ".ini",
-                        SettingsFile.KEY_GPU_DRIVERS, Settings.SECTION_GFX_SETTINGS, "")
+                        Settings.SECTION_GFX_SETTINGS, SettingsFile.KEY_DRIVER_LIB_NAME, "")
                 }
                 onDriverUninstallDone()
             }
