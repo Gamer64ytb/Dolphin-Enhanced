@@ -84,7 +84,7 @@ public final class SettingsFile
   public static final String KEY_WIDE_SCREEN_HACK = "wideScreenHack";
   public static final String KEY_FORCE_24_BIT_COLOR = "ForceTrueColor";
   public static final String KEY_BACKEND_MULTITHREADING = "BackendMultithreading";
-  public static final String KEY_GPU_DRIVERS = "GPUDrivers";
+  public static final String KEY_DRIVER_LIB_NAME = "DriverLibName";
 
   public static final String KEY_SKIP_EFB = "EFBAccessEnable";
   public static final String KEY_IGNORE_FORMAT = "EFBEmulateFormatChanges";
