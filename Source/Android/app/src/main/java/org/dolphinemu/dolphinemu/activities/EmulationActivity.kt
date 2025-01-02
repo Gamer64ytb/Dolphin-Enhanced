@@ -282,19 +282,20 @@ open class EmulationActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        val expandToCutoutAreaSetting = settings!!.getSection(Settings.SECTION_INI_INTERFACE)
-            .getSetting(SettingsFile.KEY_EXPAND_TO_CUTOUT_AREA) as BooleanSetting
-        val expandToCutoutArea = expandToCutoutAreaSetting == null || expandToCutoutAreaSetting.value
+        val expandToCutoutAreaSetting: BooleanSetting? =
+            settings?.getSection(Settings.SECTION_INI_INTERFACE)
+                ?.getSetting(SettingsFile.KEY_EXPAND_TO_CUTOUT_AREA) as? BooleanSetting
+
+        val expandToCutoutArea = expandToCutoutAreaSetting?.value ?: false
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val attributes = window.attributes
 
-            attributes.layoutInDisplayCutoutMode =
-                if (expandToCutoutArea) {
-                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-                } else {
-                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
-                }
+            attributes.layoutInDisplayCutoutMode = if (expandToCutoutArea) {
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            } else {
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
+            }
 
             window.attributes = attributes
         }
