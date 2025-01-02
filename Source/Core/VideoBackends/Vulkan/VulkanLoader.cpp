@@ -88,6 +88,7 @@ static bool OpenVulkanLibrary(bool force_system_library)
 #endif
 
   WARN_LOG(HOST_GPU, "Loading system driver");
+  OSD::AddMessage("Loading system driver", OSD::Duration::NORMAL, OSD::Color::YELLOW);
   std::string filename = Common::DynamicLibrary::GetVersionedFilename("vulkan", 1);
   if (s_vulkan_module.Open(filename.c_str()))
     return true;
