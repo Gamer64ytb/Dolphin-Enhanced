@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.features.settings.model.Settings
 import org.dolphinemu.dolphinemu.features.settings.model.view.SettingsItem
+import java.util.EnumMap
 
 class SettingsFragment : Fragment(), SettingsFragmentView {
     private var presenter: SettingsFragmentPresenter? = null
@@ -110,7 +111,7 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
         private const val ARGUMENT_MENU_TAG = "menu_tag"
         private const val ARGUMENT_GAME_ID = "game_id"
 
-        private val titles: MutableMap<MenuTag?, Int> = HashMap()
+        private val titles: MutableMap<MenuTag, Int> = EnumMap(MenuTag::class.java)
 
         init {
             titles[MenuTag.CONFIG] = R.string.preferences_settings
