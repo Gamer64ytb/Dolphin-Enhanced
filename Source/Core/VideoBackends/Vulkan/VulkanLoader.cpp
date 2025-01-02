@@ -58,7 +58,7 @@ static bool OpenVulkanLibrary(bool force_system_library)
   return s_vulkan_module.Open(filename.c_str());
 #else
 
-#if defined(ANDROID)
+#if defined(ANDROID) && _M_ARM_64
   const std::string& driver_lib_name = g_Config.customDriverLibraryName;
 
   if (!force_system_library && !driver_lib_name.empty() && SupportsCustomDriver())
