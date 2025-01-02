@@ -7,6 +7,7 @@
 #include <cstdlib>
 
 #if defined(ANDROID)
+#include <VideoCommon/OnScreenDisplay.h>
 #include <adrenotools/driver.h>
 #include <dlfcn.h>
 #endif
@@ -57,7 +58,7 @@ static bool OpenVulkanLibrary(bool force_system_library)
   return s_vulkan_module.Open(filename.c_str());
 #else
 
-#if defined(ANDROID) && _M_ARM_64
+#if defined(ANDROID)
   const std::string& driver_lib_name = g_Config.customDriverLibraryName;
 
   if (!force_system_library && !driver_lib_name.empty() && SupportsCustomDriver())
@@ -75,11 +76,13 @@ static bool OpenVulkanLibrary(bool force_system_library)
     if (s_vulkan_module.IsOpen())
     {
       INFO_LOG(HOST_GPU, "Successfully loaded driver: %s", driver_lib_name);
+      OSD::AddMessage("Successfully loaded driver: " + driver_lib_name, OSD::Duration::NORMAL, OSD::Color::YELLOW);
       return true;
     }
     else
     {
       WARN_LOG(HOST_GPU, "Loading driver %s failed.", driver_lib_name);
+      OSD::AddMessage("Loading driver " + driver_lib_name + " failed.", OSD::Duration::NORMAL, OSD::Color::YELLOW);
     }
   }
 #endif
