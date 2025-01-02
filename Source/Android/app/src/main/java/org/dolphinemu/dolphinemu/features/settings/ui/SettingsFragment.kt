@@ -13,10 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.features.settings.model.Settings
 import org.dolphinemu.dolphinemu.features.settings.model.view.SettingsItem
-import java.util.EnumMap
 
 class SettingsFragment : Fragment(), SettingsFragmentView {
-    private lateinit var presenter: SettingsFragmentPresenter
+    private var presenter: SettingsFragmentPresenter? = null
     private var settingsList: ArrayList<SettingsItem>? = null
     private var settingsActivity: SettingsActivity? = null
     private var adapter: SettingsAdapter? = null
@@ -25,6 +24,8 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
         super.onAttach(context)
 
         settingsActivity = context as SettingsActivity
+        if (presenter == null) presenter = SettingsFragmentPresenter(settingsActivity!!)
+        presenter!!.onAttach()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,10 +36,8 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
         val menuTag = args!!.getSerializable(ARGUMENT_MENU_TAG) as MenuTag?
         val gameId = requireArguments().getString(ARGUMENT_GAME_ID)
 
-        presenter = SettingsFragmentPresenter(settingsActivity!!)
         adapter = SettingsAdapter(settingsActivity!!)
-
-        presenter.onCreate(menuTag!!, gameId, args)
+        presenter!!.onCreate(menuTag!!, gameId, args)
     }
 
     override fun onCreateView(
@@ -95,7 +94,7 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
 
     override fun showSettingsList(settings: Settings?) {
         if (settingsList == null && settings != null) {
-            settingsList = presenter.loadSettingsList(settings)
+            settingsList = presenter!!.loadSettingsList(settings)
         }
 
         if (settingsList != null) {
@@ -111,7 +110,7 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
         private const val ARGUMENT_MENU_TAG = "menu_tag"
         private const val ARGUMENT_GAME_ID = "game_id"
 
-        private val titles: MutableMap<MenuTag, Int> = EnumMap(MenuTag::class.java)
+        private val titles: MutableMap<MenuTag?, Int> = HashMap()
 
         init {
             titles[MenuTag.CONFIG] = R.string.preferences_settings
