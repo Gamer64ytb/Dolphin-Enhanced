@@ -99,7 +99,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
     private var overlayPointer: InputOverlayPointer? = null
     private var overlaySensor: InputOverlaySensor? = null
 
-    private var isInEditMode = false
+    private var inEditMode = false
     private var buttonBeingConfigured: InputOverlayDrawableButton? = null
     private var dpadBeingConfigured: InputOverlayDrawableDpad? = null
     private var joystickBeingConfigured: InputOverlayDrawableJoystick? = null
@@ -123,7 +123,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
-        if (isInEditMode) {
+        if (inEditMode) {
             return onTouchWhileEditing(event)
         }
 
@@ -273,7 +273,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         return true
     }
 
-    fun onTouchWhileEditing(event: MotionEvent): Boolean {
+    private fun onTouchWhileEditing(event: MotionEvent): Boolean {
         val pointerIndex = event.actionIndex
         val pointerX = event.getX(pointerIndex).toInt()
         val pointerY = event.getY(pointerIndex).toInt()
@@ -918,11 +918,11 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
     }
 
     fun setIsInEditMode(isInEditMode: Boolean) {
-        isInEditMode = isInEditMode
+        inEditMode = isInEditMode
     }
 
     override fun isInEditMode(): Boolean {
-        return isInEditMode
+        return inEditMode
     }
 
     private fun defaultOverlay() {
