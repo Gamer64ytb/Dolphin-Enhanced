@@ -9,21 +9,32 @@ package org.dolphinemu.dolphinemu.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.dolphinemu.dolphinemu.BuildConfig;
 import org.dolphinemu.dolphinemu.NativeLibrary;
+import org.dolphinemu.dolphinemu.overlay.InputOverlay;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
  * A service that spawns its own thread in order to copy several binary and shader files
@@ -56,6 +67,14 @@ public final class DirectoryInitialization
     ((Runnable) () -> init(context)).run();
   }
 
+  private static class InitTask extends AsyncTask<Context, Void, Void> {
+    @Override
+    protected Void doInBackground(Context... contexts) {
+      initializeExternalStorage(contexts[0]);
+      return null;
+    }
+  }
+
   private static void init(Context context)
   {
     if (!mIsRunning.compareAndSet(false, true))
@@ -68,9 +87,8 @@ public final class DirectoryInitialization
         if (setDolphinUserDirectory(context))
         {
           initializeInternalStorage(context);
-          initializeExternalStorage(context);
           NativeLibrary.setSystemLanguage(Locale.getDefault().getLanguage());
-          mDirectoryState = DirectoryInitializationState.DIRECTORIES_INITIALIZED;
+          new InitTask().execute(context);
         }
         else
         {
@@ -85,6 +103,10 @@ public final class DirectoryInitialization
 
     mIsRunning.set(false);
     sendBroadcastState(mDirectoryState, context);
+  }
+
+  public static boolean isInitialized() {
+    return mDirectoryState == DirectoryInitializationState.DIRECTORIES_INITIALIZED;
   }
 
   private static boolean setDolphinUserDirectory(Context context)
@@ -157,6 +179,8 @@ public final class DirectoryInitialization
     // Create User directory structure and copy some NAND files from the extracted Sys directory.
     NativeLibrary.CreateUserDirectories();
 
+    mDirectoryState = DirectoryInitializationState.DIRECTORIES_INITIALIZED;
+
     // GCPadNew.ini and WiimoteNew.ini must contain specific values in order for controller
     // input to work as intended (they aren't user configurable), so we overwrite them just
     // in case the user has tried to modify them manually.
@@ -188,6 +212,12 @@ public final class DirectoryInitialization
 
     copyAsset("WiimoteProfile.ini", new File(profileDirectory, "WiimoteProfile.ini"), true,
             context);
+
+    File theme = new File(getThemeDirectory());
+
+    if (theme.exists() || theme.mkdir()) {
+      saveInputOverlay(context);
+    }
   }
 
   private static void deleteDirectoryRecursively(File file)
@@ -242,6 +272,10 @@ public final class DirectoryInitialization
       ".ini";
   }
 
+  public static String getThemeDirectory() {
+    return getUserDirectory() + File.separator + "Theme";
+  }
+
   public static String getInternalDirectory()
   {
     if (mDirectoryState == null)
@@ -253,6 +287,163 @@ public final class DirectoryInitialization
       throw new IllegalStateException("DirectoryInitialization has to finish running first!");
     }
     return mInternalPath;
+  }
+
+  public static void saveInputOverlay(Context context) {
+    final int[] gcInputIds = InputOverlay.ResGameCubeIds;
+    final int[] dpadAndJoystickInputIds = InputOverlay.ResDpadAndJoystickIds;
+    final int[] wiimoteInputIds = InputOverlay.ResWiimoteIds;
+    final int[] classicInputIds = InputOverlay.ResClassicIds;
+    final String[] gcInputNames = InputOverlay.ResGameCubeNames;
+    final String[] dpadAndJoystickInputNames = InputOverlay.ResDpadAndJoystickNames;
+    final String[] wiimoteInputNames = InputOverlay.ResWiimoteNames;
+    final String[] classicInputNames = InputOverlay.ResClassicNames;
+    String gcPath = getThemeDirectory() + "/gcDefault.zip";
+    String dpadAndJoystickPath = getThemeDirectory() + "/dpadJoystickDefault.zip";
+    String wiimotePath = getThemeDirectory() + "/wiimoteDefault.zip";
+    String classicPath = getThemeDirectory() + "/classicDefault.zip";
+    File gcFile = new File(gcPath);
+    File dpadJoystickFile = new File(dpadAndJoystickPath);
+    File wiimoteFile = new File(wiimotePath);
+    File classicFile = new File(classicPath);
+    if (gcFile.exists() || dpadJoystickFile.exists() || wiimoteFile.exists() || classicFile.exists()) {
+      return;
+    }
+    try {
+      FileOutputStream gcOutputStream = new FileOutputStream(gcFile);
+      FileOutputStream dpadJoystickOutputStream = new FileOutputStream(dpadJoystickFile);
+      FileOutputStream wiimoteOutputStream = new FileOutputStream(wiimoteFile);
+      FileOutputStream classicOutputStream = new FileOutputStream(classicFile);
+      ZipOutputStream gcZipOut = new ZipOutputStream(new BufferedOutputStream(gcOutputStream));
+      ZipOutputStream dpadJoystickZipOut = new ZipOutputStream(new BufferedOutputStream(dpadJoystickOutputStream));
+      ZipOutputStream wiimoteZipOut = new ZipOutputStream(new BufferedOutputStream(wiimoteOutputStream));
+      ZipOutputStream classicZipOut = new ZipOutputStream(new BufferedOutputStream(classicOutputStream));
+      for (int i = 0; i < gcInputIds.length; ++i) {
+        ZipEntry entry = new ZipEntry(gcInputNames[i]);
+        gcZipOut.putNextEntry(entry);
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), gcInputIds[i]);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, gcZipOut);
+      }
+      gcZipOut.close();
+      for (int i = 0; i < dpadAndJoystickInputIds.length; ++i) {
+        ZipEntry entry = new ZipEntry(dpadAndJoystickInputNames[i]);
+        dpadJoystickZipOut.putNextEntry(entry);
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), dpadAndJoystickInputIds[i]);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, dpadJoystickZipOut);
+      }
+      dpadJoystickZipOut.close();
+      for (int i = 0; i < wiimoteInputIds.length; ++i) {
+        ZipEntry entry = new ZipEntry(wiimoteInputNames[i]);
+        wiimoteZipOut.putNextEntry(entry);
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), wiimoteInputIds[i]);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, wiimoteZipOut);
+      }
+      wiimoteZipOut.close();
+      for (int i = 0; i < classicInputIds.length; ++i) {
+        ZipEntry entry = new ZipEntry(classicInputNames[i]);
+        classicZipOut.putNextEntry(entry);
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), classicInputIds[i]);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, classicZipOut);
+      }
+      classicZipOut.close();
+    } catch (IOException e) {
+      // ignore
+    }
+  }
+
+  public static Map<Integer, Bitmap> loadInputOverlay(Context context) {
+    final int[] gcInputIds = InputOverlay.ResGameCubeIds;
+    final int[] dpadAndJoystickInputIds = InputOverlay.ResDpadAndJoystickIds;
+    final int[] wiimoteInputIds = InputOverlay.ResWiimoteIds;
+    final int[] classicInputIds = InputOverlay.ResClassicIds;
+    final String[] gcInputNames = InputOverlay.ResGameCubeNames;
+    final String[] dpadAndJoystickInputNames = InputOverlay.ResDpadAndJoystickNames;
+    final String[] wiimoteInputNames = InputOverlay.ResWiimoteNames;
+    final String[] classicInputNames = InputOverlay.ResClassicNames;
+    Map<Integer, Bitmap> inputs = new HashMap<>();
+    String gcPath = getThemeDirectory() + "/gcDefault.zip";
+    String dpadAndJoystickPath = getThemeDirectory() + "/dpadJoystickDefault.zip";
+    String wiimotePath = getThemeDirectory() + "/wiimoteDefault.zip";
+    String classicPath = getThemeDirectory() + "/classicDefault.zip";
+    File gcFile = new File(gcPath);
+    File dpadJoystickFile = new File(dpadAndJoystickPath);
+    File wiimoteFile = new File(wiimotePath);
+    File classicFile = new File(classicPath);
+
+    // default bitmaps
+    for (int id : gcInputIds) {
+      Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+      inputs.put(id, bitmap);
+    }
+    for (int id : dpadAndJoystickInputIds) {
+      Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+      inputs.put(id, bitmap);
+    }
+    for (int id : wiimoteInputIds) {
+      Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+      inputs.put(id, bitmap);
+    }
+    for (int id : classicInputIds) {
+      Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+      inputs.put(id, bitmap);
+    }
+
+    if (gcFile.exists() || dpadJoystickFile.exists() || wiimoteFile.exists() || classicFile.exists()) {
+      return inputs;
+    }
+
+    try {
+      FileInputStream gcInputStream = new FileInputStream(gcFile);
+      FileInputStream dpadJoystickInputStream = new FileInputStream(dpadJoystickFile);
+      FileInputStream wiimoteInputStream = new FileInputStream(wiimoteFile);
+      FileInputStream classicInputStream = new FileInputStream(classicFile);
+      ZipInputStream gcZipIn = new ZipInputStream(new BufferedInputStream(gcInputStream));
+      ZipInputStream dpadJoystickZipIn = new ZipInputStream(new BufferedInputStream(dpadJoystickInputStream));
+      ZipInputStream wiimoteZipIn = new ZipInputStream(new BufferedInputStream(wiimoteInputStream));
+      ZipInputStream classicZipIn = new ZipInputStream(new BufferedInputStream(classicInputStream));
+
+      ZipEntry entry;
+      while ((entry = gcZipIn.getNextEntry()) != null) {
+        for (int i = 0; i < gcInputNames.length; ++i) {
+          if (!entry.isDirectory() && gcInputNames[i].equals(entry.getName())) {
+            Bitmap bitmap = BitmapFactory.decodeStream(gcZipIn);
+            inputs.put(gcInputIds[i], bitmap);
+          }
+        }
+      }
+      gcZipIn.close();
+      while ((entry = dpadJoystickZipIn.getNextEntry()) != null) {
+        for (int i = 0; i < dpadAndJoystickInputNames.length; ++i) {
+          if (!entry.isDirectory() && dpadAndJoystickInputNames[i].equals(entry.getName())) {
+            Bitmap bitmap = BitmapFactory.decodeStream(dpadJoystickZipIn);
+            inputs.put(dpadAndJoystickInputIds[i], bitmap);
+          }
+        }
+      }
+      dpadJoystickZipIn.close();
+      while ((entry = wiimoteZipIn.getNextEntry()) != null) {
+        for (int i = 0; i < wiimoteInputNames.length; ++i) {
+          if (!entry.isDirectory() && wiimoteInputNames[i].equals(entry.getName())) {
+            Bitmap bitmap = BitmapFactory.decodeStream(wiimoteZipIn);
+            inputs.put(wiimoteInputIds[i], bitmap);
+          }
+        }
+      }
+      wiimoteZipIn.close();
+      while ((entry = classicZipIn.getNextEntry()) != null) {
+        for (int i = 0; i < classicInputNames.length; ++i) {
+          if (!entry.isDirectory() && classicInputNames[i].equals(entry.getName())) {
+            Bitmap bitmap = BitmapFactory.decodeStream(classicZipIn);
+            inputs.put(classicInputIds[i], bitmap);
+          }
+        }
+      }
+      classicZipIn.close();
+    } catch (IOException e) {
+      // ignore
+    }
+
+    return inputs;
   }
 
   private static void sendBroadcastState(DirectoryInitializationState state, Context context)
