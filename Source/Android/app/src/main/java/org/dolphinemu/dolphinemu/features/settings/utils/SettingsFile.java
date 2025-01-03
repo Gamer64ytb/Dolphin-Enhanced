@@ -67,6 +67,11 @@ public final class SettingsFile
   public static final String KEY_USE_PANIC_HANDLERS = "UsePanicHandlers";
   public static final String KEY_OSD_MESSAGES = "OnScreenDisplayMessages";
   public static final String KEY_BUILTIN_TITLE_DATABASE = "UseBuiltinTitleDatabase";
+  public static final String KEY_GC_THEME = "GCTheme";
+  public static final String KEY_DPAD_THEME = "DpadTheme";
+  public static final String KEY_JOYSTICK_THEME = "JoystickTheme";
+  public static final String KEY_WIIMOTE_THEME = "WiimoteTheme";
+  public static final String KEY_CLASSIC_THEME = "ClassicTheme";
 
   public static final String KEY_SHOW_FPS = "ShowFPS";
   public static final String KEY_INTERNAL_RES = "InternalResolution";

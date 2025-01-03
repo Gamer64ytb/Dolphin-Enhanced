@@ -5,14 +5,15 @@
  */
 package org.dolphinemu.dolphinemu.overlay
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
+import android.os.AsyncTask
 import android.preference.PreferenceManager
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -22,7 +23,11 @@ import android.view.View.OnTouchListener
 import org.dolphinemu.dolphinemu.NativeLibrary
 import org.dolphinemu.dolphinemu.NativeLibrary.ButtonType
 import org.dolphinemu.dolphinemu.R
+import org.dolphinemu.dolphinemu.activities.EmulationActivity
 import org.dolphinemu.dolphinemu.activities.EmulationActivity.Companion.get
+import org.dolphinemu.dolphinemu.features.settings.model.Settings
+import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile
+import org.dolphinemu.dolphinemu.utils.DirectoryInitialization
 import kotlin.math.min
 
 /**
@@ -31,6 +36,63 @@ import kotlin.math.min
  */
 class InputOverlay(context: Context?, attrs: AttributeSet?) :
     SurfaceView(context, attrs), OnTouchListener {
+    @SuppressLint("StaticFieldLeak")
+    private inner class InitTask :
+        AsyncTask<Context?, Void?, Map<Int, Bitmap>>() {
+        override fun doInBackground(vararg contexts: Context?): Map<Int, Bitmap> {
+            val settings = Settings()
+            settings.loadSettings(EmulationActivity.get()!!.selectedGameId)
+
+            val themeKeys = arrayOf(
+                SettingsFile.KEY_GC_THEME,
+                SettingsFile.KEY_DPAD_THEME,
+                SettingsFile.KEY_JOYSTICK_THEME,
+                SettingsFile.KEY_WIIMOTE_THEME,
+                SettingsFile.KEY_CLASSIC_THEME
+            )
+
+            val section = settings.getSection(Settings.SECTION_INI_INTERFACE)
+            val themes: MutableMap<String, String> = HashMap()
+            for (key in themeKeys) {
+                val setting = section.getSetting(key)
+                if (setting != null) {
+                    themes[key] = setting.valueAsString
+                }
+            }
+
+            val gcTheme = themes[SettingsFile.KEY_GC_THEME]
+            val dpadTheme = themes[SettingsFile.KEY_DPAD_THEME]
+            val joystickTheme = themes[SettingsFile.KEY_JOYSTICK_THEME]
+            val wiimoteTheme = themes[SettingsFile.KEY_WIIMOTE_THEME]
+            val classicTheme = themes[SettingsFile.KEY_CLASSIC_THEME]
+
+            val gcOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], gcTheme)
+            val dpadOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], dpadTheme)
+            val joystickOverlays =
+                DirectoryInitialization.loadInputOverlay(contexts[0], joystickTheme)
+            val wiimoteOverlays =
+                DirectoryInitialization.loadInputOverlay(contexts[0], wiimoteTheme)
+            val classicOverlays =
+                DirectoryInitialization.loadInputOverlay(contexts[0], classicTheme)
+
+            val allOverlays: MutableMap<Int, Bitmap> = HashMap()
+            allOverlays.putAll(gcOverlays)
+            allOverlays.putAll(dpadOverlays)
+            allOverlays.putAll(joystickOverlays)
+            allOverlays.putAll(wiimoteOverlays)
+            allOverlays.putAll(classicOverlays)
+
+            return allOverlays
+        }
+
+        override fun onPostExecute(result: Map<Int, Bitmap>) {
+            bitmaps = result
+            refreshControls()
+            invalidate()
+        }
+    }
+
+    private var bitmaps: Map<Int, Bitmap>? = null
     private val buttons = ArrayList<InputOverlayDrawableButton>()
     private val dpads = ArrayList<InputOverlayDrawableDpad>()
     private val joysticks = ArrayList<InputOverlayDrawableJoystick>()
@@ -43,45 +105,6 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
     private var joystickBeingConfigured: InputOverlayDrawableJoystick? = null
 
     private val preferences: SharedPreferences
-
-    /**
-     * Constructor
-     *
-     * @param context The current [Context].
-     * @param attrs   [AttributeSet] for parsing XML attributes.
-     */
-    init {
-        // input hack
-        val gameId = get()!!.selectedGameId
-        if (gameId != null && gameId.length > 3 && gameId.substring(0, 3) == "RK4") {
-            sInputHackForRK4 = ButtonType.WIIMOTE_BUTTON_A
-        }
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        if (!preferences.getBoolean(CONTROL_INIT_PREF_KEY, false)) defaultOverlay()
-
-        // initialize shake states
-        for (i in sShakeStates.indices) {
-            sShakeStates[i] = NativeLibrary.ButtonState.RELEASED
-        }
-
-        // init touch pointer
-        var touchPointer = 0
-        if (!get()!!.isGameCubeGame) touchPointer = preferences.getInt(POINTER_PREF_KEY, 0)
-        setTouchPointer(touchPointer)
-
-        // Load the controls.
-        refreshControls()
-
-        // Set the on touch listener.
-        setOnTouchListener(this)
-
-        // Force draw
-        setWillNotDraw(false)
-
-        // Request focus for the overlay so it has priority on presses.
-        requestFocus()
-    }
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
@@ -100,7 +123,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
-        if (isInEditMode) {
+        if (inEditMode) {
             return onTouchWhileEditing(event)
         }
 
@@ -330,8 +353,10 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         return false
     }
 
-    fun onSensorChanged(rotation: FloatArray?) {
-        overlaySensor!!.onSensorChanged(rotation!!)
+    fun onSensorChanged(rotation: FloatArray) {
+        if (overlaySensor != null) {
+            overlaySensor!!.onSensorChanged(rotation)
+        }
     }
 
     fun onAccuracyChanged(accuracy: Int) {
@@ -368,14 +393,13 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             ),
         )
         val prefId = "ToggleGc_"
-        while (i < buttons.size) {
-            val id = buttons[i][0]
-            val normal = buttons[i][1]
-            val pressed = buttons[i][2]
+        for (button in buttons) {
+            val id = button[0]
+            val normal = button[1]
+            val pressed = button[2]
             if (preferences.getBoolean(prefId + i, true)) {
                 this.buttons.add(initializeOverlayButton(normal, pressed, id))
             }
-            ++i
         }
 
         if (preferences.getBoolean(prefId + (i++), true)) {
@@ -592,14 +616,13 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             ),
         )
         val prefId = "ToggleClassic_"
-        while (i < buttons.size) {
-            val id = buttons[i][0]
-            val normal = buttons[i][1]
-            val pressed = buttons[i][2]
+        for (button in buttons) {
+            val id = button[0]
+            val normal = button[1]
+            val pressed = button[2]
             if (preferences.getBoolean(prefId + i, true)) {
                 this.buttons.add(initializeOverlayButton(normal, pressed, id))
             }
-            ++i
         }
 
         if (preferences.getBoolean(prefId + (i++), true)) {
@@ -639,6 +662,10 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
     }
 
     fun refreshControls() {
+        if (bitmaps == null) {
+            return
+        }
+
         // Remove all the overlay buttons
         buttons.clear()
         dpads.clear()
@@ -745,8 +772,8 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         scale /= 100f
 
         // Initialize the InputOverlayDrawableButton.
-        val defaultBitmap = resizeBitmap(BitmapFactory.decodeResource(res, defaultResId), scale)
-        val pressedBitmap = resizeBitmap(BitmapFactory.decodeResource(res, pressedResId), scale)
+        val defaultBitmap = getInputBitmap(defaultResId, scale)
+        val pressedBitmap = getInputBitmap(pressedResId, scale)
         val overlay = InputOverlayDrawableButton(
             BitmapDrawable(res, defaultBitmap), BitmapDrawable(res, pressedBitmap), buttonId
         )
@@ -763,8 +790,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         val drawableY = ((dm.heightPixels / 2.0f) * (1.0f + y) - height / 2.0f).toInt()
         // Now set the bounds for the InputOverlayDrawableButton.
         // This will dictate where on the screen (and the what the size) the InputOverlayDrawableButton will be.
-        overlay.bounds =
-            Rect(drawableX, drawableY, drawableX + width, drawableY + height)
+        overlay.bounds = Rect(drawableX, drawableY, drawableX + width, drawableY + height)
 
         // Need to set the image's position
         overlay.setPosition(drawableX, drawableY)
@@ -791,11 +817,9 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         scale /= 100f
 
         // Initialize the InputOverlayDrawableDpad.
-        val defaultBitmap = resizeBitmap(BitmapFactory.decodeResource(res, defaultResId), scale)
-        val onePressedBitmap =
-            resizeBitmap(BitmapFactory.decodeResource(res, pressedOneDirectionResId), scale)
-        val twoPressedBitmap =
-            resizeBitmap(BitmapFactory.decodeResource(res, pressedTwoDirectionsResId), scale)
+        val defaultBitmap = getInputBitmap(defaultResId, scale)
+        val onePressedBitmap = getInputBitmap(pressedOneDirectionResId, scale)
+        val twoPressedBitmap = getInputBitmap(pressedTwoDirectionsResId, scale)
         val overlay = InputOverlayDrawableDpad(
             BitmapDrawable(res, defaultBitmap),
             BitmapDrawable(res, onePressedBitmap), BitmapDrawable(res, twoPressedBitmap),
@@ -814,8 +838,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         val drawableY = ((dm.heightPixels / 2.0f) * (1.0f + y) - height / 2.0f).toInt()
         // Now set the bounds for the InputOverlayDrawableDpad.
         // This will dictate where on the screen (and the what the size) the InputOverlayDrawableDpad will be.
-        overlay.bounds =
-            Rect(drawableX, drawableY, drawableX + width, drawableY + height)
+        overlay.bounds = Rect(drawableX, drawableY, drawableX + width, drawableY + height)
 
         // Need to set the image's position
         overlay.setPosition(drawableX, drawableY)
@@ -838,9 +861,9 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
 
         // Initialize the InputOverlayDrawableJoystick.
         val resOuter = R.drawable.gcwii_joystick_range
-        val bitmapOuter = resizeBitmap(BitmapFactory.decodeResource(res, resOuter), scale)
-        val bitmapInnerDefault = BitmapFactory.decodeResource(res, defaultResInner)
-        val bitmapInnerPressed = BitmapFactory.decodeResource(res, pressedResInner)
+        val bitmapOuter = getInputBitmap(resOuter, scale)
+        val bitmapInnerDefault = getInputBitmap(defaultResInner, 1.0f)
+        val bitmapInnerPressed = getInputBitmap(pressedResInner, 1.0f)
 
         // The X and Y coordinates of the InputOverlayDrawableButton on the InputOverlay.
         // These were set in the input overlay configuration menu.
@@ -875,13 +898,23 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         return overlay
     }
 
-    private fun resizeBitmap(bitmap: Bitmap, scale: Float): Bitmap {
+    private fun getInputBitmap(id: Int, scale: Float): Bitmap {
         // Determine the button size based on the smaller screen dimension.
         // This makes sure the buttons are the same size in both portrait and landscape.
         val res = context.resources
         val dm = res.displayMetrics
         val dimension = (min(dm.widthPixels.toDouble(), dm.heightPixels.toDouble()) * scale).toInt()
-        return Bitmap.createScaledBitmap(bitmap, dimension, dimension, true)
+        val bitmap = bitmaps!![id]
+        var dstWidth = bitmap!!.width
+        var dstHeight = bitmap.height
+        if (dstWidth > dstHeight) {
+            dstWidth = dstWidth * dimension / dstHeight
+            dstHeight = dimension
+        } else {
+            dstHeight = dstHeight * dimension / dstWidth
+            dstWidth = dimension
+        }
+        return Bitmap.createScaledBitmap(bitmaps!![id]!!, dstWidth, dstHeight, true)
     }
 
     fun setIsInEditMode(isInEditMode: Boolean) {
@@ -935,10 +968,10 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             intArrayOf(ButtonType.STICK_MAIN, R.integer.STICK_MAIN_X, R.integer.STICK_MAIN_Y),
         )
 
-        for (i in buttons.indices) {
-            val id = buttons[i][0]
-            val x = buttons[i][1]
-            val y = buttons[i][2]
+        for (button in buttons) {
+            val id = button[0]
+            val x = button[1]
+            val y = button[2]
             sPrefsEditor.putFloat(
                 controller.toString() + "_" + id + "_X",
                 res.getInteger(x) / 100.0f
@@ -1016,10 +1049,10 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             ),
         )
 
-        for (i in buttons.indices) {
-            val id = buttons[i][0]
-            val x = buttons[i][1]
-            val y = buttons[i][2]
+        for (button in buttons) {
+            val id = button[0]
+            val x = button[1]
+            val y = button[2]
             sPrefsEditor.putFloat(
                 controller.toString() + "_" + id + "_X",
                 res.getInteger(x) / 100.0f
@@ -1086,10 +1119,10 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             ),
         )
 
-        for (i in buttons.indices) {
-            val id = buttons[i][0]
-            val x = buttons[i][1]
-            val y = buttons[i][2]
+        for (button in buttons) {
+            val id = button[0]
+            val x = button[1]
+            val y = button[2]
             sPrefsEditor.putFloat(
                 controller.toString() + "_" + id + "_X",
                 res.getInteger(x) / 100.0f
@@ -1186,10 +1219,10 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             ),
         )
 
-        for (i in buttons.indices) {
-            val id = buttons[i][0]
-            val x = buttons[i][1]
-            val y = buttons[i][2]
+        for (button in buttons) {
+            val id = button[0]
+            val x = button[1]
+            val y = button[2]
             sPrefsEditor.putFloat(
                 controller.toString() + "_" + id + "_X",
                 res.getInteger(x) / 100.0f
@@ -1201,66 +1234,198 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         }
     }
 
+    /**
+     * Constructor
+     *
+     * @param context The current [Context].
+     * @param attrs   [AttributeSet] for parsing XML attributes.
+     */
+    init {
+        // input hack
+        val gameId = get()!!.selectedGameId
+        if (gameId != null && gameId.length > 3 && gameId.substring(0, 3) == "RK4") {
+            sInputHackForRK4 = ButtonType.WIIMOTE_BUTTON_A
+        }
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        if (!preferences.getBoolean(CONTROL_INIT_PREF_KEY, false)) defaultOverlay()
+
+        // initialize shake states
+        for (i in sShakeStates.indices) {
+            sShakeStates[i] = NativeLibrary.ButtonState.RELEASED
+        }
+
+        // init touch pointer
+        var touchPointer = 0
+        if (!get()!!.isGameCubeGame) touchPointer = preferences.getInt(POINTER_PREF_KEY, 0)
+        setTouchPointer(touchPointer)
+
+        InitTask().execute(context)
+
+        // Set the on touch listener.
+        setOnTouchListener(this)
+
+        // Force draw
+        setWillNotDraw(false)
+
+        // Request focus for the overlay so it has priority on presses.
+        requestFocus()
+    }
+
     companion object {
-        const val CONTROL_INIT_PREF_KEY = "InitOverlay"
-        const val CONTROL_SCALE_PREF_KEY = "ControlScale"
-        var sControllerScale = 0
-        const val CONTROL_ALPHA_PREF_KEY = "ControlAlpha"
-        var sControllerAlpha = 0
+        const val CONTROL_INIT_PREF_KEY: String = "InitOverlay"
+        const val CONTROL_SCALE_PREF_KEY: String = "ControlScale"
+        var sControllerScale: Int = 0
+        const val CONTROL_ALPHA_PREF_KEY: String = "ControlAlpha"
+        var sControllerAlpha: Int = 0
 
-        const val POINTER_PREF_KEY = "TouchPointer1"
-        const val RECENTER_PREF_KEY = "IRRecenter"
-        @JvmField
-        var sIRRecenter = false
-        const val RELATIVE_PREF_KEY = "JoystickRelative"
-        @JvmField
-        var sJoystickRelative = false
+        const val POINTER_PREF_KEY: String = "TouchPointer1"
+        const val RECENTER_PREF_KEY: String = "IRRecenter"
+        var sIRRecenter: Boolean = false
+        const val RELATIVE_PREF_KEY: String = "JoystickRelative"
+        var sJoystickRelative: Boolean = false
 
-        const val CONTROL_TYPE_PREF_KEY = "WiiController"
-        const val CONTROLLER_GAMECUBE = 0
-        const val CONTROLLER_CLASSIC = 1
-        const val CONTROLLER_WIINUNCHUK = 2
-        const val CONTROLLER_WIIREMOTE = 3
-        @JvmField
-        var sControllerType = 0
+        const val CONTROL_TYPE_PREF_KEY: String = "WiiController"
+        const val CONTROLLER_GAMECUBE: Int = 0
+        const val CONTROLLER_CLASSIC: Int = 1
+        const val CONTROLLER_WIINUNCHUK: Int = 2
+        const val CONTROLLER_WIIREMOTE: Int = 3
+        var sControllerType: Int = 0
 
-        const val JOYSTICK_PREF_KEY = "JoystickEmulate"
-        const val JOYSTICK_EMULATE_NONE = 0
-        const val JOYSTICK_EMULATE_IR = 1
-        const val JOYSTICK_EMULATE_WII_SWING = 2
-        const val JOYSTICK_EMULATE_WII_TILT = 3
-        const val JOYSTICK_EMULATE_WII_SHAKE = 4
-        const val JOYSTICK_EMULATE_NUNCHUK_SWING = 5
-        const val JOYSTICK_EMULATE_NUNCHUK_TILT = 6
-        const val JOYSTICK_EMULATE_NUNCHUK_SHAKE = 7
-        @JvmField
-        var sJoyStickSetting = 0
+        const val JOYSTICK_PREF_KEY: String = "JoystickEmulate"
+        const val JOYSTICK_EMULATE_NONE: Int = 0
+        const val JOYSTICK_EMULATE_IR: Int = 1
+        const val JOYSTICK_EMULATE_WII_SWING: Int = 2
+        const val JOYSTICK_EMULATE_WII_TILT: Int = 3
+        const val JOYSTICK_EMULATE_WII_SHAKE: Int = 4
+        const val JOYSTICK_EMULATE_NUNCHUK_SWING: Int = 5
+        const val JOYSTICK_EMULATE_NUNCHUK_TILT: Int = 6
+        const val JOYSTICK_EMULATE_NUNCHUK_SHAKE: Int = 7
+        var sJoyStickSetting: Int = 0
 
-        const val SENSOR_GC_NONE = 0
-        const val SENSOR_GC_JOYSTICK = 1
-        const val SENSOR_GC_CSTICK = 2
-        const val SENSOR_GC_DPAD = 3
-        @JvmField
-        var sSensorGCSetting = 0
+        const val SENSOR_GC_NONE: Int = 0
+        const val SENSOR_GC_JOYSTICK: Int = 1
+        const val SENSOR_GC_CSTICK: Int = 2
+        const val SENSOR_GC_DPAD: Int = 3
+        var sSensorGCSetting: Int = 0
 
-        const val SENSOR_WII_NONE = 0
-        const val SENSOR_WII_DPAD = 1
-        const val SENSOR_WII_STICK = 2
-        const val SENSOR_WII_IR = 3
-        const val SENSOR_WII_SWING = 4
-        const val SENSOR_WII_TILT = 5
-        const val SENSOR_WII_SHAKE = 6
-        const val SENSOR_NUNCHUK_SWING = 7
-        const val SENSOR_NUNCHUK_TILT = 8
-        const val SENSOR_NUNCHUK_SHAKE = 9
-        @JvmField
-        var sSensorWiiSetting = 0
+        const val SENSOR_WII_NONE: Int = 0
+        const val SENSOR_WII_DPAD: Int = 1
+        const val SENSOR_WII_STICK: Int = 2
+        const val SENSOR_WII_IR: Int = 3
+        const val SENSOR_WII_SWING: Int = 4
+        const val SENSOR_WII_TILT: Int = 5
+        const val SENSOR_WII_SHAKE: Int = 6
+        const val SENSOR_NUNCHUK_SWING: Int = 7
+        const val SENSOR_NUNCHUK_TILT: Int = 8
+        const val SENSOR_NUNCHUK_SHAKE: Int = 9
+        var sSensorWiiSetting: Int = 0
 
-        @JvmField
         var sShakeStates: IntArray = IntArray(4)
 
         // input hack for RK4JAF
+        var sInputHackForRK4: Int = -1
+
         @JvmField
-        var sInputHackForRK4 = -1
+        val ResGameCubeIds: IntArray = intArrayOf(
+            // gamecube
+            R.drawable.gcpad_a, R.drawable.gcpad_a_pressed,
+            R.drawable.gcpad_b, R.drawable.gcpad_b_pressed,
+            R.drawable.gcpad_x, R.drawable.gcpad_x_pressed,
+            R.drawable.gcpad_y, R.drawable.gcpad_y_pressed,
+            R.drawable.gcpad_z, R.drawable.gcpad_z_pressed,
+            R.drawable.gcpad_start, R.drawable.gcpad_start_pressed,
+            R.drawable.gcpad_l, R.drawable.gcpad_l_pressed,
+            R.drawable.gcpad_r, R.drawable.gcpad_r_pressed,
+        )
+        @JvmField
+        val ResGameCubeNames: Array<String> = arrayOf(
+            "gcpad_a.png", "gcpad_a_pressed.png",
+            "gcpad_b.png", "gcpad_b_pressed.png",
+            "gcpad_x.png", "gcpad_x_pressed.png",
+            "gcpad_y.png", "gcpad_y_pressed.png",
+            "gcpad_z.png", "gcpad_z_pressed.png",
+            "gcpad_start.png", "gcpad_start_pressed.png",
+            "gcpad_l.png", "gcpad_l_pressed.png",
+            "gcpad_r.png", "gcpad_r_pressed.png",
+        )
+
+        @JvmField
+        val ResDpadIds: IntArray = intArrayOf(
+            R.drawable.gcwii_dpad,
+            R.drawable.gcwii_dpad_pressed_one_direction,
+            R.drawable.gcwii_dpad_pressed_two_directions
+        )
+        @JvmField
+        val ResDpadNames: Array<String> = arrayOf(
+            "gcwii_dpad.png",
+            "gcwii_dpad_pressed_one_direction.png",
+            "gcwii_dpad_pressed_two_directions.png"
+        )
+
+        @JvmField
+        val ResJoystickIds: IntArray = intArrayOf(
+            R.drawable.gcwii_joystick,
+            R.drawable.gcwii_joystick_pressed,
+            R.drawable.gcwii_joystick_range,
+            R.drawable.gcpad_c,
+            R.drawable.gcpad_c_pressed,
+        )
+        @JvmField
+        val ResJoystickNames: Array<String> = arrayOf(
+            "gcwii_joystick.png", "gcwii_joystick_pressed.png", "gcwii_joystick_range.png",
+            "gcpad_c.png", "gcpad_c_pressed.png",
+        )
+
+        @JvmField
+        val ResWiimoteIds: IntArray = intArrayOf(
+            // wiimote
+            R.drawable.wiimote_a, R.drawable.wiimote_a_pressed,
+            R.drawable.wiimote_b, R.drawable.wiimote_b_pressed,
+            R.drawable.wiimote_one, R.drawable.wiimote_one_pressed,
+            R.drawable.wiimote_two, R.drawable.wiimote_two_pressed,
+            R.drawable.wiimote_plus, R.drawable.wiimote_plus_pressed,
+            R.drawable.wiimote_minus, R.drawable.wiimote_minus_pressed,
+            R.drawable.wiimote_home, R.drawable.wiimote_home_pressed,
+            R.drawable.classic_x, R.drawable.classic_x_pressed,
+            R.drawable.nunchuk_z, R.drawable.nunchuk_z_pressed,
+            R.drawable.nunchuk_c, R.drawable.nunchuk_c_pressed,
+        )
+        @JvmField
+        val ResWiimoteNames: Array<String> = arrayOf(
+            "wiimote_a.png", "wiimote_a_pressed.png",
+            "wiimote_b.png", "wiimote_b_pressed.png",
+            "wiimote_one.png", "wiimote_one_pressed.png",
+            "wiimote_two.png", "wiimote_two_pressed.png",
+            "wiimote_plus.png", "wiimote_plus_pressed.png",
+            "wiimote_minus.png", "wiimote_minus_pressed.png",
+            "wiimote_home.png", "wiimote_home_pressed.png",
+            "classic_x.png", "classic_x_pressed.png",
+            "nunchuk_z.png", "nunchuk_z_pressed.png",
+            "nunchuk_c.png", "nunchuk_c_pressed.png",
+        )
+
+        @JvmField
+        val ResClassicIds: IntArray = intArrayOf(
+            R.drawable.classic_a, R.drawable.classic_a_pressed,
+            R.drawable.classic_b, R.drawable.classic_b_pressed,
+            R.drawable.classic_x, R.drawable.classic_x_pressed,
+            R.drawable.classic_y, R.drawable.classic_y_pressed,
+            R.drawable.classic_zl, R.drawable.classic_zl_pressed,
+            R.drawable.classic_zr, R.drawable.classic_zr_pressed,
+            R.drawable.classic_l, R.drawable.classic_l_pressed,
+            R.drawable.classic_r, R.drawable.classic_r_pressed,
+        )
+        @JvmField
+        val ResClassicNames: Array<String> = arrayOf(
+            "classic_a.png", "classic_a_pressed.png",
+            "classic_b.png", "classic_b_pressed.png",
+            "classic_x.png", "classic_x_pressed.png",
+            "classic_y.png", "classic_y_pressed.png",
+            "classic_zl.png", "classic_zl_pressed.png",
+            "classic_zr.png", "classic_zr_pressed.png",
+            "classic_l.png", "classic_l_pressed.png",
+            "classic_r.png", "classic_r_pressed.png",
+        )
     }
 }
