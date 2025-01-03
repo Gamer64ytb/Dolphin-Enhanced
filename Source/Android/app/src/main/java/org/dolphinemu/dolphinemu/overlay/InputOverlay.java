@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,9 +27,14 @@ import org.dolphinemu.dolphinemu.NativeLibrary;
 import org.dolphinemu.dolphinemu.NativeLibrary.ButtonType;
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.activities.EmulationActivity;
+import org.dolphinemu.dolphinemu.features.settings.model.Setting;
+import org.dolphinemu.dolphinemu.features.settings.model.SettingSection;
+import org.dolphinemu.dolphinemu.features.settings.model.Settings;
+import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile;
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -96,7 +100,42 @@ public final class InputOverlay extends SurfaceView implements OnTouchListener
   private class InitTask extends AsyncTask<Context, Void, Map<Integer, Bitmap>> {
     @Override
     protected Map<Integer, Bitmap> doInBackground(Context... contexts) {
-      return DirectoryInitialization.loadInputOverlay(contexts[0]);
+      Settings settings = new Settings();
+      settings.loadSettings(EmulationActivity.get().getSelectedGameId());
+
+      String[] themeKeys = {
+              SettingsFile.KEY_GC_THEME,
+              SettingsFile.KEY_DPAD_JOYSTICK_THEME,
+              SettingsFile.KEY_WIIMOTE_THEME,
+              SettingsFile.KEY_CLASSIC_THEME
+      };
+
+      SettingSection section = settings.getSection(Settings.SECTION_INI_CORE);
+      Map<String, String> themes = new HashMap<>();
+      for (String key : themeKeys) {
+        Setting setting = section.getSetting(key);
+        if (setting != null) {
+          themes.put(key, setting.getValueAsString());
+        }
+      }
+
+      String gcTheme = themes.get(SettingsFile.KEY_GC_THEME);
+      String dpadJoystickTheme = themes.get(SettingsFile.KEY_DPAD_JOYSTICK_THEME);
+      String wiimoteTheme = themes.get(SettingsFile.KEY_WIIMOTE_THEME);
+      String classicTheme = themes.get(SettingsFile.KEY_CLASSIC_THEME);
+
+      Map<Integer, Bitmap> gcOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], gcTheme);
+      Map<Integer, Bitmap> dpadJoystickOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], dpadJoystickTheme);
+      Map<Integer, Bitmap> wiimoteOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], wiimoteTheme);
+      Map<Integer, Bitmap> classicOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], classicTheme);
+
+      Map<Integer, Bitmap> allOverlays = new HashMap<>();
+      allOverlays.putAll(gcOverlays);
+      allOverlays.putAll(dpadJoystickOverlays);
+      allOverlays.putAll(wiimoteOverlays);
+      allOverlays.putAll(classicOverlays);
+
+      return allOverlays;
     }
 
     @Override

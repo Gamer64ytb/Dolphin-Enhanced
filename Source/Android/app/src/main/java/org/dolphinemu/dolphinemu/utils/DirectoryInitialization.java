@@ -290,6 +290,13 @@ public final class DirectoryInitialization
   }
 
   public static void saveInputOverlay(Context context) {
+    final String themePath = getThemeDirectory();
+    final String[] folderNames = {
+            "GameCube",
+            "DpadJoystick",
+            "Wiimote",
+            "Classic"
+    };
     final int[][] inputIdsList = {
             InputOverlay.ResGameCubeIds,
             InputOverlay.ResDpadAndJoystickIds,
@@ -303,17 +310,27 @@ public final class DirectoryInitialization
             InputOverlay.ResClassicNames
     };
     final String[] paths = {
-            getThemeDirectory() + "/gcDefault.zip",
-            getThemeDirectory() + "/dpadJoystickDefault.zip",
-            getThemeDirectory() + "/wiimoteDefault.zip",
-            getThemeDirectory() + "/classicDefault.zip"
+            themePath + "/GameCube/gcDefault.zip",
+            themePath + "/DpadJoystick/dpadJoystickDefault.zip",
+            themePath + "/Wiimote/wiimoteDefault.zip",
+            themePath + "/Classic/classicDefault.zip"
     };
 
     try {
       for (int i = 0; i < paths.length; i++) {
-        File file = new File(paths[i]);
+        // Create folders
+        String folderPath = themePath + "/" + folderNames[i];
+        File folder = new File(folderPath);
+        if (!folder.exists()) {
+          folder.mkdirs();
+        }
+
+        // Create zip file paths
+        String zipPath = paths[i];
+        File file = new File(zipPath);
         if (file.exists()) continue;
 
+        // Write bitmaps to zip files
         FileOutputStream fos = new FileOutputStream(file);
         ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(fos));
         for (int j = 0; j < inputIdsList[i].length; j++) {
@@ -329,7 +346,8 @@ public final class DirectoryInitialization
     }
   }
 
-  public static Map<Integer, Bitmap> loadInputOverlay(Context context) {
+  public static Map<Integer, Bitmap> loadInputOverlay(Context context, String theme) {
+    final String themePath = getThemeDirectory();
     final int[][] inputIdsList = {
             InputOverlay.ResGameCubeIds,
             InputOverlay.ResDpadAndJoystickIds,
@@ -342,11 +360,11 @@ public final class DirectoryInitialization
             InputOverlay.ResWiimoteNames,
             InputOverlay.ResClassicNames
     };
-    final String[] paths = {
-            getThemeDirectory() + "/gcDefault.zip",
-            getThemeDirectory() + "/dpadJoystickDefault.zip",
-            getThemeDirectory() + "/wiimoteDefault.zip",
-            getThemeDirectory() + "/classicDefault.zip"
+    final String[] themePaths = {
+            themePath + "/GameCube/" + theme + ".zip",
+            themePath + "/DpadJoystick/" + theme + ".zip",
+            themePath + "/Wiimote/" + theme + ".zip",
+            themePath + "/Classic/" + theme + ".zip"
     };
     Map<Integer, Bitmap> inputs = new HashMap<>();
 
@@ -359,8 +377,8 @@ public final class DirectoryInitialization
     }
 
     try {
-      for (int i = 0; i < paths.length; i++) {
-        File file = new File(paths[i]);
+      for (int i = 0; i < themePaths.length; i++) {
+        File file = new File(themePaths[i]);
         if (!file.exists()) continue;
 
         FileInputStream fis = new FileInputStream(file);

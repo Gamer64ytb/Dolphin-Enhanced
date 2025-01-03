@@ -3,7 +3,6 @@ package org.dolphinemu.dolphinemu.features.settings.ui
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-
 import org.dolphinemu.dolphinemu.NativeLibrary
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.features.settings.model.IntSetting
@@ -23,7 +22,11 @@ import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag.Companion.getGCPad
 import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag.Companion.getWiimoteExtensionMenuTag
 import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag.Companion.getWiimoteMenuTag
 import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile
+import org.dolphinemu.dolphinemu.utils.DirectoryInitialization
 import org.dolphinemu.dolphinemu.utils.GpuDriverHelper
+import java.io.File
+import java.util.Locale
+
 
 class SettingsFragmentPresenter
     (private val activity: SettingsActivity) {
@@ -315,6 +318,10 @@ class SettingsFragmentPresenter
         val onScreenDisplayMessages = uiSection.getSetting(SettingsFile.KEY_OSD_MESSAGES)
         val useBuiltinTitleDatabase = uiSection.getSetting(SettingsFile.KEY_BUILTIN_TITLE_DATABASE)
         val systemBack = uiSection.getSetting(SettingsFile.KEY_SYSTEM_BACK)
+        val gcTheme = uiSection.getSetting(SettingsFile.KEY_GC_THEME)
+        val dpadJoystickTheme = uiSection.getSetting(SettingsFile.KEY_DPAD_JOYSTICK_THEME)
+        val wiimoteTheme = uiSection.getSetting(SettingsFile.KEY_WIIMOTE_THEME)
+        val classicTheme = uiSection.getSetting(SettingsFile.KEY_CLASSIC_THEME)
 
         // Only android 9+ supports this feature.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -362,6 +369,34 @@ class SettingsFragmentPresenter
             InputBindingSetting(
                 SettingsFile.KEY_SYSTEM_BACK, Settings.SECTION_INI_INTERFACE,
                 R.string.system_back, systemBack
+            )
+        )
+
+        // theme
+        val stringValues = getThemeValues()
+        val stringEntries = getSettingEntries(stringValues)
+        sl.add(
+            StringSingleChoiceSetting(
+                SettingsFile.KEY_GC_THEME, Settings.SECTION_INI_INTERFACE,
+                R.string.emulation_change_disc, 0, stringEntries, stringValues, "gcDefault", gcTheme
+            )
+        )
+        sl.add(
+            StringSingleChoiceSetting(
+                SettingsFile.KEY_DPAD_JOYSTICK_THEME, Settings.SECTION_INI_INTERFACE,
+                R.string.emulation_change_disc, 0, stringEntries, stringValues, "dpadJoystickDefault", dpadJoystickTheme
+            )
+        )
+        sl.add(
+            StringSingleChoiceSetting(
+                SettingsFile.KEY_WIIMOTE_THEME, Settings.SECTION_INI_INTERFACE,
+                R.string.emulation_change_disc, 0, stringEntries, stringValues, "wiimoteDefault", wiimoteTheme
+            )
+        )
+        sl.add(
+            StringSingleChoiceSetting(
+                SettingsFile.KEY_CLASSIC_THEME, Settings.SECTION_INI_INTERFACE,
+                R.string.emulation_change_disc, 0, stringEntries, stringValues, "classicDefault", classicTheme
             )
         )
     }
@@ -2332,6 +2367,65 @@ class SettingsFragmentPresenter
                 )
             }
         }
+    }
+
+    private fun capitalize(text: String): String {
+        var text = text
+        if (text.contains("_")) {
+            text = text.replace("_", " ")
+        }
+
+        if (text.length > 1 && text.contains(" ")) {
+            val ss = text.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            text = capitalize(ss[0])
+            for (i in 1 until ss.size) {
+                text += " " + capitalize(ss[i])
+            }
+            return text
+        }
+
+        return text.substring(0, 1).uppercase(Locale.getDefault()) + text.substring(1)
+    }
+
+    private fun getSettingEntries(values: Array<String>): Array<String?> {
+        val entries = arrayOfNulls<String>(values.size)
+        for (i in values.indices) {
+            if (values[i].isEmpty()) {
+                entries[i] = activity.getString(R.string.off)
+            } else {
+                entries[i] = capitalize(values[i])
+            }
+        }
+        return entries
+    }
+
+    private fun getThemeValues(): Array<String> {
+        val themePaths = listOf(
+            DirectoryInitialization.getThemeDirectory() + "/GameCube/",
+            DirectoryInitialization.getThemeDirectory() + "/DpadJoystick/",
+            DirectoryInitialization.getThemeDirectory() + "/Wiimote/",
+            DirectoryInitialization.getThemeDirectory() + "/Classic/"
+        )
+
+        val allValues = themePaths.flatMap { getFileList(it, ".zip") }
+
+        return allValues.toTypedArray()
+    }
+
+    private fun getFileList(path: String, ext: String): List<String> {
+        val values: MutableList<String> = ArrayList()
+        val file = File(path)
+        val files = file.listFiles()
+        if (files != null) {
+            for (i in files.indices) {
+                val name = files[i].name
+                val extensionIndex = name.indexOf(ext)
+                if (extensionIndex > 0) {
+                    values.add(name.substring(0, extensionIndex))
+                }
+            }
+        }
+        return values
     }
 
     private val videoBackendValue: Int
