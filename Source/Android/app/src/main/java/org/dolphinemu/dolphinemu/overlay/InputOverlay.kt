@@ -51,7 +51,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
                 SettingsFile.KEY_CLASSIC_THEME
             )
 
-            val section = settings.getSection(Settings.SECTION_INI_CORE)
+            val section = settings.getSection(Settings.SECTION_INI_INTERFACE)
             val themes: MutableMap<String, String> = HashMap()
             for (key in themeKeys) {
                 val setting = section.getSetting(key)
