@@ -190,6 +190,11 @@
     <string name="panic_handlers_description">Show a message box when a potentially serious error has occurred. Disabling this may avoid annoying and non-fatal messages.</string>
     <string name="osd_messages">Show On-Screen Display Messages</string>
     <string name="osd_messages_description">Display messages over the emulation screen area. These messages include memory card writes, video backend and CPU information, and JIT cache clearing.</string>
+    <string name="themes" translatable="false">Themes</string>
+    <string name="gc_theme" translatable="false">GameCube Theme</string>
+    <string name="dpad_joystick_theme" translatable="false">Dpad and Joystick Theme</string>
+    <string name="wiimote_theme" translatable="false">Wiimote Theme</string>
+    <string name="classic_theme" translatable="false">Classic Theme</string>
 
     <!-- Graphics Settings -->
     <string name="graphics_general">General</string>
@@ -337,7 +342,7 @@
     <string name="emulation_toggle_all">Toggle All</string>
     <string name="emulation_control_adjust">Adjust Controls</string>
     <string name="emulation_control_scale">Adjust Scale</string>
-    <string name="emulation_control_alpha">Adujst Opacity</string>
+    <string name="emulation_control_alpha">Adjust Opacity</string>
     <string name="emulation_control_reset_layout">Reset Layout</string>
     <string name="emulation_control_joystick_rel_center">Relative Stick Center</string>
     <string name="emulation_control_rumble">Rumble</string>

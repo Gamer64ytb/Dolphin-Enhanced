@@ -372,33 +372,48 @@ class SettingsFragmentPresenter
             )
         )
 
-        // theme
-        val stringValues = getThemeValues()
-        val stringEntries = getSettingEntries(stringValues)
-        sl.add(
-            StringSingleChoiceSetting(
-                SettingsFile.KEY_GC_THEME, Settings.SECTION_INI_INTERFACE,
-                R.string.emulation_change_disc, 0, stringEntries, stringValues, "gcDefault", gcTheme
+        // themes
+        if (!gameId.isNullOrEmpty()) {
+            val gcStringValues = getGameCubeThemeValues()
+            val dpadJoystickStringValues = getDpadJoystickThemeValues()
+            val wiimoteStringValues = getWiimoteThemeValues()
+            val classicStringValues = getClassicThemeValues()
+            val gcStringEntries = getSettingEntries(gcStringValues)
+            val dpadJoystickStringEntries = getSettingEntries(dpadJoystickStringValues)
+            val wiimoteStringEntries = getSettingEntries(wiimoteStringValues)
+            val classicStringEntries = getSettingEntries(classicStringValues)
+
+            sl.add(HeaderSetting(null, null, R.string.themes, 0))
+
+            sl.add(
+                StringSingleChoiceSetting(
+                    SettingsFile.KEY_GC_THEME, Settings.SECTION_INI_INTERFACE,
+                    R.string.gc_theme, 0, gcStringEntries, gcStringValues,
+                    "gcDefault", gcTheme
+                )
             )
-        )
-        sl.add(
-            StringSingleChoiceSetting(
-                SettingsFile.KEY_DPAD_JOYSTICK_THEME, Settings.SECTION_INI_INTERFACE,
-                R.string.emulation_change_disc, 0, stringEntries, stringValues, "dpadJoystickDefault", dpadJoystickTheme
+            sl.add(
+                StringSingleChoiceSetting(
+                    SettingsFile.KEY_DPAD_JOYSTICK_THEME, Settings.SECTION_INI_INTERFACE,
+                    R.string.dpad_joystick_theme, 0, dpadJoystickStringEntries, dpadJoystickStringValues,
+                    "dpadJoystickDefault", dpadJoystickTheme
+                )
             )
-        )
-        sl.add(
-            StringSingleChoiceSetting(
-                SettingsFile.KEY_WIIMOTE_THEME, Settings.SECTION_INI_INTERFACE,
-                R.string.emulation_change_disc, 0, stringEntries, stringValues, "wiimoteDefault", wiimoteTheme
+            sl.add(
+                StringSingleChoiceSetting(
+                    SettingsFile.KEY_WIIMOTE_THEME, Settings.SECTION_INI_INTERFACE,
+                    R.string.wiimote_theme, 0, wiimoteStringEntries, wiimoteStringValues,
+                    "wiimoteDefault", wiimoteTheme
+                )
             )
-        )
-        sl.add(
-            StringSingleChoiceSetting(
-                SettingsFile.KEY_CLASSIC_THEME, Settings.SECTION_INI_INTERFACE,
-                R.string.emulation_change_disc, 0, stringEntries, stringValues, "classicDefault", classicTheme
+            sl.add(
+                StringSingleChoiceSetting(
+                    SettingsFile.KEY_CLASSIC_THEME, Settings.SECTION_INI_INTERFACE,
+                    R.string.classic_theme, 0, classicStringEntries, classicStringValues,
+                    "classicDefault", classicTheme
+                )
             )
-        )
+        }
     }
 
     private fun addGameCubeSettings(sl: ArrayList<SettingsItem>) {
@@ -2399,18 +2414,16 @@ class SettingsFragmentPresenter
         return entries
     }
 
-    private fun getThemeValues(): Array<String> {
-        val themePaths = listOf(
-            DirectoryInitialization.getThemeDirectory() + "/GameCube/",
-            DirectoryInitialization.getThemeDirectory() + "/DpadJoystick/",
-            DirectoryInitialization.getThemeDirectory() + "/Wiimote/",
-            DirectoryInitialization.getThemeDirectory() + "/Classic/"
-        )
-
-        val allValues = themePaths.flatMap { getFileList(it, ".zip") }
-
-        return allValues.toTypedArray()
+    private fun getThemeValues(directoryName: String): Array<String> {
+        val path = DirectoryInitialization.getThemeDirectory() + "/$directoryName/"
+        val values = getFileList(path, ".zip")
+        return values.toTypedArray<String>()
     }
+
+    private fun getGameCubeThemeValues() = getThemeValues("GameCube")
+    private fun getDpadJoystickThemeValues() = getThemeValues("DpadJoystick")
+    private fun getWiimoteThemeValues() = getThemeValues("Wiimote")
+    private fun getClassicThemeValues() = getThemeValues("Classic")
 
     private fun getFileList(path: String, ext: String): List<String> {
         val values: MutableList<String> = ArrayList()
