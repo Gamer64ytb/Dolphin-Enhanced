@@ -575,7 +575,7 @@ class RunningSettingDialog : DialogFragment() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingViewHolder {
             val itemView: View
             val inflater = LayoutInflater.from(parent.context)
-            return when (viewType) {
+            when (viewType) {
                 TYPE_CHECKBOX -> {
                     itemView = inflater.inflate(R.layout.list_item_running_checkbox, parent, false)
                     return CheckBoxSettingViewHolder(itemView)
