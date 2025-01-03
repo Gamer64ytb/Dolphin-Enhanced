@@ -105,7 +105,8 @@ public final class InputOverlay extends SurfaceView implements OnTouchListener
 
       String[] themeKeys = {
               SettingsFile.KEY_GC_THEME,
-              SettingsFile.KEY_DPAD_JOYSTICK_THEME,
+              SettingsFile.KEY_DPAD_THEME,
+              SettingsFile.KEY_JOYSTICK_THEME,
               SettingsFile.KEY_WIIMOTE_THEME,
               SettingsFile.KEY_CLASSIC_THEME
       };
@@ -120,18 +121,21 @@ public final class InputOverlay extends SurfaceView implements OnTouchListener
       }
 
       String gcTheme = themes.get(SettingsFile.KEY_GC_THEME);
-      String dpadJoystickTheme = themes.get(SettingsFile.KEY_DPAD_JOYSTICK_THEME);
+      String dpadTheme = themes.get(SettingsFile.KEY_DPAD_THEME);
+      String joystickTheme = themes.get(SettingsFile.KEY_JOYSTICK_THEME);
       String wiimoteTheme = themes.get(SettingsFile.KEY_WIIMOTE_THEME);
       String classicTheme = themes.get(SettingsFile.KEY_CLASSIC_THEME);
 
       Map<Integer, Bitmap> gcOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], gcTheme);
-      Map<Integer, Bitmap> dpadJoystickOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], dpadJoystickTheme);
+      Map<Integer, Bitmap> dpadOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], dpadTheme);
+      Map<Integer, Bitmap> joystickOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], joystickTheme);
       Map<Integer, Bitmap> wiimoteOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], wiimoteTheme);
       Map<Integer, Bitmap> classicOverlays = DirectoryInitialization.loadInputOverlay(contexts[0], classicTheme);
 
       Map<Integer, Bitmap> allOverlays = new HashMap<>();
       allOverlays.putAll(gcOverlays);
-      allOverlays.putAll(dpadJoystickOverlays);
+      allOverlays.putAll(dpadOverlays);
+      allOverlays.putAll(joystickOverlays);
       allOverlays.putAll(wiimoteOverlays);
       allOverlays.putAll(classicOverlays);
 
@@ -1162,18 +1166,20 @@ public final class InputOverlay extends SurfaceView implements OnTouchListener
           "gcpad_r.png", "gcpad_r_pressed.png",
     };
 
-  public static final int[] ResDpadAndJoystickIds =
+  public static final int[] ResDpadIds =
   {
-          // dpad
-          R.drawable.gcwii_dpad, R.drawable.gcwii_dpad_pressed_one_direction, R.drawable.gcwii_dpad_pressed_two_directions,
-          // joystick
+          R.drawable.gcwii_dpad, R.drawable.gcwii_dpad_pressed_one_direction, R.drawable.gcwii_dpad_pressed_two_directions
+  };
+  public static final String[] ResDpadNames = {
+          "gcwii_dpad.png", "gcwii_dpad_pressed_one_direction.png", "gcwii_dpad_pressed_two_directions.png"
+  };
+
+  public static final int[] ResJoystickIds =
+  {
           R.drawable.gcwii_joystick, R.drawable.gcwii_joystick_pressed, R.drawable.gcwii_joystick_range,
           R.drawable.gcpad_c, R.drawable.gcpad_c_pressed,
   };
-  public static final String[] ResDpadAndJoystickNames = {
-          // dpad
-          "gcwii_dpad.png", "gcwii_dpad_pressed_one_direction.png", "gcwii_dpad_pressed_two_directions.png",
-          // joystick
+  public static final String[] ResJoystickNames = {
           "gcwii_joystick.png", "gcwii_joystick_pressed.png", "gcwii_joystick_range.png",
           "gcpad_c.png", "gcpad_c_pressed.png",
     };

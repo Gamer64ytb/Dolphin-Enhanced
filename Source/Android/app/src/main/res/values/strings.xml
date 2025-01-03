@@ -192,7 +192,8 @@
     <string name="osd_messages_description">Display messages over the emulation screen area. These messages include memory card writes, video backend and CPU information, and JIT cache clearing.</string>
     <string name="themes" translatable="false">Themes</string>
     <string name="gc_theme" translatable="false">GameCube Theme</string>
-    <string name="dpad_joystick_theme" translatable="false">Dpad and Joystick Theme</string>
+    <string name="dpad_theme" translatable="false">Dpad Theme</string>
+    <string name="joystick_theme" translatable="false">Joystick Theme</string>
     <string name="wiimote_theme" translatable="false">Wiimote Theme</string>
     <string name="classic_theme" translatable="false">Classic Theme</string>
 

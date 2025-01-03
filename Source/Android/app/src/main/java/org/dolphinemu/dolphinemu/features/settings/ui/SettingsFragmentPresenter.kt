@@ -319,7 +319,8 @@ class SettingsFragmentPresenter
         val useBuiltinTitleDatabase = uiSection.getSetting(SettingsFile.KEY_BUILTIN_TITLE_DATABASE)
         val systemBack = uiSection.getSetting(SettingsFile.KEY_SYSTEM_BACK)
         val gcTheme = uiSection.getSetting(SettingsFile.KEY_GC_THEME)
-        val dpadJoystickTheme = uiSection.getSetting(SettingsFile.KEY_DPAD_JOYSTICK_THEME)
+        val dpadTheme = uiSection.getSetting(SettingsFile.KEY_DPAD_THEME)
+        val joystickTheme = uiSection.getSetting(SettingsFile.KEY_JOYSTICK_THEME)
         val wiimoteTheme = uiSection.getSetting(SettingsFile.KEY_WIIMOTE_THEME)
         val classicTheme = uiSection.getSetting(SettingsFile.KEY_CLASSIC_THEME)
 
@@ -373,13 +374,15 @@ class SettingsFragmentPresenter
         )
 
         // themes
-        if (!gameId.isNullOrEmpty()) {
+        if (gameId.isNullOrEmpty()) {
             val gcStringValues = getGameCubeThemeValues()
-            val dpadJoystickStringValues = getDpadJoystickThemeValues()
+            val dpadStringValues = getDpadThemeValues()
+            val joystickStringValues = getJoystickThemeValues()
             val wiimoteStringValues = getWiimoteThemeValues()
             val classicStringValues = getClassicThemeValues()
             val gcStringEntries = getSettingEntries(gcStringValues)
-            val dpadJoystickStringEntries = getSettingEntries(dpadJoystickStringValues)
+            val dpadStringEntries = getSettingEntries(dpadStringValues)
+            val joystickStringEntries = getSettingEntries(joystickStringValues)
             val wiimoteStringEntries = getSettingEntries(wiimoteStringValues)
             val classicStringEntries = getSettingEntries(classicStringValues)
 
@@ -394,9 +397,16 @@ class SettingsFragmentPresenter
             )
             sl.add(
                 StringSingleChoiceSetting(
-                    SettingsFile.KEY_DPAD_JOYSTICK_THEME, Settings.SECTION_INI_INTERFACE,
-                    R.string.dpad_joystick_theme, 0, dpadJoystickStringEntries, dpadJoystickStringValues,
-                    "dpadJoystickDefault", dpadJoystickTheme
+                    SettingsFile.KEY_DPAD_THEME, Settings.SECTION_INI_INTERFACE,
+                    R.string.dpad_theme, 0, dpadStringEntries, dpadStringValues,
+                    "dpadDefault", dpadTheme
+                )
+            )
+            sl.add(
+                StringSingleChoiceSetting(
+                    SettingsFile.KEY_JOYSTICK_THEME, Settings.SECTION_INI_INTERFACE,
+                    R.string.joystick_theme, 0, joystickStringEntries, joystickStringValues,
+                    "joystickDefault", joystickTheme
                 )
             )
             sl.add(
@@ -2421,7 +2431,8 @@ class SettingsFragmentPresenter
     }
 
     private fun getGameCubeThemeValues() = getThemeValues("GameCube")
-    private fun getDpadJoystickThemeValues() = getThemeValues("DpadJoystick")
+    private fun getDpadThemeValues() = getThemeValues("Dpad")
+    private fun getJoystickThemeValues() = getThemeValues("Joystick")
     private fun getWiimoteThemeValues() = getThemeValues("Wiimote")
     private fun getClassicThemeValues() = getThemeValues("Classic")
 

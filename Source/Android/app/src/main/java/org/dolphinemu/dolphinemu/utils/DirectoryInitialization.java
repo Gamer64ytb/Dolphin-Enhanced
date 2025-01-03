@@ -293,25 +293,29 @@ public final class DirectoryInitialization
     final String themePath = getThemeDirectory();
     final String[] folderNames = {
             "GameCube",
-            "DpadJoystick",
+            "Dpad",
+            "Joystick",
             "Wiimote",
             "Classic"
     };
     final int[][] inputIdsList = {
             InputOverlay.ResGameCubeIds,
-            InputOverlay.ResDpadAndJoystickIds,
+            InputOverlay.ResDpadIds,
+            InputOverlay.ResJoystickIds,
             InputOverlay.ResWiimoteIds,
             InputOverlay.ResClassicIds
     };
     final String[][] inputNamesList = {
             InputOverlay.ResGameCubeNames,
-            InputOverlay.ResDpadAndJoystickNames,
+            InputOverlay.ResDpadNames,
+            InputOverlay.ResJoystickNames,
             InputOverlay.ResWiimoteNames,
             InputOverlay.ResClassicNames
     };
     final String[] paths = {
             themePath + "/GameCube/gcDefault.zip",
-            themePath + "/DpadJoystick/dpadJoystickDefault.zip",
+            themePath + "/Dpad/dpadDefault.zip",
+            themePath + "/Joystick/joystickDefault.zip",
             themePath + "/Wiimote/wiimoteDefault.zip",
             themePath + "/Classic/classicDefault.zip"
     };
@@ -350,19 +354,22 @@ public final class DirectoryInitialization
     final String themePath = getThemeDirectory();
     final int[][] inputIdsList = {
             InputOverlay.ResGameCubeIds,
-            InputOverlay.ResDpadAndJoystickIds,
+            InputOverlay.ResDpadIds,
+            InputOverlay.ResJoystickIds,
             InputOverlay.ResWiimoteIds,
             InputOverlay.ResClassicIds
     };
     final String[][] inputNamesList = {
             InputOverlay.ResGameCubeNames,
-            InputOverlay.ResDpadAndJoystickNames,
+            InputOverlay.ResDpadNames,
+            InputOverlay.ResJoystickNames,
             InputOverlay.ResWiimoteNames,
             InputOverlay.ResClassicNames
     };
     final String[] themePaths = {
             themePath + "/GameCube/" + theme + ".zip",
-            themePath + "/DpadJoystick/" + theme + ".zip",
+            themePath + "/Dpad/" + theme + ".zip",
+            themePath + "/Joystick/" + theme + ".zip",
             themePath + "/Wiimote/" + theme + ".zip",
             themePath + "/Classic/" + theme + ".zip"
     };
