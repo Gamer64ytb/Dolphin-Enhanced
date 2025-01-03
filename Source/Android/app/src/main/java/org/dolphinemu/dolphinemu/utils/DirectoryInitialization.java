@@ -290,155 +290,93 @@ public final class DirectoryInitialization
   }
 
   public static void saveInputOverlay(Context context) {
-    final int[] gcInputIds = InputOverlay.ResGameCubeIds;
-    final int[] dpadAndJoystickInputIds = InputOverlay.ResDpadAndJoystickIds;
-    final int[] wiimoteInputIds = InputOverlay.ResWiimoteIds;
-    final int[] classicInputIds = InputOverlay.ResClassicIds;
-    final String[] gcInputNames = InputOverlay.ResGameCubeNames;
-    final String[] dpadAndJoystickInputNames = InputOverlay.ResDpadAndJoystickNames;
-    final String[] wiimoteInputNames = InputOverlay.ResWiimoteNames;
-    final String[] classicInputNames = InputOverlay.ResClassicNames;
-    String gcPath = getThemeDirectory() + "/gcDefault.zip";
-    String dpadAndJoystickPath = getThemeDirectory() + "/dpadJoystickDefault.zip";
-    String wiimotePath = getThemeDirectory() + "/wiimoteDefault.zip";
-    String classicPath = getThemeDirectory() + "/classicDefault.zip";
-    File gcFile = new File(gcPath);
-    File dpadJoystickFile = new File(dpadAndJoystickPath);
-    File wiimoteFile = new File(wiimotePath);
-    File classicFile = new File(classicPath);
-    if (gcFile.exists() || dpadJoystickFile.exists() || wiimoteFile.exists() || classicFile.exists()) {
-      return;
-    }
+    final int[][] inputIdsList = {
+            InputOverlay.ResGameCubeIds,
+            InputOverlay.ResDpadAndJoystickIds,
+            InputOverlay.ResWiimoteIds,
+            InputOverlay.ResClassicIds
+    };
+    final String[][] inputNamesList = {
+            InputOverlay.ResGameCubeNames,
+            InputOverlay.ResDpadAndJoystickNames,
+            InputOverlay.ResWiimoteNames,
+            InputOverlay.ResClassicNames
+    };
+    final String[] paths = {
+            getThemeDirectory() + "/gcDefault.zip",
+            getThemeDirectory() + "/dpadJoystickDefault.zip",
+            getThemeDirectory() + "/wiimoteDefault.zip",
+            getThemeDirectory() + "/classicDefault.zip"
+    };
+
     try {
-      FileOutputStream gcOutputStream = new FileOutputStream(gcFile);
-      FileOutputStream dpadJoystickOutputStream = new FileOutputStream(dpadJoystickFile);
-      FileOutputStream wiimoteOutputStream = new FileOutputStream(wiimoteFile);
-      FileOutputStream classicOutputStream = new FileOutputStream(classicFile);
-      ZipOutputStream gcZipOut = new ZipOutputStream(new BufferedOutputStream(gcOutputStream));
-      ZipOutputStream dpadJoystickZipOut = new ZipOutputStream(new BufferedOutputStream(dpadJoystickOutputStream));
-      ZipOutputStream wiimoteZipOut = new ZipOutputStream(new BufferedOutputStream(wiimoteOutputStream));
-      ZipOutputStream classicZipOut = new ZipOutputStream(new BufferedOutputStream(classicOutputStream));
-      for (int i = 0; i < gcInputIds.length; ++i) {
-        ZipEntry entry = new ZipEntry(gcInputNames[i]);
-        gcZipOut.putNextEntry(entry);
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), gcInputIds[i]);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, gcZipOut);
+      for (int i = 0; i < paths.length; i++) {
+        File file = new File(paths[i]);
+        if (file.exists()) continue;
+
+        FileOutputStream fos = new FileOutputStream(file);
+        ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(fos));
+        for (int j = 0; j < inputIdsList[i].length; j++) {
+          ZipEntry entry = new ZipEntry(inputNamesList[i][j]);
+          zos.putNextEntry(entry);
+          Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), inputIdsList[i][j]);
+          bitmap.compress(Bitmap.CompressFormat.PNG, 90, zos);
+        }
+        zos.close();
       }
-      gcZipOut.close();
-      for (int i = 0; i < dpadAndJoystickInputIds.length; ++i) {
-        ZipEntry entry = new ZipEntry(dpadAndJoystickInputNames[i]);
-        dpadJoystickZipOut.putNextEntry(entry);
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), dpadAndJoystickInputIds[i]);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, dpadJoystickZipOut);
-      }
-      dpadJoystickZipOut.close();
-      for (int i = 0; i < wiimoteInputIds.length; ++i) {
-        ZipEntry entry = new ZipEntry(wiimoteInputNames[i]);
-        wiimoteZipOut.putNextEntry(entry);
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), wiimoteInputIds[i]);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, wiimoteZipOut);
-      }
-      wiimoteZipOut.close();
-      for (int i = 0; i < classicInputIds.length; ++i) {
-        ZipEntry entry = new ZipEntry(classicInputNames[i]);
-        classicZipOut.putNextEntry(entry);
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), classicInputIds[i]);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, classicZipOut);
-      }
-      classicZipOut.close();
     } catch (IOException e) {
       // ignore
     }
   }
 
   public static Map<Integer, Bitmap> loadInputOverlay(Context context) {
-    final int[] gcInputIds = InputOverlay.ResGameCubeIds;
-    final int[] dpadAndJoystickInputIds = InputOverlay.ResDpadAndJoystickIds;
-    final int[] wiimoteInputIds = InputOverlay.ResWiimoteIds;
-    final int[] classicInputIds = InputOverlay.ResClassicIds;
-    final String[] gcInputNames = InputOverlay.ResGameCubeNames;
-    final String[] dpadAndJoystickInputNames = InputOverlay.ResDpadAndJoystickNames;
-    final String[] wiimoteInputNames = InputOverlay.ResWiimoteNames;
-    final String[] classicInputNames = InputOverlay.ResClassicNames;
+    final int[][] inputIdsList = {
+            InputOverlay.ResGameCubeIds,
+            InputOverlay.ResDpadAndJoystickIds,
+            InputOverlay.ResWiimoteIds,
+            InputOverlay.ResClassicIds
+    };
+    final String[][] inputNamesList = {
+            InputOverlay.ResGameCubeNames,
+            InputOverlay.ResDpadAndJoystickNames,
+            InputOverlay.ResWiimoteNames,
+            InputOverlay.ResClassicNames
+    };
+    final String[] paths = {
+            getThemeDirectory() + "/gcDefault.zip",
+            getThemeDirectory() + "/dpadJoystickDefault.zip",
+            getThemeDirectory() + "/wiimoteDefault.zip",
+            getThemeDirectory() + "/classicDefault.zip"
+    };
     Map<Integer, Bitmap> inputs = new HashMap<>();
-    String gcPath = getThemeDirectory() + "/gcDefault.zip";
-    String dpadAndJoystickPath = getThemeDirectory() + "/dpadJoystickDefault.zip";
-    String wiimotePath = getThemeDirectory() + "/wiimoteDefault.zip";
-    String classicPath = getThemeDirectory() + "/classicDefault.zip";
-    File gcFile = new File(gcPath);
-    File dpadJoystickFile = new File(dpadAndJoystickPath);
-    File wiimoteFile = new File(wiimotePath);
-    File classicFile = new File(classicPath);
 
-    // default bitmaps
-    for (int id : gcInputIds) {
-      Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
-      inputs.put(id, bitmap);
-    }
-    for (int id : dpadAndJoystickInputIds) {
-      Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
-      inputs.put(id, bitmap);
-    }
-    for (int id : wiimoteInputIds) {
-      Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
-      inputs.put(id, bitmap);
-    }
-    for (int id : classicInputIds) {
-      Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
-      inputs.put(id, bitmap);
-    }
-
-    if (gcFile.exists() || dpadJoystickFile.exists() || wiimoteFile.exists() || classicFile.exists()) {
-      return inputs;
+    // Load default bitmaps
+    for (int[] inputIds : inputIdsList) {
+      for (int id : inputIds) {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+        inputs.put(id, bitmap);
+      }
     }
 
     try {
-      FileInputStream gcInputStream = new FileInputStream(gcFile);
-      FileInputStream dpadJoystickInputStream = new FileInputStream(dpadJoystickFile);
-      FileInputStream wiimoteInputStream = new FileInputStream(wiimoteFile);
-      FileInputStream classicInputStream = new FileInputStream(classicFile);
-      ZipInputStream gcZipIn = new ZipInputStream(new BufferedInputStream(gcInputStream));
-      ZipInputStream dpadJoystickZipIn = new ZipInputStream(new BufferedInputStream(dpadJoystickInputStream));
-      ZipInputStream wiimoteZipIn = new ZipInputStream(new BufferedInputStream(wiimoteInputStream));
-      ZipInputStream classicZipIn = new ZipInputStream(new BufferedInputStream(classicInputStream));
+      for (int i = 0; i < paths.length; i++) {
+        File file = new File(paths[i]);
+        if (!file.exists()) continue;
 
-      ZipEntry entry;
-      while ((entry = gcZipIn.getNextEntry()) != null) {
-        for (int i = 0; i < gcInputNames.length; ++i) {
-          if (!entry.isDirectory() && gcInputNames[i].equals(entry.getName())) {
-            Bitmap bitmap = BitmapFactory.decodeStream(gcZipIn);
-            inputs.put(gcInputIds[i], bitmap);
+        FileInputStream fis = new FileInputStream(file);
+        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
+
+        ZipEntry entry;
+        while ((entry = zis.getNextEntry()) != null) {
+          for (int j = 0; j < inputNamesList[i].length; j++) {
+            if (!entry.isDirectory() && inputNamesList[i][j].equals(entry.getName())) {
+              Bitmap bitmap = BitmapFactory.decodeStream(zis);
+              inputs.put(inputIdsList[i][j], bitmap);
+            }
           }
         }
+        zis.close();
       }
-      gcZipIn.close();
-      while ((entry = dpadJoystickZipIn.getNextEntry()) != null) {
-        for (int i = 0; i < dpadAndJoystickInputNames.length; ++i) {
-          if (!entry.isDirectory() && dpadAndJoystickInputNames[i].equals(entry.getName())) {
-            Bitmap bitmap = BitmapFactory.decodeStream(dpadJoystickZipIn);
-            inputs.put(dpadAndJoystickInputIds[i], bitmap);
-          }
-        }
-      }
-      dpadJoystickZipIn.close();
-      while ((entry = wiimoteZipIn.getNextEntry()) != null) {
-        for (int i = 0; i < wiimoteInputNames.length; ++i) {
-          if (!entry.isDirectory() && wiimoteInputNames[i].equals(entry.getName())) {
-            Bitmap bitmap = BitmapFactory.decodeStream(wiimoteZipIn);
-            inputs.put(wiimoteInputIds[i], bitmap);
-          }
-        }
-      }
-      wiimoteZipIn.close();
-      while ((entry = classicZipIn.getNextEntry()) != null) {
-        for (int i = 0; i < classicInputNames.length; ++i) {
-          if (!entry.isDirectory() && classicInputNames[i].equals(entry.getName())) {
-            Bitmap bitmap = BitmapFactory.decodeStream(classicZipIn);
-            inputs.put(classicInputIds[i], bitmap);
-          }
-        }
-      }
-      classicZipIn.close();
     } catch (IOException e) {
       // ignore
     }
