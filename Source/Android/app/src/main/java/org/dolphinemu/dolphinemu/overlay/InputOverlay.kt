@@ -1273,61 +1273,61 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
     }
 
     companion object {
-        const val CONTROL_INIT_PREF_KEY: String = "InitOverlay"
-        const val CONTROL_SCALE_PREF_KEY: String = "ControlScale"
-        var sControllerScale: Int = 0
-        const val CONTROL_ALPHA_PREF_KEY: String = "ControlAlpha"
-        var sControllerAlpha: Int = 0
+        const val CONTROL_INIT_PREF_KEY = "InitOverlay"
+        const val CONTROL_SCALE_PREF_KEY = "ControlScale"
+        var sControllerScale = 0
+        const val CONTROL_ALPHA_PREF_KEY = "ControlAlpha"
+        var sControllerAlpha = 0
 
-        const val POINTER_PREF_KEY: String = "TouchPointer1"
-        const val RECENTER_PREF_KEY: String = "IRRecenter"
-        var sIRRecenter: Boolean = false
-        const val RELATIVE_PREF_KEY: String = "JoystickRelative"
-        var sJoystickRelative: Boolean = false
+        const val POINTER_PREF_KEY = "TouchPointer1"
+        const val RECENTER_PREF_KEY = "IRRecenter"
+        var sIRRecenter =false
+        const val RELATIVE_PREF_KEY = "JoystickRelative"
+        var sJoystickRelative =false
 
-        const val CONTROL_TYPE_PREF_KEY: String = "WiiController"
-        const val CONTROLLER_GAMECUBE: Int = 0
-        const val CONTROLLER_CLASSIC: Int = 1
-        const val CONTROLLER_WIINUNCHUK: Int = 2
-        const val CONTROLLER_WIIREMOTE: Int = 3
-        var sControllerType: Int = 0
+        const val CONTROL_TYPE_PREF_KEY = "WiiController"
+        const val CONTROLLER_GAMECUBE = 0
+        const val CONTROLLER_CLASSIC = 1
+        const val CONTROLLER_WIINUNCHUK = 2
+        const val CONTROLLER_WIIREMOTE = 3
+        var sControllerType = 0
 
-        const val JOYSTICK_PREF_KEY: String = "JoystickEmulate"
-        const val JOYSTICK_EMULATE_NONE: Int = 0
-        const val JOYSTICK_EMULATE_IR: Int = 1
-        const val JOYSTICK_EMULATE_WII_SWING: Int = 2
-        const val JOYSTICK_EMULATE_WII_TILT: Int = 3
-        const val JOYSTICK_EMULATE_WII_SHAKE: Int = 4
-        const val JOYSTICK_EMULATE_NUNCHUK_SWING: Int = 5
-        const val JOYSTICK_EMULATE_NUNCHUK_TILT: Int = 6
-        const val JOYSTICK_EMULATE_NUNCHUK_SHAKE: Int = 7
-        var sJoyStickSetting: Int = 0
+        const val JOYSTICK_PREF_KEY = "JoystickEmulate"
+        const val JOYSTICK_EMULATE_NONE = 0
+        const val JOYSTICK_EMULATE_IR = 1
+        const val JOYSTICK_EMULATE_WII_SWING = 2
+        const val JOYSTICK_EMULATE_WII_TILT = 3
+        const val JOYSTICK_EMULATE_WII_SHAKE = 4
+        const val JOYSTICK_EMULATE_NUNCHUK_SWING = 5
+        const val JOYSTICK_EMULATE_NUNCHUK_TILT = 6
+        const val JOYSTICK_EMULATE_NUNCHUK_SHAKE = 7
+        var sJoyStickSetting = 0
 
-        const val SENSOR_GC_NONE: Int = 0
-        const val SENSOR_GC_JOYSTICK: Int = 1
-        const val SENSOR_GC_CSTICK: Int = 2
-        const val SENSOR_GC_DPAD: Int = 3
-        var sSensorGCSetting: Int = 0
+        const val SENSOR_GC_NONE = 0
+        const val SENSOR_GC_JOYSTICK = 1
+        const val SENSOR_GC_CSTICK = 2
+        const val SENSOR_GC_DPAD = 3
+        var sSensorGCSetting = 0
 
-        const val SENSOR_WII_NONE: Int = 0
-        const val SENSOR_WII_DPAD: Int = 1
-        const val SENSOR_WII_STICK: Int = 2
-        const val SENSOR_WII_IR: Int = 3
-        const val SENSOR_WII_SWING: Int = 4
-        const val SENSOR_WII_TILT: Int = 5
-        const val SENSOR_WII_SHAKE: Int = 6
-        const val SENSOR_NUNCHUK_SWING: Int = 7
-        const val SENSOR_NUNCHUK_TILT: Int = 8
-        const val SENSOR_NUNCHUK_SHAKE: Int = 9
-        var sSensorWiiSetting: Int = 0
+        const val SENSOR_WII_NONE = 0
+        const val SENSOR_WII_DPAD = 1
+        const val SENSOR_WII_STICK = 2
+        const val SENSOR_WII_IR = 3
+        const val SENSOR_WII_SWING = 4
+        const val SENSOR_WII_TILT = 5
+        const val SENSOR_WII_SHAKE = 6
+        const val SENSOR_NUNCHUK_SWING = 7
+        const val SENSOR_NUNCHUK_TILT = 8
+        const val SENSOR_NUNCHUK_SHAKE = 9
+        var sSensorWiiSetting = 0
 
-        var sShakeStates: IntArray = IntArray(4)
+        var sShakeStates = IntArray(4)
 
         // input hack for RK4JAF
-        var sInputHackForRK4: Int = -1
+        var sInputHackForRK4 = -1
 
         @JvmField
-        val ResGameCubeIds: IntArray = intArrayOf(
+        val ResGameCubeIds = intArrayOf(
             R.drawable.gcpad_a, R.drawable.gcpad_a_pressed,
             R.drawable.gcpad_b, R.drawable.gcpad_b_pressed,
             R.drawable.gcpad_x, R.drawable.gcpad_x_pressed,
@@ -1338,7 +1338,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             R.drawable.gcpad_r, R.drawable.gcpad_r_pressed
         )
         @JvmField
-        val ResGameCubeNames: Array<String> = arrayOf(
+        val ResGameCubeNames = arrayOf(
             "gcpad_a.png", "gcpad_a_pressed.png",
             "gcpad_b.png", "gcpad_b_pressed.png",
             "gcpad_x.png", "gcpad_x_pressed.png",
@@ -1350,20 +1350,20 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         )
 
         @JvmField
-        val ResDpadIds: IntArray = intArrayOf(
+        val ResDpadIds = intArrayOf(
             R.drawable.gcwii_dpad,
             R.drawable.gcwii_dpad_pressed_one_direction,
             R.drawable.gcwii_dpad_pressed_two_directions
         )
         @JvmField
-        val ResDpadNames: Array<String> = arrayOf(
+        val ResDpadNames = arrayOf(
             "gcwii_dpad.png",
             "gcwii_dpad_pressed_one_direction.png",
             "gcwii_dpad_pressed_two_directions.png"
         )
 
         @JvmField
-        val ResJoystickIds: IntArray = intArrayOf(
+        val ResJoystickIds = intArrayOf(
             R.drawable.gcwii_joystick,
             R.drawable.gcwii_joystick_pressed,
             R.drawable.gcwii_joystick_range,
@@ -1372,14 +1372,16 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             R.drawable.gcpad_c_pressed
         )
         @JvmField
-        val ResJoystickNames: Array<String> = arrayOf(
-            "gcwii_joystick.png", "gcwii_joystick_pressed.png", "gcwii_joystick_range.png",
+        val ResJoystickNames = arrayOf(
+            "gcwii_joystick.png",
+            "gcwii_joystick_pressed.png",
+            "gcwii_joystick_range.png",
             // gc
             "gcpad_c.png", "gcpad_c_pressed.png"
         )
 
         @JvmField
-        val ResWiimoteIds: IntArray = intArrayOf(
+        val ResWiimoteIds = intArrayOf(
             R.drawable.wiimote_a, R.drawable.wiimote_a_pressed,
             R.drawable.wiimote_b, R.drawable.wiimote_b_pressed,
             R.drawable.wiimote_one, R.drawable.wiimote_one_pressed,
@@ -1391,7 +1393,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             R.drawable.nunchuk_c, R.drawable.nunchuk_c_pressed
         )
         @JvmField
-        val ResWiimoteNames: Array<String> = arrayOf(
+        val ResWiimoteNames = arrayOf(
             "wiimote_a.png", "wiimote_a_pressed.png",
             "wiimote_b.png", "wiimote_b_pressed.png",
             "wiimote_one.png", "wiimote_one_pressed.png",
@@ -1404,7 +1406,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         )
 
         @JvmField
-        val ResClassicIds: IntArray = intArrayOf(
+        val ResClassicIds = intArrayOf(
             R.drawable.classic_a, R.drawable.classic_a_pressed,
             R.drawable.classic_b, R.drawable.classic_b_pressed,
             R.drawable.classic_x, R.drawable.classic_x_pressed,
@@ -1415,7 +1417,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             R.drawable.classic_r, R.drawable.classic_r_pressed
         )
         @JvmField
-        val ResClassicNames: Array<String> = arrayOf(
+        val ResClassicNames = arrayOf(
             "classic_a.png", "classic_a_pressed.png",
             "classic_b.png", "classic_b_pressed.png",
             "classic_x.png", "classic_x_pressed.png",

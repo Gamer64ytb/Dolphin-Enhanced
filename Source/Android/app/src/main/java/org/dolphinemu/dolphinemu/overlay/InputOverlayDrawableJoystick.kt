@@ -17,7 +17,7 @@ class InputOverlayDrawableJoystick
     innerDefault: BitmapDrawable, innerPressed: BitmapDrawable,
     rectOuter: Rect, rectInner: Rect, joystick: Int
 ) {
-    private val axisIDs: IntArray = intArrayOf(0, 0, 0, 0)
+    private val axisIDs = intArrayOf(0, 0, 0, 0)
     private val axises: FloatArray = floatArrayOf(0f, 0f)
     private val factors: FloatArray = floatArrayOf(1f, 1f, 1f, 1f)
 
