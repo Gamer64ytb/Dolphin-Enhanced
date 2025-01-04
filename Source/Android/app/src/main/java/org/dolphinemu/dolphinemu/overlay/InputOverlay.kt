@@ -23,7 +23,6 @@ import android.view.View.OnTouchListener
 import org.dolphinemu.dolphinemu.NativeLibrary
 import org.dolphinemu.dolphinemu.NativeLibrary.ButtonType
 import org.dolphinemu.dolphinemu.R
-import org.dolphinemu.dolphinemu.activities.EmulationActivity
 import org.dolphinemu.dolphinemu.activities.EmulationActivity.Companion.get
 import org.dolphinemu.dolphinemu.features.settings.model.Settings
 import org.dolphinemu.dolphinemu.features.settings.utils.SettingsFile
@@ -41,7 +40,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         AsyncTask<Context?, Void?, Map<Int, Bitmap>>() {
         override fun doInBackground(vararg contexts: Context?): Map<Int, Bitmap> {
             val settings = Settings()
-            settings.loadSettings(EmulationActivity.get()!!.selectedGameId)
+            settings.loadSettings(null)
 
             val themeKeys = arrayOf(
                 SettingsFile.KEY_GC_THEME,
