@@ -105,10 +105,6 @@ public final class DirectoryInitialization
     sendBroadcastState(mDirectoryState, context);
   }
 
-  public static boolean isInitialized() {
-    return mDirectoryState == DirectoryInitializationState.DIRECTORIES_INITIALIZED;
-  }
-
   private static boolean setDolphinUserDirectory(Context context)
   {
     if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))

@@ -1260,6 +1260,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
         if (!get()!!.isGameCubeGame) touchPointer = preferences.getInt(POINTER_PREF_KEY, 0)
         setTouchPointer(touchPointer)
 
+        // init controls
         InitTask().execute(context)
 
         // Set the on touch listener.
