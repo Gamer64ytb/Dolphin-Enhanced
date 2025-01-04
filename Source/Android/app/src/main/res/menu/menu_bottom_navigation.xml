@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_gamecube"
+        android:icon="@drawable/ic_gamecube"
+        android:contentDescription="@string/game_platform_ngc"/>
+
+    <item
+        android:id="@+id/nav_wii"
+        android:icon="@drawable/ic_wiimote"
+        android:contentDescription="@string/game_platform_wii"/>
+
+    <item
+        android:id="@+id/nav_wiiware"
+        android:icon="@drawable/ic_settings_wiimote"
+        android:contentDescription="@string/game_platform_ware"/>
+</menu>

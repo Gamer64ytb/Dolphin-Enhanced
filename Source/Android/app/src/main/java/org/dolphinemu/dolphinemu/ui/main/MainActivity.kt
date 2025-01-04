@@ -5,18 +5,26 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.GestureDetector
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GestureDetectorCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.shape.MaterialShapeDrawable
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.activities.EmulationActivity.Companion.launch
 import org.dolphinemu.dolphinemu.adapters.GameAdapter
@@ -24,6 +32,7 @@ import org.dolphinemu.dolphinemu.features.settings.ui.MenuTag
 import org.dolphinemu.dolphinemu.features.settings.ui.SettingsActivity
 import org.dolphinemu.dolphinemu.model.GameFileCache
 import org.dolphinemu.dolphinemu.services.GameFileCacheService
+import org.dolphinemu.dolphinemu.ui.platform.Platform
 import org.dolphinemu.dolphinemu.utils.ContentHandler
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization
 import org.dolphinemu.dolphinemu.utils.FileBrowserHelper
@@ -32,6 +41,7 @@ import org.dolphinemu.dolphinemu.utils.StartupHandler
 import org.dolphinemu.dolphinemu.utils.ThemeUtil
 import java.io.File
 import java.util.Arrays
+import kotlin.math.abs
 
 /**
  * The main Activity of the Lollipop style UI. Manages several PlatformGamesFragments, which
@@ -44,6 +54,49 @@ class MainActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
     private var broadcastReceiver: BroadcastReceiver? = null
     private var dirToAdd: String? = null
+    private var currentPlatform: Int = Platform.GAMECUBE.toInt()
+
+    private val gestureDetector by lazy {
+        GestureDetectorCompat(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onFling(
+                e1: MotionEvent?,
+                e2: MotionEvent,
+                velocityX: Float,
+                velocityY: Float
+            ): Boolean {
+                if (abs(velocityX) > abs(velocityY)) {
+                    if (velocityX > 0) {
+                        // Swipe right - go to previous
+                        switchPlatform(-1)
+                    } else {
+                        // Swipe left - go to next
+                        switchPlatform(1)
+                    }
+                    return true
+                }
+                return false
+            }
+        })
+    }
+
+    private fun switchPlatform(direction: Int) {
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val currentItem = when (currentPlatform) {
+            Platform.GAMECUBE.toInt() -> R.id.nav_gamecube
+            Platform.WII.toInt() -> R.id.nav_wii
+            Platform.WIIWARE.toInt() -> R.id.nav_wiiware
+            else -> R.id.nav_gamecube
+        }
+
+        val menu = bottomNav.menu
+        val currentIndex = (0 until menu.size()).indexOfFirst { menu.getItem(it).itemId == currentItem }
+        val newIndex = (currentIndex + direction + menu.size()) % menu.size()
+        val newItemId = menu.getItem(newIndex).itemId
+
+        if (newItemId != currentItem) {
+            bottomNav.selectedItemId = newItemId
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeUtil.applyTheme()
@@ -70,6 +123,52 @@ class MainActivity : AppCompatActivity() {
         if (PermissionsHandler.hasWriteAccess(this)) {
             showGames()
             GameFileCacheService.startLoad(this)
+        }
+
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        val savedPlatform = pref.getInt(PREF_PLATFORM, Platform.GAMECUBE.toInt())
+        adapter?.setCurrentPlatform(savedPlatform)
+
+        gameList?.setOnTouchListener { v, event ->
+            gestureDetector.onTouchEvent(event)
+            true
+        }
+
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).apply {
+            labelVisibilityMode = BottomNavigationView.LABEL_VISIBILITY_UNLABELED
+
+            background = MaterialShapeDrawable().apply {
+                setTint(MaterialColors.getColor(this@MainActivity, com.google.android.material.R.attr.colorSurface, R.color.dolphin))
+                elevation = resources.getDimension(R.dimen.bottom_nav_elevation)
+            }
+
+            setOnItemSelectedListener { item ->
+                val newPlatform = when (item.itemId) {
+                    R.id.nav_gamecube -> Platform.GAMECUBE.toInt()
+                    R.id.nav_wii -> Platform.WII.toInt()
+                    R.id.nav_wiiware -> Platform.WIIWARE.toInt()
+                    else -> Platform.GAMECUBE.toInt()
+                }
+
+                if (newPlatform != currentPlatform) {
+                    val slideIn = AnimationUtils.loadAnimation(
+                        this@MainActivity,
+                        if (newPlatform > currentPlatform) R.anim.slide_in_right else R.anim.slide_in_left
+                    )
+
+                    gameList?.setBackgroundColor(MaterialColors.getColor(
+                        this@MainActivity,
+                        android.R.attr.colorBackground,
+                        Color.BLACK
+                    ))
+
+                    adapter?.setCurrentPlatform(newPlatform)
+                    gameList?.startAnimation(slideIn)
+                    currentPlatform = newPlatform
+                    pref.edit().putInt(PREF_PLATFORM, newPlatform).apply()
+                }
+                true
+            }
         }
     }
 
@@ -308,6 +407,7 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_OPEN_FILE = 2
         const val REQUEST_GPU_DRIVER = 3
         private const val PREF_GAMELIST = "GAME_LIST_TYPE"
+        private const val PREF_PLATFORM = "SELECTED_PLATFORM"
         private val TITLE_BYTES = byteArrayOf(
             0x44,
             0x6f,

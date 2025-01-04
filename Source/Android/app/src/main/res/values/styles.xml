@@ -5,10 +5,11 @@
     <style name="DolphinBase" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Main theme colors -->
         <!-- Branding color for the app bar -->
-        <item name="colorSurface">@color/dolphin</item>
+        <item name="colorSurface">@color/surface</item>
         <item name="colorPrimary">@color/dolphin_accent</item>
         <item name="colorPrimaryDark">@color/dolphin</item>
         <item name="colorAccent">@color/dolphin_accent</item>
+        <item name="android:colorBackground">@color/background</item>
 
         <!-- Enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
@@ -32,6 +33,7 @@
         <item name="colorPrimary">@color/dolphin_accent</item>
         <item name="colorPrimaryDark">@color/dolphin</item>
         <item name="colorAccent">@color/dolphin_accent</item>
+        <item name="colorSurface">@color/dolphin</item>
         <item name="android:windowTranslucentNavigation">true</item>
 
         <item name="android:windowBackground">@android:color/black</item>
