@@ -9,4 +9,6 @@
     <dimen name="spacing_medium">8dp</dimen>
     <dimen name="spacing_medlarge">12dp</dimen>
     <dimen name="spacing_large">16dp</dimen>
+
+    <dimen name="bottom_nav_elevation">3dp</dimen>
 </resources>

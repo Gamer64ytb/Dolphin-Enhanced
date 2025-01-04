@@ -4,25 +4,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.activities.EmulationActivity.Companion.launch
 import org.dolphinemu.dolphinemu.dialogs.GameDetailsDialog
 import org.dolphinemu.dolphinemu.model.GameFile
+import org.dolphinemu.dolphinemu.ui.platform.Platform
 import org.dolphinemu.dolphinemu.viewholders.GameViewHolder
 
 class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener,
     OnLongClickListener {
     private var resourceId = 0
-    private var gameFileList: List<GameFile>
+    private var allGameFiles: List<GameFile> = ArrayList()
+    private var filteredGameFiles: List<GameFile> = ArrayList()
+    private var currentPlatform: Int = Platform.GAMECUBE.toInt()
 
     /**
      * Initializes the adapter's observer, which watches for changes to the dataset. The adapter will
      * display no data until swapDataSet is called.
      */
     init {
-        gameFileList = ArrayList()
+        allGameFiles = ArrayList()
     }
 
     /**
@@ -57,7 +59,7 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
      * @param position The position of the 'new' view in the dataset.
      */
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        val gameFile = gameFileList[position]
+        val gameFile = filteredGameFiles[position]
         gameFile.loadGameBanner(holder.imageScreenshot)
 
         holder.textGameTitle.text = gameFile.title
@@ -79,31 +81,23 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
         var platform = gameFile.getPlatform()
         var country = gameFile.getCountry()
         val discNumber = gameFile.getDiscNumber() + 1
-        if (platform == 2) {
-            // WiiWAD, Virtual Console
+
+        // Handle Virtual Console games
+        if (platform == Platform.WIIWARE.toInt()) {
             val gameId = gameFile.getGameId()
-            when (gameId[0]) {
-                'N' ->           // N64
-                    platform = 3
-
-                'F' ->           // NES
-                    platform = 4
-
-                'L' ->           // SMS
-                    platform = 5
-
-                'M' ->           // SMD
-                    platform = 6
-
-                'C' ->           // C64
-                    platform = 7
-
-                'J' ->           // SNES
-                    platform = 8
+            if (gameId.isNotEmpty()) {
+                when (gameId[0]) {
+                    'N' -> platform = 3  // N64
+                    'F' -> platform = 4  // NES
+                    'L' -> platform = 5  // SMS
+                    'M' -> platform = 6  // SMD
+                    'C' -> platform = 7  // C64
+                    'J' -> platform = 8  // SNES
+                }
             }
         }
         val discInfo = if (discNumber > 1) "Disc-$discNumber" else ""
-        if (platform < 0 || platform >= platforms.size) platform = 2
+        if (platform < 0 || platform >= platforms.size) platform = Platform.WIIWARE.toInt()
         if (country < 0 || country >= countryNames.size) country = countryNames.size - 1
         holder.textPlatform.text =
             context.getString(platforms[platform], countryNames[country], discInfo)
@@ -118,7 +112,7 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
      * @return Size of the dataset.
      */
     override fun getItemCount(): Int {
-        return gameFileList.size
+        return filteredGameFiles.size
     }
 
     /**
@@ -135,7 +129,23 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
      * with the newly-loaded data.
      */
     fun swapDataSet(gameFiles: List<GameFile>) {
-        gameFileList = gameFiles
+        allGameFiles = gameFiles
+        filterGamesByPlatform()
+    }
+
+    private fun filterGamesByPlatform() {
+        filteredGameFiles = allGameFiles.filter { gameFile ->
+            when (currentPlatform) {
+                Platform.GAMECUBE.toInt() -> gameFile.getPlatform() == Platform.GAMECUBE.toInt()
+                Platform.WII.toInt() -> gameFile.getPlatform() == Platform.WII.toInt()
+                Platform.WIIWARE.toInt() -> {
+                    val platform = gameFile.getPlatform()
+                    platform == Platform.WIIWARE.toInt() ||
+                    (platform in 3..8)
+                }
+                else -> false
+            }
+        }
         notifyDataSetChanged()
     }
 
@@ -164,5 +174,10 @@ class GameAdapter : RecyclerView.Adapter<GameViewHolder>(), View.OnClickListener
         val holder = view.tag as GameViewHolder
         GameDetailsDialog(context, holder.gameFile!!.getPath()).show()
         return true
+    }
+
+    fun setCurrentPlatform(platform: Int) {
+        currentPlatform = platform
+        filterGamesByPlatform()
     }
 }
