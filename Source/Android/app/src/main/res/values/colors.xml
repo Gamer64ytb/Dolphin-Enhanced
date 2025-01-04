@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 
     <color name="dolphin_background">#FFFFFF</color>
-
     <color name="dolphin">#000000</color>
     <color name="dolphin_accent">#000000</color>
 
@@ -10,4 +11,6 @@
     <color name="dialog_color">#F2F2F2</color>
     <color name="buttons">#FFFFFF</color>
 
+    <color name="surface">@color/white</color>
+    <color name="background">@color/white</color>
 </resources>
