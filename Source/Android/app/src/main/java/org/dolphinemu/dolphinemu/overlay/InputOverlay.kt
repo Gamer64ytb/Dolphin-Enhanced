@@ -1328,7 +1328,6 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
 
         @JvmField
         val ResGameCubeIds: IntArray = intArrayOf(
-            // gamecube
             R.drawable.gcpad_a, R.drawable.gcpad_a_pressed,
             R.drawable.gcpad_b, R.drawable.gcpad_b_pressed,
             R.drawable.gcpad_x, R.drawable.gcpad_x_pressed,
@@ -1336,7 +1335,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             R.drawable.gcpad_z, R.drawable.gcpad_z_pressed,
             R.drawable.gcpad_start, R.drawable.gcpad_start_pressed,
             R.drawable.gcpad_l, R.drawable.gcpad_l_pressed,
-            R.drawable.gcpad_r, R.drawable.gcpad_r_pressed,
+            R.drawable.gcpad_r, R.drawable.gcpad_r_pressed
         )
         @JvmField
         val ResGameCubeNames: Array<String> = arrayOf(
@@ -1347,7 +1346,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             "gcpad_z.png", "gcpad_z_pressed.png",
             "gcpad_start.png", "gcpad_start_pressed.png",
             "gcpad_l.png", "gcpad_l_pressed.png",
-            "gcpad_r.png", "gcpad_r_pressed.png",
+            "gcpad_r.png", "gcpad_r_pressed.png"
         )
 
         @JvmField
@@ -1368,18 +1367,19 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             R.drawable.gcwii_joystick,
             R.drawable.gcwii_joystick_pressed,
             R.drawable.gcwii_joystick_range,
+            // gc
             R.drawable.gcpad_c,
-            R.drawable.gcpad_c_pressed,
+            R.drawable.gcpad_c_pressed
         )
         @JvmField
         val ResJoystickNames: Array<String> = arrayOf(
             "gcwii_joystick.png", "gcwii_joystick_pressed.png", "gcwii_joystick_range.png",
-            "gcpad_c.png", "gcpad_c_pressed.png",
+            // gc
+            "gcpad_c.png", "gcpad_c_pressed.png"
         )
 
         @JvmField
         val ResWiimoteIds: IntArray = intArrayOf(
-            // wiimote
             R.drawable.wiimote_a, R.drawable.wiimote_a_pressed,
             R.drawable.wiimote_b, R.drawable.wiimote_b_pressed,
             R.drawable.wiimote_one, R.drawable.wiimote_one_pressed,
@@ -1387,9 +1387,8 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             R.drawable.wiimote_plus, R.drawable.wiimote_plus_pressed,
             R.drawable.wiimote_minus, R.drawable.wiimote_minus_pressed,
             R.drawable.wiimote_home, R.drawable.wiimote_home_pressed,
-            R.drawable.classic_x, R.drawable.classic_x_pressed,
             R.drawable.nunchuk_z, R.drawable.nunchuk_z_pressed,
-            R.drawable.nunchuk_c, R.drawable.nunchuk_c_pressed,
+            R.drawable.nunchuk_c, R.drawable.nunchuk_c_pressed
         )
         @JvmField
         val ResWiimoteNames: Array<String> = arrayOf(
@@ -1400,9 +1399,8 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             "wiimote_plus.png", "wiimote_plus_pressed.png",
             "wiimote_minus.png", "wiimote_minus_pressed.png",
             "wiimote_home.png", "wiimote_home_pressed.png",
-            "classic_x.png", "classic_x_pressed.png",
             "nunchuk_z.png", "nunchuk_z_pressed.png",
-            "nunchuk_c.png", "nunchuk_c_pressed.png",
+            "nunchuk_c.png", "nunchuk_c_pressed.png"
         )
 
         @JvmField
@@ -1414,7 +1412,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             R.drawable.classic_zl, R.drawable.classic_zl_pressed,
             R.drawable.classic_zr, R.drawable.classic_zr_pressed,
             R.drawable.classic_l, R.drawable.classic_l_pressed,
-            R.drawable.classic_r, R.drawable.classic_r_pressed,
+            R.drawable.classic_r, R.drawable.classic_r_pressed
         )
         @JvmField
         val ResClassicNames: Array<String> = arrayOf(
@@ -1425,7 +1423,7 @@ class InputOverlay(context: Context?, attrs: AttributeSet?) :
             "classic_zl.png", "classic_zl_pressed.png",
             "classic_zr.png", "classic_zr_pressed.png",
             "classic_l.png", "classic_l_pressed.png",
-            "classic_r.png", "classic_r_pressed.png",
+            "classic_r.png", "classic_r_pressed.png"
         )
     }
 }
