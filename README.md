@@ -14,10 +14,13 @@
   </a>
 </p>
 
-<b>Dolphin Enhanced</b> is a fork based on weihuoya's MMJ, with the goal of improve more it's performance & compatibility.
+<b>Dolphin Enhanced</b> is a fork based on weihuoya's MMJ, with the goal of improving upon its performance,  UI and compatability
 
 # About Dolphin Enhanced
-This is a fork to practice my skills as well, so it's not 100% focused to the public. I mostly release for low end devices getting benefited or people that doesn't want to use android data, or other reasons.
+
+**This fork is mostly meant for personal use / development,** so it's not really focused for public usage. 
+
+**However it can be useful for users with low end devices** or uses who don't want to use scoped storage as its much more lightweight and less accurate than upstream Dolphin 
 
 # Contributing
 
