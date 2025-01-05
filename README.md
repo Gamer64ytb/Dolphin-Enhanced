@@ -14,7 +14,7 @@
   </a>
 </p>
 
-<b>Dolphin Enhanced</b> is a fork based on weihuoya's MMJ, with the goal of improving upon its performance,  UI and compatability
+<b>Dolphin Enhanced</b> is a fork based on weihuoya's MMJ, with the goal of improving upon its performance, UI and compatability
 
 # About Dolphin Enhanced
 
