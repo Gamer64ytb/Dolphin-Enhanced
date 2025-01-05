@@ -125,51 +125,14 @@ class MainActivity : AppCompatActivity() {
             GameFileCacheService.startLoad(this)
         }
 
-        val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        val savedPlatform = pref.getInt(PREF_PLATFORM, Platform.GAMECUBE.toInt())
-        adapter?.setCurrentPlatform(savedPlatform)
+        initializePlatform()
 
         gameList?.setOnTouchListener { v, event ->
             gestureDetector.onTouchEvent(event)
             true
         }
 
-        findViewById<BottomNavigationView>(R.id.bottom_navigation).apply {
-            labelVisibilityMode = BottomNavigationView.LABEL_VISIBILITY_UNLABELED
-
-            background = MaterialShapeDrawable().apply {
-                setTint(MaterialColors.getColor(this@MainActivity, com.google.android.material.R.attr.colorSurface, R.color.dolphin))
-                elevation = resources.getDimension(R.dimen.bottom_nav_elevation)
-            }
-
-            setOnItemSelectedListener { item ->
-                val newPlatform = when (item.itemId) {
-                    R.id.nav_gamecube -> Platform.GAMECUBE.toInt()
-                    R.id.nav_wii -> Platform.WII.toInt()
-                    R.id.nav_wiiware -> Platform.WIIWARE.toInt()
-                    else -> Platform.GAMECUBE.toInt()
-                }
-
-                if (newPlatform != currentPlatform) {
-                    val slideIn = AnimationUtils.loadAnimation(
-                        this@MainActivity,
-                        if (newPlatform > currentPlatform) R.anim.slide_in_right else R.anim.slide_in_left
-                    )
-
-                    gameList?.setBackgroundColor(MaterialColors.getColor(
-                        this@MainActivity,
-                        android.R.attr.colorBackground,
-                        Color.BLACK
-                    ))
-
-                    adapter?.setCurrentPlatform(newPlatform)
-                    gameList?.startAnimation(slideIn)
-                    currentPlatform = newPlatform
-                    pref.edit().putInt(PREF_PLATFORM, newPlatform).apply()
-                }
-                true
-            }
-        }
+        setupBottomNavigation()
     }
 
     override fun onResume() {
@@ -400,6 +363,70 @@ class MainActivity : AppCompatActivity() {
 
     fun showGames() {
         adapter!!.swapDataSet(GameFileCacheService.getAllGameFiles())
+    }
+
+    private fun initializePlatform() {
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        val savedPlatform = pref.getInt(PREF_PLATFORM, Platform.GAMECUBE.toInt())
+        currentPlatform = savedPlatform
+
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).apply {
+            selectedItemId = when (savedPlatform) {
+                Platform.GAMECUBE.toInt() -> R.id.nav_gamecube
+                Platform.WII.toInt() -> R.id.nav_wii
+                Platform.WIIWARE.toInt() -> R.id.nav_wiiware
+                else -> R.id.nav_gamecube
+            }
+        }
+
+        adapter?.setCurrentPlatform(savedPlatform)
+    }
+
+    private fun setupBottomNavigation() {
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).apply {
+            labelVisibilityMode = BottomNavigationView.LABEL_VISIBILITY_UNLABELED
+
+            background = MaterialShapeDrawable().apply {
+                setTint(MaterialColors.getColor(this@MainActivity,
+                    com.google.android.material.R.attr.colorSurface,
+                    R.color.dolphin))
+                elevation = resources.getDimension(R.dimen.bottom_nav_elevation)
+            }
+
+            setOnItemSelectedListener { item ->
+                val newPlatform = when (item.itemId) {
+                    R.id.nav_gamecube -> Platform.GAMECUBE.toInt()
+                    R.id.nav_wii -> Platform.WII.toInt()
+                    R.id.nav_wiiware -> Platform.WIIWARE.toInt()
+                    else -> Platform.GAMECUBE.toInt()
+                }
+
+                if (newPlatform != currentPlatform) {
+                    val slideIn = AnimationUtils.loadAnimation(
+                        this@MainActivity,
+                        if (newPlatform > currentPlatform)
+                            R.anim.slide_in_right
+                        else
+                            R.anim.slide_in_left
+                    )
+
+                    gameList?.setBackgroundColor(MaterialColors.getColor(
+                        this@MainActivity,
+                        android.R.attr.colorBackground,
+                        Color.BLACK
+                    ))
+
+                    adapter?.setCurrentPlatform(newPlatform)
+                    gameList?.startAnimation(slideIn)
+                    currentPlatform = newPlatform
+                    PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
+                        .edit()
+                        .putInt(PREF_PLATFORM, newPlatform)
+                        .apply()
+                }
+                true
+            }
+        }
     }
 
     companion object {
