@@ -139,9 +139,20 @@ public final class GameFileCacheService extends IntentService
       // Rescan the file system and update the game list cache with the results
       synchronized (gameFileCache)
       {
-        if (gameFileCache.scanLibrary(this))
+        boolean changed = gameFileCache.update(this);
+        if (changed)
         {
           updateGameFileArray();
+        }
+
+        boolean additionalMetadataChanged = gameFileCache.updateAdditionalMetadata();
+        if (additionalMetadataChanged)
+        {
+          updateGameFileArray();
+        }
+        if (changed || additionalMetadataChanged)
+        {
+          gameFileCache.save();
         }
       }
     }

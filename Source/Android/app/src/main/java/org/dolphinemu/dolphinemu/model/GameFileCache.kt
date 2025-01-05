@@ -15,7 +15,7 @@ class GameFileCache {
      *
      * @return true if the cache was modified
      */
-    fun scanLibrary(context: Context?): Boolean {
+    fun update(context: Context?): Boolean {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val folderPathsSet = preferences.getStringSet(GAME_FOLDER_PATHS_PREFERENCE, HashSet())
             ?: return false
@@ -39,12 +39,8 @@ class GameFileCache {
         }
 
         val folderPaths = folderPathsSet.toTypedArray()
-        var cacheChanged = update(folderPaths)
-        cacheChanged = cacheChanged or updateAdditionalMetadata()
-        if (cacheChanged) {
-            save()
-        }
-        return cacheChanged
+
+        return update(folderPaths)
     }
 
     @Synchronized
@@ -57,13 +53,13 @@ class GameFileCache {
     private external fun update(folderPaths: Array<String>): Boolean
 
     @Synchronized
-    private external fun updateAdditionalMetadata(): Boolean
+    external fun updateAdditionalMetadata(): Boolean
 
     @Synchronized
     external fun load(): Boolean
 
     @Synchronized
-    private external fun save(): Boolean
+    external fun save(): Boolean
 
     companion object {
         private const val GAME_FOLDER_PATHS_PREFERENCE = "gameFolderPaths"

@@ -40,8 +40,7 @@ JNIEXPORT jobject JNICALL Java_org_dolphinemu_dolphinemu_model_GameFileCache_add
                                                           jstring path)
 {
   bool cache_changed = false;
-  return GameFileToJava(env,
-                        g_game_file_cache->AddOrGet(GetJString(env, path), &cache_changed).get());
+  return GameFileToJava(env, g_game_file_cache->AddOrGet(GetJString(env, path), &cache_changed).get());
 }
 
 JNIEXPORT jboolean JNICALL Java_org_dolphinemu_dolphinemu_model_GameFileCache_update(
