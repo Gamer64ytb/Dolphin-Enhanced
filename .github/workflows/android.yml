@@ -22,6 +22,11 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Install Ninja Build
+        run: |
+          sudo apt-get install -y ninja-build
+          ln -s /usr/bin/ninja .
+
       - name: Build
         run: |
           cd ./Source/Android
