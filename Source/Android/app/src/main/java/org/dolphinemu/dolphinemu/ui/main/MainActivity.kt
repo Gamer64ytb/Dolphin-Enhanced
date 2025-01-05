@@ -7,6 +7,8 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.preference.PreferenceManager
 import android.view.GestureDetector
 import android.view.Menu
@@ -22,6 +24,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -48,6 +51,7 @@ import kotlin.math.abs
  * individually display a grid of available games for each Fragment, in a tabbed layout.
  */
 class MainActivity : AppCompatActivity() {
+    private val refreshTimeOut = 3000L
     private var divider: DividerItemDecoration? = null
     private var gameList: RecyclerView? = null
     private var adapter: GameAdapter? = null
@@ -55,6 +59,11 @@ class MainActivity : AppCompatActivity() {
     private var broadcastReceiver: BroadcastReceiver? = null
     private var dirToAdd: String? = null
     private var currentPlatform: Int = Platform.GAMECUBE.toInt()
+    private var swipeRefresh: SwipeRefreshLayout? = null
+    private val refreshTimeoutHandler = Handler(Looper.getMainLooper())
+    private val refreshTimeoutRunnable = Runnable {
+        swipeRefresh?.isRefreshing = false
+    }
 
     private val gestureDetector by lazy {
         GestureDetectorCompat(this, object : GestureDetector.SimpleOnGestureListener() {
@@ -64,12 +73,15 @@ class MainActivity : AppCompatActivity() {
                 velocityX: Float,
                 velocityY: Float
             ): Boolean {
-                if (abs(velocityX) > abs(velocityY)) {
+                // Gesture handling for GameAdapter
+                if (abs(velocityX) > abs(velocityY) * 2 &&
+                    abs(velocityX) > 2000 &&
+                    e1 != null &&
+                    abs(e2.y - e1.y) < 150) {
+
                     if (velocityX > 0) {
-                        // Swipe right - go to previous
                         switchPlatform(-1)
                     } else {
-                        // Swipe left - go to next
                         switchPlatform(1)
                     }
                     return true
@@ -113,6 +125,7 @@ class MainActivity : AppCompatActivity() {
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 showGames()
+                swipeRefresh?.isRefreshing = false // Immediately dismiss refresh indicator if games exist
             }
         }
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver!!, filter)
@@ -149,6 +162,7 @@ class MainActivity : AppCompatActivity() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
             broadcastReceiver!!
         )
+        refreshTimeoutHandler.removeCallbacks(refreshTimeoutRunnable)
     }
 
     // TODO: Replace with a ButterKnife injection.
@@ -160,6 +174,12 @@ class MainActivity : AppCompatActivity() {
         adapter = GameAdapter()
         gameList!!.setAdapter(adapter)
         refreshGameList(pref.getBoolean(PREF_GAMELIST, true))
+        swipeRefresh = findViewById(R.id.swipe_refresh)
+        swipeRefresh?.setOnRefreshListener {
+            refreshTimeoutHandler.removeCallbacks(refreshTimeoutRunnable)
+            GameFileCacheService.startRescan(this)
+            refreshTimeoutHandler.postDelayed(refreshTimeoutRunnable, refreshTimeOut)
+        }
     }
 
     private fun refreshGameList(flag: Boolean) {
