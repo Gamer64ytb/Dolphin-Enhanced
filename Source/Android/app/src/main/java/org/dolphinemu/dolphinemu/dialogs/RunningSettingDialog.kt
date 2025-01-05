@@ -286,8 +286,6 @@ class RunningSettingDialog : DialogFragment() {
         private var settings: ArrayList<SettingsItem>? = null
 
         fun loadMainMenu() {
-            val activity = NativeLibrary.getEmulationContext() as EmulationActivity
-
             settings = ArrayList()
             settings!!.add(
                 SettingsItem(
@@ -353,7 +351,7 @@ class RunningSettingDialog : DialogFragment() {
                     0
                 )
             )
-            if (!activity.isGameCubeGame) {
+            if (!get()!!.isGameCubeGame) {
                 settings!!.add(
                     SettingsItem(
                         SETTING_CHOOSE_CONTROLLER,
