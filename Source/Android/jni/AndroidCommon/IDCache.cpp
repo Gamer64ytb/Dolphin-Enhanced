@@ -123,7 +123,9 @@ void ContentHandler::OnLoad(JNIEnv* env)
 void ContentHandler::OnUnload(JNIEnv* env)
 {
   env->DeleteGlobalRef(Clazz);
+  env->DeleteGlobalRef(StringClazz);
   Clazz = nullptr;
+  StringClazz = nullptr;
 }
 
 JNIEnv* GetEnvForThread()

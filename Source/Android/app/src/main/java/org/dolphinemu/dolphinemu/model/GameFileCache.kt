@@ -2,7 +2,6 @@ package org.dolphinemu.dolphinemu.model
 
 import android.content.Context
 import android.preference.PreferenceManager
-import org.dolphinemu.dolphinemu.services.GameFileCacheService
 import org.dolphinemu.dolphinemu.utils.ContentHandler
 import java.io.File
 
@@ -18,21 +17,8 @@ class GameFileCache {
      */
     fun scanLibrary(context: Context?): Boolean {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val folderPathsSet =
-            preferences.getStringSet(GAME_FOLDER_PATHS_PREFERENCE, HashSet())!!
-
-        // get paths from game files
-        val gameFiles = GameFileCacheService.getAllGameFiles()
-        for (f in gameFiles) {
-            val filename = f.getPath()
-            val lastSep = filename.lastIndexOf(File.separator)
-            if (lastSep > 0) {
-                val path = filename.substring(0, lastSep)
-                if (!folderPathsSet.contains(path)) {
-                    folderPathsSet.add(path)
-                }
-            }
-        }
+        val folderPathsSet = preferences.getStringSet(GAME_FOLDER_PATHS_PREFERENCE, HashSet())
+            ?: return false
 
         // remove non exists paths
         val newFolderPaths: MutableSet<String> = HashSet()
@@ -45,7 +31,6 @@ class GameFileCache {
             }
         }
 
-        // apply changes
         if (folderPathsSet.size != newFolderPaths.size) {
             // One or more folders are being deleted
             val editor = preferences.edit()
@@ -53,7 +38,7 @@ class GameFileCache {
             editor.apply()
         }
 
-        val folderPaths = folderPathsSet.toTypedArray<String>()
+        val folderPaths = folderPathsSet.toTypedArray()
         var cacheChanged = update(folderPaths)
         cacheChanged = cacheChanged or updateAdditionalMetadata()
         if (cacheChanged) {
@@ -85,14 +70,14 @@ class GameFileCache {
 
         fun addGameFolder(path: String, context: Context?) {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            val folderPaths =
-                preferences.getStringSet(GAME_FOLDER_PATHS_PREFERENCE, HashSet())!!
-            if (!folderPaths.contains(path)) {
-                folderPaths.add(path)
-                val editor = preferences.edit()
-                editor.putStringSet(GAME_FOLDER_PATHS_PREFERENCE, folderPaths)
-                editor.apply()
-            }
+            val folderPaths = preferences.getStringSet(GAME_FOLDER_PATHS_PREFERENCE, HashSet())
+                ?: return
+
+            val newFolderPaths: MutableSet<String> = HashSet(folderPaths)
+            newFolderPaths.add(path)
+            val editor = preferences.edit()
+            editor.putStringSet(GAME_FOLDER_PATHS_PREFERENCE, newFolderPaths)
+            editor.apply()
         }
 
         @JvmStatic
