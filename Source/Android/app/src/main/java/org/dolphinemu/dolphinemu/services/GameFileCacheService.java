@@ -162,7 +162,7 @@ public final class GameFileCacheService extends IntentService
   {
     GameFile[] gameFilesTemp = gameFileCache.getAllGames();
     Arrays.sort(gameFilesTemp, (lhs, rhs) -> {
-        int ret = lhs.getGameId().compareToIgnoreCase(rhs.getGameId());
+        int ret = lhs.getTitle().compareToIgnoreCase(rhs.getTitle());
         return ret == 0 ? Integer.compare(lhs.getDiscNumber(), rhs.getDiscNumber()) : ret;
     });
     gameFiles.set(gameFilesTemp);
