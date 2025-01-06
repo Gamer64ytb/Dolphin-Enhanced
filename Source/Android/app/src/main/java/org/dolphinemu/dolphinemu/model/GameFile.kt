@@ -15,6 +15,7 @@ import org.dolphinemu.dolphinemu.NativeLibrary
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.utils.CoverHelper
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization
+import org.dolphinemu.dolphinemu.DolphinApplication
 import java.io.File
 import java.io.FileOutputStream
 import kotlinx.coroutines.CoroutineScope
@@ -102,7 +103,7 @@ class GameFile private constructor(private val pointer: Long) {
 
     private var coverType = COVER_UNKNOWN
 
-    fun loadGameBanner(imageView: ImageView, context: Context) {
+    fun loadGameBanner(imageView: ImageView) {
         if (coverType == COVER_UNKNOWN) {
             if (loadFromCache(imageView)) {
                 coverType = COVER_CACHE
@@ -147,13 +148,13 @@ class GameFile private constructor(private val pointer: Long) {
         return false
     }
 
-    private fun loadFromNetwork(imageView: ImageView, context: Context, callback: Callback) {
+    private fun loadFromNetwork(imageView: ImageView, callback: Callback) {
         CoroutineScope(Dispatchers.Main).launch {
-            val request = ImageRequest.Builder(context)
+            val request = ImageRequest.Builder(DolphinApplication.getAppContext())
                     .data(CoverHelper.buildGameTDBUrl(this, null))
                     .build()
 
-            val result = withContext(Dispatchers.IO) { context.imageLoader.execute(request) }
+            val result = withContext(Dispatchers.IO) { DolphinApplication.getAppContext().imageLoader.execute(request) }
         
             if (result is SuccessResult) {
                 imageView.setImageBitmap((result.image as Image).toBitmap())
