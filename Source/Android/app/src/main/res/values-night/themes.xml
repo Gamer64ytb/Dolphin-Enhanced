@@ -50,6 +50,8 @@
     </style>
 
     <style name="Theme.DolphinEmu.Main" parent="Theme.DolphinEmu">
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowLightNavigationBar">false</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
