@@ -162,8 +162,8 @@ class EditorActivity : AppCompatActivity() {
             var result = ""
             try {
                 response = downloader.newCall(request).execute()
-                if (response != null && response.code() == 200 && response.body() != null) {
-                    result = response.body()!!.string()
+                if (response != null && response.code == 200 && response.body != null) {
+                    result = response.body!!.string()
                 }
             } catch (e: IOException) {
                 // ignore

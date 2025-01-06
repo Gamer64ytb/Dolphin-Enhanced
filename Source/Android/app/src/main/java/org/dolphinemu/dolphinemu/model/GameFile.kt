@@ -6,14 +6,22 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.widget.ImageView
 import androidx.annotation.Keep
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
+import coil3.imageLoader
+import coil3.Image
+import coil3.toBitmap
+import coil3.request.ImageRequest
+import coil3.request.SuccessResult
 import org.dolphinemu.dolphinemu.NativeLibrary
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.utils.CoverHelper
 import org.dolphinemu.dolphinemu.utils.DirectoryInitialization
+import org.dolphinemu.dolphinemu.DolphinApplication
 import java.io.File
 import java.io.FileOutputStream
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Keep
 class GameFile private constructor(private val pointer: Long) {
@@ -141,36 +149,35 @@ class GameFile private constructor(private val pointer: Long) {
     }
 
     private fun loadFromNetwork(imageView: ImageView, callback: Callback) {
-        Picasso.get()
-            .load(CoverHelper.buildGameTDBUrl(this, null))
-            .placeholder(R.drawable.no_banner)
-            .error(R.drawable.no_banner)
-            .into(imageView, object : Callback {
-                override fun onSuccess() {
-                    callback.onSuccess()
-                }
+        GlobalScope.launch(Dispatchers.Main) {
+            val request = ImageRequest.Builder(DolphinApplication.getAppContext())
+                .data(CoverHelper.buildGameTDBUrl(this@GameFile, null))
+                .build()
 
-                override fun onError(e: Exception) {
-                    val id = getGameTdbId()
-                    var region: String? = null
-                    region = if (id.length < 3) {
-                        callback.onError(e)
-                        return
-                    } else if (id[3] != 'E') {
-                        "US"
-                    } else if (id[3] != 'J') {
-                        "JA"
-                    } else {
-                        callback.onError(e)
-                        return
+            val result = withContext(Dispatchers.IO) { DolphinApplication.getAppContext().imageLoader.execute(request) }
+
+            if (result is SuccessResult) {
+                imageView.setImageBitmap((result.image as Image).toBitmap())
+                callback.onSuccess()
+            } else {
+                val id = getGameTdbId()
+                var region: String? = null
+                if (id.length < 3) {
+                    callback.onError(Exception("failed to load game banner"))
+                    return@launch  // Use return@launch to exit from the coroutine
+                } else {
+                    region = when (id[3]) {
+                        'E' -> "US"
+                        'J' -> "JA"
+                        else -> {
+                            callback.onError(Exception("failed to load game banner"))
+                            return@launch  // Return here as well to exit the coroutine
+                        }
                     }
-                    Picasso.get()
-                        .load(CoverHelper.buildGameTDBUrl(this@GameFile, region))
-                        .placeholder(R.drawable.no_banner)
-                        .error(R.drawable.no_banner)
-                        .into(imageView, callback)
                 }
-            })
+                // TODO(Ishan09811): try to load with region once
+            }
+        }
     }
 
     private fun loadFromISO(imageView: ImageView): Boolean {
@@ -200,5 +207,10 @@ class GameFile private constructor(private val pointer: Long) {
 
         @JvmStatic
         external fun parse(path: String): GameFile?
+    }
+
+    interface Callback {
+        fun onSuccess()
+        fun onError(e: Exception)
     }
 }
