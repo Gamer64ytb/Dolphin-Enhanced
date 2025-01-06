@@ -163,14 +163,14 @@ class GameFile private constructor(private val pointer: Long) {
                 val id = getGameTdbId()
                 var region: String? = null
                 region = if (id.length < 3) {
-                    callback.onError(e)
-                    return
+                    callback.onError(Exception("failed to load game banner"))
+                    return@launch
                 } else if (id[3] != 'E') {
                     "US"
                 } else if (id[3] != 'J') {
                     "JA"
                 } else {
-                    callback.onError("failed to load")
+                    callback.onError(Exception("failed to load game banner"))
                 }
             }
         }
@@ -203,5 +203,10 @@ class GameFile private constructor(private val pointer: Long) {
 
         @JvmStatic
         external fun parse(path: String): GameFile?
+    }
+
+    interface Callback {
+        fun onSuccess()
+        fun onError(e: Exception)
     }
 }
