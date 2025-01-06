@@ -18,7 +18,7 @@ import org.dolphinemu.dolphinemu.utils.DirectoryInitialization
 import org.dolphinemu.dolphinemu.DolphinApplication
 import java.io.File
 import java.io.FileOutputStream
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -149,7 +149,7 @@ class GameFile private constructor(private val pointer: Long) {
     }
 
     private fun loadFromNetwork(imageView: ImageView, callback: Callback) {
-        DolphinApplication.getAppContext().CoroutineScope(Dispatchers.Main).launch {
+        GlobalScope(Dispatchers.Main).launch {
             var request = ImageRequest.Builder(DolphinApplication.getAppContext())
                     .data(CoverHelper.buildGameTDBUrl(this, null))
                     .build()
@@ -164,14 +164,14 @@ class GameFile private constructor(private val pointer: Long) {
                 var region: String? = null
                 if (id.length < 3) {
                     callback.onError(Exception("failed to load game banner"))
-                    return@withContext
+                    return@launch
                 } else {
                     region = when (id[3]) {
                         'E' -> "US"
                         'J' -> "JA"
                     } else -> {
                       callback.onError(Exception("failed to load game banner"))
-                      return@withContext
+                      return@launch
                     }
                 }      
                 // TODO(Ishan09811): try to load with region once
