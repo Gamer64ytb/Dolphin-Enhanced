@@ -151,7 +151,7 @@ class GameFile private constructor(private val pointer: Long) {
     private fun loadFromNetwork(imageView: ImageView, callback: Callback) {
         GlobalScope.launch(Dispatchers.Main) {
             val request = ImageRequest.Builder(DolphinApplication.getAppContext())
-                .data(CoverHelper.buildGameTDBUrl(this, null))
+                .data(CoverHelper.buildGameTDBUrl(this@GameFile, null))
                 .build()
 
             val result = withContext(Dispatchers.IO) { DolphinApplication.getAppContext().imageLoader.execute(request) }
