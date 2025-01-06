@@ -27,7 +27,7 @@ import org.dolphinemu.dolphinemu.features.settings.model.view.SingleChoiceSettin
 import org.dolphinemu.dolphinemu.features.settings.model.view.SliderSetting
 import org.dolphinemu.dolphinemu.features.settings.model.view.StringSingleChoiceSetting
 import org.dolphinemu.dolphinemu.features.settings.model.view.SubmenuSetting
-import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.CheckBoxSettingViewHolder
+import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.SwitchSettingViewHolder
 import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.HeaderViewHolder
 import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.InputBindingSettingViewHolder
 import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.RumbleBindingViewHolder
@@ -70,8 +70,8 @@ class SettingsAdapter(private val activity: SettingsActivity) :
             }
 
             SettingsItem.TYPE_CHECKBOX -> {
-                view = inflater.inflate(R.layout.list_item_setting_checkbox, parent, false)
-                return CheckBoxSettingViewHolder(
+                view = inflater.inflate(R.layout.list_item_setting_switch, parent, false)
+                return SwitchSettingViewHolder(
                     view,
                     this
                 )
