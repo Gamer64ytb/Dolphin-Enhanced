@@ -149,12 +149,12 @@ class GameFile private constructor(private val pointer: Long) {
     }
 
     private fun loadFromNetwork(imageView: ImageView, callback: Callback) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val request = ImageRequest.Builder(DolphinApplication.getAppContext())
+        DolphinApplication.getAppContext().CoroutineScope(Dispatchers.Main).launch {
+            var request = ImageRequest.Builder(DolphinApplication.getAppContext())
                     .data(CoverHelper.buildGameTDBUrl(this, null))
                     .build()
 
-            val result = withContext(Dispatchers.IO) { DolphinApplication.getAppContext().imageLoader.execute(request) }
+            var result = withContext(Dispatchers.IO) { DolphinApplication.getAppContext().imageLoader.execute(request) }
         
             if (result is SuccessResult) {
                 imageView.setImageBitmap((result.image as Image).toBitmap())
@@ -162,16 +162,19 @@ class GameFile private constructor(private val pointer: Long) {
             } else {
                 val id = getGameTdbId()
                 var region: String? = null
-                region = if (id.length < 3) {
+                if (id.length < 3) {
                     callback.onError(Exception("failed to load game banner"))
-                    return@launch
-                } else if (id[3] != 'E') {
-                    "US"
-                } else if (id[3] != 'J') {
-                    "JA"
+                    return@withContext
                 } else {
-                    callback.onError(Exception("failed to load game banner"))
-                }
+                    region = when (id[3]) {
+                        'E' -> "US"
+                        'J' -> "JA"
+                    } else -> {
+                      callback.onError(Exception("failed to load game banner"))
+                      return@withContext
+                    }
+                }      
+                // TODO(Ishan09811): try to load with region once
             }
         }
     }
