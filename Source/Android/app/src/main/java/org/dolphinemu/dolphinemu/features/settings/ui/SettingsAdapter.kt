@@ -205,7 +205,12 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         slider.valueFrom = 0f
         slider.valueTo = item.max.toFloat()
         slider.value = seekbarProgress.toFloat()
-        slider.stepSize = 5f
+
+        slider.stepSize = when {
+            item.max > 200 -> 5f
+            item.max > 100 -> 2f
+            else -> 1f
+        }
 
         textSliderValue!!.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
