@@ -13,6 +13,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import org.dolphinemu.dolphinemu.R
@@ -152,7 +153,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedPosition = position
 
         val value = getSelectionForSingleChoiceValue(item)
-        val builder = AlertDialog.Builder(activity)
+        val builder = MaterialAlertDialogBuilder(activity, R.style.MaterialDialog_Material3)
         builder.setTitle(item.nameId)
         builder.setSingleChoiceItems(item.choicesId, value, this)
         dialog = builder.show()
@@ -162,7 +163,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedItem = item
         clickedPosition = position
 
-        val builder = AlertDialog.Builder(activity)
+        val builder = MaterialAlertDialogBuilder(activity, R.style.MaterialDialog_Material3)
         builder.setTitle(item.nameId)
         builder.setSingleChoiceItems(item.choicesId, item.selectValueIndex, this)
         dialog = builder.show()
@@ -180,8 +181,8 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedItem = item
         clickedPosition = position
         seekbarProgress = item.selectedValue
-        val builder = AlertDialog.Builder(activity)
 
+        val builder = MaterialAlertDialogBuilder(activity, R.style.MaterialDialog_Material3)
         val inflater = LayoutInflater.from(activity)
         val view = inflater.inflate(R.layout.dialog_seekbar, null)
         val seekbar = view.findViewById<SeekBar>(R.id.seekbar)
@@ -253,33 +254,29 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedItem = item
         clickedPosition = position
 
-        val dialog = MotionAlertDialog(activity, item)
-        dialog.setTitle(R.string.input_binding)
-        dialog.setMessage(
+        val builder = MaterialAlertDialogBuilder(activity, R.style.MaterialDialog_Material3)
+        builder.setTitle(R.string.input_binding)
+        builder.setMessage(
             getFormatString(
                 if (item is RumbleBindingSetting) R.string.input_rumble_description else R.string.input_binding_description,
                 activity.getString(item.nameId)
             )
         )
-        dialog.setButton(
-            AlertDialog.BUTTON_NEGATIVE, activity.getString(android.R.string.cancel),
-            this
-        )
-        dialog.setButton(
-            AlertDialog.BUTTON_NEUTRAL, activity.getString(R.string.clear)
-        ) { _: DialogInterface?, _: Int ->
-            val preferences =
-                PreferenceManager.getDefaultSharedPreferences(activity)
+        builder.setNegativeButton(android.R.string.cancel, this)
+        builder.setNeutralButton(R.string.clear) { _: DialogInterface?, _: Int ->
+            val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
             item.clearValue()
         }
-        dialog.setOnDismissListener {
+
+        dialog = builder.create()
+        dialog?.setOnDismissListener {
             val setting = StringSetting(item.key, item.section, item.value)
             notifyItemChanged(position)
             activity.putSetting(setting)
             activity.setSettingChanged()
         }
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.show()
+        dialog?.setCanceledOnTouchOutside(false)
+        dialog?.show()
     }
 
     override fun onClick(dialog: DialogInterface, which: Int) {

@@ -1,35 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Inherit from the material theme -->
     <style name="DolphinBase" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Main theme colors -->
-        <!-- Branding color for the app bar -->
         <item name="colorSurface">@color/dolphin</item>
         <item name="colorPrimary">@color/dolphin_accent</item>
         <item name="colorPrimaryDark">@color/dolphin</item>
         <item name="colorAccent">@color/dolphin_accent</item>
 
-        <!-- Material 3 color attributes -->
         <item name="colorPrimaryContainer">@color/dolphin</item>
         <item name="colorOnPrimaryContainer">@color/dolphin_accent</item>
         <item name="colorSecondaryContainer">@color/buttons</item>
         <item name="colorOnSecondaryContainer">@color/dolphin_accent</item>
 
-        <!-- Enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
-    <!-- Same as above, but use default action bar, and mandate margins. -->
     <style name="DolphinSettingsBase" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorSurface">@color/dolphin</item>
         <item name="colorPrimary">@color/dolphin_accent</item>
         <item name="colorPrimaryDark">@color/dolphin</item>
         <item name="colorAccent">@color/dolphin_accent</item>
 
-        <!-- Material 3 color attributes -->
         <item name="colorPrimaryContainer">@color/dolphin</item>
         <item name="colorOnPrimaryContainer">@color/dolphin_accent</item>
         <item name="colorSecondaryContainer">@color/buttons</item>
@@ -43,14 +36,12 @@
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowBackground">@android:color/black</item>
 
-        <!-- Material 3 color attributes -->
         <item name="colorPrimaryContainer">@color/dolphin</item>
         <item name="colorOnPrimaryContainer">@color/dolphin_accent</item>
         <item name="colorSecondaryContainer">@color/buttons</item>
         <item name="colorOnSecondaryContainer">@color/dolphin_accent</item>
     </style>
 
-    <!-- Hax to make Tablayout render icons -->
     <style name="MyCustomTextAppearance" parent="TextAppearance.Material3.ActionBar.Title">
         <item name="textAllCaps">false</item>
     </style>
@@ -73,5 +64,43 @@
     </style>
 
     <style name="TextAppearance"></style>
+
+    <style name="MaterialDialog.Material3" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialDialog.Material3.Title</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MaterialDialog.Material3.Body</item>
+        <item name="android:background">@color/dialog_color</item>
+        <item name="colorSurface">@color/dolphin_background</item>
+
+        <item name="buttonBarPositiveButtonStyle">@style/MaterialDialog.Material3.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/MaterialDialog.Material3.Button</item>
+        <item name="buttonBarNeutralButtonStyle">@style/MaterialDialog.Material3.Button</item>
+    </style>
+
+    <style name="MaterialDialog.Material3.Title" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="MaterialDialog.Material3.Body" parent="MaterialAlertDialog.Material3.Body.Text">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="MaterialDialog.Material3.Button" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/dolphin_accent</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="rippleColor">@color/dolphin_accent_20</item>
+    </style>
 
 </resources>
