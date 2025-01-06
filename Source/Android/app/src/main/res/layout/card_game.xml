@@ -13,8 +13,7 @@
     <RelativeLayout
         android:padding="@dimen/spacing_medium"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/dolphin_background">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/image_game_screen"

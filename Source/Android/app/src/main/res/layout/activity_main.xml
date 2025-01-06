@@ -8,14 +8,12 @@
         android:id="@+id/toolbar_main"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
         app:popupTheme="@style/Theme.MaterialComponents.DayNight"
-        android:background="@color/dolphin"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/grid_games"
-        android:background="@color/dolphin_background"
         android:layout_below="@id/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

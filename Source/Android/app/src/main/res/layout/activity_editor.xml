@@ -2,14 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/dolphin_background">
+                android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
         app:popupTheme="@style/Theme.MaterialComponents.Light"
-        android:background="@color/dolphin"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true" />
@@ -57,8 +55,6 @@
         android:text="@android:string/cancel"
         android:id="@+id/button_cancel"
         style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:backgroundTint="@color/dolphin"
-        android:textColor="@android:color/white"
         android:textAllCaps="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,8 +66,6 @@
         android:text="@string/cheat_list"
         android:id="@+id/button_confirm"
         style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:backgroundTint="@color/dolphin"
-        android:textColor="@android:color/white"
         android:textAllCaps="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
