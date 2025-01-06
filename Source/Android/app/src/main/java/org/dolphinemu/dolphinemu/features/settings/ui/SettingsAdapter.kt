@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.slider.Slider
 import org.dolphinemu.dolphinemu.R
-import org.dolphinemu.dolphinemu.dialogs.MotionAlertDialog
 import org.dolphinemu.dolphinemu.features.settings.model.Settings
 import org.dolphinemu.dolphinemu.features.settings.model.StringSetting
 import org.dolphinemu.dolphinemu.features.settings.model.view.CheckBoxSetting
@@ -184,14 +184,15 @@ class SettingsAdapter(private val activity: SettingsActivity) :
 
         val builder = MaterialAlertDialogBuilder(activity, R.style.MaterialDialog_Material3)
         val inflater = LayoutInflater.from(activity)
-        val view = inflater.inflate(R.layout.dialog_seekbar, null)
-        val seekbar = view.findViewById<SeekBar>(R.id.seekbar)
+        val view = inflater.inflate(R.layout.dialog_sliders, null)
+        val slider = view.findViewById<Slider>(R.id.slider)
 
         builder.setTitle(item.nameId)
         builder.setView(view)
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNeutralButton(R.string.slider_default) { dialog: DialogInterface?, which: Int ->
-            seekbar.progress = item.getDefaultValue()
+            slider.value = item.getDefaultValue().toFloat()
+            seekbarProgress = item.getDefaultValue()
             onClick(dialog!!, which)
         }
         dialog = builder.show()
@@ -201,43 +202,36 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         textSliderValue!!.setText(seekbarProgress.toString())
         textInputLayout!!.suffixText = item.units
 
-        seekbar.max = item.max
-        seekbar.progress = seekbarProgress
-        seekbar.keyProgressIncrement = 5
+        slider.valueFrom = 0f
+        slider.valueTo = item.max.toFloat()
+        slider.value = seekbarProgress.toFloat()
+        slider.stepSize = 5f
 
-        textSliderValue!!.addTextChangedListener( object : TextWatcher {
+        textSliderValue!!.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                val textValue = s.toString().toIntOrNull();
-                // workaround to maintain SDK 24 support
-                // we just use a 0 instead of seekbar.getMin()
+                val textValue = s.toString().toIntOrNull()
                 if (textValue == null || textValue < 0 || textValue > item.max) {
-                    textInputLayout!!.error = "Inappropriate value"
+                    textInputLayout!!.error = activity.getString(R.string.invalid_value)
                 } else {
                     textInputLayout!!.error = null
                     seekbarProgress = textValue
+                    if (slider.value.toInt() != textValue) {
+                        slider.value = textValue.toFloat()
+                    }
                 }
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         })
 
-        seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                // seekBar.max > 128 avoids 5 step skipping for MEM1 & MEM2 Size settings
-                seekbarProgress = if (seekBar.max > 128) ((progress / 5) * 5) else progress
-
-                if (textSliderValue!!.text.toString() != seekBar.toString()) {
-                    textSliderValue!!.setText(seekbarProgress.toString())
-                    textSliderValue!!.setSelection(textSliderValue!!.length())
-                }
+        slider.addOnChangeListener { _, value, fromUser ->
+            val progress = value.toInt()
+            seekbarProgress = progress
+            if (textSliderValue!!.text.toString() != progress.toString()) {
+                textSliderValue!!.setText(progress.toString())
+                textSliderValue!!.setSelection(textSliderValue!!.length())
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-            }
-        })
+        }
     }
 
     fun onSubmenuClick(item: SubmenuSetting) {
