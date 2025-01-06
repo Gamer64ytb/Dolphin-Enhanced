@@ -149,13 +149,13 @@ class GameFile private constructor(private val pointer: Long) {
     }
 
     private fun loadFromNetwork(imageView: ImageView, callback: Callback) {
-        GlobalScope(Dispatchers.Main).launch {
-            var request = ImageRequest.Builder(DolphinApplication.getAppContext())
-                    .data(CoverHelper.buildGameTDBUrl(this, null))
-                    .build()
+        GlobalScope.launch(Dispatchers.Main) {
+            val request = ImageRequest.Builder(DolphinApplication.getAppContext())
+                .data(CoverHelper.buildGameTDBUrl(this, null))
+                .build()
 
-            var result = withContext(Dispatchers.IO) { DolphinApplication.getAppContext().imageLoader.execute(request) }
-        
+            val result = withContext(Dispatchers.IO) { DolphinApplication.getAppContext().imageLoader.execute(request) }
+
             if (result is SuccessResult) {
                 imageView.setImageBitmap((result.image as Image).toBitmap())
                 callback.onSuccess()
@@ -164,16 +164,17 @@ class GameFile private constructor(private val pointer: Long) {
                 var region: String? = null
                 if (id.length < 3) {
                     callback.onError(Exception("failed to load game banner"))
-                    return@launch
+                    return@launch  // Use return@launch to exit from the coroutine
                 } else {
                     region = when (id[3]) {
                         'E' -> "US"
                         'J' -> "JA"
-                    } else -> {
-                      callback.onError(Exception("failed to load game banner"))
-                      return@launch
+                        else -> {
+                            callback.onError(Exception("failed to load game banner"))
+                            return@launch  // Return here as well to exit the coroutine
+                        }
                     }
-                }      
+                }
                 // TODO(Ishan09811): try to load with region once
             }
         }
