@@ -74,12 +74,6 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = mgr
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
 
         showSettingsList(settingsActivity!!.getSettings())
     }
