@@ -153,7 +153,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedPosition = position
 
         val value = getSelectionForSingleChoiceValue(item)
-        val builder = MaterialAlertDialogBuilder(activity, R.style.MaterialDialog_Material3)
+        val builder = MaterialAlertDialogBuilder(activity)
         builder.setTitle(item.nameId)
         builder.setSingleChoiceItems(item.choicesId, value, this)
         dialog = builder.show()
@@ -163,7 +163,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedItem = item
         clickedPosition = position
 
-        val builder = MaterialAlertDialogBuilder(activity, R.style.MaterialDialog_Material3)
+        val builder = MaterialAlertDialogBuilder(activity)
         builder.setTitle(item.nameId)
         builder.setSingleChoiceItems(item.choicesId, item.selectValueIndex, this)
         dialog = builder.show()
@@ -182,7 +182,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedPosition = position
         seekbarProgress = item.selectedValue
 
-        val builder = MaterialAlertDialogBuilder(activity, R.style.MaterialDialog_Material3)
+        val builder = MaterialAlertDialogBuilder(activity)
         val inflater = LayoutInflater.from(activity)
         val view = inflater.inflate(R.layout.dialog_sliders, null)
         val slider = view.findViewById<Slider>(R.id.slider)
@@ -253,7 +253,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedItem = item
         clickedPosition = position
 
-        val builder = MaterialAlertDialogBuilder(activity, R.style.MaterialDialog_Material3)
+        val builder = MaterialAlertDialogBuilder(activity)
         builder.setTitle(R.string.input_binding)
         builder.setMessage(
             getFormatString(
