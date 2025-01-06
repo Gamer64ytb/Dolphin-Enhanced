@@ -43,6 +43,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.io.StringReader
 import java.lang.ref.WeakReference
+import com.google.android.material.materialswitch.MaterialSwitch
 
 class EditorActivity : AppCompatActivity() {
     class CheatEntry {
@@ -278,7 +279,7 @@ class EditorActivity : AppCompatActivity() {
         private val textName: TextView = itemView.findViewById(R.id.text_setting_name)
         private val textDescription: TextView =
             itemView.findViewById(R.id.text_setting_description)
-        private val checkbox: CheckBox = itemView.findViewById(R.id.checkbox)
+        private val switch: MaterialSwitch = itemView.findViewById(R.id.switch_widget)
 
         init {
             itemView.setOnClickListener(this)
@@ -288,12 +289,12 @@ class EditorActivity : AppCompatActivity() {
             model = entry
             textName.text = entry.name
             textDescription.text = entry.info
-            checkbox.isChecked = entry.active
+            switch.isChecked = entry.active
         }
 
         override fun onClick(v: View) {
             toggleCheatEntry(model!!)
-            checkbox.isChecked = model!!.active
+            switch.isChecked = model!!.active
         }
     }
 
@@ -302,7 +303,7 @@ class EditorActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheatEntryViewHolder {
             val inflater = LayoutInflater.from(parent.context)
-            val itemView = inflater.inflate(R.layout.list_item_setting_checkbox, parent, false)
+            val itemView = inflater.inflate(R.layout.list_item_setting_switch, parent, false)
             return CheatEntryViewHolder(itemView)
         }
 
