@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity() {
             binding.settingsIcon.setOnClickListener { launchSettingsActivity(MenuTag.CONFIG) }
         }
 
+        binding.add.setOnClickListener { launchFileListActivity() } // TODO: make it to add games instead of folders
+
         val filter = IntentFilter()
         filter.addAction(GameFileCacheService.BROADCAST_ACTION)
         broadcastReceiver = object : BroadcastReceiver() {
@@ -144,6 +146,13 @@ class MainActivity : AppCompatActivity() {
                 right = rightInsets,
                 bottom = barInsets.bottom
             )
+            val fab = binding.add.layoutParams as MarginLayoutParams
+            val fabPadding = resources.getDimensionPixelSize(R.dimen.spacing_large)
+            fab.leftMargin = leftInsets + fabPadding
+            fab.bottomMargin = barInsets.bottom + fabPadding
+            fab.rightMargin = rightInsets + fabPadding
+            binding.add.layoutParams = fab
+            
             windowInsets
         }
 

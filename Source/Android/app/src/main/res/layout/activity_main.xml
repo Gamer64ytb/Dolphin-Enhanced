@@ -15,7 +15,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:fitsSystemWindows="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,5 +74,13 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>    
+    </androidx.coordinatorlayout.widget.CoordinatorLayout> 
+    
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
