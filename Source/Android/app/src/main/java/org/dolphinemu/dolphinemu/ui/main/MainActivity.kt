@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
             fab.bottomMargin = barInsets.bottom + fabPadding
             fab.rightMargin = rightInsets + fabPadding
             binding.add.layoutParams = fab
-            
+
             windowInsets
         }
 

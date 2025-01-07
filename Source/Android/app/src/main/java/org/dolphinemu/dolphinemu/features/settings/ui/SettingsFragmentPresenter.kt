@@ -76,6 +76,7 @@ class SettingsFragmentPresenter
             MenuTag.CONFIG_GAME_CUBE -> addGameCubeSettings(sl)
             MenuTag.CONFIG_WII -> addWiiSettings(sl)
             MenuTag.GRAPHICS -> addGraphicsSettings(sl)
+            MenuTag.CONFIG_INPUT -> addInputSettings(sl)
             MenuTag.GCPAD_TYPE -> addGcPadSettings(sl)
             MenuTag.WIIMOTE -> addWiimoteSettings(sl)
             MenuTag.ENHANCEMENTS -> addEnhanceSettings(sl)
@@ -105,21 +106,19 @@ class SettingsFragmentPresenter
 
     private fun addConfigSettings(sl: ArrayList<SettingsItem>) {
         sl.add(SubmenuSetting(null, null, R.string.general_submenu, 0, MenuTag.CONFIG_GENERAL))
-        sl.add(
-            SubmenuSetting(
-                null,
-                null,
-                R.string.grid_menu_graphics_settings,
-                0,
-                MenuTag.GRAPHICS
-            )
-        )
+        sl.add(SubmenuSetting(null, null, R.string.interface_submenu, 0, MenuTag.CONFIG_INTERFACE))
+        sl.add(SubmenuSetting(null, null, R.string.grid_menu_graphics_settings, 0, MenuTag.GRAPHICS))
         sl.add(SubmenuSetting(null, null, R.string.enhancements_submenu, 0, MenuTag.ENHANCEMENTS))
         sl.add(SubmenuSetting(null, null, R.string.hacks_submenu, 0, MenuTag.HACKS))
-        sl.add(SubmenuSetting(null, null, R.string.interface_submenu, 0, MenuTag.CONFIG_INTERFACE))
+        sl.add(SubmenuSetting(null, null, R.string.input_submenu, 0, MenuTag.CONFIG_INPUT))
         sl.add(SubmenuSetting(null, null, R.string.gamecube_submenu, 0, MenuTag.CONFIG_GAME_CUBE))
         sl.add(SubmenuSetting(null, null, R.string.wii_submenu, 0, MenuTag.CONFIG_WII))
         sl.add(SubmenuSetting(null, null, R.string.debug_submenu, 0, MenuTag.DEBUG))
+    }
+
+    private fun addInputSettings(sl: ArrayList<SettingsItem>) {
+        sl.add(SubmenuSetting(null, null, R.string.grid_menu_gcpad_settings, 0, MenuTag.GCPAD_TYPE))
+        sl.add(SubmenuSetting(null, null, R.string.grid_menu_wiimote_settings, 0, MenuTag.WIIMOTE))
     }
 
     private fun addGeneralSettings(sl: ArrayList<SettingsItem>) {
