@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.slider.Slider
 import org.dolphinemu.dolphinemu.R
+import org.dolphinemu.dolphinemu.dialogs.MotionAlertDialog
 import org.dolphinemu.dolphinemu.features.settings.model.Settings
 import org.dolphinemu.dolphinemu.features.settings.model.StringSetting
 import org.dolphinemu.dolphinemu.features.settings.model.view.CheckBoxSetting
@@ -50,6 +51,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
     private var seekbarProgress = 0
 
     private var dialog: AlertDialog? = null
+    private var inputDialog: MotionAlertDialog? = null
     private var textSliderValue: TextInputEditText? = null
     private var textInputLayout: TextInputLayout? = null
 
@@ -253,29 +255,35 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedItem = item
         clickedPosition = position
 
-        val builder = MaterialAlertDialogBuilder(activity)
-        builder.setTitle(R.string.input_binding)
-        builder.setMessage(
-            getFormatString(
-                if (item is RumbleBindingSetting) R.string.input_rumble_description else R.string.input_binding_description,
-                activity.getString(item.nameId)
+        // Create custom motion alert dialog that preserves input binding functionality
+        inputDialog = MotionAlertDialog(activity, item).apply {
+            setTitle(R.string.input_binding)
+            setMessage(
+                getFormatString(
+                    if (item is RumbleBindingSetting)
+                        R.string.input_rumble_description
+                    else
+                        R.string.input_binding_description,
+                    activity.getString(item.nameId)
+                )
             )
-        )
-        builder.setNegativeButton(android.R.string.cancel, this)
-        builder.setNeutralButton(R.string.clear) { _: DialogInterface?, _: Int ->
-            val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-            item.clearValue()
+            setButton(DialogInterface.BUTTON_NEGATIVE,
+                activity.getString(android.R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            setButton(DialogInterface.BUTTON_NEUTRAL,
+                activity.getString(R.string.clear)) { _, _ ->
+                item.clearValue()
+            }
+            setOnDismissListener {
+                val setting = StringSetting(item.key, item.section, item.value)
+                notifyItemChanged(position)
+                activity.putSetting(setting)
+                activity.setSettingChanged()
+            }
+            setCanceledOnTouchOutside(false)
         }
-
-        dialog = builder.create()
-        dialog?.setOnDismissListener {
-            val setting = StringSetting(item.key, item.section, item.value)
-            notifyItemChanged(position)
-            activity.putSetting(setting)
-            activity.setSettingChanged()
-        }
-        dialog?.setCanceledOnTouchOutside(false)
-        dialog?.show()
+        inputDialog?.show()
     }
 
     override fun onClick(dialog: DialogInterface, which: Int) {
