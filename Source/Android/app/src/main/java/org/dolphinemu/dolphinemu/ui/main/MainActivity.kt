@@ -46,7 +46,6 @@ import java.util.Arrays
  */
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val divider by lazy { DividerItemDecoration(this, DividerItemDecoration.VERTICAL) }
     private var adapter: GameAdapter? = GameAdapter()
     private var toolbar: Toolbar? = null
     private var broadcastReceiver: BroadcastReceiver? = null
@@ -103,44 +102,17 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private inner class CustomGridLayoutManager(gridSpan : Int) : GridLayoutManager(this, gridSpan) {
-        override fun onRequestChildFocus(parent : RecyclerView, state : RecyclerView.State, child : View, focused : View?) : Boolean {
-            binding.appBarLayout.setExpanded(false)
-            return super.onRequestChildFocus(parent, state, child, focused)
-        }
-
-        override fun onFocusSearchFailed(focused : View, focusDirection : Int, recycler : RecyclerView.Recycler, state : RecyclerView.State) : View? {
-            val nextFocus = super.onFocusSearchFailed(focused, focusDirection, recycler, state)
-            when (focusDirection) {
-                View.FOCUS_DOWN -> {
-                    return null
-                }
-
-                View.FOCUS_UP -> {
-                    if (nextFocus?.isFocusable != true) {
-                        binding.appBarLayout.setExpanded(true)
-                        binding.gridGames.smoothScrollToPosition(0)
-                        return null
-                    }
-                }
-            }
-            return nextFocus
-        }
-    }
-
     private fun refreshGameList(flag: Boolean) {
         val resourceId: Int
         var columns = resources.getInteger(R.integer.game_grid_columns)
         val layoutManager: RecyclerView.LayoutManager
         if (flag) {
             resourceId = R.layout.card_game
-            layoutManager = CustomGridLayoutManager(columns)
-            binding.gridGames.addItemDecoration(divider)
+            layoutManager = GridLayoutManager(this, columns)
         } else {
             columns = columns * 2 + 1
             resourceId = R.layout.card_game2
-            layoutManager = CustomGridLayoutManager(columns)
-            binding.gridGames.removeItemDecoration(divider)
+            layoutManager = GridLayoutManager(this, columns)
         }
         adapter!!.setResourceId(resourceId)
         binding.gridGames.layoutManager = layoutManager
