@@ -8,7 +8,9 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.Menu
+import android.view.View
 import android.view.MenuItem
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.activities.EmulationActivity.Companion.launch
 import org.dolphinemu.dolphinemu.adapters.GameAdapter
@@ -30,6 +36,7 @@ import org.dolphinemu.dolphinemu.utils.FileBrowserHelper
 import org.dolphinemu.dolphinemu.utils.PermissionsHandler
 import org.dolphinemu.dolphinemu.utils.StartupHandler
 import org.dolphinemu.dolphinemu.utils.ThemeUtil
+import org.dolphinemu.dolphinemu.databinding.ActivityMainBinding
 import java.io.File
 import java.util.Arrays
 
@@ -38,9 +45,9 @@ import java.util.Arrays
  * individually display a grid of available games for each Fragment, in a tabbed layout.
  */
 class MainActivity : AppCompatActivity() {
-    private var divider: DividerItemDecoration? = null
-    private var gameList: RecyclerView? = null
-    private var adapter: GameAdapter? = null
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val divider by lazy { DividerItemDecoration(this, DividerItemDecoration.VERTICAL) }
+    private var adapter: GameAdapter? = GameAdapter()
     private var toolbar: Toolbar? = null
     private var broadcastReceiver: BroadcastReceiver? = null
     private var dirToAdd: String? = null
@@ -49,11 +56,17 @@ class MainActivity : AppCompatActivity() {
         ThemeUtil.applyTheme()
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        findViews()
-        setSupportActionBar(toolbar)
-        title = String(TITLE_BYTES)
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        binding.gridGames.setAdapter(adapter)
+        refreshGameList(pref.getBoolean(PREF_GAMELIST, true))
+
+        binding.appBarLayout.apply {
+            binding.listingType.setOnClickListener { toggleGameList() }
+            binding.settingsIcon.setOnClickListener { launchSettingsActivity(MenuTag.CONFIG) }
+        }
 
         val filter = IntentFilter()
         filter.addAction(GameFileCacheService.BROADCAST_ACTION)
@@ -71,6 +84,7 @@ class MainActivity : AppCompatActivity() {
             showGames()
             GameFileCacheService.startLoad(this)
         }
+        setInsets()
     }
 
     override fun onResume() {
@@ -89,15 +103,29 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    // TODO: Replace with a ButterKnife injection.
-    private fun findViews() {
-        val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        toolbar = findViewById(R.id.toolbar_main)
-        gameList = findViewById(R.id.grid_games)
-        adapter = GameAdapter()
-        gameList!!.setAdapter(adapter)
-        refreshGameList(pref.getBoolean(PREF_GAMELIST, true))
+    private inner class CustomGridLayoutManager(gridSpan : Int) : GridLayoutManager(this, gridSpan) {
+        override fun onRequestChildFocus(parent : RecyclerView, state : RecyclerView.State, child : View, focused : View?) : Boolean {
+            binding.appBarLayout.setExpanded(false)
+            return super.onRequestChildFocus(parent, state, child, focused)
+        }
+
+        override fun onFocusSearchFailed(focused : View, focusDirection : Int, recycler : RecyclerView.Recycler, state : RecyclerView.State) : View? {
+            val nextFocus = super.onFocusSearchFailed(focused, focusDirection, recycler, state)
+            when (focusDirection) {
+                View.FOCUS_DOWN -> {
+                    return null
+                }
+
+                View.FOCUS_UP -> {
+                    if (nextFocus?.isFocusable != true) {
+                        binding.appBarLayout.setExpanded(true)
+                        binding.gridGames.smoothScrollToPosition(0)
+                        return null
+                    }
+                }
+            }
+            return nextFocus
+        }
     }
 
     private fun refreshGameList(flag: Boolean) {
@@ -106,16 +134,16 @@ class MainActivity : AppCompatActivity() {
         val layoutManager: RecyclerView.LayoutManager
         if (flag) {
             resourceId = R.layout.card_game
-            layoutManager = GridLayoutManager(this, columns)
-            gameList!!.addItemDecoration(divider!!)
+            layoutManager = CustomGridLayoutManager(columns)
+            binding.gridGames.addItemDecoration(divider)
         } else {
             columns = columns * 2 + 1
             resourceId = R.layout.card_game2
-            layoutManager = GridLayoutManager(this, columns)
-            gameList!!.removeItemDecoration(divider!!)
+            layoutManager = CustomGridLayoutManager(columns)
+            binding.gridGames.removeItemDecoration(divider)
         }
         adapter!!.setResourceId(resourceId)
-        gameList!!.layoutManager = layoutManager
+        binding.gridGames.layoutManager = layoutManager
     }
 
     private fun toggleGameList() {
@@ -125,57 +153,27 @@ class MainActivity : AppCompatActivity() {
         refreshGameList(flag)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_game_grid, menu)
-        return true
-    }
+    private fun setInsets() =
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.root
+        ) { view: View, windowInsets: WindowInsetsCompat ->
+            val barInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val cutoutInsets = windowInsets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            val leftInsets = barInsets.left + cutoutInsets.left
+            val rightInsets = barInsets.right + cutoutInsets.right
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_add_directory -> {
-                launchFileListActivity()
-                return true
-            }
+            val appBar = binding.appBarLayout.layoutParams as MarginLayoutParams
+            appBar.leftMargin = leftInsets
+            appBar.rightMargin = rightInsets
+            binding.appBarLayout.layoutParams = appBar
 
-            R.id.menu_toggle_list -> {
-                toggleGameList()
-                return true
-            }
-
-            R.id.menu_settings_core -> {
-                launchSettingsActivity(MenuTag.CONFIG)
-                return true
-            }
-
-            R.id.menu_settings_gcpad -> {
-                launchSettingsActivity(MenuTag.GCPAD_TYPE)
-                return true
-            }
-
-            R.id.menu_settings_wiimote -> {
-                launchSettingsActivity(MenuTag.WIIMOTE)
-                return true
-            }
-
-            R.id.menu_clear_data -> {
-                clearGameData(this)
-                return true
-            }
-
-            R.id.menu_refresh -> {
-                GameFileCacheService.startRescan(this)
-                return true
-            }
-
-            R.id.menu_open_file -> {
-                launchOpenFileActivity()
-                return true
-            }
+            binding.gridGames.updatePadding(
+                left = leftInsets,
+                right = rightInsets,
+                bottom = barInsets.bottom
+            )
+            windowInsets
         }
-
-        return false
-    }
 
     private fun launchSettingsActivity(menuTag: MenuTag?) {
         SettingsActivity.launch(this, menuTag, "")
@@ -308,23 +306,6 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_OPEN_FILE = 2
         const val REQUEST_GPU_DRIVER = 3
         private const val PREF_GAMELIST = "GAME_LIST_TYPE"
-        private val TITLE_BYTES = byteArrayOf(
-            0x44,
-            0x6f,
-            0x6c,
-            0x70,
-            0x68,
-            0x69,
-            0x6e,
-            0x20,
-            0x35,
-            0x2e,
-            0x30,
-            0x28,
-            0x4d,
-            0x4d,
-            0x4a,
-            0x29
-        )
+        private val TITLE_BYTES = "Dolphin Enhanced" // TODO: it will be dynamic based on the version
     }
 }
