@@ -472,5 +472,6 @@ It can efficiently compress both junk data and encrypted Wii data.
     <string name="invalid_value">Invalid Value</string>
 
     <string name="input_submenu">Input</string>
+    <string name="build_version">1.2</string>
 
 </resources>
