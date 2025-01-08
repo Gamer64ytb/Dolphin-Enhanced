@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.View
 import android.view.MenuItem
 import android.view.ViewGroup.MarginLayoutParams
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -65,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         binding.appBarLayout.apply {
             binding.listingType.setOnClickListener { toggleGameList() }
             binding.settingsIcon.setOnClickListener { launchSettingsActivity(MenuTag.CONFIG) }
+            binding.moreOptions.setOnClickListener { showMoreOptions(it) }
         }
 
         binding.add.setOnClickListener { launchFileListActivity() } // TODO: make it to add games instead of folders
@@ -280,6 +282,26 @@ class MainActivity : AppCompatActivity() {
 
     fun showGames() {
         adapter!!.swapDataSet(GameFileCacheService.getAllGameFiles())
+    }
+
+    private fun showMoreOptions(view: View) {
+        PopupMenu(this, view).apply {
+            menuInflater.inflate(R.menu.menu_main_more, menu)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_open_file -> {
+                        launchOpenFileActivity()
+                        true
+                    }
+                    R.id.menu_clear_cache -> {
+                        clearGameData(this@MainActivity)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            show()
+        }
     }
 
     companion object {
