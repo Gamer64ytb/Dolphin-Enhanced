@@ -57,7 +57,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/listing_type"
-                    style="@style/Widget.Material3.Button.IconButton"
+                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="8dp"
@@ -65,7 +65,7 @@
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     app:icon="@drawable/ic_grid"
-                    app:iconTint="?attr/colorOnSurface"
+                    app:iconTint="?attr/colorOnSurfaceVariant"
                     app:iconPadding="0dp"
                     app:layout_constraintEnd_toStartOf="@id/settings_icon"
                     app:layout_constraintTop_toTopOf="@id/title_container"
@@ -73,7 +73,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/settings_icon"
-                    style="@style/Widget.Material3.Button.IconButton"
+                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="8dp"
@@ -81,7 +81,7 @@
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     app:icon="@drawable/ic_settings"
-                    app:iconTint="?attr/colorOnSurface"
+                    app:iconTint="?attr/colorOnSurfaceVariant"
                     app:iconPadding="0dp"
                     app:layout_constraintEnd_toStartOf="@id/more_options"
                     app:layout_constraintTop_toTopOf="@id/title_container"
@@ -89,7 +89,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/more_options"
-                    style="@style/Widget.Material3.Button.IconButton"
+                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="8dp"
@@ -97,7 +97,7 @@
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     app:icon="@drawable/ic_more"
-                    app:iconTint="?attr/colorOnSurface"
+                    app:iconTint="?attr/colorOnSurfaceVariant"
                     app:iconPadding="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/title_container"
