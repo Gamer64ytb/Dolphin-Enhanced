@@ -2,10 +2,11 @@
 <resources>
 
     <!-- Title of the app -->
-    <string name="app_name">Dolphin Enhanced</string>
-    <string name="app_name_version">v1.1.1</string>
-    <string name="host">app</string>
-    <string name="scheme">dolphinemu</string>
+    <string name="app_name" translatable="false">Dolphin</string>
+    <string name="app_name_main" translatable="false">Dolphin Enhanced</string>
+    <string name="app_name_version" translatable="false">v1.1.1</string>
+    <string name="host" translatable="false">app</string>
+    <string name="scheme" translatable="false">dolphinemu</string>
 
     <!-- WARNING Do not move these controller entries AT ALL COSTS! They are indexed with ints, and an assumption
             is made that they are placed together so that we can access them sequentially in a loop. -->

@@ -246,6 +246,9 @@
                     app:iconGravity="textStart" />
 
             </LinearLayout>
-        </RelativeLayout>    
+
+        </RelativeLayout>
+
     </androidx.core.widget.NestedScrollView>
+
 </LinearLayout>
