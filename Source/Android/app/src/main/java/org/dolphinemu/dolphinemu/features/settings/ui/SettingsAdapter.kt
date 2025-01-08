@@ -255,7 +255,6 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedItem = item
         clickedPosition = position
 
-        // Create custom motion alert dialog that preserves input binding functionality
         inputDialog = MotionAlertDialog(activity, item).apply {
             setTitle(R.string.input_binding)
             setMessage(
