@@ -208,15 +208,17 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         slider.valueTo = item.max.toFloat()
         slider.value = seekbarProgress.toFloat()
 
+        // 128 avoids 5 step skipping on MEM2 Size setting
         slider.stepSize = when {
-            item.max > 200 -> 5f
-            item.max > 100 -> 2f
+            item.max > 128 -> 5f
             else -> 1f
         }
 
         textSliderValue!!.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 val textValue = s.toString().toIntOrNull()
+                // workaround to maintain SDK 24 support
+                // we just use textValue < 0 instead of textValue < seekbar.getMin()
                 if (textValue == null || textValue < 0 || textValue > item.max) {
                     textInputLayout!!.error = activity.getString(R.string.invalid_value)
                 } else {
@@ -231,7 +233,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         })
 
-        slider.addOnChangeListener { _, value, fromUser ->
+        slider.addOnChangeListener { _, value, _ ->
             val progress = value.toInt()
             seekbarProgress = progress
             if (textSliderValue!!.text.toString() != progress.toString()) {

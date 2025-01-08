@@ -50,9 +50,10 @@
                         android:id="@+id/version_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/build_version"
+                        android:text="@string/app_name_version"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:textSize="12sp" />
+
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -107,6 +108,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/title_container" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -115,6 +117,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -124,4 +127,5 @@
         android:src="@drawable/ic_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

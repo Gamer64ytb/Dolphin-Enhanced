@@ -48,7 +48,6 @@ import java.util.Arrays
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private var adapter: GameAdapter? = GameAdapter()
-    private var toolbar: Toolbar? = null
     private var broadcastReceiver: BroadcastReceiver? = null
     private var dirToAdd: String? = null
 
@@ -57,7 +56,10 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        setInsets()
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         binding.gridGames.setAdapter(adapter)
@@ -69,7 +71,8 @@ class MainActivity : AppCompatActivity() {
             binding.moreOptions.setOnClickListener { showMoreOptions(it) }
         }
 
-        binding.add.setOnClickListener { launchFileListActivity() } // TODO: make it to add games instead of folders
+        // TODO: make it to add games instead of folders
+        binding.add.setOnClickListener { launchFileListActivity() }
 
         val filter = IntentFilter()
         filter.addAction(GameFileCacheService.BROADCAST_ACTION)
@@ -87,7 +90,6 @@ class MainActivity : AppCompatActivity() {
             showGames()
             GameFileCacheService.startLoad(this)
         }
-        setInsets()
     }
 
     override fun onResume() {
@@ -132,7 +134,7 @@ class MainActivity : AppCompatActivity() {
     private fun setInsets() =
         ViewCompat.setOnApplyWindowInsetsListener(
             binding.root
-        ) { view: View, windowInsets: WindowInsetsCompat ->
+        ) { _: View, windowInsets: WindowInsetsCompat ->
             val barInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             val cutoutInsets = windowInsets.getInsets(WindowInsetsCompat.Type.displayCutout())
             val leftInsets = barInsets.left + cutoutInsets.left
@@ -289,12 +291,25 @@ class MainActivity : AppCompatActivity() {
             menuInflater.inflate(R.menu.menu_main_more, menu)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.menu_open_file -> {
-                        launchOpenFileActivity()
+                    R.id.menu_settings_gcpad -> {
+                        launchSettingsActivity(MenuTag.GCPAD_TYPE)
                         true
                     }
-                    R.id.menu_clear_cache -> {
-                        clearGameData(this@MainActivity)
+                    R.id.menu_settings_wiimote -> {
+                        launchSettingsActivity(MenuTag.WIIMOTE)
+                        true
+                    }
+                    R.id.menu_clear_data -> {
+                        clearGameData(view.context)
+                        true
+                    }
+                    R.id.menu_refresh -> {
+                        GameFileCacheService.startRescan(view.context)
+                        true
+                    }
+
+                    R.id.menu_open_file -> {
+                        launchOpenFileActivity()
                         true
                     }
                     else -> false
@@ -309,6 +324,5 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_OPEN_FILE = 2
         const val REQUEST_GPU_DRIVER = 3
         private const val PREF_GAMELIST = "GAME_LIST_TYPE"
-        private val TITLE_BYTES = "Dolphin Enhanced" // TODO: it will be dynamic based on the version
     }
 }

@@ -116,7 +116,6 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
             titles[MenuTag.CONFIG] = R.string.preferences_settings
             titles[MenuTag.CONFIG_GENERAL] = R.string.general_submenu
             titles[MenuTag.CONFIG_INTERFACE] = R.string.interface_submenu
-            titles[MenuTag.CONFIG_INPUT] = R.string.input_submenu
             titles[MenuTag.CONFIG_GAME_CUBE] = R.string.gamecube_submenu
             titles[MenuTag.CONFIG_WII] = R.string.wii_submenu
             titles[MenuTag.WIIMOTE] = R.string.grid_menu_wiimote_settings
@@ -125,7 +124,7 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
             titles[MenuTag.GCPAD_TYPE] =
                 R.string.grid_menu_gcpad_settings
             titles[MenuTag.GRAPHICS] =
-                R.string.grid_menu_graphics_settings
+                R.string.graphics_submenu
             titles[MenuTag.HACKS] = R.string.hacks_submenu
             titles[MenuTag.DEBUG] = R.string.debug_submenu
             titles[MenuTag.ENHANCEMENTS] = R.string.enhancements_submenu

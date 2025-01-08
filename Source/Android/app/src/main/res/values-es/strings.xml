@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Title of the app -->
-    <string name="app_name">Dolphin</string>
-    <string name="app_name_version">Dolphin %1$s</string>
+    <string name="app_name">Dolphin Enhanced</string>
+    <string name="app_name_version">v1.1.1</string>
     <string name="host">app</string>
     <string name="scheme">dolphinemu</string>
 
@@ -192,7 +192,7 @@
     <string name="osd_messages_description">Mostrar mensajes sobre el área de la pantalla de emulación. Estos mensajes incluyen escrituras en la tarjeta de memoria, el backend de video y la información de la CPU, y la limpieza de la caché de JIT.</string>
 
     <!-- Graphics Settings -->
-    <string name="graphics_general">General</string>
+    <string name="graphics_submenu">Gráficos</string>
 
     <!-- Video Preference Fragment -->
     <string name="video_backend">Backend de video</string>
@@ -294,10 +294,10 @@
     <string name="clear">Borrar</string>
     <string name="other">Otro</string>
     <string name="slider_default">Predeterminado</string>
+    <string name="invalid_value">Valor inválido</string>
 
     <!-- Game Grid Screen-->
     <string name="grid_menu_config">Configuración</string>
-    <string name="grid_menu_graphics_settings">Configuración de gráficos</string>
     <string name="grid_menu_gcpad_settings">Entrada de GameCube</string>
     <string name="grid_menu_wiimote_settings">Entrada de Wii</string>
     <string name="grid_menu_refresh">Actualizar biblioteca</string>
