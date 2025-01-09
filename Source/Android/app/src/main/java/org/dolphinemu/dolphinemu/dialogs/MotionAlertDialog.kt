@@ -10,6 +10,7 @@ import org.dolphinemu.dolphinemu.features.settings.model.view.InputBindingSettin
 import org.dolphinemu.dolphinemu.utils.ControllerMappingHelper
 import org.dolphinemu.dolphinemu.utils.Log
 import com.google.android.material.R as MaterialR
+import com.google.android.material.resources.MaterialAttributes
 import kotlin.math.abs
 
 /**
@@ -25,7 +26,7 @@ class MotionAlertDialog
  */(
     context: Context?, // The selected input preference
     private val setting: InputBindingSetting
-) : AlertDialog(context!!, MaterialR.style.ThemeOverlay_Material3_MaterialAlertDialog) {
+) : AlertDialog(context!!, MaterialAttributes.resolve(context!!, MaterialR.attr.materialAlertDialogTheme)) {
     private val previousValues = ArrayList<Float>()
     private var prevDeviceId = 0
     private var waitingForEvent = true
