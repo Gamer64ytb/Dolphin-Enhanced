@@ -50,14 +50,26 @@
         <item name="colorOnErrorContainer">@color/m3_sys_color_light_on_error_container</item>
     </style>
 
-    <style name="Theme.DolphinEmu.Main" parent="Theme.DolphinEmu">
+    <style name="Base.DolphinEmu" parent="Theme.DolphinEmu">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:enforceStatusBarContrast">false</item>
         <item name="android:enforceNavigationBarContrast">false</item>
+
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+
+        <item name="alertDialogTheme">@style/ThemeOverlay.DolphinEnhanced.MaterialAlertDialog</item>
+    </style>
+
+    <style name="Theme.DolphinEmu.Main" parent="Base.DolphinEmu">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+    <style name="ThemeOverlay.DolphinEnhanced.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="dialogCornerRadius">28dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="android:colorBackground">?attr/colorSurface</item>
     </style>
 
 </resources>
