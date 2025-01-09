@@ -49,13 +49,8 @@
         <item name="colorOnErrorContainer">@color/m3_sys_color_dark_on_error_container</item>
     </style>
 
-    <style name="Theme.DolphinEmu.Main" parent="Theme.DolphinEmu">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:enforceStatusBarContrast">false</item>
-        <item name="android:enforceNavigationBarContrast">false</item>
+    <style name="Theme.DolphinEmu.Main" parent="Base.DolphinEmu">
         <item name="android:windowLightNavigationBar">false</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 </resources>
