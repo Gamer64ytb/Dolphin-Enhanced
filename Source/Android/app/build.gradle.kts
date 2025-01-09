@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.20"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
 }
 
 android {
@@ -91,7 +91,7 @@ android {
         }
     }
 
-    packagingOptions {
+    packaging {
         jniLibs.useLegacyPackaging = true
     }
 
@@ -104,7 +104,7 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("io.coil-kt.coil3:coil:3.0.4")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
 }
 
 fun getVersion(): String {
