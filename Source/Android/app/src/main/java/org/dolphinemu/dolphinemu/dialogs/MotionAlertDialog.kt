@@ -26,7 +26,7 @@ class MotionAlertDialog
  */(
     context: Context?, // The selected input preference
     private val setting: InputBindingSetting
-) : AlertDialog(context!!, MaterialAttributes.resolve(context!!, MaterialR.attr.materialAlertDialogTheme)) {
+) : AlertDialog(context!!, MaterialAttributes.resolve(context!!, MaterialR.attr.materialAlertDialogTheme).data) {
     private val previousValues = ArrayList<Float>()
     private var prevDeviceId = 0
     private var waitingForEvent = true
