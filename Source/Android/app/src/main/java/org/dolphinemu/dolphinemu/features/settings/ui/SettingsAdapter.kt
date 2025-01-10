@@ -219,7 +219,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
                 val textValue = s.toString().toIntOrNull()
                 // workaround to maintain SDK 24 support
                 // we just use textValue < 0 instead of textValue < seekbar.getMin()
-                if (textValue == null || textValue < 0 || textValue > item.max) {
+                if (textValue == null || textValue < 0 || textValue > item.max || textValue % slider.stepSize.toInt() != 0) {
                     textInputLayout!!.error = activity.getString(R.string.invalid_value)
                 } else {
                     textInputLayout!!.error = null
