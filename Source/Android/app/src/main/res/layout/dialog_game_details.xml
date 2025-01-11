@@ -1,317 +1,254 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent">
 
-    <RelativeLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="14dp"
-        android:paddingBottom="32dp">
+        android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/bottom_sheet_pull_indicator"
-            android:layout_width="32dp"
-            android:layout_height="4dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"
-            android:alpha="0.4"
-            android:background="@drawable/bottom_sheet_pull_indicator" />
-
-        <ImageView
-            android:id="@+id/image_game_screen"
-            android:layout_width="105dp"
-            android:layout_height="150dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/bottom_sheet_pull_indicator"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="6dp"
-            android:layout_marginBottom="16dp"
-            android:contentDescription="@string/game_platform_wii"
-            android:scaleType="fitCenter"
-            android:src="@drawable/no_banner" />
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/image_game_screen"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@id/image_game_screen"
-            android:orientation="vertical"
-            tools:layout_alignParentEnd="false">
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp">
 
-            <TextView
-                android:id="@+id/text_game_title"
-                style="@style/TextAppearance.Material3.HeadlineSmall"
+            <View
+                android:id="@+id/bottom_sheet_pull_indicator"
+                android:layout_width="32dp"
+                android:layout_height="4dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:alpha="0.4"
+                android:background="@drawable/bottom_sheet_pull_indicator" />
+
+            <ImageView
+                android:id="@+id/image_game_screen"
+                android:layout_width="105dp"
+                android:layout_height="150dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/bottom_sheet_pull_indicator"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/game_platform_wii"
+                android:scaleType="fitCenter"
+                android:src="@drawable/no_banner" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:fontFamily="sans-serif"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp"
-                android:textAlignment="gravity"
-                android:textColor="@color/dolphin_accent"
-                android:textSize="20sp" />
+                android:layout_alignTop="@id/image_game_screen"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/image_game_screen"
+                android:orientation="vertical"
+                tools:layout_alignParentEnd="false">
 
-            <TextView
-                android:id="@+id/text_game_filename"
-                style="@style/TextAppearance.MaterialComponents.Body2"
+                <TextView
+                    android:id="@+id/text_game_title"
+                    style="@style/TextAppearance.Material3.HeadlineSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:fontFamily="sans-serif"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:textAlignment="gravity"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/text_game_filename"
+                    style="@style/TextAppearance.MaterialComponents.Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="2dp"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/text_game_file_format"
+                    style="@style/TextAppearance.MaterialComponents.Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="2dp"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/play"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:fontFamily="sans-serif-medium"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp"
-                android:paddingBottom="2dp"
-                android:textColor="@color/dolphin_accent"
-                android:textSize="12sp" />
+                android:layout_alignBottom="@id/image_game_screen"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/image_game_screen"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_play"
+                    style="@style/Widget.Material3.Button.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:focusedByDefault="true"
+                    android:text="@string/play"
+                    app:icon="@drawable/ic_play" />
+
+                <Button
+                    android:id="@+id/button_game_setting"
+                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center"
+                    app:icon="@drawable/ic_settings"
+                    app:iconGravity="textStart" />
+
+                <Button
+                    android:id="@+id/button_shortcut"
+                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center"
+                    app:icon="@drawable/ic_shortcut"
+                    app:iconGravity="textStart" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/text_game_file_format"
-                style="@style/TextAppearance.MaterialComponents.Body2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:fontFamily="sans-serif-medium"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp"
-                android:paddingBottom="2dp"
-                android:textColor="@color/dolphin_accent"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/play"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/image_game_screen"
-            android:layout_marginTop="8dp"
-            android:layout_toEndOf="@id/image_game_screen"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button_play"
-                style="@style/Widget.Material3.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:backgroundTint="@color/dolphin_background"
-                android:gravity="center"
-                android:stateListAnimator="@null"
-                android:text="@string/play"
-                android:textAlignment="center"
-                android:textAppearance="@style/MyCustomTextAppearance"
-                android:textColor="@color/dolphin_accent"
-                android:textSize="12sp"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_play"
-                app:iconGravity="textStart"
-                app:iconPadding="14dp"
-                app:iconTint="@color/dolphin_accent" />
+                android:layout_below="@id/play"
+                android:layout_marginTop="1dp"
+                android:fontFamily="sans-serif-light"
+                android:padding="8dp"
+                android:text="@string/input_settings"
+                android:textSize="12sp" />
 
-            <Button
-                android:id="@+id/button_game_setting"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="48dp"
+            <LinearLayout
+                android:id="@+id/first_linear_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:backgroundTint="@color/buttons"
-                android:gravity="center"
-                android:stateListAnimator="@null"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_settings"
-                app:iconGravity="textStart"
-                app:iconTint="@color/dolphin_accent" />
+                android:layout_below="@id/play"
+                android:layout_marginTop="26dp"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-            <Button
-                android:id="@+id/button_shortcut"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="48dp"
+                <Button
+                    android:id="@+id/button_gcpad_settings"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="99dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    app:icon="@drawable/ic_gamecube"
+                    app:iconGravity="textStart" />
+
+                <Button
+                    android:id="@+id/button_wiimote_settings"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="99dp"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    app:cornerRadius="24dp"
+                    app:icon="@drawable/ic_wiimote"
+                    app:iconGravity="textStart" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:backgroundTint="@color/buttons"
-                android:gravity="center"
-                android:stateListAnimator="@null"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_shortcut"
-                app:iconGravity="textStart"
-                app:iconTint="@color/dolphin_accent" />
+                android:layout_below="@id/first_linear_layout"
+                android:fontFamily="sans-serif-light"
+                android:padding="8dp"
+                android:text="@string/other_buttons_section"
+                android:textSize="12sp" />
 
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/play"
-            android:layout_marginTop="1dp"
-            android:fontFamily="sans-serif-light"
-            android:padding="8dp"
-            android:text="@string/input_settings"
-            android:textColor="@color/dolphin_accent"
-            android:textSize="12sp" />
-
-        <LinearLayout
-            android:id="@+id/first_linear_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/play"
-            android:layout_marginTop="26dp"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <Button
-                android:id="@+id/button_gcpad_settings"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="99dp"
+            <LinearLayout
+                android:id="@+id/second_linear_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:backgroundTint="@color/buttons"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:stateListAnimator="@null"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_gamecube"
-                app:iconGravity="textStart"
-                app:iconTint="@color/dolphin_accent" />
+                android:layout_below="@id/first_linear_layout"
+                android:layout_marginTop="26dp"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-            <Button
-                android:id="@+id/button_wiimote_settings"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="99dp"
+                <Button
+                    android:id="@+id/button_convert"
+                    style="@style/Widget.Material3.Button.TonalButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:text="@string/convert"
+                    app:icon="@drawable/ic_convert_file"
+                    app:iconGravity="textStart" />
+
+                <Button
+                    android:id="@+id/button_quick_load"
+                    style="@style/Widget.Material3.Button.TonalButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:text="@string/emulation_quickload"
+                    app:icon="@drawable/ic_quickload"
+                    app:iconGravity="textStart" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/third_linear_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/buttons"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_wiimote"
-                app:iconGravity="textStart"
-                app:iconTint="@color/dolphin_accent" />
+                android:layout_below="@id/second_linear_layout"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/button_cheat_code"
+                    style="@style/Widget.Material3.Button.TonalButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:text="@string/cheats"
+                    app:icon="@drawable/ic_cheat_code"
+                    app:iconGravity="textStart" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/first_linear_layout"
-            android:fontFamily="sans-serif-light"
-            android:padding="8dp"
-            android:text="@string/other_buttons_section"
-            android:textColor="@color/dolphin_accent"
-            android:textSize="12sp" />
+                <Button
+                    android:id="@+id/button_delete_setting"
+                    style="@style/Widget.Material3.Button.TonalButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:text="@string/delete_game_setting"
+                    app:icon="@drawable/ic_settings_delete"
+                    app:iconGravity="textStart" />
 
-        <LinearLayout
-            android:id="@+id/second_linear_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/first_linear_layout"
-            android:layout_marginTop="26dp"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/button_convert"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="138dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:backgroundTint="@color/buttons"
-                android:fontFamily="sans-serif"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:stateListAnimator="@null"
-                android:text="@string/convert"
-                android:textAlignment="center"
-                android:textAppearance="@style/MyCustomTextAppearance"
-                android:textColor="@color/dolphin_accent"
-                android:textSize="12sp"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_convert_file"
-                app:iconGravity="textStart"
-                app:iconPadding="14dp"
-                app:iconTint="@color/dolphin_accent" />
+        </RelativeLayout>
 
-            <Button
-                android:id="@+id/button_quick_load"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="173dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/buttons"
-                android:fontFamily="sans-serif"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:stateListAnimator="@null"
-                android:text="@string/emulation_quickload"
-                android:textAlignment="center"
-                android:textAppearance="@style/MyCustomTextAppearance"
-                android:textColor="@color/dolphin_accent"
-                android:textSize="12sp"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_quickload"
-                app:iconGravity="textStart"
-                app:iconPadding="14dp"
-                app:iconTint="@color/dolphin_accent" />
+    </androidx.core.widget.NestedScrollView>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/third_linear_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/second_linear_layout"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <Button
-                android:id="@+id/button_cheat_code"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="138dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:backgroundTint="@color/buttons"
-                android:fontFamily="sans-serif"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:stateListAnimator="@null"
-                android:text="@string/cheats"
-                android:textAlignment="center"
-                android:textAppearance="@style/MyCustomTextAppearance"
-                android:textColor="@color/dolphin_accent"
-                android:textSize="12sp"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_cheat_code"
-                app:iconGravity="textStart"
-                app:iconPadding="14dp"
-                app:iconTint="@color/dolphin_accent" />
-
-            <Button
-                android:id="@+id/button_delete_setting"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="173dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/buttons"
-                android:fontFamily="sans-serif"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:stateListAnimator="@null"
-                android:text="@string/delete_game_setting"
-                android:textAlignment="center"
-                android:textAppearance="@style/MyCustomTextAppearance"
-                android:textColor="@color/dolphin_accent"
-                android:textSize="12sp"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_settings_delete"
-                app:iconGravity="textStart"
-                app:iconPadding="14dp"
-                app:iconTint="@color/dolphin_accent" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-</ScrollView>
+</LinearLayout>

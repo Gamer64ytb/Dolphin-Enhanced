@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/menu_add_directory"
-        android:title="@string/add_directory_title"
-        android:icon="@drawable/ic_add"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/menu_toggle_list"
-        android:title="@string/toggle_list"
-        android:icon="@drawable/ic_settings_graphics"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/menu_settings_core"
-        android:title="@string/preferences_settings"
-        android:icon="@drawable/ic_settings_core"
-        app:showAsAction="never"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_settings_gcpad"
@@ -48,6 +30,6 @@
         android:id="@+id/menu_open_file"
         android:icon="@android:drawable/ic_media_play"
         android:title="@string/grid_menu_open_file"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
 </menu>

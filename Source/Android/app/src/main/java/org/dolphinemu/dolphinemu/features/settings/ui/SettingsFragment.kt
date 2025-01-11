@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.MaterialToolbar
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.features.settings.model.Settings
 import org.dolphinemu.dolphinemu.features.settings.model.view.SettingsItem
@@ -52,11 +53,15 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
         val args = arguments
         val menuTag = args!!.getSerializable(ARGUMENT_MENU_TAG) as MenuTag?
 
+        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar_settings)
         if (titles.containsKey(menuTag)) {
-            requireActivity().setTitle(titles[menuTag]!!)
+            toolbar.title = getString(titles[menuTag]!!)
         }
 
-        //LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.list_settings)
 
         val mgr = GridLayoutManager(settingsActivity, 2)
@@ -74,12 +79,6 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = mgr
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
 
         showSettingsList(settingsActivity!!.getSettings())
     }
@@ -125,7 +124,7 @@ class SettingsFragment : Fragment(), SettingsFragmentView {
             titles[MenuTag.GCPAD_TYPE] =
                 R.string.grid_menu_gcpad_settings
             titles[MenuTag.GRAPHICS] =
-                R.string.grid_menu_graphics_settings
+                R.string.graphics_submenu
             titles[MenuTag.HACKS] = R.string.hacks_submenu
             titles[MenuTag.DEBUG] = R.string.debug_submenu
             titles[MenuTag.ENHANCEMENTS] = R.string.enhancements_submenu

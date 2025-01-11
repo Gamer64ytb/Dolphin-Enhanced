@@ -10,7 +10,6 @@ import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -21,6 +20,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.materialswitch.MaterialSwitch
 import org.dolphinemu.dolphinemu.NativeLibrary
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.activities.EmulationActivity
@@ -154,23 +154,23 @@ class RunningSettingDialog : DialogFragment() {
         CompoundButton.OnCheckedChangeListener {
         var item: SettingsItem? = null
         private var textSettingName: TextView? = null
-        private var checkbox: CheckBox? = null
+        private var switchWidget: MaterialSwitch? = null
 
         override fun findViews(root: View) {
             textSettingName = root.findViewById(R.id.text_setting_name)
-            checkbox = root.findViewById(R.id.checkbox)
-            checkbox!!.setOnCheckedChangeListener(this)
+            switchWidget = root.findViewById(R.id.switch_widget)
+            switchWidget!!.setOnCheckedChangeListener(this)
         }
 
         override fun bind(item: SettingsItem) {
             this.item = item
             textSettingName!!.text = item.name
-            checkbox!!.isChecked = this.item!!.value > 0
+            switchWidget!!.isChecked = this.item!!.value > 0
         }
 
         override fun onClick(clicked: View) {
-            checkbox!!.toggle()
-            item!!.value = if (checkbox!!.isChecked) 1 else 0
+            switchWidget!!.toggle()
+            item!!.value = if (switchWidget!!.isChecked) 1 else 0
         }
 
         override fun onCheckedChanged(view: CompoundButton, isChecked: Boolean) {
@@ -575,7 +575,7 @@ class RunningSettingDialog : DialogFragment() {
             val inflater = LayoutInflater.from(parent.context)
             when (viewType) {
                 TYPE_CHECKBOX -> {
-                    itemView = inflater.inflate(R.layout.list_item_running_checkbox, parent, false)
+                    itemView = inflater.inflate(R.layout.list_item_running_switch, parent, false)
                     return CheckBoxSettingViewHolder(itemView)
                 }
 

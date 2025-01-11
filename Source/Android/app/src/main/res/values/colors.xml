@@ -9,5 +9,6 @@
     <color name="light_grey">#e6e6e6</color>
     <color name="dialog_color">#F2F2F2</color>
     <color name="buttons">#FFFFFF</color>
+    <color name="dolphin_accent_20">#33018CCA</color>
 
 </resources>

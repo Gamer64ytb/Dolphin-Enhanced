@@ -2,10 +2,11 @@
 <resources>
 
     <!-- Title of the app -->
-    <string name="app_name">Dolphin</string>
-    <string name="app_name_version">Dolphin %1$s</string>
-    <string name="host">app</string>
-    <string name="scheme">dolphinemu</string>
+    <string name="app_name" translatable="false">Dolphin</string>
+    <string name="app_name_main" translatable="false">Dolphin Enhanced</string>
+    <string name="app_name_version" translatable="false">v1.1.1</string>
+    <string name="host" translatable="false">app</string>
+    <string name="scheme" translatable="false">dolphinemu</string>
 
     <!-- WARNING Do not move these controller entries AT ALL COSTS! They are indexed with ints, and an assumption
             is made that they are placed together so that we can access them sequentially in a loop. -->
@@ -192,7 +193,7 @@
     <string name="osd_messages_description">Display messages over the emulation screen area. These messages include memory card writes, video backend and CPU information, and JIT cache clearing.</string>
 
     <!-- Graphics Settings -->
-    <string name="graphics_general">General</string>
+    <string name="graphics_submenu">Graphics</string>
 
     <!-- Video Preference Fragment -->
     <string name="video_backend">Video Backend</string>
@@ -294,10 +295,10 @@
     <string name="clear">Clear</string>
     <string name="other">Other</string>
     <string name="slider_default">Default</string>
+    <string name="invalid_value">Invalid value</string>
 
     <!-- Game Grid Screen-->
     <string name="grid_menu_config">Config</string>
-    <string name="grid_menu_graphics_settings">Graphics Settings</string>
     <string name="grid_menu_gcpad_settings">GameCube Input</string>
     <string name="grid_menu_wiimote_settings">Wii Input</string>
     <string name="grid_menu_refresh">Refresh Library</string>
@@ -467,6 +468,7 @@ It can efficiently compress both junk data and encrypted Wii data.
     <string name="convert">Convert</string>
     <string name="cheats">Cheats</string>
     <string name="create_shortcut">Shortcut</string>
-    <string name="shortcut_failed">Failed to ceate shortcut</string>
+    <string name="shortcut_failed">Failed to create shortcut</string>
+    <string name="value">Enter a value</string>
 
 </resources>

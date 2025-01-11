@@ -13,8 +13,10 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.slider.Slider
 import org.dolphinemu.dolphinemu.R
 import org.dolphinemu.dolphinemu.dialogs.MotionAlertDialog
 import org.dolphinemu.dolphinemu.features.settings.model.Settings
@@ -27,7 +29,7 @@ import org.dolphinemu.dolphinemu.features.settings.model.view.SingleChoiceSettin
 import org.dolphinemu.dolphinemu.features.settings.model.view.SliderSetting
 import org.dolphinemu.dolphinemu.features.settings.model.view.StringSingleChoiceSetting
 import org.dolphinemu.dolphinemu.features.settings.model.view.SubmenuSetting
-import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.CheckBoxSettingViewHolder
+import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.SwitchSettingViewHolder
 import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.HeaderViewHolder
 import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.InputBindingSettingViewHolder
 import org.dolphinemu.dolphinemu.features.settings.ui.viewholder.RumbleBindingViewHolder
@@ -49,6 +51,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
     private var seekbarProgress = 0
 
     private var dialog: AlertDialog? = null
+    private var inputDialog: MotionAlertDialog? = null
     private var textSliderValue: TextInputEditText? = null
     private var textInputLayout: TextInputLayout? = null
 
@@ -70,8 +73,8 @@ class SettingsAdapter(private val activity: SettingsActivity) :
             }
 
             SettingsItem.TYPE_CHECKBOX -> {
-                view = inflater.inflate(R.layout.list_item_setting_checkbox, parent, false)
-                return CheckBoxSettingViewHolder(
+                view = inflater.inflate(R.layout.list_item_setting_switch, parent, false)
+                return SwitchSettingViewHolder(
                     view,
                     this
                 )
@@ -152,7 +155,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedPosition = position
 
         val value = getSelectionForSingleChoiceValue(item)
-        val builder = AlertDialog.Builder(activity)
+        val builder = MaterialAlertDialogBuilder(activity)
         builder.setTitle(item.nameId)
         builder.setSingleChoiceItems(item.choicesId, value, this)
         dialog = builder.show()
@@ -162,7 +165,7 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedItem = item
         clickedPosition = position
 
-        val builder = AlertDialog.Builder(activity)
+        val builder = MaterialAlertDialogBuilder(activity)
         builder.setTitle(item.nameId)
         builder.setSingleChoiceItems(item.choicesId, item.selectValueIndex, this)
         dialog = builder.show()
@@ -180,17 +183,18 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedItem = item
         clickedPosition = position
         seekbarProgress = item.selectedValue
-        val builder = AlertDialog.Builder(activity)
 
+        val builder = MaterialAlertDialogBuilder(activity)
         val inflater = LayoutInflater.from(activity)
-        val view = inflater.inflate(R.layout.dialog_seekbar, null)
-        val seekbar = view.findViewById<SeekBar>(R.id.seekbar)
+        val view = inflater.inflate(R.layout.dialog_sliders, null)
+        val slider = view.findViewById<Slider>(R.id.slider)
 
         builder.setTitle(item.nameId)
         builder.setView(view)
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNeutralButton(R.string.slider_default) { dialog: DialogInterface?, which: Int ->
-            seekbar.progress = item.getDefaultValue()
+            slider.value = item.getDefaultValue().toFloat()
+            seekbarProgress = item.getDefaultValue()
             onClick(dialog!!, which)
         }
         dialog = builder.show()
@@ -200,43 +204,43 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         textSliderValue!!.setText(seekbarProgress.toString())
         textInputLayout!!.suffixText = item.units
 
-        seekbar.max = item.max
-        seekbar.progress = seekbarProgress
-        seekbar.keyProgressIncrement = 5
+        slider.valueFrom = 0f
+        slider.valueTo = item.max.toFloat()
+        slider.value = seekbarProgress.toFloat()
 
-        textSliderValue!!.addTextChangedListener( object : TextWatcher {
+        // 128 avoids 5 step skipping on MEM2 Size setting
+        slider.stepSize = when {
+            item.max > 128 -> 5f
+            else -> 1f
+        }
+
+        textSliderValue!!.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                val textValue = s.toString().toIntOrNull();
+                val textValue = s.toString().toIntOrNull()
                 // workaround to maintain SDK 24 support
-                // we just use a 0 instead of seekbar.getMin()
-                if (textValue == null || textValue < 0 || textValue > item.max) {
-                    textInputLayout!!.error = "Inappropriate value"
+                // we just use textValue < 0 instead of textValue < seekbar.getMin()
+                if (textValue == null || textValue < 0 || textValue > item.max || textValue % slider.stepSize.toInt() != 0) {
+                    textInputLayout!!.error = activity.getString(R.string.invalid_value)
                 } else {
                     textInputLayout!!.error = null
                     seekbarProgress = textValue
+                    if (slider.value.toInt() != textValue) {
+                        slider.value = textValue.toFloat()
+                    }
                 }
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         })
 
-        seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                // seekBar.max > 128 avoids 5 step skipping for MEM1 & MEM2 Size settings
-                seekbarProgress = if (seekBar.max > 128) ((progress / 5) * 5) else progress
-
-                if (textSliderValue!!.text.toString() != seekBar.toString()) {
-                    textSliderValue!!.setText(seekbarProgress.toString())
-                    textSliderValue!!.setSelection(textSliderValue!!.length())
-                }
+        slider.addOnChangeListener { _, value, _ ->
+            val progress = value.toInt()
+            seekbarProgress = progress
+            if (textSliderValue!!.text.toString() != progress.toString()) {
+                textSliderValue!!.setText(progress.toString())
+                textSliderValue!!.setSelection(textSliderValue!!.length())
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-            }
-        })
+        }
     }
 
     fun onSubmenuClick(item: SubmenuSetting) {
@@ -253,33 +257,34 @@ class SettingsAdapter(private val activity: SettingsActivity) :
         clickedItem = item
         clickedPosition = position
 
-        val dialog = MotionAlertDialog(activity, item)
-        dialog.setTitle(R.string.input_binding)
-        dialog.setMessage(
-            getFormatString(
-                if (item is RumbleBindingSetting) R.string.input_rumble_description else R.string.input_binding_description,
-                activity.getString(item.nameId)
+        inputDialog = MotionAlertDialog(activity, item).apply {
+            setTitle(R.string.input_binding)
+            setMessage(
+                getFormatString(
+                    if (item is RumbleBindingSetting)
+                        R.string.input_rumble_description
+                    else
+                        R.string.input_binding_description,
+                    activity.getString(item.nameId)
+                )
             )
-        )
-        dialog.setButton(
-            AlertDialog.BUTTON_NEGATIVE, activity.getString(android.R.string.cancel),
-            this
-        )
-        dialog.setButton(
-            AlertDialog.BUTTON_NEUTRAL, activity.getString(R.string.clear)
-        ) { _: DialogInterface?, _: Int ->
-            val preferences =
-                PreferenceManager.getDefaultSharedPreferences(activity)
-            item.clearValue()
+            setButton(DialogInterface.BUTTON_NEGATIVE,
+                activity.getString(android.R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            setButton(DialogInterface.BUTTON_NEUTRAL,
+                activity.getString(R.string.clear)) { _, _ ->
+                item.clearValue()
+            }
+            setOnDismissListener {
+                val setting = StringSetting(item.key, item.section, item.value)
+                notifyItemChanged(position)
+                activity.putSetting(setting)
+                activity.setSettingChanged()
+            }
+            setCanceledOnTouchOutside(false)
         }
-        dialog.setOnDismissListener {
-            val setting = StringSetting(item.key, item.section, item.value)
-            notifyItemChanged(position)
-            activity.putSetting(setting)
-            activity.setSettingChanged()
-        }
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.show()
+        inputDialog?.show()
     }
 
     override fun onClick(dialog: DialogInterface, which: Int) {

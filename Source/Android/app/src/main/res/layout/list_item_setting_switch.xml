@@ -15,10 +15,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginHorizontal="16dp"
+        android:layout_toStartOf="@+id/switch_widget"
         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        tools:text="Setting Name" />
+        tools:text="@string/overclock_enable" />
 
     <TextView
         android:id="@+id/text_setting_description"
@@ -27,11 +27,21 @@
         android:layout_below="@+id/text_setting_name"
         android:layout_alignStart="@+id/text_setting_name"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="4dp"
+        android:layout_toStartOf="@+id/switch_widget"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
         android:textColor="?android:textColorSecondary"
         tools:text="@string/overclock_enable_description" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switch_widget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="16dp"
+        android:clickable="false"
+        android:focusable="false" />
 
 </RelativeLayout>
