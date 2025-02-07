@@ -96,7 +96,7 @@ public final class DirectoryInitialization
     if (externalPath == null)
       return false;
 
-    File userPath = new File(externalPath, "dolphin-mmj");
+    File userPath = new File(externalPath, "dolphin-enhanced");
     if (!userPath.isDirectory() && !userPath.mkdir())
     {
       return false;

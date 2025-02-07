@@ -105,18 +105,10 @@ class SettingsFragmentPresenter
 
     private fun addConfigSettings(sl: ArrayList<SettingsItem>) {
         sl.add(SubmenuSetting(null, null, R.string.general_submenu, 0, MenuTag.CONFIG_GENERAL))
-        sl.add(
-            SubmenuSetting(
-                null,
-                null,
-                R.string.grid_menu_graphics_settings,
-                0,
-                MenuTag.GRAPHICS
-            )
-        )
+        sl.add(SubmenuSetting(null, null, R.string.interface_submenu, 0, MenuTag.CONFIG_INTERFACE))
+        sl.add(SubmenuSetting(null, null, R.string.graphics_submenu, 0, MenuTag.GRAPHICS))
         sl.add(SubmenuSetting(null, null, R.string.enhancements_submenu, 0, MenuTag.ENHANCEMENTS))
         sl.add(SubmenuSetting(null, null, R.string.hacks_submenu, 0, MenuTag.HACKS))
-        sl.add(SubmenuSetting(null, null, R.string.interface_submenu, 0, MenuTag.CONFIG_INTERFACE))
         sl.add(SubmenuSetting(null, null, R.string.gamecube_submenu, 0, MenuTag.CONFIG_GAME_CUBE))
         sl.add(SubmenuSetting(null, null, R.string.wii_submenu, 0, MenuTag.CONFIG_WII))
         sl.add(SubmenuSetting(null, null, R.string.debug_submenu, 0, MenuTag.DEBUG))

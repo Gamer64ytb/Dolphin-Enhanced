@@ -3,10 +3,22 @@
                                                                     android:layout_width="match_parent"
                                                                     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_settings"
-        android:background="@color/dolphin_background"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/toolbar_settings" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_settings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorSurface"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
+
+    </LinearLayout>
 
 </org.dolphinemu.dolphinemu.features.settings.ui.SettingsFrameLayout>
